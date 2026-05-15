@@ -22,6 +22,15 @@ import './styles/chaotic-reasons-fix.css'
 import './styles/coming-soon-universe.css'
 import './styles/audio-sync.css'
 
+const resetParams = new URLSearchParams(window.location.search)
+
+if (resetParams.get('reset') === '1') {
+  localStorage.clear()
+  sessionStorage.clear()
+  window.history.replaceState({}, document.title, window.location.pathname)
+  window.location.reload()
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AudioProvider>
