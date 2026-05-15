@@ -1,0 +1,58 @@
+{
+  "project": {
+    "name": "Distancia Cero",
+    "subtitle": "Un universo digital para Ale & Yori",
+    "repositoryName": "alecitabbcitabblin",
+    "githubUser": "yori7v7"
+  },
+  "couple": {
+    "herName": "Ale",
+    "herFullName": "Alex Sun de la Cruz Martínez",
+    "yourName": "Yori",
+    "yourFullName": "Diego Yorel Castelán Silva",
+    "mainPairName": "Ale & Yori",
+    "herNicknames": [
+      "Ale",
+      "Alecita",
+      "Alecita bbcita bblin"
+    ],
+    "yourNicknames": [
+      "Yori",
+      "Dieguito bbcito bblin",
+      "Dieguito vevecitovevelin"
+    ]
+  },
+  "dates": {
+    "metDate": "2026-03-13",
+    "relationshipStartDate": "2026-05-17",
+    "proposalDate": "2026-05-17",
+    "nextMeetingDate": "2026-11-17",
+    "metLabel": "Días de conocernos",
+    "storyLabel": "Días de historia",
+    "nextMeetingLabel": "Días para vernos"
+  },
+  "audio": {
+    "backgroundTrackPath": "/audio/wonderwall.mp3",
+    "defaultVolume": 0.45,
+    "afterMainPlaylistName": "Playlist 11:11",
+    "afterMainPlaylistLink": "https://open.spotify.com/playlist/53Iki42jhtUsuviE1yRNrh?si=4ef16584fe794ab6"
+  },
+  "secret": {
+    "passwords": [
+      "milanesa",
+      "alecita",
+      "ale",
+      "yori"
+    ],
+    "hint": "Pista: comida favorita, apodo bonito o nuestros nombres.",
+    "unlockedTitle": "Para mi Alecita bbcita bblin",
+    "unlockedSignature": "Atte: tu Yori, tu dieguito bbcito bblin."
+  },
+  "hero": {
+    "eyebrow": "Un universo para Ale & Yori",
+    "titlePrefix": "Para ti,",
+    "titleName": "Ale",
+    "description": "Hice este lugar para que, aunque estemos lejos, siempre tengas un pedacito de mí cerquita. Este no es solo un regalo, es nuestro espacio: algo que va a crecer contigo, conmigo y con todo lo que somos.",
+    "primaryButton": "Abrir mi primer regalo para ti"
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "Foto futura",
+    "description": "Aquí irá una foto bonita de nosotros o una imagen generada con IA."
+  },
+  {
+    "id": 2,
+    "title": "Recuerdo especial",
+    "description": "Un espacio para guardar un momento que no queramos olvidar."
+  },
+  {
+    "id": 3,
+    "title": "Nuestro universo",
+    "description": "Aquí podemos poner dibujos, edits, capturas o cualquier detalle lindo."
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "category": "Cita",
+    "title": "Comer milanesas juntos",
+    "description": "Porque claramente esta es una misión principal, no secundaria."
+  },
+  {
+    "id": 2,
+    "category": "Viaje",
+    "title": "Vernos sin pantalla de por medio",
+    "description": "Un plan futuro para transformar la distancia en abrazo."
+  },
+  {
+    "id": 3,
+    "category": "Recuerdo",
+    "title": "Tomarnos fotos bonitas",
+    "description": "Fotos reales para llenar esta página con momentos de verdad."
+  },
+  {
+    "id": 4,
+    "category": "Vida",
+    "title": "Construir más historias",
+    "description": "Cosas pequeñas, días normales y momentos que luego se vuelven importantes."
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "type": "Video futuro",
+    "title": "Nuestro primer video guardado",
+    "description": "Aquí podrás poner un clip, un edit, una grabación o un recuerdo especial."
+  },
+  {
+    "id": 2,
+    "type": "Llamada",
+    "title": "Captura de una llamada bonita",
+    "description": "Espacio para screenshots, audios o momentos de videollamada."
+  },
+  {
+    "id": 3,
+    "type": "Recuerdo",
+    "title": "Un momento que queramos repetir",
+    "description": "Ideal para videos cortos, reels, edits o mensajes grabados."
+  }
+]

@@ -1,0 +1,19 @@
+.counter-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.counter-card {
+  min-height: 245px;
+}
+
+@media (max-width: 1180px) {
+  .counter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .counter-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

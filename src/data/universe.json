@@ -1,0 +1,148 @@
+{
+  "center": {
+    "type": "Centro del universo",
+    "name": "Ale & Yori",
+    "description": "Este no es un planeta más. Es el centro de todo: lo que sostiene las órbitas, lo que le da sentido al resto y el lugar donde empieza nuestra historia. Ale y Yori no son solo dos nombres aquí; son el punto donde la distancia deja de sentirse tan grande.",
+    "features": [
+      "Aquí vive nuestra historia completa",
+      "De aquí nacen las cartas, canciones y recuerdos",
+      "Es el punto donde todo lo demás encuentra sentido",
+      "Si el universo crece, es porque nosotros seguimos eligiéndonos"
+    ]
+  },
+  "planets": [
+    {
+      "id": 1,
+      "type": "Base",
+      "name": "Confianza",
+      "description": "Este planeta está cerca del centro porque sin confianza nada orbita bonito. Es esa calma de saber que, aunque estemos lejos, seguimos cuidando lo que sentimos y hablando con el corazón en la mano.",
+      "features": [
+        "Creer en lo que estamos construyendo",
+        "Cuidar lo que sentimos incluso a distancia",
+        "Sentirnos seguros el uno con el otro",
+        "Hacer que el amor no dependa del miedo"
+      ],
+      "orbit": 340,
+      "duration": 24,
+      "delay": -2,
+      "size": 84,
+      "colorA": "#ff79c9",
+      "colorB": "#ffd0ea",
+      "hasRing": false
+    },
+    {
+      "id": 2,
+      "type": "Puente",
+      "name": "Comunicación",
+      "description": "Este planeta mantiene abiertas las rutas entre nuestros mundos. Mensajes, llamadas, audios, silencios explicados y ganas de entendernos: todo eso hace que la distancia no se vuelva pared.",
+      "features": [
+        "Decir lo bonito sin guardarlo",
+        "Hablar de lo difícil sin lastimarnos",
+        "Buscar entender antes de asumir",
+        "Hacer de cada mensaje una forma de estar cerca"
+      ],
+      "orbit": 440,
+      "duration": 30,
+      "delay": -9,
+      "size": 82,
+      "colorA": "#ff4f9f",
+      "colorB": "#781144",
+      "hasRing": false
+    },
+    {
+      "id": 3,
+      "type": "Calma",
+      "name": "Paciencia",
+      "description": "La paciencia es el planeta que entiende que no todo puede pasar hoy, pero que eso no significa que no vaya a pasar. Es esperar sin soltar, respirar sin rendirse y creer en el tiempo de nosotros.",
+      "features": [
+        "Esperar sin desesperarnos",
+        "Entender los días llenos de tareas",
+        "No exigir perfección para sentir amor",
+        "Confiar en que lo bonito también toma tiempo"
+      ],
+      "orbit": 540,
+      "duration": 36,
+      "delay": -18,
+      "size": 78,
+      "colorA": "#b66cff",
+      "colorB": "#38105c",
+      "hasRing": true
+    },
+    {
+      "id": 4,
+      "type": "Refugio",
+      "name": "Cuidado",
+      "description": "Este planeta es suave, pero no débil. Es preguntarte cómo estás, pensar en ti aunque el día esté pesado y querer que sientas que no tienes que cargar con todo sola.",
+      "features": [
+        "Acompañarnos en días raros",
+        "Cuidar las palabras",
+        "Estar pendientes sin invadir",
+        "Recordarnos que somos importantes"
+      ],
+      "orbit": 640,
+      "duration": 42,
+      "delay": -28,
+      "size": 80,
+      "colorA": "#ff9edb",
+      "colorB": "#a31362",
+      "hasRing": false
+    },
+    {
+      "id": 5,
+      "type": "Luz",
+      "name": "Risa",
+      "description": "La risa es ese planeta que evita que todo sea demasiado serio. Apodos raros, bromas tontas, mensajes mensos y esa forma nuestra de convertir cualquier cosa en algo que solo nosotros entendemos.",
+      "features": [
+        "Bromas internas",
+        "Apodos que no tienen explicación normal",
+        "Mensajes que dan risa de la nada",
+        "La ternura de ser bien mensos juntos"
+      ],
+      "orbit": 730,
+      "duration": 48,
+      "delay": -36,
+      "size": 74,
+      "colorA": "#ffb347",
+      "colorB": "#ff5e00",
+      "hasRing": false
+    },
+    {
+      "id": 6,
+      "type": "Motor",
+      "name": "Amor",
+      "description": "Este planeta no grita para existir. Se nota en los detalles, en las ganas de seguir, en la forma en que una persona se vuelve casa incluso estando lejos.",
+      "features": [
+        "Elegirnos con ternura",
+        "Tener detalles aunque sean pequeños",
+        "Sentir bonito cuando aparece su mensaje",
+        "Saber que esto vale la pena"
+      ],
+      "orbit": 810,
+      "duration": 55,
+      "delay": -44,
+      "size": 84,
+      "colorA": "#ff1744",
+      "colorB": "#5d0016",
+      "hasRing": true
+    },
+    {
+      "id": 7,
+      "type": "Destino",
+      "name": "Futuro",
+      "description": "Este planeta todavía no termina de formarse, y eso lo hace especial. Aquí viven las citas pendientes, las fotos que faltan, los abrazos que todavía no llegan y todo lo que algún día vamos a contar como recuerdo.",
+      "features": [
+        "Planes que todavía esperan fecha",
+        "Abrazos que van a llegar",
+        "Lugares que queremos conocer",
+        "Historias que apenas estamos empezando"
+      ],
+      "orbit": 900,
+      "duration": 64,
+      "delay": -52,
+      "size": 78,
+      "colorA": "#7a4cff",
+      "colorB": "#1c0f52",
+      "hasRing": true
+    }
+  ]
+}

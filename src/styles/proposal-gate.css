@@ -1,0 +1,45 @@
+/* =========================================================
+   BLOQUEO DE DECLARACIÓN
+   Antes del "sí", solo se muestra la pregunta oficial.
+========================================================= */
+
+body.proposal-gate-active .navbar,
+body.proposal-gate-active .hero,
+body.proposal-gate-active footer,
+body.proposal-gate-active .floating-music-dock,
+body.proposal-gate-active .floating-emergency-button,
+body.proposal-gate-active .back-to-top,
+body.proposal-gate-active .theme-switcher-wrap {
+  display: none !important;
+}
+
+body.proposal-gate-active main > section:not(.proposal-section) {
+  display: none !important;
+}
+
+body.proposal-gate-active {
+  overflow-x: hidden;
+}
+
+body.proposal-gate-active .proposal-section {
+  min-height: 100vh;
+  width: min(100% - 28px, 1040px);
+  display: grid;
+  place-items: center;
+  padding: 28px 0;
+}
+
+body.proposal-gate-active .proposal-card {
+  width: 100%;
+}
+
+.proposal-note {
+  margin-top: 20px !important;
+  font-size: 0.95rem !important;
+  color: var(--pink-soft) !important;
+  opacity: 0.9;
+}
+
+.proposal-unlocked {
+  padding-top: 34px;
+}

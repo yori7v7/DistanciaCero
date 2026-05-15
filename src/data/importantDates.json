@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "date": "17 May",
+    "title": "Aniversario",
+    "description": "Hoy empieza oficialmente nuestra historia. Es la fecha que convierte todo este universo en algo todavía más nuestro.",
+    "tag": "Nuestra fecha"
+  },
+  {
+    "id": 2,
+    "date": "18 Nov",
+    "title": "Cumple de Yori",
+    "description": "Próximamente. Aquí después podrá aparecer una sorpresa, una carta o un detallito especial.",
+    "tag": "Próximamente"
+  },
+  {
+    "id": 3,
+    "date": "24 Nov",
+    "title": "Cumple de Ale",
+    "description": "Próximamente. Este espacio queda reservado para su día especial y todo lo bonito que venga con él.",
+    "tag": "Próximamente"
+  }
+]

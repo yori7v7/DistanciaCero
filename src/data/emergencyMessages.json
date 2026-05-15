@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "label": "Extraño a Yori",
+    "messages": [
+      "Si me extrañas, ven aquí tantito. Yo también te pienso mucho más de lo que a veces digo.",
+      "La distancia se pone castrosa, sí, pero no alcanza para hacerme querer menos estar contigo.",
+      "Aunque no pueda abrazarte físicamente ahorita, quiero que sepas que este rincón existe justo para eso."
+    ]
+  },
+  {
+    "id": 2,
+    "label": "Estoy triste",
+    "messages": [
+      "Respira, mi Ale. No necesitas poder con todo tú sola al mismo tiempo.",
+      "Incluso en tus días raros sigues siendo una persona preciosa, valiosa y muy amada.",
+      "Tu Yori quisiera apapacharte ahorita, así que por mientras te dejo este abrazo digital."
+    ]
+  },
+  {
+    "id": 3,
+    "label": "Quiero una frase bonita",
+    "messages": [
+      "Eres una de las cosas más bonitas que me han pasado.",
+      "Me gusta muchísimo compartir existencia contigo, aunque sea en forma de mensajes, llamadas y locuras nuestras.",
+      "Si el mundo anda raro, al menos tú sigues siendo algo que me da calma."
+    ]
+  },
+  {
+    "id": 4,
+    "label": "Quiero reírme",
+    "messages": [
+      "Diagnóstico oficial: exceso de alecita bbcita bblin detectado.",
+      "Recuerda que, pase lo que pase, siempre nos quedarán las milanesas.",
+      "Este universo no sería estable sin una dosis mínima de mensadas románticas."
+    ]
+  }
+]

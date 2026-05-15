@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "category": "Cita",
+    "title": "Comer milanesas juntos",
+    "description": "Meta principal del sistema solar. No es opcional."
+  },
+  {
+    "id": 2,
+    "category": "Llamada",
+    "title": "Dormirse en llamada",
+    "description": "Porque las llamadas largas tienen su propio nivel de ternura."
+  },
+  {
+    "id": 3,
+    "category": "Recuerdo",
+    "title": "Guardar una foto bonita",
+    "description": "Para llenar el scrapbook con algo real y especial."
+  },
+  {
+    "id": 4,
+    "category": "Película",
+    "title": "Ver una película juntos",
+    "description": "Y luego discutir cuál escena estuvo más bonita o más mensa."
+  },
+  {
+    "id": 5,
+    "category": "Música",
+    "title": "Crear una playlist nueva",
+    "description": "Una de esas bien suya, con canciones que ya tengan historia."
+  },
+  {
+    "id": 6,
+    "category": "Futuro",
+    "title": "Planear una cita pendiente",
+    "description": "Aunque falte tiempo, la intención también construye."
+  }
+]

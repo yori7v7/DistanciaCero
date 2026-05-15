@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "mood": "Abrir cuando me extrañes",
+    "title": "Estoy más cerca de lo que parece",
+    "preview": "Una cartita para cuando la distancia se sienta medio castrosa.",
+    "locked": true,
+    "url": "/open-when/me-extranes/"
+  },
+  {
+    "id": 2,
+    "mood": "Abrir cuando estés triste",
+    "title": "Respira, mi Alecita",
+    "preview": "Un mensaje para abrazarte tantito desde aquí.",
+    "locked": true,
+    "url": "/open-when/estes-triste/"
+  },
+  {
+    "id": 3,
+    "mood": "Abrir cuando no puedas dormir",
+    "title": "Quédate tantito conmigo",
+    "preview": "Una carta suave para una noche larga.",
+    "locked": true,
+    "url": "/open-when/no-puedas-dormir/"
+  },
+  {
+    "id": 4,
+    "mood": "Abrir cuando quieras reír",
+    "title": "Modo mensos activado",
+    "preview": "Un espacio para bromas internas, stickers y tonterías nuestras.",
+    "locked": true,
+    "url": "/open-when/quieras-reir/"
+  },
+  {
+    "id": 5,
+    "mood": "Abrir cuando dudes",
+    "title": "Aquí sigo",
+    "preview": "Una carta para recordarte lo que siento y lo que estamos construyendo.",
+    "locked": true,
+    "url": "/open-when/cuando-dudes/"
+  },
+  {
+    "id": 6,
+    "mood": "Abrir cuando sea un día especial",
+    "title": "Sorpresa programada",
+    "preview": "Una cartita para una fecha que todavía no llega.",
+    "locked": true,
+    "url": "/open-when/dia-especial/"
+  }
+]

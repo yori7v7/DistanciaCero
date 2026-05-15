@@ -1,0 +1,30 @@
+{
+  "whenYouMissMe": [
+    {
+      "id": 1,
+      "text": "Ale, si me estás extrañando, acuérdate de que yo también te pienso más veces de las que digo."
+    },
+    {
+      "id": 2,
+      "text": "La distancia podrá ser castrosa, pero no es más grande que las ganas que tengo de seguir contigo."
+    },
+    {
+      "id": 3,
+      "text": "Cuando sientas que estoy lejos, entra aquí. Este lugar existe para abrazarte tantito desde mi lado del mundo."
+    }
+  ],
+  "whenYouAreSad": [
+    {
+      "id": 1,
+      "text": "Respira, mi Alecita. No tienes que poder con todo al mismo tiempo."
+    },
+    {
+      "id": 2,
+      "text": "Aunque hoy se sienta pesado, sigues siendo una personita preciosa, importante y muy amada."
+    },
+    {
+      "id": 3,
+      "text": "Tu Yori está contigo, incluso cuando no pueda estar físicamente a tu lado."
+    }
+  ]
+}

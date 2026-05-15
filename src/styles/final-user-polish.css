@@ -1,0 +1,189 @@
+/* =========================================================
+   PULIDO FINAL PEDIDO POR YORI
+========================================================= */
+
+/* Scrapbook oscuro como videos */
+
+.scrapbook-dark-grid {
+  margin-top: 20px;
+}
+
+.scrapbook-memory-card {
+  background:
+    radial-gradient(circle at top, rgba(255, 122, 200, 0.10), transparent 38%),
+    var(--bg-card) !important;
+  color: var(--white) !important;
+}
+
+.scrapbook-placeholder {
+  min-height: 210px;
+  gap: 10px;
+  color: var(--pink-soft);
+  text-align: center;
+  border-style: dashed;
+}
+
+.scrapbook-placeholder span {
+  font-weight: 900;
+  color: var(--pink-soft);
+  font-size: 0.92rem;
+}
+
+.scrapbook-content h3 {
+  color: var(--white);
+}
+
+.scrapbook-content p {
+  color: var(--muted);
+}
+
+/* 100 razones: botón sacudir */
+
+.reasons-heart-stage {
+  position: relative;
+  padding-bottom: 92px;
+}
+
+.shake-reasons-button {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  z-index: 5;
+}
+
+.big-reason-heart.heart-shaking .reason-heart {
+  animation:
+    reasonShake 0.8s ease both,
+    reasonFloat var(--float) ease-in-out infinite,
+    reasonSpin 9s linear infinite;
+}
+
+@keyframes reasonShake {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  15% {
+    transform: translate(-12px, 8px) rotate(-14deg) scale(1.08);
+  }
+
+  30% {
+    transform: translate(14px, -10px) rotate(16deg) scale(0.95);
+  }
+
+  45% {
+    transform: translate(-9px, -12px) rotate(-10deg) scale(1.1);
+  }
+
+  60% {
+    transform: translate(10px, 9px) rotate(12deg) scale(0.98);
+  }
+
+  80% {
+    transform: translate(-5px, 4px) rotate(-5deg) scale(1.04);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+/* Distancia cero con km y fotos */
+
+.distance-card-final {
+  min-height: 460px;
+}
+
+.portrait-point {
+  width: 138px;
+  height: 162px;
+  border-radius: 28px;
+  gap: 7px;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.portrait-point:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 122, 200, 0.65);
+}
+
+.portrait-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.24), transparent 30%),
+    linear-gradient(135deg, var(--pink), var(--red));
+  box-shadow: var(--shadow-red);
+  margin-bottom: 4px;
+}
+
+.portrait-placeholder span {
+  color: white;
+  font-size: 1.65rem;
+  font-weight: 950;
+}
+
+.portrait-point strong {
+  color: var(--pink-soft);
+}
+
+.distance-message-final {
+  bottom: 24px;
+}
+
+.km-counter {
+  width: fit-content;
+  margin: 12px auto 14px;
+  padding: 15px 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 122, 200, 0.32);
+  background: rgba(255, 122, 200, 0.08);
+  display: grid;
+  gap: 2px;
+  box-shadow: var(--shadow-pink);
+}
+
+.km-number {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1;
+  font-weight: 950;
+  color: white;
+  letter-spacing: -1px;
+}
+
+.km-label {
+  color: var(--pink-soft);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .distance-card-final {
+    min-height: 640px;
+  }
+
+  .portrait-point {
+    width: 112px;
+    height: 142px;
+  }
+
+  .portrait-placeholder {
+    width: 58px;
+    height: 58px;
+  }
+
+  .shake-reasons-button {
+    width: calc(100% - 40px);
+    justify-content: center;
+  }
+}

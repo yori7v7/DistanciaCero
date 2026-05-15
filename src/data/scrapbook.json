@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "date": "Recuerdo futuro",
+    "title": "Primera polaroid oficial",
+    "caption": "Aquí después puedes poner una foto, una captura o una imagen IA de ustedes.",
+    "photoLabel": "Foto / imagen futura",
+    "rotation": -3
+  },
+  {
+    "id": 2,
+    "date": "Llamada bonita",
+    "title": "Captura especial",
+    "caption": "Espacio para guardar una screenshot de llamada, chat o video que signifique algo.",
+    "photoLabel": "Captura pendiente",
+    "rotation": 2
+  },
+  {
+    "id": 3,
+    "date": "Momento Ale & Yori",
+    "title": "Una tontería muy nuestra",
+    "caption": "Ideal para bromas internas, stickers, dibujos o edits.",
+    "photoLabel": "Recuerdo pendiente",
+    "rotation": -2
+  },
+  {
+    "id": 4,
+    "date": "Cita soñada",
+    "title": "Lore de milanesas",
+    "caption": "Porque un buen scrapbook también debe honrar las causas gastronómicas importantes.",
+    "photoLabel": "Milanesa pendiente",
+    "rotation": 4
+  }
+]

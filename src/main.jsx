@@ -1,0 +1,31 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import { AudioProvider } from './context/AudioContext.jsx'
+
+import './styles/global.css'
+import './styles/animations.css'
+import './styles/responsive.css'
+import './styles/extra-sections.css'
+import './styles/universe-interactive.css'
+import './styles/ui-expansions.css'
+import './styles/final-polish.css'
+import './styles/z-final-fixes.css'
+import './styles/proposal.css'
+import './styles/proposal-gate.css'
+import './styles/counter-final.css'
+import './styles/relationship-refactor.css'
+import './styles/final-user-polish.css'
+import './styles/final-adjustments-yori.css'
+import './styles/chaotic-reasons.css'
+import './styles/chaotic-reasons-fix.css'
+import './styles/coming-soon-universe.css'
+import './styles/audio-sync.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <AudioProvider>
+      <App />
+    </AudioProvider>
+  </React.StrictMode>,
+)
