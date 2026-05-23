@@ -372,3 +372,27 @@
     min-height: 1260px !important;
   }
 }
+
+/* YORI-ROUTER-REAL-PAGES */
+
+.scene-visible {
+  animation: sceneReveal 0.58s ease both;
+}
+
+.scene-mode-enabled main,
+.scene-mode-enabled .app,
+.scene-mode-enabled #root {
+  min-height: 100vh;
+}
+
+.scene-portal-links {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 900px) {
+  .scene-portal-links {
+    max-height: 96px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
