@@ -4,7 +4,7 @@
   right: 18px;
   left: auto;
   bottom: 18px;
-  width: min(460px, calc(100vw - 36px));
+  width: min(440px, calc(100vw - 36px));
   display: grid;
   gap: 10px;
   padding: 12px;
@@ -110,23 +110,15 @@
   box-shadow: 0 0 24px rgba(255, 122, 200, 0.28);
 }
 
-.scene-music-progress,
 .scene-music-volume {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 44px;
   align-items: center;
   gap: 9px;
   padding: 8px 10px;
   border: 1px solid rgba(255, 122, 200, 0.18);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.045);
-}
-
-.scene-music-progress {
-  grid-template-columns: 42px minmax(0, 1fr) 42px;
-}
-
-.scene-music-volume {
-  grid-template-columns: auto minmax(0, 1fr) 44px;
 }
 
 .scene-volume-icon {
@@ -141,7 +133,6 @@
   cursor: pointer;
 }
 
-.scene-music-progress input,
 .scene-music-volume input {
   width: 100%;
   height: 8px;
@@ -149,18 +140,6 @@
   border-radius: 999px;
   outline: none;
   cursor: pointer;
-}
-
-.scene-music-progress input {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(255, 122, 200, 0.95) 0 var(--song-progress),
-      rgba(255, 255, 255, 0.13) var(--song-progress) 100%
-    );
-}
-
-.scene-music-volume input {
   background:
     linear-gradient(
       90deg,
@@ -169,12 +148,6 @@
     );
 }
 
-.scene-music-progress input:disabled {
-  cursor: not-allowed;
-  opacity: 0.44;
-}
-
-.scene-music-progress input::-webkit-slider-thumb,
 .scene-music-volume input::-webkit-slider-thumb {
   appearance: none;
   width: 17px;
@@ -185,7 +158,6 @@
   box-shadow: 0 0 18px rgba(255, 122, 200, 0.54);
 }
 
-.scene-music-progress input::-moz-range-thumb,
 .scene-music-volume input::-moz-range-thumb {
   width: 17px;
   height: 17px;
@@ -195,19 +167,10 @@
   box-shadow: 0 0 18px rgba(255, 122, 200, 0.54);
 }
 
-.scene-music-progress span,
 .scene-music-volume span {
   color: var(--pink-soft);
   font-size: 0.76rem;
   font-weight: 900;
-}
-
-.scene-music-progress span:first-child {
-  text-align: left;
-}
-
-.scene-music-progress span:last-child,
-.scene-music-volume span {
   text-align: right;
 }
 
