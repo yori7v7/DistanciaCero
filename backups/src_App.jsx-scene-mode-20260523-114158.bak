@@ -17,7 +17,6 @@ import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
 import SceneMusicController from './components/SceneMusicController'
-import SceneModeController from './components/SceneModeController'
 import BackToTop from './components/BackToTop'
 import Footer from './components/Footer'
 
@@ -67,8 +66,7 @@ function App() {
         <DistanceMapSection />
       </main>
 
-      <SceneModeController />
-        <SceneMusicController />
+      <SceneMusicController />
       <BackToTop />
       <Footer />
     </div>
@@ -76,7 +74,6 @@ function App() {
 }
 
 export default App
-
 
 
 

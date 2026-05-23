@@ -22,7 +22,6 @@ import './styles/chaotic-reasons-fix.css'
 import './styles/coming-soon-universe.css'
 import './styles/audio-sync.css'
 import './styles/scene-music-controller.css'
-import './styles/scene-mode.css'
 import './styles/diary-story.css'
 import './styles/true-3d.css'
 import './styles/space-3d-upgrade.css'
@@ -44,7 +43,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </AudioProvider>
   </React.StrictMode>,
 )
-
 
 
 

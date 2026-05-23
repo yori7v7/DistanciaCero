@@ -216,7 +216,6 @@ function SceneMusicController() {
     if (!scenes.length) return
 
     const scheduleDetection = () => {
-      if (document.body.classList.contains('scene-mode-enabled')) return
       if (rafRef.current) return
 
       rafRef.current = requestAnimationFrame(() => {
@@ -420,5 +419,4 @@ function SceneMusicController() {
 }
 
 export default SceneMusicController
-
 

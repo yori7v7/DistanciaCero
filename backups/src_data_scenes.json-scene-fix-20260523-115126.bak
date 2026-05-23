@@ -1,0 +1,74 @@
+﻿[
+  {
+    "id": "inicio",
+    "label": "Inicio",
+    "title": "El inicio del universo",
+    "subtitle": "La entrada principal de Distancia Cero.",
+    "musicSectionId": "inicio",
+    "sectionIds": ["inicio", "hero", "propuesta", "contadores", "carta"]
+  },
+  {
+    "id": "universo",
+    "label": "Universo",
+    "title": "Sistema solar Ale & Yori",
+    "subtitle": "Los planetas que giran alrededor de lo que somos.",
+    "musicSectionId": "universo",
+    "sectionIds": ["universo", "sistema-solar"]
+  },
+  {
+    "id": "historia",
+    "label": "Diario",
+    "title": "Nuestra historia",
+    "subtitle": "El diario gótico-romántico de nuestra historia.",
+    "musicSectionId": "historia",
+    "sectionIds": ["historia", "nuestra-historia", "diario"]
+  },
+  {
+    "id": "galeria",
+    "label": "Agujero negro",
+    "title": "Galería de recuerdos",
+    "subtitle": "Las fotos y momentos atrapados en nuestra gravedad.",
+    "musicSectionId": "galeria-agujero-negro",
+    "sectionIds": ["galeria-agujero-negro", "agujero-negro", "blackhole", "galeria", "momentos", "recuerdos"]
+  },
+  {
+    "id": "razones",
+    "label": "100 razones",
+    "title": "Razones por las que te amo",
+    "subtitle": "Canicas vivas flotando por ti.",
+    "musicSectionId": "razones",
+    "sectionIds": ["razones", "100-razones"]
+  },
+  {
+    "id": "cartas",
+    "label": "Cartas",
+    "title": "Cartas y abrir cuando...",
+    "subtitle": "Cartas mensuales y cartitas para momentos especiales.",
+    "musicSectionId": "cartas",
+    "sectionIds": ["cartas", "cartas-mensuales", "abrir-cuando", "open-when", "cartitas"]
+  },
+  {
+    "id": "musica",
+    "label": "Música",
+    "title": "Banda sonora del universo",
+    "subtitle": "Las canciones que viven dentro de nosotros.",
+    "musicSectionId": "playlist",
+    "sectionIds": ["playlist", "banda-sonora", "musica", "soundtrack"]
+  },
+  {
+    "id": "promesas",
+    "label": "Promesas",
+    "title": "Promesas pequeñas, pero reales",
+    "subtitle": "Lo que quiero cuidar contigo.",
+    "musicSectionId": "promesas",
+    "sectionIds": ["promesas", "promises"]
+  },
+  {
+    "id": "distancia",
+    "label": "Distancia cero",
+    "title": "Donde la distancia deja de ganar",
+    "subtitle": "Nuestro mapa, nuestras coordenadas y lo que falta para vernos.",
+    "musicSectionId": "distancia",
+    "sectionIds": ["distancia", "distancia-cero"]
+  }
+]

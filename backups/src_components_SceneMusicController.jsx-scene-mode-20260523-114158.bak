@@ -178,21 +178,6 @@ function SceneMusicController() {
     masterVolumeRef.current = masterVolume
   }, [masterVolume])
 
-
-  useEffect(() => {
-    const handleSceneChange = (event) => {
-      const nextSceneId = event.detail?.sceneId
-
-      if (!nextSceneId) return
-
-      setActiveSectionId(nextSceneId)
-    }
-
-    window.addEventListener('distancia-cero-scene-change', handleSceneChange)
-
-    return () => window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
-  }, [])
-
   useEffect(() => {
     const storedUnlock = localStorage.getItem(UNLOCK_KEY)
     const storedVolumeRaw = localStorage.getItem(VOLUME_KEY)
@@ -216,7 +201,6 @@ function SceneMusicController() {
     if (!scenes.length) return
 
     const scheduleDetection = () => {
-      if (document.body.classList.contains('scene-mode-enabled')) return
       if (rafRef.current) return
 
       rafRef.current = requestAnimationFrame(() => {
@@ -420,5 +404,3 @@ function SceneMusicController() {
 }
 
 export default SceneMusicController
-
-

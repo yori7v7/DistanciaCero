@@ -5,8 +5,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/inicio.mp3",
-    "volume": 0.7
+    "volume": 0.68
   },
   {
     "sectionId": "propuesta",
@@ -14,8 +13,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/propuesta.mp3",
-    "volume": 0.7
+    "volume": 0.68
   },
   {
     "sectionId": "contadores",
@@ -23,8 +21,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/contadores.mp3",
-    "volume": 0.7
+    "volume": 0.64
   },
   {
     "sectionId": "carta",
@@ -32,8 +29,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/carta.mp3",
-    "volume": 0.7
+    "volume": 0.62
   },
   {
     "sectionId": "historia",
@@ -41,8 +37,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/historia.mp3",
-    "volume": 0.7
+    "volume": 0.66
   },
   {
     "sectionId": "universo",
@@ -50,7 +45,6 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/universo.mp3",
     "volume": 0.7
   },
   {
@@ -59,8 +53,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/cartas.mp3",
-    "volume": 0.7
+    "volume": 0.62
   },
   {
     "sectionId": "abrir-cuando",
@@ -68,8 +61,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/abrir-cuando.mp3",
-    "volume": 0.7
+    "volume": 0.62
   },
   {
     "sectionId": "playlist",
@@ -77,8 +69,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/playlist.mp3",
-    "volume": 0.7
+    "volume": 0.72
   },
   {
     "sectionId": "razones",
@@ -86,8 +77,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/razones.mp3",
-    "volume": 0.7
+    "volume": 0.68
   },
   {
     "sectionId": "galeria-agujero-negro",
@@ -95,8 +85,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/agujero-negro.mp3",
-    "volume": 0.7
+    "volume": 0.74
   },
   {
     "sectionId": "promesas",
@@ -104,8 +93,7 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/promesas.mp3",
-    "volume": 0.7
+    "volume": 0.64
   },
   {
     "sectionId": "distancia",
@@ -113,7 +101,6 @@
     "title": "Wonderwall",
     "artist": "Oasis",
     "src": "audio/wonderwall.mp3",
-    "plannedSrc": "audio/scenes/distancia.mp3",
-    "volume": 0.7
+    "volume": 0.68
   }
 ]

@@ -4,10 +4,10 @@ import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
 
 const BALL_SIZE = 62
 const RADIUS = BALL_SIZE / 2
-const MAX_SPEED = 1.14
-const JITTER = 0.007
-const MIN_Z = -100
-const MAX_Z = 160
+const MAX_SPEED = 1.18
+const JITTER = 0.01
+const MIN_Z = -110
+const MAX_Z = 170
 const PADDING = 42
 
 function clampSpeed(value, limit) {
@@ -16,28 +16,13 @@ function clampSpeed(value, limit) {
   return value
 }
 
-function shuffleArray(array) {
-  const copy = [...array]
-
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const temp = copy[i]
-    copy[i] = copy[j]
-    copy[j] = temp
-  }
-
-  return copy
-}
-
 function ReasonsSection({ reasons = [] }) {
   const [selectedReason, setSelectedReason] = useState(null)
   const selectedReasonRef = useRef(null)
   const containerRef = useRef(null)
-  const sectionRef = useRef(null)
   const itemRefs = useRef([])
   const animationRef = useRef(null)
   const objectsRef = useRef([])
-  const hasInitializedRef = useRef(false)
 
   useEffect(() => {
     selectedReasonRef.current = selectedReason
@@ -45,14 +30,11 @@ function ReasonsSection({ reasons = [] }) {
 
   useEffect(() => {
     const container = containerRef.current
-    const section = sectionRef.current
-
-    if (!container || !section || !reasons?.length) return
+    if (!container || !reasons?.length) return
 
     const getBounds = () => {
-      const rect = container.getBoundingClientRect()
-      const width = Math.max(rect.width || container.clientWidth, 720)
-      const height = Math.max(rect.height || container.clientHeight, 1120)
+      const width = Math.max(container.clientWidth, 320)
+      const height = Math.max(container.clientHeight, 1040)
 
       return {
         width,
@@ -64,77 +46,32 @@ function ReasonsSection({ reasons = [] }) {
       }
     }
 
-    const applyObjectStyle = (obj) => {
-      if (!obj.el) return
-
-      const depth = (obj.z - MIN_Z) / (MAX_Z - MIN_Z)
-      const scale = 0.72 + depth * 0.52
-      const brightness = 0.82 + depth * 0.32
-      const opacity = 0.72 + depth * 0.28
-
-      obj.el.style.transform = `translate3d(${obj.x}px, ${obj.y}px, ${obj.z}px) rotate(${obj.angle}deg) scale(${scale})`
-      obj.el.style.zIndex = String(20 + Math.round(depth * 220))
-      obj.el.style.filter = `brightness(${brightness}) saturate(${0.98 + depth * 0.22})`
-      obj.el.style.opacity = String(opacity)
-    }
-
     const createObjects = () => {
       const bounds = getBounds()
       const usableWidth = Math.max(1, bounds.maxX - bounds.minX)
-      const usableHeight = Math.max(1, bounds.maxY - bounds.minY)
-
-      const cols = Math.max(6, Math.ceil(Math.sqrt(reasons.length * (usableWidth / usableHeight))))
-      const rows = Math.max(6, Math.ceil(reasons.length / cols))
-
-      const cells = []
-
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          cells.push({ row, col })
-        }
-      }
-
-      const shuffledCells = shuffleArray(cells)
+      const cols = Math.max(6, Math.floor(usableWidth / 96))
 
       const objects = reasons.map((reason, index) => {
-        const cell = shuffledCells[index] || {
-          col: index % cols,
-          row: Math.floor(index / cols)
-        }
-
+        const col = index % cols
+        const row = Math.floor(index / cols)
         const cellW = usableWidth / cols
-        const cellH = usableHeight / rows
-
-        const jitterX = (Math.random() - 0.5) * Math.max(10, cellW * 0.42)
-        const jitterY = (Math.random() - 0.5) * Math.max(10, cellH * 0.42)
-
-        const x = Math.max(
-          bounds.minX,
-          Math.min(bounds.maxX, bounds.minX + cell.col * cellW + cellW / 2 - BALL_SIZE / 2 + jitterX)
-        )
-
-        const y = Math.max(
-          bounds.minY,
-          Math.min(bounds.maxY, bounds.minY + cell.row * cellH + cellH / 2 - BALL_SIZE / 2 + jitterY)
-        )
+        const cellH = 96
 
         return {
           id: reason.id,
-          x,
-          y,
+          x: Math.min(bounds.maxX, bounds.minX + col * cellW + Math.random() * Math.max(18, cellW - BALL_SIZE)),
+          y: Math.min(bounds.maxY, bounds.minY + row * cellH + Math.random() * 42),
           z: MIN_Z + Math.random() * (MAX_Z - MIN_Z),
-          vx: (Math.random() * 0.66 + 0.22) * (Math.random() > 0.5 ? 1 : -1),
-          vy: (Math.random() * 0.66 + 0.22) * (Math.random() > 0.5 ? 1 : -1),
-          vz: (Math.random() * 0.28 + 0.1) * (Math.random() > 0.5 ? 1 : -1),
+          vx: (Math.random() * 0.72 + 0.26) * (Math.random() > 0.5 ? 1 : -1),
+          vy: (Math.random() * 0.72 + 0.26) * (Math.random() > 0.5 ? 1 : -1),
+          vz: (Math.random() * 0.34 + 0.12) * (Math.random() > 0.5 ? 1 : -1),
           angle: Math.random() * 360,
-          rotationSpeed: (Math.random() * 0.22 + 0.06) * (Math.random() > 0.5 ? 1 : -1),
+          rotationSpeed: (Math.random() * 0.28 + 0.08) * (Math.random() > 0.5 ? 1 : -1),
           el: itemRefs.current[index],
         }
       })
 
       objectsRef.current = objects
-      objects.forEach(applyObjectStyle)
-      hasInitializedRef.current = true
     }
 
     const resolveCollisions = (objects) => {
@@ -151,7 +88,7 @@ function ReasonsSection({ reasons = [] }) {
           const dx = bx - ax
           const dy = by - ay
           const dist = Math.sqrt(dx * dx + dy * dy)
-          const minDist = BALL_SIZE - 8
+          const minDist = BALL_SIZE - 7
 
           if (dist > 0 && dist < minDist) {
             const nx = dx / dist
@@ -167,12 +104,12 @@ function ReasonsSection({ reasons = [] }) {
             const tempVy = a.vy
             const tempVz = a.vz
 
-            a.vx = b.vx + (Math.random() - 0.5) * 0.05
-            a.vy = b.vy + (Math.random() - 0.5) * 0.05
+            a.vx = b.vx + (Math.random() - 0.5) * 0.07
+            a.vy = b.vy + (Math.random() - 0.5) * 0.07
             a.vz = b.vz
 
-            b.vx = tempVx + (Math.random() - 0.5) * 0.05
-            b.vy = tempVy + (Math.random() - 0.5) * 0.05
+            b.vx = tempVx + (Math.random() - 0.5) * 0.07
+            b.vy = tempVy + (Math.random() - 0.5) * 0.07
             b.vz = tempVz
           }
         }
@@ -183,17 +120,6 @@ function ReasonsSection({ reasons = [] }) {
       if (selectedReasonRef.current) {
         animationRef.current = requestAnimationFrame(animate)
         return
-      }
-
-      const isHidden = section.classList.contains('scene-hidden') || section.offsetParent === null
-
-      if (isHidden) {
-        animationRef.current = requestAnimationFrame(animate)
-        return
-      }
-
-      if (!hasInitializedRef.current) {
-        createObjects()
       }
 
       const bounds = getBounds()
@@ -243,47 +169,37 @@ function ReasonsSection({ reasons = [] }) {
       })
 
       resolveCollisions(objects)
-      objects.forEach(applyObjectStyle)
+
+      objects.forEach((obj) => {
+        if (!obj.el) return
+
+        const depth = (obj.z - MIN_Z) / (MAX_Z - MIN_Z)
+        const scale = 0.72 + depth * 0.52
+        const brightness = 0.8 + depth * 0.34
+        const opacity = 0.7 + depth * 0.3
+
+        obj.el.style.transform = `translate3d(${obj.x}px, ${obj.y}px, ${obj.z}px) rotate(${obj.angle}deg) scale(${scale})`
+        obj.el.style.zIndex = String(20 + Math.round(depth * 220))
+        obj.el.style.filter = `brightness(${brightness}) saturate(${0.98 + depth * 0.24})`
+        obj.el.style.opacity = String(opacity)
+      })
 
       animationRef.current = requestAnimationFrame(animate)
     }
 
-    const resetWhenVisible = () => {
-      if (section.classList.contains('scene-hidden') || section.offsetParent === null) return
-
-      hasInitializedRef.current = false
-
-      setTimeout(() => {
-        if (!section.classList.contains('scene-hidden')) {
-          createObjects()
-        }
-      }, 80)
-    }
-
-    const handleSceneChange = (event) => {
-      if (event.detail?.sceneId === 'razones' || event.detail?.appSceneId === 'razones') {
-        resetWhenVisible()
-      }
-    }
-
-    const handleResize = () => {
-      resetWhenVisible()
-    }
-
-    window.addEventListener('distancia-cero-scene-change', handleSceneChange)
-    window.addEventListener('resize', handleResize)
-
+    createObjects()
     animationRef.current = requestAnimationFrame(animate)
 
-    setTimeout(() => {
-      if (!section.classList.contains('scene-hidden')) {
-        createObjects()
-      }
-    }, 120)
+    const handleResize = () => {
+      cancelAnimationFrame(animationRef.current)
+      createObjects()
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    window.addEventListener('resize', handleResize)
 
     return () => {
       cancelAnimationFrame(animationRef.current)
-      window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
       window.removeEventListener('resize', handleResize)
     }
   }, [reasons])
@@ -295,7 +211,7 @@ function ReasonsSection({ reasons = [] }) {
   }
 
   return (
-    <section className="section reasons-section" id="razones" ref={sectionRef}>
+    <section className="section reasons-section" id="razones">
       <SectionTitle
         eyebrow="100 razones"
         title="Ale, aquí dejé flotando 100 razones por las que te amo"

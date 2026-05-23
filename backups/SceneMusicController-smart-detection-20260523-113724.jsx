@@ -5,30 +5,6 @@ import sceneMusic from '../data/sceneMusic.json'
 const UNLOCK_KEY = 'distancia-cero-scene-music-unlocked'
 const VOLUME_KEY = 'distancia-cero-scene-music-volume'
 const DEFAULT_VOLUME = 0.7
-const SWITCH_DELAY_MS = 1300
-
-const SECTION_ALIASES = {
-  inicio: ['inicio', 'hero', 'home'],
-  propuesta: ['propuesta', 'declaracion', 'pregunta'],
-  contadores: ['contadores', 'contador', 'tiempo'],
-  carta: ['carta', 'carta-principal', 'letter'],
-  historia: ['historia', 'nuestra-historia', 'diario'],
-  universo: ['universo', 'sistema-solar'],
-  cartas: ['cartas', 'cartas-mensuales'],
-  'abrir-cuando': ['abrir-cuando', 'open-when', 'cartitas'],
-  playlist: ['playlist', 'banda-sonora', 'musica', 'soundtrack'],
-  razones: ['razones', '100-razones'],
-  'galeria-agujero-negro': [
-    'galeria-agujero-negro',
-    'agujero-negro',
-    'blackhole',
-    'galeria',
-    'momentos',
-    'recuerdos'
-  ],
-  promesas: ['promesas', 'promises'],
-  distancia: ['distancia', 'distancia-cero']
-}
 
 function resolveAudioSrc(src) {
   if (!src) return ''
@@ -89,62 +65,6 @@ function fadeAudio(audio, targetVolume, duration = 650) {
   })
 }
 
-function getElementForScene(scene) {
-  if (!scene?.sectionId) return null
-
-  const aliases = SECTION_ALIASES[scene.sectionId] || [scene.sectionId]
-  const ids = [scene.sectionId, ...aliases]
-
-  for (const id of ids) {
-    const element = document.getElementById(id)
-
-    if (element) {
-      return element
-    }
-  }
-
-  return null
-}
-
-function findActiveSceneByViewport(scenes) {
-  const candidates = scenes
-    .map((scene) => {
-      const element = getElementForScene(scene)
-
-      if (!element) return null
-
-      const rect = element.getBoundingClientRect()
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight
-      const viewportCenter = viewportHeight * 0.52
-      const sectionCenter = rect.top + rect.height / 2
-
-      const isVisible = rect.bottom > viewportHeight * 0.12 && rect.top < viewportHeight * 0.88
-      const centerInside = rect.top <= viewportCenter && rect.bottom >= viewportCenter
-
-      if (!isVisible && !centerInside) return null
-
-      let score = Math.abs(sectionCenter - viewportCenter)
-
-      if (centerInside) {
-        score -= 100000
-      }
-
-      const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0)
-      const visibilityRatio = Math.max(0, visibleHeight) / Math.max(1, rect.height)
-
-      score -= visibilityRatio * 1000
-
-      return {
-        scene,
-        score
-      }
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.score - b.score)
-
-  return candidates[0]?.scene || scenes[0]
-}
-
 function SceneMusicController() {
   const scenes = useMemo(() => Array.isArray(sceneMusic) ? sceneMusic : [], [])
   const [activeSectionId, setActiveSectionId] = useState(scenes[0]?.sectionId || '')
@@ -158,9 +78,6 @@ function SceneMusicController() {
   const activeSceneRef = useRef(null)
   const masterVolumeRef = useRef(DEFAULT_VOLUME)
   const transitionRef = useRef(Promise.resolve())
-  const switchTimerRef = useRef(null)
-  const pendingSectionRef = useRef('')
-  const rafRef = useRef(null)
 
   const activeScene = useMemo(() => {
     return scenes.find((scene) => scene.sectionId === activeSectionId) || scenes[0]
@@ -177,21 +94,6 @@ function SceneMusicController() {
   useEffect(() => {
     masterVolumeRef.current = masterVolume
   }, [masterVolume])
-
-
-  useEffect(() => {
-    const handleSceneChange = (event) => {
-      const nextSceneId = event.detail?.sceneId
-
-      if (!nextSceneId) return
-
-      setActiveSectionId(nextSceneId)
-    }
-
-    window.addEventListener('distancia-cero-scene-change', handleSceneChange)
-
-    return () => window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
-  }, [])
 
   useEffect(() => {
     const storedUnlock = localStorage.getItem(UNLOCK_KEY)
@@ -213,56 +115,31 @@ function SceneMusicController() {
   }, [])
 
   useEffect(() => {
-    if (!scenes.length) return
+    const existingSections = scenes
+      .map((scene) => document.getElementById(scene.sectionId))
+      .filter(Boolean)
 
-    const scheduleDetection = () => {
-      if (document.body.classList.contains('scene-mode-enabled')) return
-      if (rafRef.current) return
+    if (existingSections.length === 0) return
 
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
 
-        const detectedScene = findActiveSceneByViewport(scenes)
-
-        if (!detectedScene?.sectionId) return
-
-        const nextSectionId = detectedScene.sectionId
-
-        if (nextSectionId === activeSceneRef.current?.sectionId) return
-        if (nextSectionId === pendingSectionRef.current) return
-
-        pendingSectionRef.current = nextSectionId
-
-        if (switchTimerRef.current) {
-          clearTimeout(switchTimerRef.current)
+        if (visible?.target?.id) {
+          setActiveSectionId(visible.target.id)
         }
-
-        switchTimerRef.current = setTimeout(() => {
-          setActiveSectionId((current) => {
-            if (current === pendingSectionRef.current) return current
-            return pendingSectionRef.current
-          })
-        }, SWITCH_DELAY_MS)
-      })
-    }
-
-    scheduleDetection()
-
-    window.addEventListener('scroll', scheduleDetection, { passive: true })
-    window.addEventListener('resize', scheduleDetection)
-
-    return () => {
-      window.removeEventListener('scroll', scheduleDetection)
-      window.removeEventListener('resize', scheduleDetection)
-
-      if (switchTimerRef.current) {
-        clearTimeout(switchTimerRef.current)
+      },
+      {
+        threshold: [0.22, 0.38, 0.55, 0.72],
+        rootMargin: '-18% 0px -42% 0px'
       }
+    )
 
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
-    }
+    existingSections.forEach((section) => observer.observe(section))
+
+    return () => observer.disconnect()
   }, [scenes])
 
   const playScene = async (scene, force = false) => {
@@ -420,5 +297,3 @@ function SceneMusicController() {
 }
 
 export default SceneMusicController
-
-
