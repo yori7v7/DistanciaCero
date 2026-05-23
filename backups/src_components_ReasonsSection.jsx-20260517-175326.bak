@@ -1,0 +1,171 @@
+﻿import { Suspense, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Html, OrbitControls, Stars } from '@react-three/drei'
+import SectionTitle from './SectionTitle'
+import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
+
+function ReasonOrb({ reason, index, total, onSelect }) {
+  const ref = useRef(null)
+
+  const position = useMemo(() => {
+    const golden = Math.PI * (3 - Math.sqrt(5))
+    const y = 1 - (index / Math.max(total - 1, 1)) * 2
+    const radius = Math.sqrt(1 - y * y)
+    const theta = golden * index
+
+    const shell = 4.8 + (index % 7) * 0.18
+
+    return [
+      Math.cos(theta) * radius * shell,
+      y * 4.15,
+      Math.sin(theta) * radius * shell,
+    ]
+  }, [index, total])
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return
+
+    const t = clock.elapsedTime
+    ref.current.position.y = position[1] + Math.sin(t * 0.9 + index) * 0.08
+    ref.current.rotation.x += 0.004
+    ref.current.rotation.y += 0.006
+  })
+
+  const pick = (event) => {
+    event.stopPropagation()
+    onSelect(reason)
+  }
+
+  return (
+    <group ref={ref} position={position}>
+      <mesh onClick={pick}>
+        <sphereGeometry args={[0.28, 32, 32]} />
+        <meshStandardMaterial
+          color="#ff4fa3"
+          emissive="#ff1744"
+          emissiveIntensity={0.38}
+          roughness={0.32}
+          metalness={0.18}
+        />
+      </mesh>
+
+      <Html center distanceFactor={8}>
+        <button className="reason-3d-label" type="button" onClick={pick} title={reason.title}>
+          <Heart size={12} />
+          {reason.id}
+        </button>
+      </Html>
+    </group>
+  )
+}
+
+function ReasonsCloud({ reasons, onSelect }) {
+  const groupRef = useRef(null)
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return
+    groupRef.current.rotation.y = clock.elapsedTime * 0.045
+  })
+
+  return (
+    <group ref={groupRef}>
+      {reasons.map((reason, index) => (
+        <ReasonOrb
+          key={reason.id}
+          reason={reason}
+          index={index}
+          total={reasons.length}
+          onSelect={onSelect}
+        />
+      ))}
+    </group>
+  )
+}
+
+function ReasonsScene({ reasons, onSelect }) {
+  return (
+    <>
+      <color attach="background" args={['#050008']} />
+
+      <ambientLight intensity={0.74} />
+      <pointLight position={[0, 0, 0]} intensity={3.8} color="#ff7ac8" />
+      <pointLight position={[5, 7, 8]} intensity={2.2} color="#ffffff" />
+      <pointLight position={[-7, -4, -6]} intensity={1.8} color="#ff1744" />
+
+      <Stars radius={70} depth={38} count={700} factor={3.4} saturation={0} fade speed={0.18} />
+
+      <ReasonsCloud reasons={reasons} onSelect={onSelect} />
+
+      <OrbitControls
+        enableZoom
+        enablePan={false}
+        minDistance={4}
+        maxDistance={18}
+        rotateSpeed={0.58}
+        zoomSpeed={0.82}
+        dampingFactor={0.08}
+        enableDamping
+      />
+    </>
+  )
+}
+
+function ReasonsSection({ reasons = [] }) {
+  const [selectedReason, setSelectedReason] = useState(null)
+
+  return (
+    <section className="section reasons-section" id="razones">
+      <SectionTitle
+        eyebrow="100 razones"
+        title="Ale, aquí dejé flotando 100 razones por las que te amo"
+        text="Ahora puedes acercarte, girarlas y escoger una como si estuvieras tocando una constelación hecha de todo lo que siento por ti."
+      />
+
+      <div className="true-3d-card reasons-3d-shell fade-up">
+        <div className="true-3d-hud">
+          <span>
+            <ZoomIn size={16} />
+            Zoom con la ruedita
+          </span>
+          <span>
+            <MousePointer2 size={16} />
+            Arrastra para girar
+          </span>
+          <span>
+            <Heart size={16} />
+            Toca una razón
+          </span>
+        </div>
+
+        <Canvas className="true-3d-canvas" camera={{ position: [0, 1.6, 11.5], fov: 52 }}>
+          <Suspense fallback={null}>
+            <ReasonsScene reasons={reasons} onSelect={setSelectedReason} />
+          </Suspense>
+        </Canvas>
+      </div>
+
+      {selectedReason && (
+        <div className="reason-modal-backdrop" onPointerDown={() => setSelectedReason(null)}>
+          <article className="reason-modal reason-modal-true-3d" onPointerDown={(event) => event.stopPropagation()}>
+            <button className="reason-close" type="button" onPointerDown={() => setSelectedReason(null)}>
+              <X size={18} />
+            </button>
+
+            <div className="reason-modal-heart">
+              <Heart size={34} />
+            </div>
+
+            <span>{selectedReason.title}</span>
+            <h3>{selectedReason.text}</h3>
+
+            <button className="main-button" type="button" onPointerDown={() => setSelectedReason(null)}>
+              Cerrar
+            </button>
+          </article>
+        </div>
+      )}
+    </section>
+  )
+}
+
+export default ReasonsSection

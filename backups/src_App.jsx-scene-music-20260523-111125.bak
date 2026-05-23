@@ -16,6 +16,7 @@ import BlackHoleGallerySection from './components/BlackHoleGallerySection'
 import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
+import MusicDock from './components/MusicDock'
 import SceneMusicController from './components/SceneMusicController'
 import BackToTop from './components/BackToTop'
 import Footer from './components/Footer'
@@ -67,6 +68,7 @@ function App() {
       </main>
 
       <SceneMusicController />
+        <MusicDock />
       <BackToTop />
       <Footer />
     </div>
@@ -74,6 +76,4 @@ function App() {
 }
 
 export default App
-
-
 

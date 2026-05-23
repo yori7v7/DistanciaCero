@@ -1,4 +1,4 @@
-﻿import LoadingIntro from './components/LoadingIntro'
+import LoadingIntro from './components/LoadingIntro'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProposalSection from './components/ProposalSection'
@@ -12,11 +12,12 @@ import OpenWhenSection from './components/OpenWhenSection'
 import PlaylistSection from './components/PlaylistSection'
 import ReasonsSection from './components/ReasonsSection'
 import ImportantDatesSection from './components/ImportantDatesSection'
-import BlackHoleGallerySection from './components/BlackHoleGallerySection'
+import VideoMemoriesSection from './components/VideoMemoriesSection'
+import ScrapbookSection from './components/ScrapbookSection'
 import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
-import SceneMusicController from './components/SceneMusicController'
+import MusicDock from './components/MusicDock'
 import BackToTop from './components/BackToTop'
 import Footer from './components/Footer'
 
@@ -27,7 +28,8 @@ import openWhen from './data/openWhen.json'
 import playlist from './data/playlist.json'
 import reasons from './data/reasons.json'
 import importantDates from './data/importantDates.json'
-import blackHoleGallery from './data/blackHoleGallery.json'
+import videoMemories from './data/videoMemories.json'
+import scrapbook from './data/scrapbook.json'
 import futureDreams from './data/futureDreams.json'
 import promises from './data/promises.json'
 
@@ -60,13 +62,14 @@ function App() {
         <PlaylistSection playlist={playlist} />
         <ReasonsSection reasons={reasons} />
         <ImportantDatesSection dates={importantDates} />
-        <BlackHoleGallerySection items={blackHoleGallery} />
+        <VideoMemoriesSection videos={videoMemories} />
+        <ScrapbookSection items={scrapbook} />
         <FutureDreamsSection dreams={futureDreams} />
         <PromisesSection promises={promises} />
         <DistanceMapSection />
       </main>
 
-      <SceneMusicController />
+      <MusicDock />
       <BackToTop />
       <Footer />
     </div>
@@ -74,6 +77,3 @@ function App() {
 }
 
 export default App
-
-
-

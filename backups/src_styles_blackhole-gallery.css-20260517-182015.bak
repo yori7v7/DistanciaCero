@@ -1,0 +1,653 @@
+﻿.blackhole-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.blackhole-section,
+.blackhole-section * {
+  user-select: none;
+}
+
+.blackhole-section img {
+  -webkit-user-drag: none;
+}
+
+.blackhole-3d-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(460px, 1.16fr);
+  gap: clamp(24px, 5vw, 52px);
+  align-items: stretch;
+  padding: clamp(22px, 4vw, 42px);
+  border: 1px solid rgba(255, 122, 200, 0.32);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 23, 68, 0.14), transparent 30%),
+    radial-gradient(circle at 82% 28%, rgba(255, 122, 200, 0.18), transparent 34%),
+    linear-gradient(145deg, rgba(18, 5, 22, 0.94), rgba(4, 0, 8, 0.97));
+  box-shadow:
+    0 0 62px rgba(255, 23, 68, 0.18),
+    inset 0 0 90px rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.blackhole-3d-copy {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+}
+
+.blackhole-kicker,
+.blackhole-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  color: var(--pink-soft);
+  font-weight: 900;
+}
+
+.blackhole-kicker {
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 122, 200, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 122, 200, 0.08);
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  font-size: 0.72rem;
+}
+
+.blackhole-copy h3 {
+  margin: 18px 0 14px;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -1.6px;
+}
+
+.blackhole-copy p {
+  color: var(--muted);
+  line-height: 1.82;
+  font-size: 1.02rem;
+  margin: 0 0 12px;
+}
+
+.blackhole-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.blackhole-enter-button {
+  align-items: center;
+  gap: 9px;
+}
+
+.blackhole-count {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.blackhole-3d-stage {
+  position: relative;
+  height: clamp(560px, 60vw, 760px);
+  min-height: 560px;
+  border-radius: 34px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 150, 210, 0.24);
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.045), transparent 18%),
+    radial-gradient(circle at 50% 45%, rgba(255, 122, 200, 0.16), transparent 24%),
+    radial-gradient(circle at 50% 50%, rgba(255, 159, 82, 0.12), transparent 32%),
+    radial-gradient(circle at 20% 80%, rgba(122, 76, 255, 0.12), transparent 30%),
+    #010003;
+  box-shadow:
+    inset 0 0 110px rgba(255, 122, 200, 0.08),
+    inset 0 0 210px rgba(255, 159, 82, 0.05),
+    0 0 58px rgba(255, 23, 68, 0.18);
+}
+
+.blackhole-3d-stage::before {
+  content: "";
+  position: absolute;
+  inset: -34%;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    conic-gradient(
+      from 180deg,
+      transparent,
+      rgba(255, 122, 200, 0.07),
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 168, 115, 0.08),
+      rgba(255, 23, 68, 0.1),
+      transparent,
+      rgba(255, 122, 200, 0.06),
+      transparent
+    );
+  filter: blur(36px);
+  mix-blend-mode: screen;
+  animation: blackholePanelAura 18s linear infinite;
+}
+
+.blackhole-3d-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 0 24%, rgba(255, 255, 255, 0.045) 25%, transparent 36%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent 20%, rgba(0, 0, 0, 0.36));
+  mix-blend-mode: screen;
+}
+
+.blackhole-3d-stage canvas {
+  position: relative;
+  z-index: 3;
+}
+
+.blackhole-3d-hud,
+.blackhole-locked-label {
+  z-index: 8 !important;
+}
+
+.blackhole-3d-core-label {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 210, 235, 0.42);
+  background:
+    radial-gradient(circle at center, rgba(255, 122, 200, 0.16), transparent 54%),
+    rgba(0, 0, 0, 0.72);
+  color: var(--pink-soft);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow:
+    0 0 30px rgba(255, 122, 200, 0.34),
+    0 0 65px rgba(255, 159, 82, 0.08),
+    inset 0 0 22px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.blackhole-3d-core-label strong {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.memory-3d-card {
+  width: 76px;
+  height: 98px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 220, 240, 0.56);
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 5px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.16), transparent 24%),
+    rgba(18, 5, 22, 0.9);
+  color: var(--pink-soft);
+  cursor: pointer;
+  box-shadow:
+    0 0 24px rgba(255, 122, 200, 0.32),
+    0 0 58px rgba(255, 159, 82, 0.06),
+    0 18px 34px rgba(0, 0, 0, 0.36);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.memory-3d-card:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: rgba(255, 240, 248, 0.96);
+  box-shadow:
+    0 0 38px rgba(255, 122, 200, 0.58),
+    0 0 84px rgba(255, 159, 82, 0.1),
+    0 18px 34px rgba(0, 0, 0, 0.4);
+}
+
+.memory-3d-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.memory-3d-card-locked {
+  cursor: not-allowed;
+  filter: saturate(0.82) brightness(0.9);
+}
+
+.blackhole-locked-label {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100% - 36px);
+  padding: 9px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 180, 230, 0.32);
+  background: rgba(8, 0, 12, 0.72);
+  color: var(--pink-soft);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 0 22px rgba(255, 122, 200, 0.18);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.blackhole-gate-message {
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 12px !important;
+  padding: 10px 13px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 180, 230, 0.34);
+  background: rgba(255, 122, 200, 0.08);
+  color: var(--pink-soft) !important;
+  font-weight: 800;
+  animation: gateMessagePulse 1.1s ease-in-out both;
+}
+
+.blackhole-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(255, 235, 250, 0.16), transparent 14%),
+    radial-gradient(circle at center, rgba(255, 122, 200, 0.24), transparent 28%),
+    radial-gradient(circle at center, rgba(255, 159, 82, 0.12), transparent 38%),
+    radial-gradient(circle at center, rgba(255, 23, 68, 0.22), transparent 48%),
+    rgba(4, 0, 8, 0.94);
+  backdrop-filter: blur(8px);
+  perspective: 1800px;
+}
+
+.blackhole-transition::before,
+.blackhole-transition::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.blackhole-transition::before {
+  background:
+    conic-gradient(
+      from 90deg,
+      transparent,
+      rgba(255, 122, 200, 0.4),
+      rgba(255, 255, 255, 0.72),
+      rgba(255, 159, 82, 0.22),
+      rgba(255, 23, 68, 0.44),
+      transparent,
+      rgba(255, 122, 200, 0.36),
+      transparent
+    );
+  filter: blur(20px);
+  animation: transitionVortexSpin 2.85s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.blackhole-transition::after {
+  background:
+    radial-gradient(circle at center, transparent 0 9%, rgba(255, 255, 255, 0.28) 10%, transparent 12%),
+    repeating-radial-gradient(circle at center, rgba(255, 122, 200, 0.15) 0 2px, transparent 3px 22px);
+  animation: transitionTunnelZoom 2.85s ease-in forwards;
+}
+
+.blackhole-warp-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.blackhole-warp-lines span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 42vh;
+  transform-origin: center top;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 122, 200, 0.64), transparent);
+  filter: drop-shadow(0 0 10px rgba(255, 122, 200, 0.82));
+  opacity: 0;
+  rotate: calc(var(--line-index) * 11.25deg);
+  animation: warpLineDive 2.6s ease-in forwards;
+  animation-delay: calc(var(--line-index) * 0.01s);
+}
+
+.blackhole-transition-ring {
+  position: absolute;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  border: 2px solid rgba(255, 170, 225, 0.32);
+  box-shadow:
+    0 0 35px rgba(255, 122, 200, 0.44),
+    0 0 75px rgba(255, 159, 82, 0.08),
+    inset 0 0 24px rgba(255, 255, 255, 0.14);
+}
+
+.blackhole-transition-ring-1 {
+  width: 220px;
+  aspect-ratio: 1;
+  animation: transitionCollapse3D 2.75s ease-in forwards;
+}
+
+.blackhole-transition-ring-2 {
+  width: 380px;
+  aspect-ratio: 1;
+  border-style: dashed;
+  animation: transitionCollapse3D 2.75s ease-in 0.06s forwards;
+}
+
+.blackhole-transition-ring-3 {
+  width: 560px;
+  aspect-ratio: 1;
+  animation: transitionCollapse3D 2.75s ease-in 0.12s forwards;
+}
+
+.blackhole-transition-ring-4 {
+  width: 760px;
+  aspect-ratio: 1;
+  opacity: 0.62;
+  border-style: dotted;
+  animation: transitionCollapse3D 2.75s ease-in 0.17s forwards;
+}
+
+.blackhole-transition-core {
+  position: absolute;
+  width: 120px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #000 0 38%, rgba(255, 23, 68, 0.98) 39% 47%, rgba(255, 122, 200, 0.88) 48% 55%, rgba(255, 246, 241, 0.9) 56% 58%, transparent 72%);
+  box-shadow:
+    0 0 55px rgba(255, 122, 200, 0.5),
+    0 0 92px rgba(255, 159, 82, 0.12),
+    0 0 85px rgba(255, 23, 68, 0.38);
+  animation: transitionCore3D 2.75s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.blackhole-transition-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 20px;
+  animation: transitionText 2.55s ease-out forwards;
+}
+
+.blackhole-transition-text span,
+.portal-header span,
+.portal-info span,
+.blackhole-photo-text span {
+  color: var(--pink);
+  font-weight: 900;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.blackhole-transition-text h3 {
+  margin: 12px 0 8px;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.blackhole-transition-text p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.blackhole-portal {
+  scroll-margin-top: 110px;
+  margin-top: 28px;
+  padding: clamp(20px, 4vw, 34px);
+  border: 1px solid rgba(255, 122, 200, 0.32);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top, rgba(255, 122, 200, 0.13), transparent 34%),
+    rgba(10, 2, 14, 0.9);
+  box-shadow: 0 0 45px rgba(255, 23, 68, 0.17);
+}
+
+.portal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.portal-header h3,
+.portal-info h3 {
+  margin: 8px 0 0;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.portal-close {
+  min-width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 122, 200, 0.34);
+  border-radius: 50%;
+  background: rgba(255, 122, 200, 0.08);
+  color: var(--pink-soft);
+  cursor: pointer;
+}
+
+.portal-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.portal-preview {
+  min-height: 360px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 122, 200, 0.24);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.portal-preview img,
+.blackhole-photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portal-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  color: var(--pink-soft);
+  background:
+    radial-gradient(circle at center, rgba(255, 122, 200, 0.18), transparent 40%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.portal-info {
+  border: 1px solid rgba(255, 122, 200, 0.22);
+  border-radius: 24px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.portal-info p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.portal-info strong {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--pink-soft);
+  background: rgba(255, 122, 200, 0.1);
+  border: 1px solid rgba(255, 122, 200, 0.24);
+}
+
+.blackhole-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.blackhole-photo-card {
+  min-width: 0;
+  text-align: left;
+  border: 1px solid rgba(255, 122, 200, 0.22);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.045);
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.blackhole-photo-card:hover,
+.blackhole-photo-card-active {
+  transform: translateY(-4px);
+  border-color: rgba(255, 210, 235, 0.82);
+  box-shadow: 0 0 24px rgba(255, 122, 200, 0.24);
+}
+
+.blackhole-photo-thumb {
+  height: 126px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  overflow: hidden;
+  color: var(--pink-soft);
+  background:
+    radial-gradient(circle at center, rgba(255, 122, 200, 0.16), transparent 45%),
+    rgba(255, 255, 255, 0.05);
+  margin-bottom: 12px;
+}
+
+.blackhole-photo-text h4 {
+  margin: 7px 0 5px;
+  font-size: 1rem;
+}
+
+.blackhole-photo-text p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.86rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes blackholePanelAura {
+  from {
+    transform: rotate(0deg) scale(1.1);
+  }
+  to {
+    transform: rotate(360deg) scale(1.1);
+  }
+}
+
+@keyframes gateMessagePulse {
+  0% { opacity: 0; transform: translateY(8px) scale(0.96); }
+  45% { opacity: 1; transform: translateY(0) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes transitionVortexSpin {
+  0% { transform: rotate(0deg) scale(1.8); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: rotate(620deg) scale(0.18); opacity: 0; }
+}
+
+@keyframes transitionTunnelZoom {
+  0% { transform: scale(0.5) translateZ(0); opacity: 0; }
+  22% { opacity: 1; }
+  100% { transform: scale(4.8) translateZ(380px); opacity: 0; }
+}
+
+@keyframes warpLineDive {
+  0% { opacity: 0; transform: translate(-50%, -50%) rotateX(74deg) translateY(160px) scaleY(0.2); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) rotateX(74deg) translateY(-40vh) scaleY(2.8); }
+}
+
+@keyframes transitionCollapse3D {
+  0% { opacity: 0; transform: rotateX(74deg) rotateZ(0deg) translateZ(180px) scale(1.3); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: rotateX(74deg) rotateZ(260deg) translateZ(-560px) scale(0.035); }
+}
+
+@keyframes transitionCore3D {
+  0% { transform: translateZ(120px) scale(0.76) rotateZ(0deg); opacity: 0.76; }
+  35% { transform: translateZ(260px) scale(1.35) rotateZ(120deg); opacity: 1; }
+  100% { transform: translateZ(-650px) scale(0.04) rotateZ(420deg); opacity: 0; }
+}
+
+@keyframes transitionText {
+  0% { opacity: 0; transform: translateY(18px) scale(0.98); }
+  16%, 72% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-20px) scale(1.02); }
+}
+
+@media (max-width: 980px) {
+  .blackhole-3d-shell,
+  .portal-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .blackhole-3d-stage {
+    height: 580px;
+    min-height: 580px;
+  }
+
+  .blackhole-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .blackhole-3d-shell {
+    padding: 18px;
+    border-radius: 26px;
+  }
+
+  .blackhole-3d-stage {
+    height: 480px;
+    min-height: 480px;
+  }
+
+  .memory-3d-card {
+    width: 60px;
+    height: 80px;
+  }
+
+  .portal-preview,
+  .portal-placeholder {
+    min-height: 280px;
+  }
+
+  .blackhole-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blackhole-transition-ring-4 {
+    width: 520px;
+  }
+}

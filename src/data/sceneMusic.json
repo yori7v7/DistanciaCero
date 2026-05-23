@@ -1,0 +1,106 @@
+﻿[
+  {
+    "sectionId": "inicio",
+    "label": "Inicio",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.68
+  },
+  {
+    "sectionId": "propuesta",
+    "label": "La pregunta",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.68
+  },
+  {
+    "sectionId": "contadores",
+    "label": "Nuestro tiempo",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.64
+  },
+  {
+    "sectionId": "carta",
+    "label": "Carta principal",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.62
+  },
+  {
+    "sectionId": "historia",
+    "label": "Diario",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.66
+  },
+  {
+    "sectionId": "universo",
+    "label": "Sistema solar",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "cartas",
+    "label": "Cartas mensuales",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.62
+  },
+  {
+    "sectionId": "abrir-cuando",
+    "label": "Abrir cuando...",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.62
+  },
+  {
+    "sectionId": "playlist",
+    "label": "Banda sonora",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.72
+  },
+  {
+    "sectionId": "razones",
+    "label": "100 razones",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.68
+  },
+  {
+    "sectionId": "galeria-agujero-negro",
+    "label": "Agujero negro",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.74
+  },
+  {
+    "sectionId": "promesas",
+    "label": "Promesas",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.64
+  },
+  {
+    "sectionId": "distancia",
+    "label": "Distancia cero",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "src": "audio/wonderwall.mp3",
+    "volume": 0.68
+  }
+]

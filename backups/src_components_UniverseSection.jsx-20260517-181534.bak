@@ -1,0 +1,348 @@
+﻿import { Suspense, useEffect, useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Html, OrbitControls, Stars } from '@react-three/drei'
+import * as THREE from 'three'
+import SectionTitle from './SectionTitle'
+import { ArrowLeft, MousePointer2, Sparkles, ZoomIn } from 'lucide-react'
+
+function CameraRig({ focus, controlsRef }) {
+  const { camera } = useThree()
+  const desired = useRef(new THREE.Vector3(0, 7.8, 19)).current
+  const target = useRef(new THREE.Vector3(0, 0, 0)).current
+
+  useFrame(() => {
+    if (focus) {
+      const focusPoint = new THREE.Vector3(focus.position[0], focus.position[1], focus.position[2])
+      desired.set(
+        focus.position[0] + focus.offset[0],
+        focus.position[1] + focus.offset[1],
+        focus.position[2] + focus.offset[2],
+      )
+
+      camera.position.lerp(desired, 0.055)
+      target.lerp(focusPoint, 0.075)
+    } else {
+      desired.set(0, 7.8, 19)
+      camera.position.lerp(desired, 0.035)
+      target.lerp(new THREE.Vector3(0, 0, 0), 0.045)
+    }
+
+    if (controlsRef.current) {
+      controlsRef.current.target.copy(target)
+      controlsRef.current.update()
+    }
+  })
+
+  return null
+}
+
+function OrbitRing({ radius, tilt = 0, opacity = 0.26 }) {
+  return (
+    <mesh rotation={[Math.PI / 2 + tilt, 0, 0]}>
+      <torusGeometry args={[radius, 0.01, 8, 220]} />
+      <meshBasicMaterial color="#ff7ac8" transparent opacity={opacity} />
+    </mesh>
+  )
+}
+
+function Planet3D({ planet, index, activeId, onSelect }) {
+  const orbitRef = useRef(null)
+  const planetRef = useRef(null)
+
+  const radius = 3.2 + index * 1.25
+  const speed = 0.085 + index * 0.009
+  const size = Math.max(0.38, planet.size / 72)
+  const tilt = ((index % 5) - 2) * 0.08
+  const startAngle = index * 1.12 + (planet.delay || 0)
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime * speed + startAngle
+
+    if (orbitRef.current && activeId !== planet.id) {
+      orbitRef.current.position.x = Math.cos(t) * radius
+      orbitRef.current.position.z = Math.sin(t) * radius
+      orbitRef.current.position.y = Math.sin(t * 1.4 + index) * 0.32
+    }
+
+    if (planetRef.current) {
+      planetRef.current.rotation.y += 0.012
+      planetRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.7 + index) * 0.06
+    }
+  })
+
+  const pickPlanet = (event) => {
+    event.stopPropagation()
+
+    const world = new THREE.Vector3()
+    orbitRef.current?.getWorldPosition(world)
+
+    onSelect(planet, [world.x, world.y, world.z], [0, 1.55, 4.65])
+  }
+
+  return (
+    <>
+      <OrbitRing radius={radius} tilt={tilt} opacity={activeId === planet.id ? 0.46 : 0.2} />
+
+      <group ref={orbitRef}>
+        <mesh ref={planetRef} onClick={pickPlanet}>
+          <sphereGeometry args={[size, 56, 56]} />
+          <meshStandardMaterial
+            color={planet.colorA}
+            emissive={planet.colorB}
+            emissiveIntensity={activeId === planet.id ? 0.72 : 0.34}
+            roughness={0.34}
+            metalness={0.16}
+          />
+        </mesh>
+
+        {planet.hasRing && (
+          <mesh rotation={[Math.PI / 2.45, 0.2, 0]}>
+            <torusGeometry args={[size * 1.45, 0.035, 12, 120]} />
+            <meshStandardMaterial
+              color="#ffd6f0"
+              emissive="#ff7ac8"
+              emissiveIntensity={0.52}
+              transparent
+              opacity={0.86}
+            />
+          </mesh>
+        )}
+
+        <Html center distanceFactor={8} position={[0, -size - 0.42, 0]}>
+          <button
+            className={`planet-3d-label ${activeId === planet.id ? 'planet-3d-label-active' : ''}`}
+            type="button"
+            onClick={pickPlanet}
+          >
+            {planet.name}
+          </button>
+        </Html>
+      </group>
+    </>
+  )
+}
+
+function CenterStar({ center, activeId, onSelect }) {
+  const starRef = useRef(null)
+  const haloRef = useRef(null)
+
+  useFrame(({ clock }) => {
+    if (starRef.current) {
+      starRef.current.rotation.y += 0.006
+      starRef.current.scale.setScalar(1 + Math.sin(clock.elapsedTime * 1.3) * 0.025)
+    }
+
+    if (haloRef.current) {
+      haloRef.current.scale.setScalar(1.08 + Math.sin(clock.elapsedTime * 1.15) * 0.035)
+    }
+  })
+
+  const pickCenter = (event) => {
+    event.stopPropagation()
+
+    onSelect(
+      {
+        ...center,
+        id: 'ale-yori-core',
+        isCenter: true,
+        colorA: '#ff7ac8',
+        colorB: '#ff1744',
+        hasRing: false,
+        features: center.features || [],
+      },
+      [0, 0, 0],
+      [0, 2.1, 6.2],
+    )
+  }
+
+  return (
+    <group>
+      <mesh ref={starRef} onClick={pickCenter}>
+        <sphereGeometry args={[1.55, 64, 64]} />
+        <meshStandardMaterial
+          color="#ff4fa3"
+          emissive="#ff1744"
+          emissiveIntensity={0.82}
+          roughness={0.25}
+          metalness={0.14}
+        />
+      </mesh>
+
+      <mesh ref={haloRef}>
+        <sphereGeometry args={[2.05, 48, 48]} />
+        <meshBasicMaterial color="#ff7ac8" transparent opacity={0.08} />
+      </mesh>
+
+      <Html center distanceFactor={9} position={[0, 0, 0]}>
+        <button
+          className={`core-3d-label ${activeId === 'ale-yori-core' ? 'core-3d-label-active' : ''}`}
+          type="button"
+          onClick={pickCenter}
+        >
+          <Sparkles size={20} />
+          <strong>Ale & Yori</strong>
+          <span>El centro</span>
+        </button>
+      </Html>
+    </group>
+  )
+}
+
+function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
+  const controlsRef = useRef(null)
+  const planets = universe.planets || []
+  const center = universe.center || {}
+
+  return (
+    <>
+      <color attach="background" args={['#050008']} />
+
+      <ambientLight intensity={0.72} />
+      <pointLight position={[0, 0, 0]} intensity={8.5} color="#ff7ac8" />
+      <pointLight position={[7, 7, 9]} intensity={2.4} color="#ffffff" />
+      <pointLight position={[-8, -4, -5]} intensity={1.9} color="#ff1744" />
+
+      <Stars radius={95} depth={44} count={1200} factor={4} saturation={0} fade speed={0.2} />
+
+      <CenterStar center={center} activeId={activeWorld?.id} onSelect={onSelect} />
+
+      {planets.map((planet, index) => (
+        <Planet3D
+          key={planet.id}
+          planet={planet}
+          index={index}
+          activeId={activeWorld?.id}
+          onSelect={onSelect}
+        />
+      ))}
+
+      <CameraRig focus={cameraFocus} controlsRef={controlsRef} />
+
+      <OrbitControls
+        ref={controlsRef}
+        enableZoom
+        enablePan={false}
+        minDistance={4}
+        maxDistance={30}
+        rotateSpeed={0.58}
+        zoomSpeed={0.72}
+        dampingFactor={0.08}
+        enableDamping
+      />
+    </>
+  )
+}
+
+function UniverseSection({ universe }) {
+  const [activeWorld, setActiveWorld] = useState(null)
+  const [cameraFocus, setCameraFocus] = useState(null)
+  const [showDetails, setShowDetails] = useState(false)
+  const detailsRef = useRef(null)
+  const systemRef = useRef(null)
+  const timerRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
+
+  const selectPlanet = (planet, position, offset) => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+
+    setShowDetails(false)
+    setActiveWorld(planet)
+    setCameraFocus({ position, offset })
+
+    timerRef.current = setTimeout(() => {
+      setShowDetails(true)
+
+      setTimeout(() => {
+        detailsRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+      }, 120)
+    }, 900)
+  }
+
+  const closePlanet = () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+
+    setShowDetails(false)
+    setActiveWorld(null)
+    setCameraFocus(null)
+
+    setTimeout(() => {
+      systemRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+    }, 130)
+  }
+
+  return (
+    <section className="section" id="universo">
+      <SectionTitle
+        eyebrow="Universo Ale & Yori"
+        title="Ale, este es el sistema solar que imaginé para nosotros"
+        text="Puedes acercarte, alejarte y moverlo como si estuvieras viendo nuestro universo desde afuera."
+      />
+
+      <div className="true-3d-card universe-3d-shell fade-up" ref={systemRef}>
+        <div className="true-3d-hud">
+          <span>
+            <ZoomIn size={16} />
+            Zoom con la ruedita
+          </span>
+          <span>
+            <MousePointer2 size={16} />
+            Arrastra para girar
+          </span>
+          <span>
+            <Sparkles size={16} />
+            Toca un planeta
+          </span>
+        </div>
+
+        <Canvas className="true-3d-canvas" camera={{ position: [0, 7.8, 19], fov: 46 }}>
+          <Suspense fallback={null}>
+            <UniverseScene
+              universe={universe}
+              activeWorld={activeWorld}
+              cameraFocus={cameraFocus}
+              onSelect={selectPlanet}
+            />
+          </Suspense>
+        </Canvas>
+      </div>
+
+      {activeWorld && showDetails && (
+        <article className="universe-selected-card fade-up" ref={detailsRef}>
+          <div className="universe-selected-orb" style={{ '--planet-a': activeWorld.colorA, '--planet-b': activeWorld.colorB }}>
+            <span></span>
+          </div>
+
+          <div className="universe-selected-content">
+            <span>{activeWorld.type}</span>
+            <h3>{activeWorld.name}</h3>
+            <p>{activeWorld.description}</p>
+
+            <ul>
+              {(activeWorld.features || []).map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+
+            <button className="main-button planet-back-button" type="button" onClick={closePlanet}>
+              <ArrowLeft size={18} />
+              Cerrar planeta
+            </button>
+          </div>
+        </article>
+      )}
+    </section>
+  )
+}
+
+export default UniverseSection

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "date": "13 de marzo",
+    "title": "El día que conocí a Ale",
+    "description": "Ese día empezó algo que todavía no sabía cuánto iba a significar para mí. Desde ahí comenzó nuestra historia, aunque todavía no tuviera nombre oficial."
+  },
+  {
+    "id": 2,
+    "date": "19 de marzo",
+    "title": "Nuestro primer “te amo”",
+    "description": "Una de esas fechas que se quedan guardadas porque cambian la forma en la que miras todo. El primer te amo de Ale & Yori."
+  },
+  {
+    "id": 3,
+    "date": "17 de mayo",
+    "title": "La pregunta oficial",
+    "description": "El día en que Yori decidió preguntarle a Ale, de forma oficial, si podía ser su novio."
+  },
+  {
+    "id": 4,
+    "date": "Lo que sigue",
+    "title": "Un universo en expansión",
+    "description": "Después de esto, cada carta, canción, foto, recuerdo y promesa puede convertirse en una nueva parte de Distancia Cero."
+  }
+]

@@ -6,23 +6,24 @@ import SectionTitle from './SectionTitle'
 import { ArrowLeft, MousePointer2, Sparkles, ZoomIn } from 'lucide-react'
 
 const ORBIT_CONFIGS = [
-  { radius: 6.4, speed: 0.105, flatten: 0.78, incline: 0.18, phase: 0.25, ring: false, moon: false },
-  { radius: 9.2, speed: 0.091, flatten: 0.8, incline: -0.22, phase: 1.45, ring: true, moon: false },
-  { radius: 12.4, speed: 0.079, flatten: 0.76, incline: 0.28, phase: 2.65, ring: false, moon: true },
-  { radius: 15.9, speed: 0.069, flatten: 0.82, incline: -0.3, phase: 3.88, ring: false, moon: false },
-  { radius: 19.7, speed: 0.061, flatten: 0.8, incline: 0.34, phase: 5.05, ring: true, moon: false },
-  { radius: 23.8, speed: 0.053, flatten: 0.84, incline: -0.26, phase: 0.95, ring: false, moon: true },
-  { radius: 28.2, speed: 0.047, flatten: 0.86, incline: 0.2, phase: 2.08, ring: true, moon: false },
+  { radius: 4.8, speed: 0.12, flatten: 0.78, y: 0.18, phase: 0.22, tilt: 0.04, ring: false, moon: false },
+  { radius: 6.35, speed: 0.104, flatten: 0.8, y: -0.18, phase: 1.4, tilt: -0.03, ring: true, moon: false },
+  { radius: 8.1, speed: 0.093, flatten: 0.77, y: 0.34, phase: 2.42, tilt: 0.06, ring: false, moon: true },
+  { radius: 10.15, speed: 0.082, flatten: 0.81, y: -0.38, phase: 3.55, tilt: -0.08, ring: false, moon: false },
+  { radius: 12.3, speed: 0.074, flatten: 0.79, y: 0.48, phase: 4.48, tilt: 0.09, ring: true, moon: false },
+  { radius: 14.7, speed: 0.066, flatten: 0.83, y: -0.42, phase: 5.44, tilt: -0.05, ring: false, moon: true },
+  { radius: 17.3, speed: 0.058, flatten: 0.85, y: 0.24, phase: 0.94, tilt: 0.03, ring: true, moon: false },
 ]
 
 function CameraRig({ focus, controlsRef }) {
   const { camera } = useThree()
-  const desired = useRef(new THREE.Vector3(0, 10, 38)).current
+  const desired = useRef(new THREE.Vector3(0, 8.2, 26)).current
   const target = useRef(new THREE.Vector3(0, 0, 0)).current
 
   useFrame(() => {
     if (focus) {
       const focusPoint = new THREE.Vector3(focus.position[0], focus.position[1], focus.position[2])
+
       desired.set(
         focus.position[0] + focus.offset[0],
         focus.position[1] + focus.offset[1],
@@ -32,7 +33,7 @@ function CameraRig({ focus, controlsRef }) {
       camera.position.lerp(desired, 0.052)
       target.lerp(focusPoint, 0.07)
     } else {
-      desired.set(0, 10, 38)
+      desired.set(0, 8.2, 26)
       camera.position.lerp(desired, 0.034)
       target.lerp(new THREE.Vector3(0, 0, 0), 0.04)
     }
@@ -46,105 +47,98 @@ function CameraRig({ focus, controlsRef }) {
   return null
 }
 
-function OrbitRing({ radius, flatten = 0.8, incline = 0, opacity = 0.14 }) {
+function OrbitRing({ radius, flatten = 0.8, tilt = 0, opacity = 0.18 }) {
   return (
-    <group rotation={[incline, 0, 0]}>
-      <mesh rotation={[Math.PI / 2, 0, 0]} scale={[1, flatten, 1]}>
-        <torusGeometry args={[radius, 0.014, 10, 300]} />
-        <meshBasicMaterial color="#ff84c8" transparent opacity={opacity} />
-      </mesh>
-    </group>
+    <mesh rotation={[Math.PI / 2 + tilt, 0, 0]} scale={[1, flatten, 1]}>
+      <torusGeometry args={[radius, 0.018, 12, 280]} />
+      <meshBasicMaterial color="#ff84c8" transparent opacity={opacity} />
+    </mesh>
   )
 }
 
-function PlanetAtmosphere({ size, color }) {
+function PlanetGlow({ size, color }) {
   return (
     <mesh>
-      <sphereGeometry args={[size * 1.18, 40, 40]} />
-      <meshBasicMaterial color={color} transparent opacity={0.13} blending={THREE.AdditiveBlending} />
+      <sphereGeometry args={[size * 1.3, 32, 32]} />
+      <meshBasicMaterial color={color} transparent opacity={0.16} />
     </mesh>
   )
 }
 
 function PlanetVisual({ planet, size, config, active }) {
   const spinRef = useRef(null)
-  const moonRef = useRef(null)
-  const shimmerRef = useRef(null)
+  const moonOrbitRef = useRef(null)
 
   useFrame(({ clock }) => {
     if (spinRef.current) {
-      spinRef.current.rotation.y += 0.01
-      spinRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.5) * 0.035
+      spinRef.current.rotation.y += 0.012
+      spinRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.5) * 0.04
     }
 
-    if (moonRef.current) {
-      moonRef.current.rotation.y += 0.018
-    }
-
-    if (shimmerRef.current) {
-      shimmerRef.current.rotation.y -= 0.006
+    if (moonOrbitRef.current) {
+      moonOrbitRef.current.rotation.y += 0.02
     }
   })
 
   return (
     <group ref={spinRef}>
-      <PlanetAtmosphere size={size} color={planet.colorB || planet.colorA} />
+      <PlanetGlow size={size} color={planet.colorB || planet.colorA} />
 
       <mesh castShadow receiveShadow>
         <sphereGeometry args={[size, 64, 64]} />
         <meshPhysicalMaterial
           color={planet.colorA}
           emissive={planet.colorB || planet.colorA}
-          emissiveIntensity={active ? 0.42 : 0.18}
-          roughness={0.4}
-          metalness={0.14}
-          clearcoat={0.72}
-          clearcoatRoughness={0.2}
+          emissiveIntensity={active ? 0.36 : 0.18}
+          roughness={0.42}
+          metalness={0.12}
+          clearcoat={0.52}
+          clearcoatRoughness={0.24}
           sheen={0.4}
           sheenColor={new THREE.Color(planet.colorB || planet.colorA)}
         />
       </mesh>
 
-      <mesh ref={shimmerRef}>
-        <sphereGeometry args={[size * 1.012, 32, 32]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.055} />
+      <mesh>
+        <sphereGeometry args={[size * 1.06, 40, 40]} />
+        <meshBasicMaterial color="#ffd8ee" transparent opacity={0.08} />
       </mesh>
 
-      <mesh position={[-size * 0.24, size * 0.2, size * 0.62]}>
-        <sphereGeometry args={[size * 0.09, 16, 16]} />
-        <meshBasicMaterial color="#fff6fb" transparent opacity={0.32} />
+      <mesh position={[-size * 0.22, size * 0.16, size * 0.6]}>
+        <sphereGeometry args={[size * 0.1, 18, 18]} />
+        <meshBasicMaterial color="#fff6fb" transparent opacity={0.26} />
       </mesh>
 
       {config.ring && (
         <>
-          <mesh rotation={[Math.PI / 2.45, 0.32, 0.08]}>
-            <torusGeometry args={[size * 1.65, size * 0.065, 16, 220]} />
+          <mesh rotation={[Math.PI / 2.45, 0.26, 0.08]}>
+            <torusGeometry args={[size * 1.58, size * 0.082, 16, 200]} />
             <meshStandardMaterial
               color="#ffd8f1"
               emissive="#ff7ac8"
-              emissiveIntensity={0.52}
+              emissiveIntensity={0.46}
               transparent
               opacity={0.78}
-              roughness={0.28}
-              metalness={0.2}
+              roughness={0.3}
+              metalness={0.18}
             />
           </mesh>
 
-          <mesh rotation={[Math.PI / 2.45, 0.32, 0.08]}>
-            <torusGeometry args={[size * 1.98, size * 0.018, 10, 220]} />
-            <meshBasicMaterial color="#fff3fa" transparent opacity={0.28} />
+          <mesh rotation={[Math.PI / 2.45, 0.26, 0.08]}>
+            <torusGeometry args={[size * 1.84, size * 0.024, 10, 180]} />
+            <meshBasicMaterial color="#fff3fa" transparent opacity={0.26} />
           </mesh>
         </>
       )}
 
       {config.moon && (
-        <group ref={moonRef}>
-          <mesh position={[size * 2.15, 0.04, 0]}>
-            <sphereGeometry args={[size * 0.18, 24, 24]} />
+        <group ref={moonOrbitRef}>
+          <mesh position={[size * 2.2, 0, 0]}>
+            <sphereGeometry args={[size * 0.22, 24, 24]} />
             <meshStandardMaterial
               color="#ffd8f1"
               emissive="#ff7ac8"
-              emissiveIntensity={0.18}
+              emissiveIntensity={0.2}
               roughness={0.46}
             />
           </mesh>
@@ -157,24 +151,23 @@ function PlanetVisual({ planet, size, config, active }) {
 function Planet3D({ planet, index, activeId, onSelect }) {
   const orbitRef = useRef(null)
   const config = ORBIT_CONFIGS[index] || {
-    radius: 7 + index * 3.2,
-    speed: 0.06,
-    flatten: 0.82,
-    incline: 0,
+    radius: 5 + index * 2.2,
+    speed: 0.08,
+    flatten: 0.8,
+    y: 0,
     phase: index,
+    tilt: 0,
     ring: false,
     moon: false,
   }
 
-  const size = Math.max(0.42, Math.min(0.78, planet.size / 88))
+  const size = Math.max(0.58, Math.min(1.12, planet.size / 64))
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime * config.speed + config.phase
-    const flatZ = Math.sin(t) * config.radius * config.flatten
-
     const x = Math.cos(t) * config.radius
-    const y = flatZ * Math.sin(config.incline)
-    const z = flatZ * Math.cos(config.incline)
+    const z = Math.sin(t) * config.radius * config.flatten
+    const y = config.y + Math.sin(t * 1.26 + index * 0.8) * 0.18
 
     if (orbitRef.current && activeId !== planet.id) {
       orbitRef.current.position.set(x, y, z)
@@ -187,7 +180,11 @@ function Planet3D({ planet, index, activeId, onSelect }) {
     const world = new THREE.Vector3()
     orbitRef.current?.getWorldPosition(world)
 
-    onSelect(planet, [world.x, world.y, world.z], [0, 1.4, 5.2])
+    onSelect(
+      planet,
+      [world.x, world.y, world.z],
+      [0, 1.6, 5.7]
+    )
   }
 
   return (
@@ -195,16 +192,21 @@ function Planet3D({ planet, index, activeId, onSelect }) {
       <OrbitRing
         radius={config.radius}
         flatten={config.flatten}
-        incline={config.incline}
-        opacity={activeId === planet.id ? 0.32 : 0.12}
+        tilt={config.tilt}
+        opacity={activeId === planet.id ? 0.34 : 0.14}
       />
 
       <group ref={orbitRef}>
         <group onClick={pickPlanet}>
-          <PlanetVisual planet={planet} size={size} config={config} active={activeId === planet.id} />
+          <PlanetVisual
+            planet={planet}
+            size={size}
+            config={config}
+            active={activeId === planet.id}
+          />
         </group>
 
-        <Html center distanceFactor={9.2} position={[0, -size - 0.42, 0]}>
+        <Html center distanceFactor={8.8} position={[0, -size - 0.6, 0]}>
           <button
             className={`planet-3d-label ${activeId === planet.id ? 'planet-3d-label-active' : ''}`}
             type="button"
@@ -247,31 +249,31 @@ function CenterStar({ center, activeId, onSelect }) {
         features: center.features || [],
       },
       [0, 0, 0],
-      [0, 2, 6.8],
+      [0, 2.2, 7.4],
     )
   }
 
   return (
     <group>
       <mesh ref={starRef} onClick={pickCenter} castShadow receiveShadow>
-        <sphereGeometry args={[1.5, 72, 72]} />
+        <sphereGeometry args={[2.12, 72, 72]} />
         <meshPhysicalMaterial
           color="#ff5cab"
           emissive="#ff275f"
-          emissiveIntensity={0.92}
+          emissiveIntensity={0.9}
           roughness={0.24}
           metalness={0.12}
-          clearcoat={0.74}
-          clearcoatRoughness={0.16}
+          clearcoat={0.62}
+          clearcoatRoughness={0.18}
         />
       </mesh>
 
       <mesh ref={haloRef}>
-        <sphereGeometry args={[2.2, 48, 48]} />
-        <meshBasicMaterial color="#ff84c8" transparent opacity={0.1} blending={THREE.AdditiveBlending} />
+        <sphereGeometry args={[2.8, 48, 48]} />
+        <meshBasicMaterial color="#ff84c8" transparent opacity={0.1} />
       </mesh>
 
-      <Html center distanceFactor={11} position={[0, 0, 0]}>
+      <Html center distanceFactor={10.5} position={[0, 0, 0]}>
         <button
           className={`core-3d-label ${activeId === 'ale-yori-core' ? 'core-3d-label-active' : ''}`}
           type="button"
@@ -294,14 +296,14 @@ function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
   return (
     <>
       <color attach="background" args={['#040008']} />
-      <fog attach="fog" args={['#040008', 38, 72]} />
+      <fog attach="fog" args={['#040008', 30, 58]} />
 
-      <ambientLight intensity={0.84} />
-      <pointLight position={[0, 0, 0]} intensity={13} color="#ff84c8" />
-      <pointLight position={[10, 12, 16]} intensity={3.4} color="#ffffff" />
-      <pointLight position={[-14, -7, -12]} intensity={2.1} color="#7c4cff" />
+      <ambientLight intensity={0.82} />
+      <pointLight position={[0, 0, 0]} intensity={14} color="#ff84c8" />
+      <pointLight position={[8, 10, 12]} intensity={3.4} color="#ffffff" />
+      <pointLight position={[-12, -6, -10]} intensity={2.1} color="#7c4cff" />
 
-      <Stars radius={135} depth={70} count={2200} factor={4.8} saturation={0} fade speed={0.18} />
+      <Stars radius={120} depth={60} count={1800} factor={4.8} saturation={0} fade speed={0.2} />
 
       <CenterStar center={center} activeId={activeWorld?.id} onSelect={onSelect} />
 
@@ -321,8 +323,8 @@ function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
         ref={controlsRef}
         enableZoom
         enablePan={false}
-        minDistance={9}
-        maxDistance={48}
+        minDistance={7}
+        maxDistance={34}
         rotateSpeed={0.55}
         zoomSpeed={0.72}
         dampingFactor={0.08}
@@ -355,6 +357,7 @@ function UniverseSection({ universe }) {
 
     timerRef.current = setTimeout(() => {
       setShowDetails(true)
+
       setTimeout(() => {
         detailsRef.current?.scrollIntoView({
           behavior: 'smooth',
@@ -403,7 +406,7 @@ function UniverseSection({ universe }) {
           </span>
         </div>
 
-        <Canvas className="true-3d-canvas" shadows camera={{ position: [0, 10, 38], fov: 42 }}>
+        <Canvas className="true-3d-canvas" shadows camera={{ position: [0, 8.2, 26], fov: 44 }}>
           <Suspense fallback={null}>
             <UniverseScene
               universe={universe}
@@ -417,7 +420,10 @@ function UniverseSection({ universe }) {
 
       {activeWorld && showDetails && (
         <article className="universe-selected-card fade-up" ref={detailsRef}>
-          <div className="universe-selected-orb" style={{ '--planet-a': activeWorld.colorA, '--planet-b': activeWorld.colorB }}>
+          <div
+            className="universe-selected-orb"
+            style={{ '--planet-a': activeWorld.colorA, '--planet-b': activeWorld.colorB }}
+          >
             <span></span>
           </div>
 

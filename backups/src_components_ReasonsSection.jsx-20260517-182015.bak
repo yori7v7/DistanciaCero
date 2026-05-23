@@ -4,11 +4,10 @@ import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
 
 const BALL_SIZE = 62
 const RADIUS = BALL_SIZE / 2
-const MAX_SPEED = 1.18
-const JITTER = 0.01
-const MIN_Z = -110
-const MAX_Z = 170
-const PADDING = 42
+const MAX_SPEED = 1.22
+const JITTER = 0.012
+const MIN_Z = -120
+const MAX_Z = 180
 
 function clampSpeed(value, limit) {
   if (value > limit) return limit
@@ -32,41 +31,27 @@ function ReasonsSection({ reasons = [] }) {
     const container = containerRef.current
     if (!container || !reasons?.length) return
 
-    const getBounds = () => {
-      const width = Math.max(container.clientWidth, 320)
-      const height = Math.max(container.clientHeight, 1040)
-
-      return {
-        width,
-        height,
-        minX: PADDING,
-        minY: PADDING,
-        maxX: width - BALL_SIZE - PADDING,
-        maxY: height - BALL_SIZE - PADDING,
-      }
-    }
-
     const createObjects = () => {
-      const bounds = getBounds()
-      const usableWidth = Math.max(1, bounds.maxX - bounds.minX)
-      const cols = Math.max(6, Math.floor(usableWidth / 96))
+      const width = container.clientWidth
+      const height = Math.max(container.clientHeight, 900)
+      const cols = Math.max(6, Math.floor(width / 96))
 
       const objects = reasons.map((reason, index) => {
         const col = index % cols
         const row = Math.floor(index / cols)
-        const cellW = usableWidth / cols
+        const cellW = width / cols
         const cellH = 96
 
         return {
           id: reason.id,
-          x: Math.min(bounds.maxX, bounds.minX + col * cellW + Math.random() * Math.max(18, cellW - BALL_SIZE)),
-          y: Math.min(bounds.maxY, bounds.minY + row * cellH + Math.random() * 42),
+          x: Math.min(width - BALL_SIZE, col * cellW + Math.random() * Math.max(16, cellW - BALL_SIZE)),
+          y: Math.min(height - BALL_SIZE, row * cellH + Math.random() * 38),
           z: MIN_Z + Math.random() * (MAX_Z - MIN_Z),
-          vx: (Math.random() * 0.72 + 0.26) * (Math.random() > 0.5 ? 1 : -1),
-          vy: (Math.random() * 0.72 + 0.26) * (Math.random() > 0.5 ? 1 : -1),
-          vz: (Math.random() * 0.34 + 0.12) * (Math.random() > 0.5 ? 1 : -1),
+          vx: (Math.random() * 0.74 + 0.28) * (Math.random() > 0.5 ? 1 : -1),
+          vy: (Math.random() * 0.74 + 0.28) * (Math.random() > 0.5 ? 1 : -1),
+          vz: (Math.random() * 0.42 + 0.16) * (Math.random() > 0.5 ? 1 : -1),
           angle: Math.random() * 360,
-          rotationSpeed: (Math.random() * 0.28 + 0.08) * (Math.random() > 0.5 ? 1 : -1),
+          rotationSpeed: (Math.random() * 0.36 + 0.08) * (Math.random() > 0.5 ? 1 : -1),
           el: itemRefs.current[index],
         }
       })
@@ -88,7 +73,7 @@ function ReasonsSection({ reasons = [] }) {
           const dx = bx - ax
           const dy = by - ay
           const dist = Math.sqrt(dx * dx + dy * dy)
-          const minDist = BALL_SIZE - 7
+          const minDist = BALL_SIZE - 8
 
           if (dist > 0 && dist < minDist) {
             const nx = dx / dist
@@ -104,12 +89,12 @@ function ReasonsSection({ reasons = [] }) {
             const tempVy = a.vy
             const tempVz = a.vz
 
-            a.vx = b.vx + (Math.random() - 0.5) * 0.07
-            a.vy = b.vy + (Math.random() - 0.5) * 0.07
+            a.vx = b.vx + (Math.random() - 0.5) * 0.08
+            a.vy = b.vy + (Math.random() - 0.5) * 0.08
             a.vz = b.vz
 
-            b.vx = tempVx + (Math.random() - 0.5) * 0.07
-            b.vy = tempVy + (Math.random() - 0.5) * 0.07
+            b.vx = tempVx + (Math.random() - 0.5) * 0.08
+            b.vy = tempVy + (Math.random() - 0.5) * 0.08
             b.vz = tempVz
           }
         }
@@ -122,7 +107,8 @@ function ReasonsSection({ reasons = [] }) {
         return
       }
 
-      const bounds = getBounds()
+      const width = container.clientWidth
+      const height = Math.max(container.clientHeight, 900)
       const objects = objectsRef.current
 
       objects.forEach((obj) => {
@@ -137,23 +123,23 @@ function ReasonsSection({ reasons = [] }) {
         obj.z += obj.vz
         obj.angle += obj.rotationSpeed
 
-        if (obj.x <= bounds.minX) {
-          obj.x = bounds.minX
+        if (obj.x <= 0) {
+          obj.x = 0
           obj.vx = Math.abs(obj.vx)
         }
 
-        if (obj.x >= bounds.maxX) {
-          obj.x = bounds.maxX
+        if (obj.x >= width - BALL_SIZE) {
+          obj.x = width - BALL_SIZE
           obj.vx = -Math.abs(obj.vx)
         }
 
-        if (obj.y <= bounds.minY) {
-          obj.y = bounds.minY
+        if (obj.y <= 0) {
+          obj.y = 0
           obj.vy = Math.abs(obj.vy)
         }
 
-        if (obj.y >= bounds.maxY) {
-          obj.y = bounds.maxY
+        if (obj.y >= height - BALL_SIZE) {
+          obj.y = height - BALL_SIZE
           obj.vy = -Math.abs(obj.vy)
         }
 
@@ -175,12 +161,12 @@ function ReasonsSection({ reasons = [] }) {
 
         const depth = (obj.z - MIN_Z) / (MAX_Z - MIN_Z)
         const scale = 0.72 + depth * 0.52
-        const brightness = 0.8 + depth * 0.34
-        const opacity = 0.7 + depth * 0.3
+        const brightness = 0.78 + depth * 0.38
+        const opacity = 0.68 + depth * 0.32
 
         obj.el.style.transform = `translate3d(${obj.x}px, ${obj.y}px, ${obj.z}px) rotate(${obj.angle}deg) scale(${scale})`
         obj.el.style.zIndex = String(20 + Math.round(depth * 220))
-        obj.el.style.filter = `brightness(${brightness}) saturate(${0.98 + depth * 0.24})`
+        obj.el.style.filter = `brightness(${brightness}) saturate(${0.96 + depth * 0.28})`
         obj.el.style.opacity = String(opacity)
       })
 

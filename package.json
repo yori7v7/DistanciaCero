@@ -1,24 +1,27 @@
 {
-    "name":  "alecitabbcitabblin",
-    "private":  true,
-    "version":  "1.0.0",
-    "type":  "module",
-    "scripts":  {
-                    "dev":  "vite",
-                    "build":  "vite build",
-                    "preview":  "vite preview",
-                    "predeploy":  "npm run build",
-                    "deploy":  "gh-pages -d dist"
-                },
-    "dependencies":  {
-                         "lucide-react":  "latest",
-                         "react":  "latest",
-                         "react-dom":  "latest"
-                     },
-    "devDependencies":  {
-                            "@vitejs/plugin-react":  "latest",
-                            "gh-pages":  "^6.3.0",
-                            "vite":  "latest"
-                        },
-    "homepage":  "https://yori7v7.github.io/DistanciaCero"
+    "name": "alecitabbcitabblin",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
+    },
+    "dependencies": {
+        "@react-three/drei": "^10.7.7",
+        "@react-three/fiber": "^9.6.1",
+        "lucide-react": "latest",
+        "react": "latest",
+        "react-dom": "latest",
+        "three": "^0.184.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "latest",
+        "gh-pages": "^6.3.0",
+        "vite": "latest"
+    },
+    "homepage": "https://yori7v7.github.io/DistanciaCero"
 }

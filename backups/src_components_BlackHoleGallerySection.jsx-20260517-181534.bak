@@ -1,0 +1,518 @@
+﻿import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Html, OrbitControls, Stars } from '@react-three/drei'
+import * as THREE from 'three'
+import SectionTitle from './SectionTitle'
+import { Aperture, Heart, Image as ImageIcon, MousePointer2, Orbit, Sparkles, X, ZoomIn } from 'lucide-react'
+
+function AccretionDisk({ inner = 1.05, outer = 4.45, rotation = [Math.PI / 2.16, 0.08, -0.1], opacity = 1 }) {
+  const materialRef = useRef(null)
+
+  useFrame(({ clock }) => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.uTime.value = clock.elapsedTime
+    }
+  })
+
+  return (
+    <mesh rotation={rotation}>
+      <ringGeometry args={[inner, outer, 320, 1]} />
+      <shaderMaterial
+        ref={materialRef}
+        transparent
+        depthWrite={false}
+        side={THREE.DoubleSide}
+        blending={THREE.AdditiveBlending}
+        uniforms={{
+          uTime: { value: 0 },
+          uOpacity: { value: opacity },
+        }}
+        vertexShader={`
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            vec3 p = position;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+          }
+        `}
+        fragmentShader={`
+          varying vec2 vUv;
+          uniform float uTime;
+          uniform float uOpacity;
+
+          void main() {
+            float r = vUv.x;
+            float a = vUv.y * 6.28318;
+
+            float fadeIn = smoothstep(0.02, 0.18, r);
+            float fadeOut = 1.0 - smoothstep(0.72, 1.0, r);
+            float edge = fadeIn * fadeOut;
+
+            float swirl1 = sin(a * 7.0 + r * 19.0 - uTime * 1.7);
+            float swirl2 = sin(a * 3.0 - r * 28.0 + uTime * 2.4);
+            float swirl3 = sin(a * 11.0 + r * 10.0 + uTime * 0.9);
+
+            float bands = smoothstep(0.1, 1.0, swirl1 * 0.42 + swirl2 * 0.36 + swirl3 * 0.22);
+            float hot = pow(1.0 - r, 2.2);
+
+            vec3 darkPink = vec3(1.0, 0.05, 0.26);
+            vec3 pink = vec3(1.0, 0.34, 0.73);
+            vec3 whiteHot = vec3(1.0, 0.88, 0.98);
+
+            vec3 color = mix(darkPink, pink, bands);
+            color = mix(color, whiteHot, hot * 0.78 + bands * 0.22);
+
+            float alpha = edge * (0.28 + bands * 0.58 + hot * 0.72) * uOpacity;
+
+            gl_FragColor = vec4(color, alpha);
+          }
+        `}
+      />
+    </mesh>
+  )
+}
+
+function PhotonArc({ radius = 2.2, tube = 0.018, rotation = [Math.PI / 2.2, 0, 0], color = '#ffd6f0', opacity = 0.65 }) {
+  const ref = useRef(null)
+
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.rotation.z = clock.elapsedTime * 0.16
+    }
+  })
+
+  return (
+    <mesh ref={ref} rotation={rotation}>
+      <torusGeometry args={[radius, tube, 10, 220]} />
+      <meshBasicMaterial color={color} transparent opacity={opacity} blending={THREE.AdditiveBlending} />
+    </mesh>
+  )
+}
+
+function BlackHoleParticles() {
+  const pointsRef = useRef(null)
+
+  const particlePositions = useMemo(() => {
+    const count = 980
+    const positions = new Float32Array(count * 3)
+
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2
+      const radius = 1.4 + Math.random() * 6.8
+      const spiral = angle + radius * 0.46
+      const y = (Math.random() - 0.5) * 1.8
+
+      positions[i * 3] = Math.cos(spiral) * radius
+      positions[i * 3 + 1] = y * (1 - Math.min(radius / 9, 0.8))
+      positions[i * 3 + 2] = Math.sin(spiral) * radius * 0.72
+    }
+
+    return positions
+  }, [])
+
+  useFrame(({ clock }) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = clock.elapsedTime * 0.04
+      pointsRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.25) * 0.04
+    }
+  })
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={particlePositions.length / 3}
+          array={particlePositions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial size={0.035} color="#ffd6f0" transparent opacity={0.78} depthWrite={false} />
+    </points>
+  )
+}
+
+function BlackHoleCore3D() {
+  const coreRef = useRef(null)
+  const glowRef = useRef(null)
+
+  useFrame(({ clock }) => {
+    if (coreRef.current) {
+      coreRef.current.rotation.y += 0.004
+    }
+
+    if (glowRef.current) {
+      glowRef.current.scale.setScalar(1.05 + Math.sin(clock.elapsedTime * 1.4) * 0.035)
+    }
+  })
+
+  return (
+    <group>
+      <BlackHoleParticles />
+
+      <AccretionDisk inner={1.05} outer={4.65} rotation={[Math.PI / 2.12, 0.05, -0.12]} opacity={1} />
+      <AccretionDisk inner={0.96} outer={3.4} rotation={[Math.PI / 2.45, -0.12, 0.28]} opacity={0.65} />
+      <AccretionDisk inner={1.2} outer={5.25} rotation={[Math.PI / 2.02, 0.22, -0.34]} opacity={0.38} />
+
+      <PhotonArc radius={2.15} tube={0.018} rotation={[Math.PI / 2.35, 0.16, 0.1]} color="#ffe5f5" opacity={0.55} />
+      <PhotonArc radius={2.75} tube={0.015} rotation={[Math.PI / 2.05, -0.12, -0.2]} color="#ff7ac8" opacity={0.38} />
+      <PhotonArc radius={3.25} tube={0.012} rotation={[Math.PI / 2.65, 0.2, 0.18]} color="#ff1744" opacity={0.28} />
+
+      <mesh ref={coreRef}>
+        <sphereGeometry args={[1.02, 72, 72]} />
+        <meshStandardMaterial color="#000000" roughness={0.15} metalness={0.2} />
+      </mesh>
+
+      <mesh ref={glowRef}>
+        <sphereGeometry args={[1.26, 72, 72]} />
+        <meshBasicMaterial color="#ff1744" transparent opacity={0.11} blending={THREE.AdditiveBlending} />
+      </mesh>
+
+      <pointLight position={[0, 0.25, 1.4]} intensity={4.8} color="#ff7ac8" />
+      <pointLight position={[-2.4, 0.2, -1.8]} intensity={2.5} color="#ff1744" />
+
+      <Html center distanceFactor={8} position={[0, 0, 0]}>
+        <div className="blackhole-3d-core-label">
+          <span>Ale</span>
+          <strong>&</strong>
+          <span>Yori</span>
+        </div>
+      </Html>
+    </group>
+  )
+}
+
+function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked }) {
+  const groupRef = useRef(null)
+  const { camera } = useThree()
+
+  const config = useMemo(() => {
+    return {
+      radius: 3.75 + (index % 5) * 0.55,
+      y: ((index % 5) - 2) * 0.42,
+      speed: 0.18 + (index % 3) * 0.032,
+      offset: (index / Math.max(total, 1)) * Math.PI * 2,
+    }
+  }, [index, total])
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return
+
+    const t = clock.elapsedTime * config.speed + config.offset
+    const x = Math.cos(t) * config.radius
+    const z = Math.sin(t) * config.radius * 0.72
+    const y = config.y + Math.sin(t * 1.7) * 0.16
+
+    groupRef.current.position.set(x, y, z)
+    groupRef.current.lookAt(camera.position)
+  })
+
+  const clickMemory = (event) => {
+    event.stopPropagation()
+
+    if (!hasEntered) {
+      onBlocked()
+      return
+    }
+
+    onPick(item)
+  }
+
+  return (
+    <group ref={groupRef}>
+      <Html center transform distanceFactor={8}>
+        <button
+          className={`memory-3d-card ${!hasEntered ? 'memory-3d-card-locked' : ''}`}
+          type="button"
+          onClick={clickMemory}
+          title={hasEntered ? item.title : 'Primero entra al agujero negro'}
+        >
+          {item.image ? (
+            <img
+              src={item.image}
+              alt={item.alt || item.title}
+              draggable="false"
+              onError={(event) => {
+                event.currentTarget.style.display = 'none'
+              }}
+            />
+          ) : (
+            <Sparkles size={24} />
+          )}
+        </button>
+      </Html>
+    </group>
+  )
+}
+
+function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
+  return (
+    <>
+      <color attach="background" args={['#020004']} />
+
+      <ambientLight intensity={0.52} />
+      <pointLight position={[0, 2.2, 0]} intensity={8.2} color="#ff7ac8" />
+      <pointLight position={[4.5, 5.5, 7]} intensity={3.2} color="#ffffff" />
+      <pointLight position={[-5, -3, -5]} intensity={2.4} color="#ff1744" />
+
+      <Stars radius={74} depth={42} count={980} factor={3.8} saturation={0} fade speed={0.32} />
+
+      <BlackHoleCore3D />
+
+      {items.slice(0, 10).map((item, index) => (
+        <MemoryOrbit3D
+          key={item.id}
+          item={item}
+          index={index}
+          total={items.length}
+          hasEntered={hasEntered}
+          onPick={onPick}
+          onBlocked={onBlocked}
+        />
+      ))}
+
+      <OrbitControls
+        enableZoom
+        enablePan={false}
+        minDistance={3.2}
+        maxDistance={14}
+        rotateSpeed={0.5}
+        zoomSpeed={0.72}
+        dampingFactor={0.08}
+        enableDamping
+      />
+    </>
+  )
+}
+
+function BlackHoleGallerySection({ items = [] }) {
+  const visibleItems = useMemo(() => items.filter(Boolean), [items])
+  const [isOpen, setIsOpen] = useState(false)
+  const [isEntering, setIsEntering] = useState(false)
+  const [hasEntered, setHasEntered] = useState(false)
+  const [needsGate, setNeedsGate] = useState(false)
+  const [activeItem, setActiveItem] = useState(visibleItems[0] || null)
+  const portalRef = useRef(null)
+
+  const warpLines = useMemo(() => Array.from({ length: 28 }, (_, index) => index), [])
+
+  useEffect(() => {
+    if (!activeItem && visibleItems.length > 0) {
+      setActiveItem(visibleItems[0])
+    }
+  }, [activeItem, visibleItems])
+
+  useEffect(() => {
+    if (!isEntering) return
+
+    const timer = setTimeout(() => {
+      setIsEntering(false)
+      setHasEntered(true)
+      setIsOpen(true)
+      setActiveItem((current) => current || visibleItems[0] || null)
+    }, 2850)
+
+    return () => clearTimeout(timer)
+  }, [isEntering, visibleItems])
+
+  useEffect(() => {
+    if (!isOpen || isEntering) return
+
+    const timer = setTimeout(() => {
+      portalRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }, 220)
+
+    return () => clearTimeout(timer)
+  }, [isOpen, isEntering])
+
+  const enterBlackHole = () => {
+    if (isEntering) return
+    setNeedsGate(false)
+    setActiveItem(visibleItems[0] || null)
+    setIsEntering(true)
+  }
+
+  const blockedMemory = () => {
+    setNeedsGate(true)
+
+    setTimeout(() => {
+      setNeedsGate(false)
+    }, 1150)
+  }
+
+  const pickMemory = (item) => {
+    setIsOpen(true)
+    setActiveItem(item)
+  }
+
+  return (
+    <section
+      className={`section blackhole-section ${isEntering ? 'blackhole-entering' : ''} ${needsGate ? 'blackhole-needs-gate' : ''}`}
+      id="galeria-agujero-negro"
+    >
+      <SectionTitle
+        eyebrow="Galería"
+        title="Ale, aquí guardo todo lo que quiero volver a vivir contigo"
+        text="Quiero que nuestros recuerdos no se sientan guardados en una carpeta cualquiera, sino flotando dentro de algo inmenso, oscuro, bonito y totalmente nuestro."
+      />
+
+      <div className="blackhole-3d-shell fade-up">
+        <div className="blackhole-copy blackhole-3d-copy">
+          <span className="blackhole-kicker">
+            <Orbit size={16} />
+            Momentos que no quiero soltar
+          </span>
+
+          <h3>Si algo me hace pensar en ti, termina orbitando aquí.</h3>
+
+          <p>
+            Ale, este lugar lo imaginé como un agujero negro hecho de nosotros: de lo que hemos vivido, de lo que me haces sentir y de todo eso que quisiera repetir contigo mil veces.
+          </p>
+
+          <p className="blackhole-copy-soft">
+            Puedes acercarte, girarlo y mirar cómo nuestras fotos se quedan flotando alrededor de este pedacito de universo que hice para ti.
+          </p>
+
+          {needsGate && (
+            <p className="blackhole-gate-message">
+              Primero entra conmigo al agujero negro, Ale. Después sí te enseño lo que vive ahí dentro.
+            </p>
+          )}
+
+          <div className="blackhole-actions">
+            <button className="main-button blackhole-enter-button" type="button" onClick={enterBlackHole}>
+              <Aperture size={18} />
+              Entrar al agujero negro
+            </button>
+
+            <span className="blackhole-count">
+              <Heart size={16} />
+              {visibleItems.length} recuerdos orbitando por ti
+            </span>
+          </div>
+        </div>
+
+        <div className="blackhole-3d-stage">
+          <div className="true-3d-hud blackhole-3d-hud">
+            <span>
+              <ZoomIn size={16} />
+              Zoom
+            </span>
+            <span>
+              <MousePointer2 size={16} />
+              Girar
+            </span>
+          </div>
+
+          {!hasEntered && (
+            <div className="blackhole-locked-label">
+              Cruza primero el horizonte de sucesos
+            </div>
+          )}
+
+          <Canvas className="true-3d-canvas" camera={{ position: [0, 3.15, 8.4], fov: 47 }}>
+            <Suspense fallback={null}>
+              <BlackHoleScene
+                items={visibleItems}
+                hasEntered={hasEntered}
+                onPick={pickMemory}
+                onBlocked={blockedMemory}
+              />
+            </Suspense>
+          </Canvas>
+        </div>
+      </div>
+
+      {isEntering && (
+        <div className="blackhole-transition">
+          <div className="blackhole-warp-lines">
+            {warpLines.map((line) => (
+              <span key={line} style={{ '--line-index': line }} />
+            ))}
+          </div>
+
+          <div className="blackhole-transition-ring blackhole-transition-ring-1"></div>
+          <div className="blackhole-transition-ring blackhole-transition-ring-2"></div>
+          <div className="blackhole-transition-ring blackhole-transition-ring-3"></div>
+          <div className="blackhole-transition-ring blackhole-transition-ring-4"></div>
+          <div className="blackhole-transition-core"></div>
+
+          <div className="blackhole-transition-text">
+            <span>Entrando al agujero negro</span>
+            <h3>Ale, ven conmigo...</h3>
+            <p>Quiero enseñarte todo lo que guardo de nosotros aquí adentro.</p>
+          </div>
+        </div>
+      )}
+
+      {isOpen && (
+        <div ref={portalRef} className="blackhole-portal fade-up">
+          <div className="portal-header">
+            <div>
+              <span>Dentro del horizonte de sucesos</span>
+              <h3>Ale, estos pedacitos de nosotros se quedaron viviendo en mí.</h3>
+            </div>
+
+            <button className="portal-close" type="button" onClick={() => setIsOpen(false)} aria-label="Cerrar galería">
+              <X size={18} />
+            </button>
+          </div>
+
+          <div className="portal-layout">
+            <div className="portal-preview">
+              {activeItem?.image ? (
+                <img src={activeItem.image} alt={activeItem.alt || activeItem.title} draggable="false" />
+              ) : (
+                <div className="portal-placeholder">
+                  <ImageIcon size={42} />
+                  <span>Aquí quiero seguir guardando más de ti</span>
+                </div>
+              )}
+            </div>
+
+            <div className="portal-info">
+              <span>{activeItem?.date || 'Un recuerdo nuestro'}</span>
+              <h3>{activeItem?.title || 'Tú y yo, en algún rincón del universo'}</h3>
+              <p>
+                {activeItem?.description ||
+                  activeItem?.caption ||
+                  'Aunque este espacio todavía no tenga foto, igual ya existe dentro de mí. Solo está esperando el siguiente momento bonito contigo, Ale.'}
+              </p>
+              {activeItem?.tag && <strong>{activeItem.tag}</strong>}
+            </div>
+          </div>
+
+          <div className="blackhole-gallery-grid">
+            {visibleItems.map((item) => (
+              <button
+                className={`blackhole-photo-card ${activeItem?.id === item.id ? 'blackhole-photo-card-active' : ''}`}
+                key={item.id}
+                type="button"
+                onClick={() => setActiveItem(item)}
+              >
+                <div className="blackhole-photo-thumb">
+                  {item.image ? (
+                    <img src={item.image} alt={item.alt || item.title} draggable="false" />
+                  ) : (
+                    <ImageIcon size={24} />
+                  )}
+                </div>
+
+                <div className="blackhole-photo-text">
+                  <span>{item.date || item.type || 'Recuerdo'}</span>
+                  <h4>{item.title}</h4>
+                  <p>{item.description || item.caption}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  )
+}
+
+export default BlackHoleGallerySection

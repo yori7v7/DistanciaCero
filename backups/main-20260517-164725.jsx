@@ -1,4 +1,4 @@
-﻿import React from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { AudioProvider } from './context/AudioContext.jsx'
@@ -21,11 +21,6 @@ import './styles/chaotic-reasons.css'
 import './styles/chaotic-reasons-fix.css'
 import './styles/coming-soon-universe.css'
 import './styles/audio-sync.css'
-import './styles/scene-music-controller.css'
-import './styles/diary-story.css'
-import './styles/true-3d.css'
-import './styles/space-3d-upgrade.css'
-import './styles/blackhole-gallery.css'
 
 const resetParams = new URLSearchParams(window.location.search)
 
@@ -43,8 +38,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </AudioProvider>
   </React.StrictMode>,
 )
-
-
-
-
-

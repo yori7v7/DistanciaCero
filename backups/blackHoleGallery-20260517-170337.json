@@ -1,0 +1,38 @@
+﻿[
+  {
+    "id": "foto-01",
+    "date": "Nuestro universo",
+    "title": "Primera foto dentro del agujero negro",
+    "description": "Cambia esta imagen por una foto real de ustedes. Este recuerdo será el primero en orbitar alrededor del horizonte de sucesos.",
+    "image": "/DistanciaCero/images/blackhole-gallery/foto-01.jpg",
+    "alt": "Foto especial de Ale y Yori",
+    "tag": "Ale & Yori"
+  },
+  {
+    "id": "foto-02",
+    "date": "Momento bonito",
+    "title": "Una captura que merece repetirse",
+    "description": "Aquí puede ir una screenshot de llamada, chat, videollamada o cualquier momento que les dé ternura volver a ver.",
+    "image": "/DistanciaCero/images/blackhole-gallery/foto-02.jpg",
+    "alt": "Recuerdo bonito de Ale y Yori",
+    "tag": "Distancia cero"
+  },
+  {
+    "id": "ia-01",
+    "date": "Imagen IA",
+    "title": "Una versión de nuestro universo",
+    "description": "Espacio para una imagen generada con IA, edit romántico o algo con vibra de anime oscuro.",
+    "image": "",
+    "alt": "Imagen IA pendiente",
+    "tag": "Universo digital"
+  },
+  {
+    "id": "momento-01",
+    "date": "Recuerdo futuro",
+    "title": "Próximo momento que caiga aquí",
+    "description": "Este espacio queda reservado para lo que venga después: una cita, una llamada, una broma interna o una promesa cumplida.",
+    "image": "",
+    "alt": "Recuerdo futuro",
+    "tag": "Próximamente"
+  }
+]
