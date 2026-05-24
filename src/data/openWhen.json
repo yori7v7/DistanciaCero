@@ -4,8 +4,13 @@
     "mood": "Abrir cuando me extrañes",
     "title": "Estoy más cerca de lo que parece",
     "preview": "Una cartita para cuando la distancia se sienta medio castrosa.",
-    "locked": true,
-    "url": "/open-when/me-extranes/"
+    "locked": false,
+    "url": "/open-when/me-extranes/",
+    "content": [
+      "Si estás leyendo esto, es porque la distancia hoy se está sintiendo más pesada de lo normal. Quiero que cierres los ojos por un segundo y recuerdes que, no importa cuántos kilómetros nos separen, estamos bajo el mismo cielo.",
+      "Cada día que pasa es un día menos para vernos, y cada segundo separados vale totalmente la pena cuando pienso en el futuro que nos espera.",
+      "Te llevo conmigo en todo lo que hago. Siente este mensaje como un abrazo fuerte de mi parte. No estás sola, aquí estoy contigo siempre."
+    ]
   },
   {
     "id": 2,
@@ -13,7 +18,8 @@
     "title": "Respira, mi Alecita",
     "preview": "Un mensaje para abrazarte tantito desde aquí.",
     "locked": true,
-    "url": "/open-when/estes-triste/"
+    "url": "/open-when/estes-triste/",
+    "content": []
   },
   {
     "id": 3,
@@ -21,7 +27,8 @@
     "title": "Quédate tantito conmigo",
     "preview": "Una carta suave para una noche larga.",
     "locked": true,
-    "url": "/open-when/no-puedas-dormir/"
+    "url": "/open-when/no-puedas-dormir/",
+    "content": []
   },
   {
     "id": 4,
@@ -29,7 +36,8 @@
     "title": "Modo mensos activado",
     "preview": "Un espacio para bromas internas, stickers y tonterías nuestras.",
     "locked": true,
-    "url": "/open-when/quieras-reir/"
+    "url": "/open-when/quieras-reir/",
+    "content": []
   },
   {
     "id": 5,
@@ -37,7 +45,8 @@
     "title": "Aquí sigo",
     "preview": "Una carta para recordarte lo que siento y lo que estamos construyendo.",
     "locked": true,
-    "url": "/open-when/cuando-dudes/"
+    "url": "/open-when/cuando-dudes/",
+    "content": []
   },
   {
     "id": 6,
@@ -45,6 +54,7 @@
     "title": "Sorpresa programada",
     "preview": "Una cartita para una fecha que todavía no llega.",
     "locked": true,
-    "url": "/open-when/dia-especial/"
+    "url": "/open-when/dia-especial/",
+    "content": []
   }
 ]

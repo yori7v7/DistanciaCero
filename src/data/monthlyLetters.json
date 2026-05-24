@@ -4,8 +4,13 @@
     "month": "Mes 1",
     "title": "Nuestra primera carta mensual",
     "preview": "Esta carta se desbloqueará cuando empiece oficialmente nuestro primer mes.",
-    "locked": true,
-    "url": "/letters/mes-01/"
+    "locked": false,
+    "url": "/letters/mes-01/",
+    "content": [
+      "Hola amor, hoy cumplimos nuestro primer mes juntos y no puedo evitar sonreír al pensar en todo lo que hemos compartido hasta ahora.",
+      "A pesar de que la distancia intente hacernos dudar, cada conversación, cada risa y cada momento que pasamos conectados me demuestra que estamos construyendo algo verdaderamente único y especial.",
+      "Gracias por estar en mi vida, por tu paciencia, tu cariño y por hacer que cada día sea más bonito. Este es solo el primer paso de un camino largo y hermoso que quiero recorrer a tu lado. Te quiero muchísimo."
+    ]
   },
   {
     "id": 2,
@@ -13,7 +18,8 @@
     "title": "Próximamente",
     "preview": "Aquí irá una carta nueva cuando llegue el momento.",
     "locked": true,
-    "url": "/letters/mes-02/"
+    "url": "/letters/mes-02/",
+    "content": []
   },
   {
     "id": 3,
@@ -21,6 +27,7 @@
     "title": "Próximamente",
     "preview": "Otro pedacito de nosotros esperando ser escrito.",
     "locked": true,
-    "url": "/letters/mes-03/"
+    "url": "/letters/mes-03/",
+    "content": []
   }
 ]

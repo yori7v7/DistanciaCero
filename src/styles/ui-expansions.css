@@ -587,3 +587,165 @@
     height: 180px;
   }
 }
+
+/* ==========================================================================
+   Letter Reader Styles (In-App Visor)
+   ========================================================================== */
+.letter-reader {
+  width: 100%;
+  max-width: 800px;
+  margin: 24px auto 0;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.letter-reader-panel {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: rgba(14, 2, 22, 0.75);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  box-shadow: 0 24px 60px rgba(255, 46, 147, 0.12), 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-reader-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pink, #ff7ac8), var(--red, #ff1744));
+}
+
+.letter-reader-meta {
+  margin-bottom: 28px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+  text-align: left;
+}
+
+.reader-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 46, 147, 0.15);
+  border: 1px solid rgba(255, 46, 147, 0.3);
+  color: var(--pink-soft, #ffe0ef);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+.letter-reader-meta h2 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: #fff;
+  margin: 0 0 10px 0;
+  font-weight: 800;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(255, 46, 147, 0.3);
+}
+
+.letter-reader-preview {
+  margin: 0;
+  color: var(--pink-soft, #ffe0ef);
+  font-size: 1.05rem;
+  opacity: 0.85;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.letter-reader-content {
+  text-align: left;
+  margin-bottom: 36px;
+  color: var(--muted, #e2d9eb);
+  font-size: 1.12rem;
+  line-height: 1.8;
+}
+
+.letter-reader-content p {
+  margin: 0 0 20px 0;
+  text-indent: 10px;
+}
+
+.letter-reader-content p:last-child {
+  margin-bottom: 0;
+}
+
+.letter-reader-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--pink-soft, #ffe0ef);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 10px;
+}
+
+.letter-reader-back:hover {
+  background: linear-gradient(135deg, rgba(255, 46, 147, 0.2), rgba(255, 23, 68, 0.2));
+  border-color: rgba(255, 46, 147, 0.5);
+  transform: translateY(-2px);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(255, 46, 147, 0.25);
+}
+
+/* Specific state transitions and check circle styles for card-grid items */
+.mini-card.opened-card {
+  border-color: rgba(255, 46, 147, 0.4);
+  box-shadow: 0 8px 30px rgba(255, 46, 147, 0.08);
+}
+
+.check-icon {
+  animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .letter-reader-panel {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  
+  .letter-reader-content {
+    font-size: 1.02rem;
+    line-height: 1.7;
+  }
+
+  .letter-reader-back {
+    width: 100%;
+    justify-content: center;
+  }
+}

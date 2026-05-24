@@ -1,13 +1,69 @@
+import { useState } from 'react'
 import SectionTitle from './SectionTitle'
-import { Lock, ExternalLink } from 'lucide-react'
+import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
 
 function MonthlyLetters({ letters }) {
+  const [selectedLetterId, setSelectedLetterId] = useState(null)
+
   const openLetter = (letter) => {
     if (letter.locked) return
 
-    const storageKey = `distancia-cero-letter-${letter.id}`
+    const storageKey = `distancia-cero-monthly-letter-${letter.id}`
     localStorage.setItem(storageKey, 'opened')
-    window.open(letter.url, '_blank', 'noopener,noreferrer')
+    setSelectedLetterId(letter.id)
+
+    // Scroll suave al inicio de la sección
+    setTimeout(() => {
+      const section = document.getElementById('cartas')
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 50)
+  }
+
+  const handleBack = () => {
+    setSelectedLetterId(null)
+    setTimeout(() => {
+      const section = document.getElementById('cartas')
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 50)
+  }
+
+  const activeLetter = letters.find((letter) => letter.id === selectedLetterId)
+
+  if (activeLetter) {
+    return (
+      <section className="section" id="cartas">
+        <SectionTitle
+          eyebrow="Cartas mensuales"
+          title={activeLetter.month}
+          text={activeLetter.title}
+        />
+
+        <div className="letter-reader">
+          <div className="letter-reader-panel">
+            <div className="letter-reader-meta">
+              <span className="reader-badge">{activeLetter.month}</span>
+              <h2>{activeLetter.title}</h2>
+              <p className="letter-reader-preview">{activeLetter.preview}</p>
+            </div>
+
+            <div className="letter-reader-content">
+              {Array.isArray(activeLetter.content) && activeLetter.content.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
+
+            <button className="ghost-button letter-reader-back" onClick={handleBack} type="button">
+              <ChevronLeft size={16} />
+              Volver a las cartas
+            </button>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -15,25 +71,40 @@ function MonthlyLetters({ letters }) {
       <SectionTitle
         eyebrow="Cartas mensuales"
         title="Un mes, una carta, un pedacito más de nosotros"
-        text="Cada carta podrá abrir una página propia cuando llegue su momento."
+        text="Cada carta se puede leer directamente aquí cuando llegue su momento."
       />
 
       <div className="card-grid">
-        {letters.map((letter) => (
-          <article className={`mini-card ${letter.locked ? 'locked' : ''}`} key={letter.id}>
-            <div className="card-top">
-              <span>{letter.month}</span>
-              {letter.locked ? <Lock size={20} /> : <ExternalLink size={20} />}
-            </div>
+        {letters.map((letter) => {
+          const isOpened = localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened'
 
-            <h3>{letter.title}</h3>
-            <p>{letter.preview}</p>
+          return (
+            <article className={`mini-card ${letter.locked ? 'locked' : ''} ${isOpened ? 'opened-card' : ''}`} key={letter.id}>
+              <div className="card-top">
+                <span>{letter.month}</span>
+                {letter.locked ? (
+                  <Lock size={20} />
+                ) : isOpened ? (
+                  <Check size={20} className="check-icon" style={{ color: 'var(--color-accent-pink, #ff2e93)' }} />
+                ) : (
+                  <BookOpen size={20} />
+                )}
+              </div>
 
-            <button className="ghost-button" onClick={() => openLetter(letter)} disabled={letter.locked}>
-              {letter.locked ? 'Próximamente' : 'Abrir carta'}
-            </button>
-          </article>
-        ))}
+              <h3>{letter.title}</h3>
+              <p>{letter.preview}</p>
+
+              <button
+                className="ghost-button"
+                onClick={() => openLetter(letter)}
+                disabled={letter.locked}
+                type="button"
+              >
+                {letter.locked ? 'Próximamente' : isOpened ? 'Releer carta' : 'Abrir carta'}
+              </button>
+            </article>
+          )
+        })}
       </div>
     </section>
   )
