@@ -6,6 +6,11 @@ function MonthlyLetters({ letters }) {
   const [selectedLetterId, setSelectedLetterId] = useState(null)
   const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
+  // Load and combine static JSON letters with local letters from localStorage
+  const localLettersRaw = localStorage.getItem('distancia-cero-local-monthly-letters')
+  const localLetters = localLettersRaw ? JSON.parse(localLettersRaw) : []
+  const allLetters = [...letters, ...localLetters]
+
   const openLetter = (letter) => {
     const isLocked = isSimUnlocked ? false : letter.locked
     if (isLocked) return
@@ -33,10 +38,10 @@ function MonthlyLetters({ letters }) {
     }, 50)
   }
 
-  const totalLetters = letters.length
-  const openedLetters = letters.filter((letter) => localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened').length
+  const totalLetters = allLetters.length
+  const openedLetters = allLetters.filter((letter) => localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened').length
 
-  const activeLetter = letters.find((letter) => letter.id === selectedLetterId)
+  const activeLetter = allLetters.find((letter) => letter.id === selectedLetterId)
 
   if (activeLetter) {
     return (
@@ -84,15 +89,17 @@ function MonthlyLetters({ letters }) {
       </div>
 
       <div className="card-grid">
-        {letters.map((letter) => {
+        {allLetters.map((letter) => {
           const isOpened = localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened'
           const cardLockedForClick = isSimUnlocked ? false : letter.locked
 
           return (
-            <article className={`mini-card ${cardLockedForClick ? 'locked' : ''} ${isOpened ? 'opened-card' : ''} ${isSimUnlocked && letter.locked ? 'sim-unlocked-card' : ''}`} key={letter.id}>
+            <article className={`mini-card ${cardLockedForClick ? 'locked' : ''} ${isOpened ? 'opened-card' : ''} ${isSimUnlocked && letter.locked ? 'sim-unlocked-card' : ''} ${letter.isLocal ? 'local-letter-card' : ''}`} key={letter.id}>
               <div className="card-top">
                 <span>{letter.month}</span>
-                {letter.locked ? (
+                {letter.isLocal ? (
+                  <span className="card-status-badge local-badge"><BookOpen size={12} /> Local</span>
+                ) : letter.locked ? (
                   isSimUnlocked ? (
                     <span className="card-status-badge sim-unlocked-badge"><BookOpen size={12} /> Simulado</span>
                   ) : (

@@ -1,39 +1,58 @@
 import { useState, useEffect } from 'react'
 import SectionTitle from './SectionTitle'
-import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen } from 'lucide-react'
-import monthlyLetters from '../data/monthlyLetters.json'
-import openWhen from '../data/openWhen.json'
+import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle } from 'lucide-react'
+import monthlyLettersData from '../data/monthlyLetters.json'
+import openWhenData from '../data/openWhen.json'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
-  
+  const [localMonthly, setLocalMonthly] = useState([])
+  const [localOpenWhen, setLocalOpenWhen] = useState([])
+
+  // Form states
+  const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
+  const [title, setTitle] = useState('')
+  const [preview, setPreview] = useState('')
+  const [contentRaw, setContentRaw] = useState('')
+  const [tag, setTag] = useState('')
+  const [editingId, setEditingId] = useState(null)
+
   useEffect(() => {
     setIsSimUnlocked(localStorage.getItem('distancia-cero-sim-unlocked') === '1')
+    
+    const m = localStorage.getItem('distancia-cero-local-monthly-letters')
+    const ow = localStorage.getItem('distancia-cero-local-open-when')
+    setLocalMonthly(m ? JSON.parse(m) : [])
+    setLocalOpenWhen(ow ? JSON.parse(ow) : [])
   }, [])
 
-  // Map open when cards to lock 'special day' card just like the section does
-  const mappedOpenWhen = openWhen.map((card) => {
+  // Map open when cards to lock 'special day' card
+  const mappedOpenWhen = openWhenData.map((card) => {
     if (card.mood === 'Abrir cuando sea un día especial') {
       return { ...card, locked: true }
     }
     return card
   })
 
-  // Calculation for Monthly Letters stats
-  const totalMonthly = monthlyLetters.length
-  const openedMonthly = monthlyLetters.filter(
+  // Calculation for Monthly Letters stats (combining JSON + Local)
+  const totalMonthly = monthlyLettersData.length + localMonthly.length
+  const openedMonthly = monthlyLettersData.filter(
+    (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
+  ).length + localMonthly.filter(
     (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
   ).length
-  const unlockedMonthly = monthlyLetters.filter((l) => !l.locked).length
-  const lockedMonthly = totalMonthly - unlockedMonthly
+  const unlockedMonthly = monthlyLettersData.filter((l) => !l.locked).length + localMonthly.length
+  const lockedMonthly = (monthlyLettersData.length - monthlyLettersData.filter((l) => !l.locked).length)
 
-  // Calculation for Open When Letters stats
-  const totalOpenWhen = mappedOpenWhen.length
+  // Calculation for Open When Letters stats (combining JSON + Local)
+  const totalOpenWhen = mappedOpenWhen.length + localOpenWhen.length
   const openedOpenWhen = mappedOpenWhen.filter(
     (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
+  ).length + localOpenWhen.filter(
+    (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
   ).length
-  const unlockedOpenWhen = mappedOpenWhen.filter((c) => !c.locked).length
-  const lockedOpenWhen = totalOpenWhen - unlockedOpenWhen
+  const unlockedOpenWhen = mappedOpenWhen.filter((c) => !c.locked).length + localOpenWhen.length
+  const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -47,17 +66,132 @@ function CentroUniversoSection() {
   const handleReset = () => {
     if (
       window.confirm(
-        '¿Seguro que quieres borrar el progreso de lectura de las cartas? Esto no afectará la música ni otras configuraciones locales.'
+        '¿Seguro que quieres borrar el progreso de lectura de las cartas? Esto no afectará las cartas creadas localmente ni la música.'
       )
     ) {
-      monthlyLetters.forEach((l) => {
+      // Clear progress keys for JSON letters
+      monthlyLettersData.forEach((l) => {
         localStorage.removeItem(`distancia-cero-monthly-letter-${l.id}`)
       })
-      openWhen.forEach((c) => {
+      mappedOpenWhen.forEach((c) => {
+        localStorage.removeItem(`distancia-cero-open-when-${c.id}`)
+      })
+      // Clear progress keys for Local letters
+      localMonthly.forEach((l) => {
+        localStorage.removeItem(`distancia-cero-monthly-letter-${l.id}`)
+      })
+      localOpenWhen.forEach((c) => {
         localStorage.removeItem(`distancia-cero-open-when-${c.id}`)
       })
       localStorage.removeItem('distancia-cero-sim-unlocked')
       window.location.reload()
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!title.trim() || !preview.trim() || !contentRaw.trim()) {
+      alert('Por favor, completa todos los campos obligatorios.')
+      return
+    }
+
+    const contentArray = contentRaw
+      .split('\n')
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0)
+
+    const isMonthly = letterType === 'monthly'
+    const storageKey = isMonthly
+      ? 'distancia-cero-local-monthly-letters'
+      : 'distancia-cero-local-open-when'
+    const currentList = isMonthly ? localMonthly : localOpenWhen
+
+    let updatedList
+    if (editingId) {
+      // Edit mode
+      updatedList = currentList.map((item) => {
+        if (item.id === editingId) {
+          return {
+            ...item,
+            title: title.trim(),
+            preview: preview.trim(),
+            content: contentArray,
+            month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
+            mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
+          }
+        }
+        return item
+      })
+      setEditingId(null)
+    } else {
+      // Create mode
+      const newItem = {
+        id: `local-${Date.now()}`,
+        title: title.trim(),
+        preview: preview.trim(),
+        content: contentArray,
+        locked: false,
+        isLocal: true,
+        month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
+        mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
+        url: isMonthly ? `/local-letter/${Date.now()}` : `/local-open-when/${Date.now()}`
+      }
+      updatedList = [...currentList, newItem]
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(updatedList))
+    if (isMonthly) {
+      setLocalMonthly(updatedList)
+    } else {
+      setLocalOpenWhen(updatedList)
+    }
+
+    // Reset Form
+    setTitle('')
+    setPreview('')
+    setContentRaw('')
+    setTag('')
+    alert('Carta local guardada con éxito. Compruébala en su respectiva sección.')
+  }
+
+  const handleEdit = (item, type) => {
+    setLetterType(type)
+    setEditingId(item.id)
+    setTitle(item.title)
+    setPreview(item.preview)
+    setContentRaw(item.content ? item.content.join('\n') : '')
+    setTag(type === 'monthly' ? (item.month || '') : (item.mood || ''))
+
+    const formElement = document.getElementById('local-editor-form')
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const handleDelete = (id, type) => {
+    if (window.confirm('¿Seguro que quieres eliminar esta carta local?')) {
+      const isMonthly = type === 'monthly'
+      const storageKey = isMonthly
+        ? 'distancia-cero-local-monthly-letters'
+        : 'distancia-cero-local-open-when'
+      const currentList = isMonthly ? localMonthly : localOpenWhen
+      const updatedList = currentList.filter((item) => item.id !== id)
+
+      localStorage.setItem(storageKey, JSON.stringify(updatedList))
+      if (isMonthly) {
+        setLocalMonthly(updatedList)
+      } else {
+        setLocalOpenWhen(updatedList)
+      }
+
+      // If we were editing this item, reset form
+      if (editingId === id) {
+        setEditingId(null)
+        setTitle('')
+        setPreview('')
+        setContentRaw('')
+        setTag('')
+      }
     }
   }
 
@@ -78,13 +212,13 @@ function CentroUniversoSection() {
         </div>
       )}
 
+      {/* Statistics Cards */}
       <div className="control-grid">
-        {/* Monthly Letters Stats Panel */}
         <div className="control-card">
           <h3>Cartas Mensuales</h3>
           <div className="control-stats">
             <div className="stat-item">
-              <span className="stat-label">Total en base</span>
+              <span className="stat-label">Total (Base + Local)</span>
               <span className="stat-value">{totalMonthly}</span>
             </div>
             <div className="stat-item">
@@ -108,12 +242,11 @@ function CentroUniversoSection() {
           </div>
         </div>
 
-        {/* Open When Stats Panel */}
         <div className="control-card">
           <h3>Cartas Abrir Cuando</h3>
           <div className="control-stats">
             <div className="stat-item">
-              <span className="stat-label">Total en base</span>
+              <span className="stat-label">Total (Base + Local)</span>
               <span className="stat-value">{totalOpenWhen}</span>
             </div>
             <div className="stat-item">
@@ -138,6 +271,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
+      {/* Global Actions */}
       <div className="control-actions">
         <button
           className={`control-btn ${isSimUnlocked ? 'active-sim' : 'inactive-sim'}`}
@@ -152,6 +286,195 @@ function CentroUniversoSection() {
           <Trash2 size={18} />
           Resetear Progreso
         </button>
+      </div>
+
+      {/* Local letters CRUD editor */}
+      <div className="local-editor-container" id="local-editor-form">
+        <div className="editor-card">
+          <h3>
+            <Plus size={18} />
+            {editingId ? 'Editar Carta Local' : 'Crear Carta Local'}
+          </h3>
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>
+              <strong>Aviso de pruebas</strong>: Estas cartas se guardan solo localmente en tu navegador.
+            </span>
+          </div>
+
+          <form onSubmit={handleSubmit} className="editor-form">
+            <div className="editor-row">
+              <div className="editor-field">
+                <label htmlFor="letterType">Tipo de Carta *</label>
+                <select
+                  id="letterType"
+                  value={letterType}
+                  onChange={(e) => setLetterType(e.target.value)}
+                  disabled={!!editingId}
+                >
+                  <option value="monthly">Carta Mensual</option>
+                  <option value="openwhen">Carta Abrir cuando...</option>
+                </select>
+              </div>
+
+              <div className="editor-field">
+                <label htmlFor="tag">
+                  {letterType === 'monthly' ? 'Mes / Etiqueta *' : 'Motivo / Emoción *'}
+                </label>
+                <input
+                  type="text"
+                  id="tag"
+                  placeholder={
+                    letterType === 'monthly'
+                      ? 'Ej. Mes 4 o Carta especial'
+                      : 'Ej. Abrir cuando me extrañes'
+                  }
+                  value={tag}
+                  onChange={(e) => setTag(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="title">Título de la Carta *</label>
+              <input
+                type="text"
+                id="title"
+                placeholder="Ej. Un escrito desde mi corazón"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="preview">Vista previa / Preview *</label>
+              <input
+                type="text"
+                id="preview"
+                placeholder="Ej. Un breve mensaje antes de abrir..."
+                value={preview}
+                onChange={(e) => setPreview(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="contentRaw">Contenido de la carta (un párrafo por línea) *</label>
+              <textarea
+                id="contentRaw"
+                rows="6"
+                placeholder="Escribe el texto de tu carta aquí.&#10;Presiona Enter para crear un nuevo párrafo."
+                value={contentRaw}
+                onChange={(e) => setContentRaw(e.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingId && (
+                <button
+                  type="button"
+                  className="ghost-button cancel-btn"
+                  onClick={() => {
+                    setEditingId(null)
+                    setTitle('')
+                    setPreview('')
+                    setContentRaw('')
+                    setTag('')
+                  }}
+                >
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn">
+                {editingId ? 'Actualizar Carta' : 'Guardar Carta'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Local Letters Listings */}
+        <div className="local-list-card">
+          <h3>Cartas locales creadas</h3>
+          
+          <div className="local-lists-split">
+            {/* Monthly Local List */}
+            <div className="list-column">
+              <h4>Mensuales ({localMonthly.length})</h4>
+              {localMonthly.length === 0 ? (
+                <p className="no-items">No hay cartas mensuales locales.</p>
+              ) : (
+                <div className="items-list">
+                  {localMonthly.map((item) => (
+                    <div className="item-row" key={item.id}>
+                      <div className="item-info">
+                        <strong>{item.title}</strong>
+                        <span>{item.month}</span>
+                      </div>
+                      <div className="item-actions">
+                        <button
+                          type="button"
+                          className="action-icon-btn edit"
+                          onClick={() => handleEdit(item, 'monthly')}
+                          title="Editar"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          className="action-icon-btn delete"
+                          onClick={() => handleDelete(item.id, 'monthly')}
+                          title="Eliminar"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Open When Local List */}
+            <div className="list-column">
+              <h4>Abrir cuando ({localOpenWhen.length})</h4>
+              {localOpenWhen.length === 0 ? (
+                <p className="no-items">No hay cartas abrir cuando locales.</p>
+              ) : (
+                <div className="items-list">
+                  {localOpenWhen.map((item) => (
+                    <div className="item-row" key={item.id}>
+                      <div className="item-info">
+                        <strong>{item.title}</strong>
+                        <span>{item.mood}</span>
+                      </div>
+                      <div className="item-actions">
+                        <button
+                          type="button"
+                          className="action-icon-btn edit"
+                          onClick={() => handleEdit(item, 'openwhen')}
+                          title="Editar"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          className="action-icon-btn delete"
+                          onClick={() => handleDelete(item.id, 'openwhen')}
+                          title="Eliminar"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
