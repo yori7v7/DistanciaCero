@@ -970,3 +970,219 @@
 .mini-card.opened-card:hover {
   box-shadow: 0 10px 30px rgba(255, 46, 147, 0.15), 0 0 15px rgba(255, 46, 147, 0.1);
 }
+
+/* ==========================================================================
+   Centro del Universo Section Styles (Dashboard)
+   ========================================================================== */
+.centro-universo-section {
+  text-align: center;
+}
+
+/* Simulation active glowing banner */
+.simulation-active-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: rgba(255, 23, 68, 0.12);
+  border: 1px solid rgba(255, 23, 68, 0.4);
+  color: #ff5252;
+  font-size: 0.95rem;
+  margin-bottom: 32px;
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.15);
+  animation: bannerPulse 2s infinite ease-in-out;
+}
+
+@keyframes bannerPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.15);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(255, 23, 68, 0.3);
+  }
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto 36px;
+}
+
+.control-card {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: rgba(14, 2, 22, 0.6);
+  backdrop-filter: blur(15px);
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.control-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 46, 147, 0.3);
+  box-shadow: 0 20px 50px rgba(255, 46, 147, 0.05);
+}
+
+.control-card h3 {
+  margin: 0 0 20px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.control-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.stat-label {
+  color: var(--muted, #ebdff5);
+  font-weight: 500;
+}
+
+.flex-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-value {
+  font-weight: 800;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 10px;
+  border-radius: 6px;
+  min-width: 28px;
+  text-align: center;
+}
+
+.text-pink {
+  color: var(--pink, #ff2e93) !important;
+  text-shadow: 0 0 10px rgba(255, 46, 147, 0.3);
+}
+
+.icon-available {
+  color: #00bfa5;
+}
+
+.icon-locked {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.icon-opened {
+  color: var(--pink, #ff2e93);
+}
+
+/* Actions buttons panel */
+.control-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 0.95rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.inactive-sim {
+  background: rgba(255, 46, 147, 0.1);
+  border: 1px solid rgba(255, 46, 147, 0.35);
+  color: #ff7ac8;
+}
+
+.inactive-sim:hover {
+  background: linear-gradient(135deg, rgba(255, 46, 147, 0.25) 0%, rgba(255, 23, 68, 0.25) 100%);
+  border-color: rgba(255, 46, 147, 0.6);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 46, 147, 0.2);
+}
+
+.active-sim {
+  background: linear-gradient(135deg, #ff1744 0%, #ff2e93 100%);
+  border: 1px solid rgba(255, 23, 68, 0.5);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.25);
+}
+
+.active-sim:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 23, 68, 0.4);
+}
+
+.reset-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffe0ef;
+}
+
+.reset-btn:hover {
+  background: rgba(255, 23, 68, 0.08);
+  border-color: rgba(255, 23, 68, 0.4);
+  color: #ff5252;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 23, 68, 0.1);
+}
+
+/* Sim Unlocked details in original cards */
+.sim-unlocked-card {
+  border-color: rgba(0, 191, 165, 0.35) !important;
+  box-shadow: 0 0 15px rgba(0, 191, 165, 0.08) !important;
+}
+
+.sim-unlocked-badge {
+  background: rgba(0, 191, 165, 0.15);
+  border: 1px solid rgba(0, 191, 165, 0.4);
+  color: #00e676;
+}
+
+.sim-hint-tag {
+  color: #00bfa5;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+@media (max-width: 760px) {
+  .control-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 12px;
+  }
+  
+  .control-btn {
+    width: 100%;
+    padding: 12px 20px;
+  }
+}

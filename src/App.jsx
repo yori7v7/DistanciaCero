@@ -1,4 +1,4 @@
-﻿import LoadingIntro from './components/LoadingIntro'
+import LoadingIntro from './components/LoadingIntro'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProposalSection from './components/ProposalSection'
@@ -16,6 +16,7 @@ import BlackHoleGallerySection from './components/BlackHoleGallerySection'
 import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
+import CentroUniversoSection from './components/CentroUniversoSection'
 import SceneMusicController from './components/SceneMusicController'
 import SceneModeController from './components/SceneModeController'
 import BackToTop from './components/BackToTop'
@@ -65,6 +66,7 @@ function App() {
         <FutureDreamsSection dreams={futureDreams} />
         <PromisesSection promises={promises} />
         <DistanceMapSection />
+        <CentroUniversoSection />
       </main>
 
       <SceneModeController />

@@ -4,9 +4,11 @@ import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
 
 function MonthlyLetters({ letters }) {
   const [selectedLetterId, setSelectedLetterId] = useState(null)
+  const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
   const openLetter = (letter) => {
-    if (letter.locked) return
+    const isLocked = isSimUnlocked ? false : letter.locked
+    if (isLocked) return
 
     const storageKey = `distancia-cero-monthly-letter-${letter.id}`
     localStorage.setItem(storageKey, 'opened')
@@ -84,13 +86,18 @@ function MonthlyLetters({ letters }) {
       <div className="card-grid">
         {letters.map((letter) => {
           const isOpened = localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened'
+          const cardLockedForClick = isSimUnlocked ? false : letter.locked
 
           return (
-            <article className={`mini-card ${letter.locked ? 'locked' : ''} ${isOpened ? 'opened-card' : ''}`} key={letter.id}>
+            <article className={`mini-card ${cardLockedForClick ? 'locked' : ''} ${isOpened ? 'opened-card' : ''} ${isSimUnlocked && letter.locked ? 'sim-unlocked-card' : ''}`} key={letter.id}>
               <div className="card-top">
                 <span>{letter.month}</span>
                 {letter.locked ? (
-                  <span className="card-status-badge locked-badge"><Lock size={12} /> Bloqueada</span>
+                  isSimUnlocked ? (
+                    <span className="card-status-badge sim-unlocked-badge"><BookOpen size={12} /> Simulado</span>
+                  ) : (
+                    <span className="card-status-badge locked-badge"><Lock size={12} /> Bloqueada</span>
+                  )
                 ) : isOpened ? (
                   <span className="card-status-badge opened-badge"><Check size={12} /> Leída</span>
                 ) : (
@@ -102,16 +109,18 @@ function MonthlyLetters({ letters }) {
               <p>{letter.preview}</p>
 
               {letter.locked && letter.unlockHint && (
-                <p className="card-unlock-hint">{letter.unlockHint}</p>
+                <p className="card-unlock-hint">
+                  {letter.unlockHint} {isSimUnlocked && <span className="sim-hint-tag">(Modo Prueba)</span>}
+                </p>
               )}
 
               <button
                 className="ghost-button"
                 onClick={() => openLetter(letter)}
-                disabled={letter.locked}
+                disabled={cardLockedForClick}
                 type="button"
               >
-                {letter.locked ? (letter.availableLabel || 'Próximamente') : isOpened ? 'Releer carta' : 'Abrir carta'}
+                {cardLockedForClick ? (letter.availableLabel || 'Próximamente') : isOpened ? 'Releer carta' : isSimUnlocked && letter.locked ? 'Abrir (Sim)' : 'Abrir carta'}
               </button>
             </article>
           )

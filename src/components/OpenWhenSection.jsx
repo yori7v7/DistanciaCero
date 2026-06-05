@@ -4,6 +4,7 @@ import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
 
 function OpenWhenSection({ cards = [] }) {
   const [selectedCardId, setSelectedCardId] = useState(null)
+  const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
   const finalCards = cards.map((card) => {
     if (card.mood === 'Abrir cuando sea un día especial') {
@@ -18,7 +19,8 @@ function OpenWhenSection({ cards = [] }) {
   })
 
   const openCard = (card) => {
-    if (card.locked) return
+    const isLocked = isSimUnlocked ? false : card.locked
+    if (isLocked) return
 
     const storageKey = `distancia-cero-open-when-${card.id}`
     localStorage.setItem(storageKey, 'opened')
@@ -96,13 +98,18 @@ function OpenWhenSection({ cards = [] }) {
       <div className="card-grid">
         {finalCards.map((card) => {
           const isOpened = localStorage.getItem(`distancia-cero-open-when-${card.id}`) === 'opened'
+          const cardLockedForClick = isSimUnlocked ? false : card.locked
 
           return (
-            <article className={`mini-card open-card ${card.locked ? 'locked' : ''} ${isOpened ? 'opened-card' : ''} fade-up`} key={card.id}>
+            <article className={`mini-card open-card ${cardLockedForClick ? 'locked' : ''} ${isOpened ? 'opened-card' : ''} ${isSimUnlocked && card.locked ? 'sim-unlocked-card' : ''} fade-up`} key={card.id}>
               <div className="card-top">
                 <span>{card.mood}</span>
                 {card.locked ? (
-                  <span className="card-status-badge locked-badge"><Lock size={12} /> Bloqueada</span>
+                  isSimUnlocked ? (
+                    <span className="card-status-badge sim-unlocked-badge"><BookOpen size={12} /> Simulado</span>
+                  ) : (
+                    <span className="card-status-badge locked-badge"><Lock size={12} /> Bloqueada</span>
+                  )
                 ) : isOpened ? (
                   <span className="card-status-badge opened-badge"><Check size={12} /> Leída</span>
                 ) : (
@@ -114,16 +121,18 @@ function OpenWhenSection({ cards = [] }) {
               <p>{card.preview}</p>
 
               {card.locked && card.unlockHint && (
-                <p className="card-unlock-hint">{card.unlockHint}</p>
+                <p className="card-unlock-hint">
+                  {card.unlockHint} {isSimUnlocked && <span className="sim-hint-tag">(Modo Prueba)</span>}
+                </p>
               )}
 
               <button
                 className="ghost-button"
                 onClick={() => openCard(card)}
-                disabled={card.locked}
+                disabled={cardLockedForClick}
                 type="button"
               >
-                {card.locked ? (card.availableLabel || 'Próximamente') : isOpened ? 'Releer carta' : 'Abrir carta'}
+                {cardLockedForClick ? (card.availableLabel || 'Próximamente') : isOpened ? 'Releer carta' : isSimUnlocked && card.locked ? 'Abrir (Sim)' : 'Abrir carta'}
               </button>
             </article>
           )

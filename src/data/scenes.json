@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "id": "inicio",
     "label": "Inicio",
@@ -70,5 +70,13 @@
     "subtitle": "Nuestro mapa, nuestras coordenadas y lo que falta para vernos.",
     "musicSectionId": "distancia",
     "sectionIds": ["distancia"]
+  },
+  {
+    "id": "centro-universo",
+    "label": "Centro Control",
+    "title": "Centro del Universo",
+    "subtitle": "Panel secreto de control local.",
+    "musicSectionId": "universo",
+    "sectionIds": ["centro-universo"]
   }
 ]
