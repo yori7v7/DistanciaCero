@@ -43,6 +43,9 @@ function OpenWhenSection({ cards = [] }) {
     }, 50)
   }
 
+  const totalCards = finalCards.length
+  const openedCards = finalCards.filter((card) => localStorage.getItem(`distancia-cero-open-when-${card.id}`) === 'opened').length
+
   const activeCard = finalCards.find((card) => card.id === selectedCardId)
 
   if (activeCard) {
@@ -86,6 +89,10 @@ function OpenWhenSection({ cards = [] }) {
         text="Cada cartita se puede leer directamente aquí cuando sea su momento."
       />
 
+      <div className="letters-counter">
+        <span>Cartas abiertas: <strong>{openedCards} / {totalCards}</strong></span>
+      </div>
+
       <div className="card-grid">
         {finalCards.map((card) => {
           const isOpened = localStorage.getItem(`distancia-cero-open-when-${card.id}`) === 'opened'
@@ -95,16 +102,20 @@ function OpenWhenSection({ cards = [] }) {
               <div className="card-top">
                 <span>{card.mood}</span>
                 {card.locked ? (
-                  <Lock size={20} />
+                  <span className="card-status-badge locked-badge"><Lock size={12} /> Bloqueada</span>
                 ) : isOpened ? (
-                  <Check size={20} className="check-icon" style={{ color: 'var(--color-accent-pink, #ff2e93)' }} />
+                  <span className="card-status-badge opened-badge"><Check size={12} /> Leída</span>
                 ) : (
-                  <BookOpen size={20} />
+                  <span className="card-status-badge available-badge"><BookOpen size={12} /> Nueva</span>
                 )}
               </div>
 
               <h3>{card.title}</h3>
               <p>{card.preview}</p>
+
+              {card.locked && card.unlockHint && (
+                <p className="card-unlock-hint">{card.unlockHint}</p>
+              )}
 
               <button
                 className="ghost-button"
@@ -112,7 +123,7 @@ function OpenWhenSection({ cards = [] }) {
                 disabled={card.locked}
                 type="button"
               >
-                {card.locked ? 'Próximamente' : isOpened ? 'Releer carta' : 'Abrir carta'}
+                {card.locked ? (card.availableLabel || 'Próximamente') : isOpened ? 'Releer carta' : 'Abrir carta'}
               </button>
             </article>
           )

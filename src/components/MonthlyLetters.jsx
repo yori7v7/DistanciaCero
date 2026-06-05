@@ -31,6 +31,9 @@ function MonthlyLetters({ letters }) {
     }, 50)
   }
 
+  const totalLetters = letters.length
+  const openedLetters = letters.filter((letter) => localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened').length
+
   const activeLetter = letters.find((letter) => letter.id === selectedLetterId)
 
   if (activeLetter) {
@@ -74,6 +77,10 @@ function MonthlyLetters({ letters }) {
         text="Cada carta se puede leer directamente aquí cuando llegue su momento."
       />
 
+      <div className="letters-counter">
+        <span>Cartas abiertas: <strong>{openedLetters} / {totalLetters}</strong></span>
+      </div>
+
       <div className="card-grid">
         {letters.map((letter) => {
           const isOpened = localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened'
@@ -83,16 +90,20 @@ function MonthlyLetters({ letters }) {
               <div className="card-top">
                 <span>{letter.month}</span>
                 {letter.locked ? (
-                  <Lock size={20} />
+                  <span className="card-status-badge locked-badge"><Lock size={12} /> Bloqueada</span>
                 ) : isOpened ? (
-                  <Check size={20} className="check-icon" style={{ color: 'var(--color-accent-pink, #ff2e93)' }} />
+                  <span className="card-status-badge opened-badge"><Check size={12} /> Leída</span>
                 ) : (
-                  <BookOpen size={20} />
+                  <span className="card-status-badge available-badge"><BookOpen size={12} /> Nueva</span>
                 )}
               </div>
 
               <h3>{letter.title}</h3>
               <p>{letter.preview}</p>
+
+              {letter.locked && letter.unlockHint && (
+                <p className="card-unlock-hint">{letter.unlockHint}</p>
+              )}
 
               <button
                 className="ghost-button"
@@ -100,7 +111,7 @@ function MonthlyLetters({ letters }) {
                 disabled={letter.locked}
                 type="button"
               >
-                {letter.locked ? 'Próximamente' : isOpened ? 'Releer carta' : 'Abrir carta'}
+                {letter.locked ? (letter.availableLabel || 'Próximamente') : isOpened ? 'Releer carta' : 'Abrir carta'}
               </button>
             </article>
           )

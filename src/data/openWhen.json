@@ -6,6 +6,8 @@
     "preview": "Para los momentos en que el silencio de la distancia se vuelva muy ruidoso.",
     "locked": false,
     "url": "/open-when/me-extranes/",
+    "availableLabel": "Disponible ahora",
+    "unlockHint": "Ábrela cuando sientas mi ausencia",
     "content": [
       "Si abriste esta cartita, mi Alecita, es porque hoy los kilómetros se sienten un poco más pesados de lo normal y el espacio parece demasiado grande. Lo sé, hay días en los que la distancia incomoda y nos hace falta el abrazo físico.",
       "Pero quiero que recuerdes algo importante: nuestro amor tiene su propia gravedad. Aquel 17 de mayo nos elegimos conscientemente para recorrer esto juntos, y desde nuestro primer encuentro el 13 de marzo, cada mensaje, llamada y risa compartida en Distancia Cero ha sido un hilo indestructible que nos une.",
@@ -20,6 +22,8 @@
     "preview": "Un mensaje para abrazarte tantito desde aquí.",
     "locked": true,
     "url": "/open-when/estes-triste/",
+    "availableLabel": "Próximamente",
+    "unlockHint": "Se desbloqueará en un momento especial",
     "content": []
   },
   {
@@ -29,6 +33,8 @@
     "preview": "Una carta suave para una noche larga.",
     "locked": true,
     "url": "/open-when/no-puedas-dormir/",
+    "availableLabel": "Próximamente",
+    "unlockHint": "Se desbloqueará en una noche de insomnio",
     "content": []
   },
   {
@@ -38,6 +44,8 @@
     "preview": "Un espacio para bromas internas, stickers y tonterías nuestras.",
     "locked": true,
     "url": "/open-when/quieras-reir/",
+    "availableLabel": "Próximamente",
+    "unlockHint": "Se desbloqueará para sacarte una sonrisa",
     "content": []
   },
   {
@@ -47,6 +55,8 @@
     "preview": "Una carta para recordarte lo que siento y lo que estamos construyendo.",
     "locked": true,
     "url": "/open-when/cuando-dudes/",
+    "availableLabel": "Próximamente",
+    "unlockHint": "Se desbloqueará cuando necesites recordar",
     "content": []
   },
   {
@@ -56,6 +66,8 @@
     "preview": "Una cartita para una fecha que todavía no llega.",
     "locked": true,
     "url": "/open-when/dia-especial/",
+    "availableLabel": "Próximamente",
+    "unlockHint": "Reservado para una fecha especial",
     "content": []
   }
 ]

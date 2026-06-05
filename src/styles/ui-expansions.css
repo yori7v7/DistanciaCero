@@ -874,3 +874,99 @@
   padding-top: 20px;
   display: block;
 }
+
+/* ==========================================================================
+   Mejoras de Visibilidad y Estado de Cartas (Counters, Badges y Locks)
+   ========================================================================== */
+.letters-counter {
+  display: flex;
+  justify-content: center;
+  margin: -10px auto 28px;
+  max-width: 320px;
+}
+
+.letters-counter span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(14, 2, 22, 0.6);
+  border: 1px solid rgba(255, 46, 147, 0.25);
+  box-shadow: 0 0 15px rgba(255, 46, 147, 0.08);
+  font-size: 0.9rem;
+  color: var(--muted, #ebdff5);
+  backdrop-filter: blur(10px);
+}
+
+.letters-counter span strong {
+  color: var(--pink, #ff2e93);
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255, 46, 147, 0.4);
+}
+
+/* Status Badges on mini-card */
+.card-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.locked-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.opened-badge {
+  background: rgba(255, 46, 147, 0.15);
+  border: 1px solid rgba(255, 46, 147, 0.4);
+  color: #ff7ac8;
+  box-shadow: 0 0 10px rgba(255, 46, 147, 0.15);
+}
+
+.available-badge {
+  background: rgba(0, 191, 165, 0.1);
+  border: 1px solid rgba(0, 191, 165, 0.35);
+  color: #00bfa5;
+  box-shadow: 0 0 10px rgba(0, 191, 165, 0.1);
+}
+
+/* Unlock Hint description text */
+.card-unlock-hint {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Atenuación y mejora para tarjetas bloqueadas */
+.mini-card.locked {
+  opacity: 0.55;
+  filter: grayscale(40%);
+  background: rgba(9, 1, 14, 0.4);
+  border-color: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+/* Tarjetas abiertas (leídas) */
+.mini-card.opened-card {
+  border-color: rgba(255, 46, 147, 0.35);
+  background: linear-gradient(145deg, rgba(28, 4, 38, 0.45) 0%, rgba(9, 1, 14, 0.7) 100%);
+}
+
+.mini-card.opened-card:hover {
+  box-shadow: 0 10px 30px rgba(255, 46, 147, 0.15), 0 0 15px rgba(255, 46, 147, 0.1);
+}
