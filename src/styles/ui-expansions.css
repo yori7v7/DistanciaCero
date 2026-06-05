@@ -848,3 +848,29 @@
     padding: 12px 20px;
   }
 }
+
+/* ==========================================================================
+   Firma y Capitulares para las Cartas (Detalles Premium)
+   ========================================================================== */
+.letter-reader-content p:first-of-type::first-letter {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--pink, #ff2e93);
+  float: left;
+  line-height: 0.85;
+  margin-right: 12px;
+  margin-top: 4px;
+  text-shadow: 0 0 12px rgba(255, 46, 147, 0.45);
+}
+
+.letter-reader-content p:last-of-type {
+  text-align: right;
+  font-style: italic;
+  color: #ff7ac8;
+  margin-top: 36px;
+  font-size: 1.12rem;
+  letter-spacing: 0.5px;
+  border-top: 1px dashed rgba(255, 46, 147, 0.2);
+  padding-top: 20px;
+  display: block;
+}
