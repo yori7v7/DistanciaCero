@@ -13,6 +13,9 @@ import {
   getLocalOverrides,
   hideDefaultItem,
   restoreHiddenItem,
+  saveHiddenItemIds,
+  saveLocalItems,
+  saveLocalOverrides,
   setLocalOverride,
   updateLocalItem
 } from '../utils/localContentStore'
@@ -122,13 +125,26 @@ function CentroUniversoSection() {
     }
   }
 
+  const isPlainObject = (value) => {
+    return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+  }
+
   const handleExportLocalLetters = () => {
     const exportData = {
-      version: 1,
+      version: 2,
       exportedAt: new Date().toISOString(),
       source: 'Distancia Cero - Centro del Universo',
-      monthlyLetters: readLocalLetters('distancia-cero-local-monthly-letters'),
-      openWhenLetters: readLocalLetters('distancia-cero-local-open-when')
+      content: {
+        monthlyLetters: readLocalLetters('distancia-cero-local-monthly-letters'),
+        openWhenLetters: readLocalLetters('distancia-cero-local-open-when'),
+        reasons: getLocalItems('reasons')
+      },
+      overrides: {
+        reasons: getLocalOverrides('reasons')
+      },
+      hidden: {
+        reasons: getHiddenItemIds('reasons')
+      }
     }
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
@@ -137,12 +153,12 @@ function CentroUniversoSection() {
     const downloadUrl = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = downloadUrl
-    link.download = `distancia-cero-cartas-locales-${new Date().toISOString().slice(0, 10)}.json`
+    link.download = `distancia-cero-respaldo-local-${new Date().toISOString().slice(0, 10)}.json`
     document.body.appendChild(link)
     link.click()
     link.remove()
     URL.revokeObjectURL(downloadUrl)
-    setBackupStatus({ type: 'success', text: 'Respaldo JSON creado correctamente.' })
+    setBackupStatus({ type: 'success', text: 'Respaldo local v2 creado correctamente.' })
   }
 
   const handleImportLocalLetters = (event) => {
@@ -199,6 +215,119 @@ function CentroUniversoSection() {
       setBackupStatus({ type: 'error', text: 'No se pudo abrir el archivo seleccionado.' })
       event.target.value = ''
     }
+    reader.readAsText(file)
+  }
+
+  const handleImportLocalBackup = (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const importedData = JSON.parse(reader.result)
+
+        if (importedData?.version === 1) {
+          if (!Array.isArray(importedData.monthlyLetters) || !Array.isArray(importedData.openWhenLetters)) {
+            setBackupStatus({ type: 'error', text: 'El respaldo v1 no tiene cartas validas.' })
+            return
+          }
+
+          const confirmed = window.confirm(
+            'Esto reemplazara solo las cartas locales guardadas en este navegador. No tocara razones. ¿Quieres continuar?'
+          )
+
+          if (!confirmed) {
+            setBackupStatus({ type: 'error', text: 'Importacion cancelada. No se cambiaron datos locales.' })
+            return
+          }
+
+          localStorage.setItem(
+            'distancia-cero-local-monthly-letters',
+            JSON.stringify(importedData.monthlyLetters)
+          )
+          localStorage.setItem(
+            'distancia-cero-local-open-when',
+            JSON.stringify(importedData.openWhenLetters)
+          )
+          setLocalMonthly(importedData.monthlyLetters)
+          setLocalOpenWhen(importedData.openWhenLetters)
+          setEditingId(null)
+          setTitle('')
+          setPreview('')
+          setContentRaw('')
+          setTag('')
+          setBackupStatus({ type: 'success', text: 'Respaldo v1 importado: solo cartas locales.' })
+          return
+        }
+
+        const content = importedData?.content
+        const overrides = importedData?.overrides
+        const hidden = importedData?.hidden
+        const isValidV2 =
+          importedData?.version === 2 &&
+          isPlainObject(content) &&
+          Array.isArray(content.monthlyLetters) &&
+          Array.isArray(content.openWhenLetters) &&
+          Array.isArray(content.reasons) &&
+          isPlainObject(overrides) &&
+          isPlainObject(overrides.reasons) &&
+          isPlainObject(hidden) &&
+          Array.isArray(hidden.reasons)
+
+        if (!isValidV2) {
+          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato valido de respaldo v2.' })
+          return
+        }
+
+        const confirmed = window.confirm(
+          'Esto reemplazara cartas locales, razones locales, overrides y razones ocultas de este navegador. ¿Quieres continuar?'
+        )
+
+        if (!confirmed) {
+          setBackupStatus({ type: 'error', text: 'Importacion cancelada. No se cambiaron datos locales.' })
+          return
+        }
+
+        localStorage.setItem(
+          'distancia-cero-local-monthly-letters',
+          JSON.stringify(content.monthlyLetters)
+        )
+        localStorage.setItem(
+          'distancia-cero-local-open-when',
+          JSON.stringify(content.openWhenLetters)
+        )
+        const savedReasons = saveLocalItems('reasons', content.reasons)
+        const savedOverrides = saveLocalOverrides('reasons', overrides.reasons)
+        const savedHiddenIds = saveHiddenItemIds('reasons', hidden.reasons)
+
+        setLocalMonthly(content.monthlyLetters)
+        setLocalOpenWhen(content.openWhenLetters)
+        setLocalReasons(savedReasons)
+        setReasonOverrides(savedOverrides)
+        setHiddenReasonIds(savedHiddenIds)
+        setEditingId(null)
+        setTitle('')
+        setPreview('')
+        setContentRaw('')
+        setTag('')
+        resetReasonForm()
+        resetBaseReasonForm()
+        dispatchContentUpdate('all')
+        dispatchContentUpdate('reasons')
+        setBackupStatus({ type: 'success', text: 'Respaldo v2 importado correctamente.' })
+      } catch (error) {
+        setBackupStatus({ type: 'error', text: 'No se pudo leer el JSON seleccionado.' })
+      } finally {
+        event.target.value = ''
+      }
+    }
+
+    reader.onerror = () => {
+      setBackupStatus({ type: 'error', text: 'No se pudo abrir el archivo seleccionado.' })
+      event.target.value = ''
+    }
+
     reader.readAsText(file)
   }
 
@@ -572,26 +701,26 @@ function CentroUniversoSection() {
       {/* Local letters backup */}
       <div className="backup-card">
         <div className="backup-header">
-          <h3>Respaldo de cartas locales</h3>
-          <p>Exporta o restaura las cartas guardadas solo en este navegador.</p>
+          <h3>Respaldo local del universo</h3>
+          <p>Exporta o restaura cartas locales, razones locales, ediciones de razones originales y razones ocultas.</p>
         </div>
 
         <div className="backup-actions">
           <button className="control-btn backup-export-btn" onClick={handleExportLocalLetters} type="button">
             <Download size={18} />
-            Exportar cartas locales
+            Exportar respaldo local
           </button>
 
           <label className="control-btn backup-import-label" htmlFor="localLettersImport">
             <Upload size={18} />
-            Importar cartas locales
+            Importar respaldo local
           </label>
           <input
             id="localLettersImport"
             className="backup-file-input"
             type="file"
             accept=".json,application/json"
-            onChange={handleImportLocalLetters}
+            onChange={handleImportLocalBackup}
           />
         </div>
 
