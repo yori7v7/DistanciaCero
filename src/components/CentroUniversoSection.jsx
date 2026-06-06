@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import SectionTitle from './SectionTitle'
-import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle } from 'lucide-react'
+import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
 
@@ -8,6 +8,7 @@ function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
   const [localMonthly, setLocalMonthly] = useState([])
   const [localOpenWhen, setLocalOpenWhen] = useState([])
+  const [backupStatus, setBackupStatus] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -61,6 +62,96 @@ function CentroUniversoSection() {
       localStorage.setItem('distancia-cero-sim-unlocked', '1')
     }
     window.location.reload()
+  }
+
+  const readLocalLetters = (storageKey) => {
+    try {
+      const rawValue = localStorage.getItem(storageKey)
+      const parsedValue = rawValue ? JSON.parse(rawValue) : []
+      return Array.isArray(parsedValue) ? parsedValue : []
+    } catch (error) {
+      return []
+    }
+  }
+
+  const handleExportLocalLetters = () => {
+    const exportData = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      source: 'Distancia Cero - Centro del Universo',
+      monthlyLetters: readLocalLetters('distancia-cero-local-monthly-letters'),
+      openWhenLetters: readLocalLetters('distancia-cero-local-open-when')
+    }
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: 'application/json'
+    })
+    const downloadUrl = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.download = `distancia-cero-cartas-locales-${new Date().toISOString().slice(0, 10)}.json`
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(downloadUrl)
+    setBackupStatus({ type: 'success', text: 'Respaldo JSON creado correctamente.' })
+  }
+
+  const handleImportLocalLetters = (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const importedData = JSON.parse(reader.result)
+        const isValidBackup =
+          importedData &&
+          Object.prototype.hasOwnProperty.call(importedData, 'version') &&
+          Array.isArray(importedData.monthlyLetters) &&
+          Array.isArray(importedData.openWhenLetters)
+
+        if (!isValidBackup) {
+          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato valido de respaldo.' })
+          return
+        }
+
+        const confirmed = window.confirm(
+          'Esto reemplazara las cartas locales guardadas en este navegador. ¿Quieres continuar?'
+        )
+
+        if (!confirmed) {
+          setBackupStatus({ type: 'error', text: 'Importacion cancelada. No se cambiaron las cartas locales.' })
+          return
+        }
+
+        localStorage.setItem(
+          'distancia-cero-local-monthly-letters',
+          JSON.stringify(importedData.monthlyLetters)
+        )
+        localStorage.setItem(
+          'distancia-cero-local-open-when',
+          JSON.stringify(importedData.openWhenLetters)
+        )
+        setLocalMonthly(importedData.monthlyLetters)
+        setLocalOpenWhen(importedData.openWhenLetters)
+        setEditingId(null)
+        setTitle('')
+        setPreview('')
+        setContentRaw('')
+        setTag('')
+        setBackupStatus({ type: 'success', text: 'Cartas locales importadas correctamente.' })
+      } catch (error) {
+        setBackupStatus({ type: 'error', text: 'No se pudo leer el JSON seleccionado.' })
+      } finally {
+        event.target.value = ''
+      }
+    }
+    reader.onerror = () => {
+      setBackupStatus({ type: 'error', text: 'No se pudo abrir el archivo seleccionado.' })
+      event.target.value = ''
+    }
+    reader.readAsText(file)
   }
 
   const handleReset = () => {
@@ -286,6 +377,39 @@ function CentroUniversoSection() {
           <Trash2 size={18} />
           Resetear Progreso
         </button>
+      </div>
+
+      {/* Local letters backup */}
+      <div className="backup-card">
+        <div className="backup-header">
+          <h3>Respaldo de cartas locales</h3>
+          <p>Exporta o restaura las cartas guardadas solo en este navegador.</p>
+        </div>
+
+        <div className="backup-actions">
+          <button className="control-btn backup-export-btn" onClick={handleExportLocalLetters} type="button">
+            <Download size={18} />
+            Exportar cartas locales
+          </button>
+
+          <label className="control-btn backup-import-label" htmlFor="localLettersImport">
+            <Upload size={18} />
+            Importar cartas locales
+          </label>
+          <input
+            id="localLettersImport"
+            className="backup-file-input"
+            type="file"
+            accept=".json,application/json"
+            onChange={handleImportLocalLetters}
+          />
+        </div>
+
+        {backupStatus && (
+          <p className={`backup-status ${backupStatus.type}`}>
+            {backupStatus.text}
+          </p>
+        )}
       </div>
 
       {/* Local letters CRUD editor */}
