@@ -23,7 +23,7 @@ function MilanesaSection() {
 
         <p>
           Aquí algún día podemos poner nuestro top de milanesas, lugares que queremos probar,
-          o una lista de Ã¢â‚¬Å“citas pendientes con comida ricaÃ¢â‚¬Â.
+          o una lista de “citas pendientes con comida rica”.
         </p>
       </article>
     </section>
