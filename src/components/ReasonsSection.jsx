@@ -351,7 +351,7 @@ function ReasonsSection({ reasons = [] }) {
               type="button"
             >
               <Heart size={18} />
-              <span>{reason.id}</span>
+              <span>{reason.displayLabel || reason.id}</span>
             </button>
           ))}
         </div>

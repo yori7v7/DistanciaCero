@@ -1417,6 +1417,170 @@
   background: rgba(255, 46, 147, 0.06);
 }
 
+.base-reasons-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 24px auto 0;
+  scroll-margin-top: 90px;
+}
+
+.base-reasons-panel {
+  border: 1px solid rgba(255, 46, 147, 0.22);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 46, 147, 0.12), transparent 34%),
+    linear-gradient(145deg, rgba(13, 3, 22, 0.95), rgba(28, 8, 38, 0.88));
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.32), 0 0 24px rgba(255, 23, 68, 0.05);
+  padding: 24px 28px;
+  text-align: left;
+}
+
+.base-reasons-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: #ffb3df;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.reason-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.reason-stats-grid div {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 10px;
+}
+
+.reason-stats-grid strong {
+  display: block;
+  color: #ffe0ef;
+  font-size: 1.15rem;
+}
+
+.reason-stats-grid span {
+  display: block;
+  color: rgba(255, 224, 239, 0.5);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.base-reasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 460px;
+  overflow: auto;
+  margin-top: 16px;
+  padding-right: 4px;
+}
+
+.base-reason-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 12px 14px;
+}
+
+.base-reason-row.is-overridden {
+  border-color: rgba(255, 46, 147, 0.38);
+  background: rgba(255, 46, 147, 0.07);
+}
+
+.base-reason-row.is-hidden {
+  opacity: 0.66;
+  border-color: rgba(255, 82, 82, 0.28);
+}
+
+.base-reason-copy {
+  min-width: 0;
+}
+
+.base-reason-copy strong,
+.base-reason-copy span,
+.base-reason-copy small {
+  display: block;
+}
+
+.base-reason-copy strong {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.86rem;
+}
+
+.base-reason-copy span {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+.base-reason-copy small {
+  color: #ff9ad5;
+  font-size: 0.68rem;
+  font-weight: 800;
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.base-reason-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.base-reason-actions .ghost-button,
+.hidden-reasons-box .ghost-button {
+  padding: 8px 10px;
+  font-size: 0.72rem;
+  border-radius: 9px;
+}
+
+.danger-action {
+  border-color: rgba(255, 82, 82, 0.24);
+  color: #ff8a9f;
+}
+
+.danger-action:hover {
+  border-color: rgba(255, 82, 82, 0.48);
+  background: rgba(255, 23, 68, 0.1);
+  color: #ffb3c1;
+}
+
+.hidden-reasons-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hidden-reasons-box h4 {
+  width: 100%;
+  margin: 0;
+  color: rgba(255, 224, 239, 0.68);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
 /* ===================================================
    EDITOR LOCAL DE CARTAS — Centro del Universo
    =================================================== */
@@ -1724,6 +1888,28 @@
     margin: 28px 12px 0;
   }
 
+  .base-reasons-editor {
+    grid-template-columns: 1fr;
+    margin: 24px 12px 0;
+  }
+
+  .reason-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .base-reason-row {
+    grid-template-columns: 1fr;
+  }
+
+  .base-reason-actions {
+    justify-content: stretch;
+  }
+
+  .base-reason-actions .ghost-button {
+    flex: 1;
+    justify-content: center;
+  }
+
   .editor-row {
     grid-template-columns: 1fr;
   }
@@ -1734,6 +1920,7 @@
 
   .reasons-editor-card,
   .reasons-list-card,
+  .base-reasons-panel,
   .editor-card,
   .local-list-card {
     padding: 20px 18px;

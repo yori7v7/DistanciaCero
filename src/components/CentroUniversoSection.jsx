@@ -3,7 +3,19 @@ import SectionTitle from './SectionTitle'
 import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
-import { addLocalItem, deleteLocalItem, getLocalItems, updateLocalItem } from '../utils/localContentStore'
+import reasonsData from '../data/reasons.json'
+import {
+  addLocalItem,
+  deleteLocalItem,
+  deleteLocalOverride,
+  getHiddenItemIds,
+  getLocalItems,
+  getLocalOverrides,
+  hideDefaultItem,
+  restoreHiddenItem,
+  setLocalOverride,
+  updateLocalItem
+} from '../utils/localContentStore'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
@@ -14,6 +26,12 @@ function CentroUniversoSection() {
   const [reasonTitle, setReasonTitle] = useState('')
   const [reasonText, setReasonText] = useState('')
   const [editingReasonId, setEditingReasonId] = useState(null)
+  const [reasonOverrides, setReasonOverrides] = useState({})
+  const [hiddenReasonIds, setHiddenReasonIds] = useState([])
+  const [baseReasonQuery, setBaseReasonQuery] = useState('')
+  const [baseReasonTitle, setBaseReasonTitle] = useState('')
+  const [baseReasonText, setBaseReasonText] = useState('')
+  const [editingBaseReasonId, setEditingBaseReasonId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -31,6 +49,8 @@ function CentroUniversoSection() {
     setLocalMonthly(m ? JSON.parse(m) : [])
     setLocalOpenWhen(ow ? JSON.parse(ow) : [])
     setLocalReasons(getLocalItems('reasons'))
+    setReasonOverrides(getLocalOverrides('reasons'))
+    setHiddenReasonIds(getHiddenItemIds('reasons'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -60,6 +80,28 @@ function CentroUniversoSection() {
   ).length
   const unlockedOpenWhen = mappedOpenWhen.filter((c) => !c.locked).length + localOpenWhen.length
   const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
+  const editedBaseReasonsCount = Object.keys(reasonOverrides).length
+  const hiddenBaseReasonsCount = hiddenReasonIds.length
+  const visibleBaseReasons = reasonsData.map((reason) => {
+    const override = reasonOverrides[String(reason.id)]
+    return {
+      ...reason,
+      ...(override || {}),
+      id: reason.id,
+      isOverridden: Boolean(override),
+      isHidden: hiddenReasonIds.includes(String(reason.id))
+    }
+  })
+  const filteredBaseReasons = visibleBaseReasons.filter((reason) => {
+    const query = baseReasonQuery.trim().toLowerCase()
+    if (!query) return true
+
+    return (
+      String(reason.id).includes(query) ||
+      (reason.title || '').toLowerCase().includes(query) ||
+      (reason.text || '').toLowerCase().includes(query)
+    )
+  })
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -174,6 +216,12 @@ function CentroUniversoSection() {
     setEditingReasonId(null)
   }
 
+  const resetBaseReasonForm = () => {
+    setBaseReasonTitle('')
+    setBaseReasonText('')
+    setEditingBaseReasonId(null)
+  }
+
   const handleReasonSubmit = (event) => {
     event.preventDefault()
 
@@ -230,6 +278,70 @@ function CentroUniversoSection() {
 
       dispatchContentUpdate('reasons')
     }
+  }
+
+  const handleBaseReasonEdit = (reason) => {
+    setEditingBaseReasonId(reason.id)
+    setBaseReasonTitle(reason.title || '')
+    setBaseReasonText(reason.text || '')
+
+    const formElement = document.getElementById('base-reasons-editor')
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const handleBaseReasonSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBaseReasonId || !baseReasonTitle.trim() || !baseReasonText.trim()) {
+      alert('Selecciona una razon original y completa titulo y texto.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('reasons', editingBaseReasonId, {
+      title: baseReasonTitle.trim(),
+      text: baseReasonText.trim(),
+      updatedAt: new Date().toISOString()
+    })
+
+    setReasonOverrides(updatedOverrides)
+    resetBaseReasonForm()
+    dispatchContentUpdate('reasons')
+  }
+
+  const handleBaseReasonRestore = (reasonId) => {
+    const updatedOverrides = deleteLocalOverride('reasons', reasonId)
+    setReasonOverrides(updatedOverrides)
+
+    if (String(editingBaseReasonId) === String(reasonId)) {
+      resetBaseReasonForm()
+    }
+
+    dispatchContentUpdate('reasons')
+  }
+
+  const handleBaseReasonHide = (reason) => {
+    if (
+      window.confirm(
+        'Â¿Seguro que quieres ocultar esta razon original? No se modificara el JSON y podras restaurarla despues.'
+      )
+    ) {
+      const updatedHiddenIds = hideDefaultItem('reasons', reason.id)
+      setHiddenReasonIds(updatedHiddenIds)
+
+      if (String(editingBaseReasonId) === String(reason.id)) {
+        resetBaseReasonForm()
+      }
+
+      dispatchContentUpdate('reasons')
+    }
+  }
+
+  const handleBaseReasonUnhide = (reasonId) => {
+    const updatedHiddenIds = restoreHiddenItem('reasons', reasonId)
+    setHiddenReasonIds(updatedHiddenIds)
+    dispatchContentUpdate('reasons')
   }
 
   const handleReset = () => {
@@ -580,6 +692,150 @@ function CentroUniversoSection() {
                     </button>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="base-reasons-editor" id="base-reasons-editor">
+        <div className="base-reasons-panel">
+          <div className="reasons-list-header">
+            <h3>Razones originales</h3>
+            <span>{reasonsData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <div>
+              <strong>{reasonsData.length}</strong>
+              <span>Base totales</span>
+            </div>
+            <div>
+              <strong>{editedBaseReasonsCount}</strong>
+              <span>Editadas</span>
+            </div>
+            <div>
+              <strong>{hiddenBaseReasonsCount}</strong>
+              <span>Ocultas</span>
+            </div>
+            <div>
+              <strong>{localReasons.length}</strong>
+              <span>Locales</span>
+            </div>
+          </div>
+
+          <div className="editor-field">
+            <label htmlFor="baseReasonSearch">Buscar razon original</label>
+            <input
+              id="baseReasonSearch"
+              type="text"
+              placeholder="Busca por numero, titulo o texto"
+              value={baseReasonQuery}
+              onChange={(event) => setBaseReasonQuery(event.target.value)}
+            />
+          </div>
+
+          <div className="base-reasons-list">
+            {filteredBaseReasons.map((reason) => (
+              <div
+                className={`base-reason-row ${reason.isOverridden ? 'is-overridden' : ''} ${reason.isHidden ? 'is-hidden' : ''}`}
+                key={reason.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>
+                    #{reason.id} {reason.title}
+                  </strong>
+                  <span>{reason.text}</span>
+                  <small>
+                    {reason.isHidden ? 'Oculta localmente' : reason.isOverridden ? 'Editada localmente' : 'Original'}
+                  </small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBaseReasonEdit(reason)}>
+                    <Edit2 size={14} />
+                    Editar
+                  </button>
+
+                  {reason.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseReasonRestore(reason.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {reason.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseReasonUnhide(reason.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseReasonHide(reason)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="base-reasons-panel">
+          <h3>
+            <Edit2 size={18} />
+            {editingBaseReasonId ? `Editando razon #${editingBaseReasonId}` : 'Editar razon original'}
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>
+              <strong>Override local</strong>: Esto no modifica reasons.json; solo guarda una version local en este navegador.
+            </span>
+          </div>
+
+          <form className="editor-form" onSubmit={handleBaseReasonSubmit}>
+            <div className="editor-field">
+              <label htmlFor="baseReasonTitle">Titulo override *</label>
+              <input
+                id="baseReasonTitle"
+                type="text"
+                value={baseReasonTitle}
+                onChange={(event) => setBaseReasonTitle(event.target.value)}
+                disabled={!editingBaseReasonId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseReasonText">Texto override *</label>
+              <textarea
+                id="baseReasonText"
+                rows="5"
+                value={baseReasonText}
+                onChange={(event) => setBaseReasonText(event.target.value)}
+                disabled={!editingBaseReasonId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingBaseReasonId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseReasonForm}>
+                  Cancelar
+                </button>
+              )}
+
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseReasonId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+
+          {hiddenBaseReasonsCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Razones ocultas</h4>
+              {visibleBaseReasons.filter((reason) => reason.isHidden).map((reason) => (
+                <button type="button" className="ghost-button" key={reason.id} onClick={() => handleBaseReasonUnhide(reason.id)}>
+                  Mostrar #{reason.id}
+                </button>
               ))}
             </div>
           )}
