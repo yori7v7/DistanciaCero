@@ -3,12 +3,17 @@ import SectionTitle from './SectionTitle'
 import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
+import { addLocalItem, deleteLocalItem, getLocalItems, updateLocalItem } from '../utils/localContentStore'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
   const [localMonthly, setLocalMonthly] = useState([])
   const [localOpenWhen, setLocalOpenWhen] = useState([])
   const [backupStatus, setBackupStatus] = useState(null)
+  const [localReasons, setLocalReasons] = useState([])
+  const [reasonTitle, setReasonTitle] = useState('')
+  const [reasonText, setReasonText] = useState('')
+  const [editingReasonId, setEditingReasonId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -25,6 +30,7 @@ function CentroUniversoSection() {
     const ow = localStorage.getItem('distancia-cero-local-open-when')
     setLocalMonthly(m ? JSON.parse(m) : [])
     setLocalOpenWhen(ow ? JSON.parse(ow) : [])
+    setLocalReasons(getLocalItems('reasons'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -152,6 +158,78 @@ function CentroUniversoSection() {
       event.target.value = ''
     }
     reader.readAsText(file)
+  }
+
+  const dispatchContentUpdate = (collection) => {
+    window.dispatchEvent(
+      new CustomEvent('distancia-cero-content-updated', {
+        detail: { collection }
+      })
+    )
+  }
+
+  const resetReasonForm = () => {
+    setReasonTitle('')
+    setReasonText('')
+    setEditingReasonId(null)
+  }
+
+  const handleReasonSubmit = (event) => {
+    event.preventDefault()
+
+    if (!reasonTitle.trim() || !reasonText.trim()) {
+      alert('Por favor, completa el titulo y el texto de la razon.')
+      return
+    }
+
+    const now = new Date().toISOString()
+    let updatedReasons
+
+    if (editingReasonId) {
+      updatedReasons = updateLocalItem('reasons', editingReasonId, {
+        title: reasonTitle.trim(),
+        text: reasonText.trim(),
+        updatedAt: now
+      })
+    } else {
+      updatedReasons = addLocalItem('reasons', {
+        id: `local-reason-${Date.now()}`,
+        title: reasonTitle.trim(),
+        text: reasonText.trim(),
+        createdAt: now
+      })
+    }
+
+    setLocalReasons(updatedReasons)
+    resetReasonForm()
+    dispatchContentUpdate('reasons')
+  }
+
+  const handleReasonEdit = (reason) => {
+    if (!reason.isLocal) return
+    setEditingReasonId(reason.id)
+    setReasonTitle(reason.title || '')
+    setReasonText(reason.text || '')
+
+    const formElement = document.getElementById('local-reasons-editor')
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  const handleReasonDelete = (reason) => {
+    if (!reason.isLocal) return
+
+    if (window.confirm('Â¿Seguro que quieres eliminar esta razon local?')) {
+      const updatedReasons = deleteLocalItem('reasons', reason.id)
+      setLocalReasons(updatedReasons)
+
+      if (editingReasonId === reason.id) {
+        resetReasonForm()
+      }
+
+      dispatchContentUpdate('reasons')
+    }
   }
 
   const handleReset = () => {
@@ -410,6 +488,102 @@ function CentroUniversoSection() {
             {backupStatus.text}
           </p>
         )}
+      </div>
+
+      {/* Local reasons CRUD editor */}
+      <div className="local-reasons-editor" id="local-reasons-editor">
+        <div className="reasons-editor-card">
+          <h3>
+            <Plus size={18} />
+            Editor local de 100 razones
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>
+              <strong>Aviso de pruebas</strong>: Estas razones son locales y de prueba; las razones originales no se modifican.
+            </span>
+          </div>
+
+          <form className="editor-form" onSubmit={handleReasonSubmit}>
+            <div className="editor-field">
+              <label htmlFor="reasonTitle">Titulo de la razon *</label>
+              <input
+                id="reasonTitle"
+                type="text"
+                placeholder="Ej. Razon 101"
+                value={reasonTitle}
+                onChange={(event) => setReasonTitle(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="reasonText">Texto de la razon *</label>
+              <textarea
+                id="reasonText"
+                rows="4"
+                placeholder="Escribe una nueva razon local para que flote en la seccion."
+                value={reasonText}
+                onChange={(event) => setReasonText(event.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingReasonId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetReasonForm}>
+                  Cancelar
+                </button>
+              )}
+
+              <button type="submit" className="control-btn submit-btn">
+                {editingReasonId ? 'Actualizar razon local' : 'Guardar razon local'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="reasons-list-card">
+          <div className="reasons-list-header">
+            <h3>Razones locales actuales</h3>
+            <span>{localReasons.length} locales</span>
+          </div>
+
+          {localReasons.length === 0 ? (
+            <p className="no-items">No hay razones locales creadas.</p>
+          ) : (
+            <div className="reason-items-list">
+              {localReasons.map((reason) => (
+                <div className="reason-item-row" key={reason.id}>
+                  <div className="item-info">
+                    <strong>{reason.title}</strong>
+                    <span>{reason.text}</span>
+                  </div>
+
+                  <div className="item-actions">
+                    <button
+                      type="button"
+                      className="action-icon-btn edit"
+                      onClick={() => handleReasonEdit(reason)}
+                      title="Editar razon local"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon-btn delete"
+                      onClick={() => handleReasonDelete(reason)}
+                      title="Eliminar razon local"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Local letters CRUD editor */}

@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
 const BALL_SIZE = 62
 const RADIUS = BALL_SIZE / 2
@@ -30,6 +31,7 @@ function shuffleArray(array) {
 }
 
 function ReasonsSection({ reasons = [] }) {
+  const [allReasons, setAllReasons] = useState(() => mergeWithLocalItems(reasons, 'reasons'))
   const [selectedReason, setSelectedReason] = useState(null)
   const selectedReasonRef = useRef(null)
   const containerRef = useRef(null)
@@ -40,6 +42,24 @@ function ReasonsSection({ reasons = [] }) {
   const hasInitializedRef = useRef(false)
 
   useEffect(() => {
+    setAllReasons(mergeWithLocalItems(reasons, 'reasons'))
+  }, [reasons])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      if (event.detail?.collection !== 'reasons') return
+      setAllReasons(mergeWithLocalItems(reasons, 'reasons'))
+      hasInitializedRef.current = false
+    }
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+
+    return () => {
+      window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+    }
+  }, [reasons])
+
+  useEffect(() => {
     selectedReasonRef.current = selectedReason
   }, [selectedReason])
 
@@ -47,7 +67,7 @@ function ReasonsSection({ reasons = [] }) {
     const container = containerRef.current
     const section = sectionRef.current
 
-    if (!container || !section || !reasons?.length) return
+    if (!container || !section || !allReasons?.length) return
 
     const getBounds = () => {
       const rect = container.getBoundingClientRect()
@@ -83,8 +103,8 @@ function ReasonsSection({ reasons = [] }) {
       const usableWidth = Math.max(1, bounds.maxX - bounds.minX)
       const usableHeight = Math.max(1, bounds.maxY - bounds.minY)
 
-      const cols = Math.max(6, Math.ceil(Math.sqrt(reasons.length * (usableWidth / usableHeight))))
-      const rows = Math.max(6, Math.ceil(reasons.length / cols))
+      const cols = Math.max(6, Math.ceil(Math.sqrt(allReasons.length * (usableWidth / usableHeight))))
+      const rows = Math.max(6, Math.ceil(allReasons.length / cols))
 
       const cells = []
 
@@ -96,7 +116,7 @@ function ReasonsSection({ reasons = [] }) {
 
       const shuffledCells = shuffleArray(cells)
 
-      const objects = reasons.map((reason, index) => {
+      const objects = allReasons.map((reason, index) => {
         const cell = shuffledCells[index] || {
           col: index % cols,
           row: Math.floor(index / cols)
@@ -286,7 +306,7 @@ function ReasonsSection({ reasons = [] }) {
       window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
       window.removeEventListener('resize', handleResize)
     }
-  }, [reasons])
+  }, [allReasons])
 
   const openReason = (event, reason) => {
     event.preventDefault()
@@ -319,7 +339,7 @@ function ReasonsSection({ reasons = [] }) {
         </div>
 
         <div className="reasons-3d-chaos-box" ref={containerRef}>
-          {reasons.map((reason, index) => (
+          {allReasons.map((reason, index) => (
             <button
               className="reason-heart chaotic-heart hyper-chaotic-heart reason-depth-heart"
               key={reason.id}

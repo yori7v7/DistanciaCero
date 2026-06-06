@@ -1313,6 +1313,111 @@
 }
 
 /* ===================================================
+   EDITOR LOCAL DE RAZONES — Centro del Universo
+   =================================================== */
+
+.local-reasons-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 32px auto 0;
+  scroll-margin-top: 90px;
+}
+
+.reasons-editor-card,
+.reasons-list-card {
+  border: 1px solid rgba(255, 46, 147, 0.24);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(255, 23, 68, 0.12), transparent 34%),
+    linear-gradient(145deg, rgba(17, 4, 26, 0.94), rgba(31, 8, 42, 0.86));
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.34), 0 0 28px rgba(255, 46, 147, 0.06);
+  backdrop-filter: blur(12px);
+  padding: 26px 30px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.reasons-editor-card::before,
+.reasons-list-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255, 46, 147, 0.08), transparent 42%);
+  pointer-events: none;
+}
+
+.reasons-editor-card > *,
+.reasons-list-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.reasons-editor-card h3,
+.reasons-list-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: #ffb3df;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.reasons-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reasons-list-header h3 {
+  margin: 0;
+}
+
+.reasons-list-header span {
+  border: 1px solid rgba(255, 46, 147, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 46, 147, 0.1);
+  color: #ff9ad5;
+  padding: 5px 10px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.reason-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.reason-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.reason-item-row:hover {
+  border-color: rgba(255, 46, 147, 0.25);
+  background: rgba(255, 46, 147, 0.06);
+}
+
+/* ===================================================
    EDITOR LOCAL DE CARTAS — Centro del Universo
    =================================================== */
 
@@ -1614,6 +1719,11 @@
 
 /* Responsive editor */
 @media (max-width: 760px) {
+  .local-reasons-editor {
+    grid-template-columns: 1fr;
+    margin: 28px 12px 0;
+  }
+
   .editor-row {
     grid-template-columns: 1fr;
   }
@@ -1622,6 +1732,8 @@
     grid-template-columns: 1fr;
   }
 
+  .reasons-editor-card,
+  .reasons-list-card,
   .editor-card,
   .local-list-card {
     padding: 20px 18px;
