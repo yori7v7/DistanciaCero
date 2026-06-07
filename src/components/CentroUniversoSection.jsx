@@ -53,6 +53,7 @@ function CentroUniversoSection() {
   const [baseMonthlyTitle, setBaseMonthlyTitle] = useState('')
   const [baseMonthlyPreview, setBaseMonthlyPreview] = useState('')
   const [baseMonthlyContent, setBaseMonthlyContent] = useState('')
+  const [baseMonthlyLocked, setBaseMonthlyLocked] = useState(false)
   const [editingBaseMonthlyId, setEditingBaseMonthlyId] = useState(null)
 
   // Form states
@@ -61,6 +62,7 @@ function CentroUniversoSection() {
   const [preview, setPreview] = useState('')
   const [contentRaw, setContentRaw] = useState('')
   const [tag, setTag] = useState('')
+  const [letterLocked, setLetterLocked] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
   useEffect(() => {
@@ -109,7 +111,7 @@ function CentroUniversoSection() {
   ).length + localMonthly.filter(
     (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
   ).length
-  const unlockedMonthly = activeBaseMonthly.filter((l) => !l.locked).length + localMonthly.length
+  const unlockedMonthly = activeBaseMonthly.filter((l) => !l.locked).length + localMonthly.filter((l) => !l.locked).length
   const lockedMonthly = activeBaseMonthly.length - activeBaseMonthly.filter((l) => !l.locked).length
 
   // Calculation for Open When Letters stats (combining JSON + Local)
@@ -119,7 +121,7 @@ function CentroUniversoSection() {
   ).length + localOpenWhen.filter(
     (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
   ).length
-  const unlockedOpenWhen = mappedOpenWhen.filter((c) => !c.locked).length + localOpenWhen.length
+  const unlockedOpenWhen = mappedOpenWhen.filter((c) => !c.locked).length + localOpenWhen.filter((c) => !c.locked).length
   const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
   const editedBaseReasonsCount = Object.keys(reasonOverrides).length
   const hiddenBaseReasonsCount = hiddenReasonIds.length
@@ -261,6 +263,7 @@ function CentroUniversoSection() {
         setPreview('')
         setContentRaw('')
         setTag('')
+        setLetterLocked(false)
         setBackupStatus({ type: 'success', text: 'Cartas locales importadas correctamente.' })
       } catch (error) {
         setBackupStatus({ type: 'error', text: 'No se pudo leer el JSON seleccionado.' })
@@ -314,6 +317,7 @@ function CentroUniversoSection() {
           setPreview('')
           setContentRaw('')
           setTag('')
+          setLetterLocked(false)
           dispatchLettersUpdate('monthlyLetters')
           dispatchLettersUpdate('openWhenLetters')
           setBackupStatus({ type: 'success', text: 'Respaldo v1 importado: solo cartas locales.' })
@@ -404,6 +408,7 @@ function CentroUniversoSection() {
         setPreview('')
         setContentRaw('')
         setTag('')
+        setLetterLocked(false)
         resetReasonForm()
         resetBaseReasonForm()
         resetBaseMonthlyForm()
@@ -474,6 +479,7 @@ function CentroUniversoSection() {
     setBaseMonthlyTitle('')
     setBaseMonthlyPreview('')
     setBaseMonthlyContent('')
+    setBaseMonthlyLocked(false)
     setEditingBaseMonthlyId(null)
   }
 
@@ -717,6 +723,7 @@ function CentroUniversoSection() {
     setBaseMonthlyTitle(letter.title || '')
     setBaseMonthlyPreview(letter.preview || '')
     setBaseMonthlyContent(Array.isArray(letter.content) ? letter.content.join('\n') : '')
+    setBaseMonthlyLocked(Boolean(letter.locked))
   }
 
   const handleBaseMonthlySubmit = (event) => {
@@ -742,6 +749,7 @@ function CentroUniversoSection() {
       title: baseMonthlyTitle.trim(),
       preview: baseMonthlyPreview.trim(),
       content: contentArray,
+      locked: baseMonthlyLocked,
       updatedAt: new Date().toISOString()
     })
 
@@ -833,6 +841,7 @@ function CentroUniversoSection() {
             title: title.trim(),
             preview: preview.trim(),
             content: contentArray,
+            locked: letterLocked,
             month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
             mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
           }
@@ -847,7 +856,7 @@ function CentroUniversoSection() {
         title: title.trim(),
         preview: preview.trim(),
         content: contentArray,
-        locked: false,
+        locked: letterLocked,
         isLocal: true,
         month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
         mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
@@ -870,6 +879,7 @@ function CentroUniversoSection() {
     setPreview('')
     setContentRaw('')
     setTag('')
+    setLetterLocked(false)
     alert('Carta local guardada con éxito. Compruébala en su respectiva sección.')
   }
 
@@ -880,6 +890,7 @@ function CentroUniversoSection() {
     setPreview(item.preview)
     setContentRaw(item.content ? item.content.join('\n') : '')
     setTag(type === 'monthly' ? (item.month || '') : (item.mood || ''))
+    setLetterLocked(Boolean(item.locked))
 
     const formElement = document.getElementById('local-editor-form')
     if (formElement) {
@@ -912,6 +923,7 @@ function CentroUniversoSection() {
         setPreview('')
         setContentRaw('')
         setTag('')
+        setLetterLocked(false)
       }
     }
   }
@@ -1171,6 +1183,20 @@ function CentroUniversoSection() {
                 disabled={!editingBaseMonthlyId}
                 required
               />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseMonthlyLocked">Estado de carta *</label>
+              <select
+                id="baseMonthlyLocked"
+                value={baseMonthlyLocked ? 'locked' : 'unlocked'}
+                onChange={(event) => setBaseMonthlyLocked(event.target.value === 'locked')}
+                disabled={!editingBaseMonthlyId}
+                required
+              >
+                <option value="unlocked">Desbloqueada</option>
+                <option value="locked">Bloqueada</option>
+              </select>
             </div>
 
             <div className="editor-field">
@@ -1733,6 +1759,19 @@ function CentroUniversoSection() {
             </div>
 
             <div className="editor-field">
+              <label htmlFor="letterLocked">Estado de carta *</label>
+              <select
+                id="letterLocked"
+                value={letterLocked ? 'locked' : 'unlocked'}
+                onChange={(e) => setLetterLocked(e.target.value === 'locked')}
+                required
+              >
+                <option value="unlocked">Desbloqueada</option>
+                <option value="locked">Bloqueada</option>
+              </select>
+            </div>
+
+            <div className="editor-field">
               <label htmlFor="preview">Vista previa / Preview *</label>
               <input
                 type="text"
@@ -1767,6 +1806,7 @@ function CentroUniversoSection() {
                     setPreview('')
                     setContentRaw('')
                     setTag('')
+                    setLetterLocked(false)
                   }}
                 >
                   Cancelar
