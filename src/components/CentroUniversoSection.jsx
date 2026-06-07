@@ -55,6 +55,14 @@ function CentroUniversoSection() {
   const [baseMonthlyContent, setBaseMonthlyContent] = useState('')
   const [baseMonthlyLocked, setBaseMonthlyLocked] = useState(false)
   const [editingBaseMonthlyId, setEditingBaseMonthlyId] = useState(null)
+  const [openWhenOverrides, setOpenWhenOverrides] = useState({})
+  const [hiddenOpenWhenIds, setHiddenOpenWhenIds] = useState([])
+  const [baseOpenWhenMood, setBaseOpenWhenMood] = useState('')
+  const [baseOpenWhenTitle, setBaseOpenWhenTitle] = useState('')
+  const [baseOpenWhenPreview, setBaseOpenWhenPreview] = useState('')
+  const [baseOpenWhenContent, setBaseOpenWhenContent] = useState('')
+  const [baseOpenWhenLocked, setBaseOpenWhenLocked] = useState(false)
+  const [editingBaseOpenWhenId, setEditingBaseOpenWhenId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -80,6 +88,8 @@ function CentroUniversoSection() {
     setHiddenPromiseIds(getHiddenItemIds('promises'))
     setMonthlyOverrides(getLocalOverrides('monthlyLetters'))
     setHiddenMonthlyIds(getHiddenItemIds('monthlyLetters'))
+    setOpenWhenOverrides(getLocalOverrides('openWhenLetters'))
+    setHiddenOpenWhenIds(getHiddenItemIds('openWhenLetters'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -89,6 +99,19 @@ function CentroUniversoSection() {
     }
     return card
   })
+  const visibleBaseOpenWhen = mappedOpenWhen.map((card) => {
+    const override = openWhenOverrides[String(card.id)]
+    return {
+      ...card,
+      ...(override || {}),
+      id: card.id,
+      isOverridden: Boolean(override),
+      isHidden: hiddenOpenWhenIds.includes(String(card.id))
+    }
+  })
+  const activeBaseOpenWhen = visibleBaseOpenWhen.filter((card) => !card.isHidden)
+  const editedBaseOpenWhenCount = Object.keys(openWhenOverrides).length
+  const hiddenBaseOpenWhenCount = hiddenOpenWhenIds.length
 
   const visibleBaseMonthly = monthlyLettersData.map((letter) => {
     const override = monthlyOverrides[String(letter.id)]
@@ -115,13 +138,13 @@ function CentroUniversoSection() {
   const lockedMonthly = activeBaseMonthly.length - activeBaseMonthly.filter((l) => !l.locked).length
 
   // Calculation for Open When Letters stats (combining JSON + Local)
-  const totalOpenWhen = mappedOpenWhen.length + localOpenWhen.length
-  const openedOpenWhen = mappedOpenWhen.filter(
+  const totalOpenWhen = activeBaseOpenWhen.length + localOpenWhen.length
+  const openedOpenWhen = activeBaseOpenWhen.filter(
     (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
   ).length + localOpenWhen.filter(
     (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
   ).length
-  const unlockedOpenWhen = mappedOpenWhen.filter((c) => !c.locked).length + localOpenWhen.filter((c) => !c.locked).length
+  const unlockedOpenWhen = activeBaseOpenWhen.filter((c) => !c.locked).length + localOpenWhen.filter((c) => !c.locked).length
   const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
   const editedBaseReasonsCount = Object.keys(reasonOverrides).length
   const hiddenBaseReasonsCount = hiddenReasonIds.length
@@ -196,11 +219,13 @@ function CentroUniversoSection() {
       },
       overrides: {
         monthlyLetters: getLocalOverrides('monthlyLetters'),
+        openWhenLetters: getLocalOverrides('openWhenLetters'),
         reasons: getLocalOverrides('reasons'),
         promises: getLocalOverrides('promises')
       },
       hidden: {
         monthlyLetters: getHiddenItemIds('monthlyLetters'),
+        openWhenLetters: getHiddenItemIds('openWhenLetters'),
         reasons: getHiddenItemIds('reasons'),
         promises: getHiddenItemIds('promises')
       }
@@ -334,6 +359,9 @@ function CentroUniversoSection() {
         const hasMonthlyBaseBackup =
           Object.prototype.hasOwnProperty.call(overrides || {}, 'monthlyLetters') ||
           Object.prototype.hasOwnProperty.call(hidden || {}, 'monthlyLetters')
+        const hasOpenWhenBaseBackup =
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'openWhenLetters') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'openWhenLetters')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -346,6 +374,9 @@ function CentroUniversoSection() {
           (!hasMonthlyBaseBackup ||
             (isPlainObject(overrides.monthlyLetters) &&
               Array.isArray(hidden.monthlyLetters))) &&
+          (!hasOpenWhenBaseBackup ||
+            (isPlainObject(overrides.openWhenLetters) &&
+              Array.isArray(hidden.openWhenLetters))) &&
           Array.isArray(hidden.reasons) &&
           (!hasPromisesBackup ||
             (Array.isArray(content.promises) &&
@@ -383,6 +414,12 @@ function CentroUniversoSection() {
         const savedHiddenMonthlyIds = hasMonthlyBaseBackup
           ? saveHiddenItemIds('monthlyLetters', hidden.monthlyLetters)
           : getHiddenItemIds('monthlyLetters')
+        const savedOpenWhenOverrides = hasOpenWhenBaseBackup
+          ? saveLocalOverrides('openWhenLetters', overrides.openWhenLetters)
+          : getLocalOverrides('openWhenLetters')
+        const savedHiddenOpenWhenIds = hasOpenWhenBaseBackup
+          ? saveHiddenItemIds('openWhenLetters', hidden.openWhenLetters)
+          : getHiddenItemIds('openWhenLetters')
         const savedPromises = hasPromisesBackup
           ? saveLocalItems('promises', content.promises)
           : getLocalItems('promises')
@@ -400,6 +437,8 @@ function CentroUniversoSection() {
         setHiddenReasonIds(savedHiddenIds)
         setMonthlyOverrides(savedMonthlyOverrides)
         setHiddenMonthlyIds(savedHiddenMonthlyIds)
+        setOpenWhenOverrides(savedOpenWhenOverrides)
+        setHiddenOpenWhenIds(savedHiddenOpenWhenIds)
         setLocalPromises(savedPromises)
         setPromiseOverrides(savedPromiseOverrides)
         setHiddenPromiseIds(savedHiddenPromiseIds)
@@ -412,6 +451,7 @@ function CentroUniversoSection() {
         resetReasonForm()
         resetBaseReasonForm()
         resetBaseMonthlyForm()
+        resetBaseOpenWhenForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
         if (hasPromisesBackup) {
@@ -481,6 +521,15 @@ function CentroUniversoSection() {
     setBaseMonthlyContent('')
     setBaseMonthlyLocked(false)
     setEditingBaseMonthlyId(null)
+  }
+
+  const resetBaseOpenWhenForm = () => {
+    setBaseOpenWhenMood('')
+    setBaseOpenWhenTitle('')
+    setBaseOpenWhenPreview('')
+    setBaseOpenWhenContent('')
+    setBaseOpenWhenLocked(false)
+    setEditingBaseOpenWhenId(null)
   }
 
   const handleReasonSubmit = (event) => {
@@ -786,6 +835,77 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('monthlyLetters', letterId)
     setHiddenMonthlyIds(updatedHiddenIds)
     dispatchLettersUpdate('monthlyLetters')
+  }
+
+  const handleBaseOpenWhenEdit = (card) => {
+    setEditingBaseOpenWhenId(card.id)
+    setBaseOpenWhenMood(card.mood || '')
+    setBaseOpenWhenTitle(card.title || '')
+    setBaseOpenWhenPreview(card.preview || '')
+    setBaseOpenWhenContent(Array.isArray(card.content) ? card.content.join('\n') : '')
+    setBaseOpenWhenLocked(Boolean(card.locked))
+  }
+
+  const handleBaseOpenWhenSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBaseOpenWhenId || !baseOpenWhenMood.trim() || !baseOpenWhenTitle.trim() || !baseOpenWhenPreview.trim()) {
+      alert('Selecciona una carta Abrir cuando base y completa motivo, titulo y preview.')
+      return
+    }
+
+    const contentArray = baseOpenWhenContent
+      .split('\n')
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph.length > 0)
+
+    if (contentArray.length === 0) {
+      alert('Agrega al menos un parrafo para la carta.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('openWhenLetters', editingBaseOpenWhenId, {
+      mood: baseOpenWhenMood.trim(),
+      title: baseOpenWhenTitle.trim(),
+      preview: baseOpenWhenPreview.trim(),
+      content: contentArray,
+      locked: baseOpenWhenLocked,
+      updatedAt: new Date().toISOString()
+    })
+
+    setOpenWhenOverrides(updatedOverrides)
+    resetBaseOpenWhenForm()
+    dispatchLettersUpdate('openWhenLetters')
+  }
+
+  const handleBaseOpenWhenRestore = (cardId) => {
+    const updatedOverrides = deleteLocalOverride('openWhenLetters', cardId)
+    setOpenWhenOverrides(updatedOverrides)
+
+    if (String(editingBaseOpenWhenId) === String(cardId)) {
+      resetBaseOpenWhenForm()
+    }
+
+    dispatchLettersUpdate('openWhenLetters')
+  }
+
+  const handleBaseOpenWhenHide = (card) => {
+    if (window.confirm('¿Seguro que quieres ocultar esta carta Abrir cuando base? Podras restaurarla despues.')) {
+      const updatedHiddenIds = hideDefaultItem('openWhenLetters', card.id)
+      setHiddenOpenWhenIds(updatedHiddenIds)
+
+      if (String(editingBaseOpenWhenId) === String(card.id)) {
+        resetBaseOpenWhenForm()
+      }
+
+      dispatchLettersUpdate('openWhenLetters')
+    }
+  }
+
+  const handleBaseOpenWhenUnhide = (cardId) => {
+    const updatedHiddenIds = restoreHiddenItem('openWhenLetters', cardId)
+    setHiddenOpenWhenIds(updatedHiddenIds)
+    dispatchLettersUpdate('openWhenLetters')
   }
 
   const handleReset = () => {
@@ -1218,6 +1338,177 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn" disabled={!editingBaseMonthlyId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Base open when letters editor */}
+      <div className="base-openwhen-editor" id="base-openwhen-editor">
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
+          <div className="reasons-list-header">
+            <h3>
+              <BookOpen size={18} />
+              Cartas Abrir cuando originales
+            </h3>
+            <span>{openWhenData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <div>
+              <strong>{openWhenData.length}</strong>
+              <span>Base</span>
+            </div>
+            <div>
+              <strong>{editedBaseOpenWhenCount}</strong>
+              <span>Editadas</span>
+            </div>
+            <div>
+              <strong>{hiddenBaseOpenWhenCount}</strong>
+              <span>Ocultas</span>
+            </div>
+            <div>
+              <strong>{localOpenWhen.length}</strong>
+              <span>Locales</span>
+            </div>
+          </div>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>Estas ediciones son overrides locales; el JSON original no se modifica.</span>
+          </div>
+
+          <div className="base-reasons-list">
+            {visibleBaseOpenWhen.map((card) => (
+              <div
+                className={`base-reason-row ${card.isOverridden ? 'is-overridden' : ''} ${card.isHidden ? 'is-hidden' : ''}`}
+                key={card.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{card.mood}</strong>
+                  <span>{card.title} · {card.preview}</span>
+                  <small>
+                    {card.isHidden ? 'Oculta localmente' : card.isOverridden ? 'Editada localmente' : card.locked ? 'Base bloqueada' : 'Base disponible'}
+                  </small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBaseOpenWhenEdit(card)}>
+                    Editar
+                  </button>
+
+                  {card.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseOpenWhenRestore(card.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {card.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseOpenWhenUnhide(card.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseOpenWhenHide(card)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {hiddenBaseOpenWhenCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Cartas Abrir cuando ocultas</h4>
+              {visibleBaseOpenWhen.filter((card) => card.isHidden).map((card) => (
+                <button type="button" className="ghost-button" key={card.id} onClick={() => handleBaseOpenWhenUnhide(card.id)}>
+                  Mostrar {card.mood}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
+          <h3>
+            <Edit2 size={18} />
+            Override de carta Abrir cuando
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBaseOpenWhenSubmit}>
+            <div className="editor-field">
+              <label htmlFor="baseOpenWhenMood">Motivo / emocion *</label>
+              <input
+                id="baseOpenWhenMood"
+                type="text"
+                value={baseOpenWhenMood}
+                onChange={(event) => setBaseOpenWhenMood(event.target.value)}
+                disabled={!editingBaseOpenWhenId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseOpenWhenTitle">Titulo override *</label>
+              <input
+                id="baseOpenWhenTitle"
+                type="text"
+                value={baseOpenWhenTitle}
+                onChange={(event) => setBaseOpenWhenTitle(event.target.value)}
+                disabled={!editingBaseOpenWhenId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseOpenWhenPreview">Preview override *</label>
+              <input
+                id="baseOpenWhenPreview"
+                type="text"
+                value={baseOpenWhenPreview}
+                onChange={(event) => setBaseOpenWhenPreview(event.target.value)}
+                disabled={!editingBaseOpenWhenId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseOpenWhenLocked">Estado de carta *</label>
+              <select
+                id="baseOpenWhenLocked"
+                value={baseOpenWhenLocked ? 'locked' : 'unlocked'}
+                onChange={(event) => setBaseOpenWhenLocked(event.target.value === 'locked')}
+                disabled={!editingBaseOpenWhenId}
+                required
+              >
+                <option value="unlocked">Desbloqueada</option>
+                <option value="locked">Bloqueada</option>
+              </select>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseOpenWhenContent">Contenido override (un parrafo por linea) *</label>
+              <textarea
+                id="baseOpenWhenContent"
+                rows="6"
+                value={baseOpenWhenContent}
+                onChange={(event) => setBaseOpenWhenContent(event.target.value)}
+                disabled={!editingBaseOpenWhenId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingBaseOpenWhenId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseOpenWhenForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseOpenWhenId}>
                 Guardar override
               </button>
             </div>

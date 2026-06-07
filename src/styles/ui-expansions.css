@@ -984,6 +984,10 @@
   order: 10;
 }
 
+.base-openwhen-editor {
+  order: 15;
+}
+
 .local-editor-container {
   order: 20;
 }
@@ -1474,6 +1478,7 @@
 
 .base-reasons-editor,
 .base-monthly-editor,
+.base-openwhen-editor,
 .base-promises-editor {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
@@ -1948,6 +1953,7 @@
 
   .base-reasons-editor,
   .base-monthly-editor,
+  .base-openwhen-editor,
   .base-promises-editor {
     grid-template-columns: 1fr;
     margin: 24px 12px 0;

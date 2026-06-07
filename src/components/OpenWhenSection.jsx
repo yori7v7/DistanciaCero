@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
+import { getHiddenItemIds, getLocalOverrides } from '../utils/localContentStore'
 
 function readLocalOpenWhenLetters() {
   try {
@@ -15,20 +16,24 @@ function readLocalOpenWhenLetters() {
 function OpenWhenSection({ cards = [] }) {
   const [selectedCardId, setSelectedCardId] = useState(null)
   const [localOpenWhen, setLocalOpenWhen] = useState(() => readLocalOpenWhenLetters())
+  const [openWhenOverrides, setOpenWhenOverrides] = useState(() => getLocalOverrides('openWhenLetters'))
+  const [hiddenOpenWhenIds, setHiddenOpenWhenIds] = useState(() => getHiddenItemIds('openWhenLetters'))
   const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
   useEffect(() => {
-    const refreshLocalOpenWhen = () => {
+    const refreshOpenWhen = () => {
       setLocalOpenWhen(readLocalOpenWhenLetters())
+      setOpenWhenOverrides(getLocalOverrides('openWhenLetters'))
+      setHiddenOpenWhenIds(getHiddenItemIds('openWhenLetters'))
     }
 
     const handleContentUpdate = (event) => {
       const collection = event.detail?.collection
       if (!['openWhenLetters', 'letters', 'all'].includes(collection)) return
-      refreshLocalOpenWhen()
+      refreshOpenWhen()
     }
 
-    refreshLocalOpenWhen()
+    refreshOpenWhen()
     window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
 
     return () => {
@@ -47,10 +52,21 @@ function OpenWhenSection({ cards = [] }) {
     }
     return card
   })
+    .filter((card) => !hiddenOpenWhenIds.includes(String(card.id)))
+    .map((card) => {
+      const override = openWhenOverrides[String(card.id)]
+      return {
+        ...card,
+        ...(override || {}),
+        id: card.id,
+        isLocal: false,
+        isOverridden: Boolean(override)
+      }
+    })
   const finalCards = [...baseCards, ...localOpenWhen]
 
   useEffect(() => {
-    if (selectedCardId && !finalCards.some((card) => card.id === selectedCardId)) {
+    if (selectedCardId && !finalCards.some((card) => String(card.id) === String(selectedCardId))) {
       setSelectedCardId(null)
     }
   }, [finalCards, selectedCardId])
@@ -85,7 +101,7 @@ function OpenWhenSection({ cards = [] }) {
   const totalCards = finalCards.length
   const openedCards = finalCards.filter((card) => localStorage.getItem(`distancia-cero-open-when-${card.id}`) === 'opened').length
 
-  const activeCard = finalCards.find((card) => card.id === selectedCardId)
+  const activeCard = finalCards.find((card) => String(card.id) === String(selectedCardId))
 
   if (activeCard) {
     return (
