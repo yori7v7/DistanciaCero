@@ -975,7 +975,33 @@
    Centro del Universo Section Styles (Dashboard)
    ========================================================================== */
 .centro-universo-section {
+  display: flex;
+  flex-direction: column;
   text-align: center;
+}
+
+.base-monthly-editor {
+  order: 10;
+}
+
+.local-editor-container {
+  order: 20;
+}
+
+.base-reasons-editor {
+  order: 30;
+}
+
+.local-reasons-editor {
+  order: 40;
+}
+
+.base-promises-editor {
+  order: 50;
+}
+
+.local-promises-editor {
+  order: 60;
 }
 
 /* Simulation active glowing banner */
@@ -1339,6 +1365,34 @@
   text-align: left;
   position: relative;
   overflow: hidden;
+}
+
+.local-reasons-editor .reasons-list-card,
+.local-promises-editor .reasons-list-card,
+.local-editor-container .local-list-card {
+  order: 1;
+}
+
+.local-reasons-editor .reasons-editor-card,
+.local-promises-editor .reasons-editor-card,
+.local-editor-container .editor-card {
+  order: 2;
+}
+
+.crud-subsection-title {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 12px;
+  border: 1px solid rgba(255, 46, 147, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 46, 147, 0.08);
+  color: rgba(255, 224, 239, 0.72);
+  padding: 5px 10px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .reasons-editor-card::before,

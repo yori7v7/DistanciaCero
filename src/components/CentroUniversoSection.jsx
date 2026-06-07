@@ -1045,6 +1045,7 @@ function CentroUniversoSection() {
       {/* Base monthly letters editor */}
       <div className="base-monthly-editor" id="base-monthly-editor">
         <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
             <h3>
               <BookOpen size={18} />
@@ -1129,6 +1130,7 @@ function CentroUniversoSection() {
         </div>
 
         <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
           <h3>
             <Edit2 size={18} />
             Override de carta mensual
@@ -1200,6 +1202,7 @@ function CentroUniversoSection() {
       {/* Local reasons CRUD editor */}
       <div className="local-reasons-editor" id="local-reasons-editor">
         <div className="reasons-editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
             Editor local de 100 razones
@@ -1252,6 +1255,7 @@ function CentroUniversoSection() {
         </div>
 
         <div className="reasons-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
             <h3>Razones locales actuales</h3>
             <span>{localReasons.length} locales</span>
@@ -1295,6 +1299,7 @@ function CentroUniversoSection() {
 
       <div className="base-reasons-editor" id="base-reasons-editor">
         <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
             <h3>Razones originales</h3>
             <span>{reasonsData.length} base</span>
@@ -1374,6 +1379,7 @@ function CentroUniversoSection() {
         </div>
 
         <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
           <h3>
             <Edit2 size={18} />
             {editingBaseReasonId ? `Editando razon #${editingBaseReasonId}` : 'Editar razon original'}
@@ -1439,6 +1445,7 @@ function CentroUniversoSection() {
 
       <div className="local-promises-editor" id="local-promises-editor">
         <div className="reasons-editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
             Editor local de promesas
@@ -1499,6 +1506,7 @@ function CentroUniversoSection() {
         </div>
 
         <div className="reasons-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
             <h3>Promesas locales</h3>
             <span>{localPromises.length} locales</span>
@@ -1542,6 +1550,7 @@ function CentroUniversoSection() {
 
       <div className="base-promises-editor">
         <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
             <h3>Promesas base</h3>
             <span>{promisesData.length} base</span>
@@ -1606,6 +1615,7 @@ function CentroUniversoSection() {
         </div>
 
         <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
           <h3>
             <Edit2 size={18} />
             {editingBasePromiseId ? `Editando promesa #${editingBasePromiseId}` : 'Editar promesa base'}
@@ -1664,6 +1674,7 @@ function CentroUniversoSection() {
       {/* Local letters CRUD editor */}
       <div className="local-editor-container" id="local-editor-form">
         <div className="editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
             {editingId ? 'Editar Carta Local' : 'Crear Carta Local'}
@@ -1770,6 +1781,7 @@ function CentroUniversoSection() {
 
         {/* Local Letters Listings */}
         <div className="local-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
           <h3>Cartas locales creadas</h3>
           
           <div className="local-lists-split">
