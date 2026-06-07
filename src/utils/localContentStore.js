@@ -5,12 +5,14 @@ const COLLECTION_KEYS = {
 
 const OVERRIDE_KEYS = {
   reasons: 'distancia-cero-content-reasons-overrides',
-  promises: 'distancia-cero-content-promises-overrides'
+  promises: 'distancia-cero-content-promises-overrides',
+  monthlyLetters: 'distancia-cero-content-monthlyLetters-overrides'
 }
 
 const HIDDEN_KEYS = {
   reasons: 'distancia-cero-content-reasons-hidden',
-  promises: 'distancia-cero-content-promises-hidden'
+  promises: 'distancia-cero-content-promises-hidden',
+  monthlyLetters: 'distancia-cero-content-monthlyLetters-hidden'
 }
 
 function getStorageKey(collectionName) {

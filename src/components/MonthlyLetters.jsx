@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
+import { getHiddenItemIds, getLocalOverrides } from '../utils/localContentStore'
 
 function readLocalMonthlyLetters() {
   try {
@@ -15,20 +16,24 @@ function readLocalMonthlyLetters() {
 function MonthlyLetters({ letters }) {
   const [selectedLetterId, setSelectedLetterId] = useState(null)
   const [localLetters, setLocalLetters] = useState(() => readLocalMonthlyLetters())
+  const [monthlyOverrides, setMonthlyOverrides] = useState(() => getLocalOverrides('monthlyLetters'))
+  const [hiddenMonthlyIds, setHiddenMonthlyIds] = useState(() => getHiddenItemIds('monthlyLetters'))
   const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
   useEffect(() => {
-    const refreshLocalLetters = () => {
+    const refreshMonthlyLetters = () => {
       setLocalLetters(readLocalMonthlyLetters())
+      setMonthlyOverrides(getLocalOverrides('monthlyLetters'))
+      setHiddenMonthlyIds(getHiddenItemIds('monthlyLetters'))
     }
 
     const handleContentUpdate = (event) => {
       const collection = event.detail?.collection
       if (!['monthlyLetters', 'letters', 'all'].includes(collection)) return
-      refreshLocalLetters()
+      refreshMonthlyLetters()
     }
 
-    refreshLocalLetters()
+    refreshMonthlyLetters()
     window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
 
     return () => {
@@ -36,10 +41,22 @@ function MonthlyLetters({ letters }) {
     }
   }, [])
 
-  const allLetters = [...letters, ...localLetters]
+  const baseLetters = (Array.isArray(letters) ? letters : [])
+    .filter((letter) => !hiddenMonthlyIds.includes(String(letter.id)))
+    .map((letter) => {
+      const override = monthlyOverrides[String(letter.id)]
+      return {
+        ...letter,
+        ...(override || {}),
+        id: letter.id,
+        isLocal: false,
+        isOverridden: Boolean(override)
+      }
+    })
+  const allLetters = [...baseLetters, ...localLetters]
 
   useEffect(() => {
-    if (selectedLetterId && !allLetters.some((letter) => letter.id === selectedLetterId)) {
+    if (selectedLetterId && !allLetters.some((letter) => String(letter.id) === String(selectedLetterId))) {
       setSelectedLetterId(null)
     }
   }, [allLetters, selectedLetterId])
@@ -74,7 +91,7 @@ function MonthlyLetters({ letters }) {
   const totalLetters = allLetters.length
   const openedLetters = allLetters.filter((letter) => localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened').length
 
-  const activeLetter = allLetters.find((letter) => letter.id === selectedLetterId)
+  const activeLetter = allLetters.find((letter) => String(letter.id) === String(selectedLetterId))
 
   if (activeLetter) {
     return (

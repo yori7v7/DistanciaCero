@@ -47,6 +47,13 @@ function CentroUniversoSection() {
   const [basePromiseText, setBasePromiseText] = useState('')
   const [basePromiseTag, setBasePromiseTag] = useState('')
   const [editingBasePromiseId, setEditingBasePromiseId] = useState(null)
+  const [monthlyOverrides, setMonthlyOverrides] = useState({})
+  const [hiddenMonthlyIds, setHiddenMonthlyIds] = useState([])
+  const [baseMonthlyMonth, setBaseMonthlyMonth] = useState('')
+  const [baseMonthlyTitle, setBaseMonthlyTitle] = useState('')
+  const [baseMonthlyPreview, setBaseMonthlyPreview] = useState('')
+  const [baseMonthlyContent, setBaseMonthlyContent] = useState('')
+  const [editingBaseMonthlyId, setEditingBaseMonthlyId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -69,6 +76,8 @@ function CentroUniversoSection() {
     setLocalPromises(getLocalItems('promises'))
     setPromiseOverrides(getLocalOverrides('promises'))
     setHiddenPromiseIds(getHiddenItemIds('promises'))
+    setMonthlyOverrides(getLocalOverrides('monthlyLetters'))
+    setHiddenMonthlyIds(getHiddenItemIds('monthlyLetters'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -79,15 +88,29 @@ function CentroUniversoSection() {
     return card
   })
 
+  const visibleBaseMonthly = monthlyLettersData.map((letter) => {
+    const override = monthlyOverrides[String(letter.id)]
+    return {
+      ...letter,
+      ...(override || {}),
+      id: letter.id,
+      isOverridden: Boolean(override),
+      isHidden: hiddenMonthlyIds.includes(String(letter.id))
+    }
+  })
+  const activeBaseMonthly = visibleBaseMonthly.filter((letter) => !letter.isHidden)
+  const editedBaseMonthlyCount = Object.keys(monthlyOverrides).length
+  const hiddenBaseMonthlyCount = hiddenMonthlyIds.length
+
   // Calculation for Monthly Letters stats (combining JSON + Local)
-  const totalMonthly = monthlyLettersData.length + localMonthly.length
-  const openedMonthly = monthlyLettersData.filter(
+  const totalMonthly = activeBaseMonthly.length + localMonthly.length
+  const openedMonthly = activeBaseMonthly.filter(
     (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
   ).length + localMonthly.filter(
     (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
   ).length
-  const unlockedMonthly = monthlyLettersData.filter((l) => !l.locked).length + localMonthly.length
-  const lockedMonthly = (monthlyLettersData.length - monthlyLettersData.filter((l) => !l.locked).length)
+  const unlockedMonthly = activeBaseMonthly.filter((l) => !l.locked).length + localMonthly.length
+  const lockedMonthly = activeBaseMonthly.length - activeBaseMonthly.filter((l) => !l.locked).length
 
   // Calculation for Open When Letters stats (combining JSON + Local)
   const totalOpenWhen = mappedOpenWhen.length + localOpenWhen.length
@@ -170,10 +193,12 @@ function CentroUniversoSection() {
         promises: getLocalItems('promises')
       },
       overrides: {
+        monthlyLetters: getLocalOverrides('monthlyLetters'),
         reasons: getLocalOverrides('reasons'),
         promises: getLocalOverrides('promises')
       },
       hidden: {
+        monthlyLetters: getHiddenItemIds('monthlyLetters'),
         reasons: getHiddenItemIds('reasons'),
         promises: getHiddenItemIds('promises')
       }
@@ -302,6 +327,9 @@ function CentroUniversoSection() {
           Object.prototype.hasOwnProperty.call(content || {}, 'promises') ||
           Object.prototype.hasOwnProperty.call(overrides || {}, 'promises') ||
           Object.prototype.hasOwnProperty.call(hidden || {}, 'promises')
+        const hasMonthlyBaseBackup =
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'monthlyLetters') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'monthlyLetters')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -311,6 +339,9 @@ function CentroUniversoSection() {
           isPlainObject(overrides) &&
           isPlainObject(overrides.reasons) &&
           isPlainObject(hidden) &&
+          (!hasMonthlyBaseBackup ||
+            (isPlainObject(overrides.monthlyLetters) &&
+              Array.isArray(hidden.monthlyLetters))) &&
           Array.isArray(hidden.reasons) &&
           (!hasPromisesBackup ||
             (Array.isArray(content.promises) &&
@@ -342,6 +373,12 @@ function CentroUniversoSection() {
         const savedReasons = saveLocalItems('reasons', content.reasons)
         const savedOverrides = saveLocalOverrides('reasons', overrides.reasons)
         const savedHiddenIds = saveHiddenItemIds('reasons', hidden.reasons)
+        const savedMonthlyOverrides = hasMonthlyBaseBackup
+          ? saveLocalOverrides('monthlyLetters', overrides.monthlyLetters)
+          : getLocalOverrides('monthlyLetters')
+        const savedHiddenMonthlyIds = hasMonthlyBaseBackup
+          ? saveHiddenItemIds('monthlyLetters', hidden.monthlyLetters)
+          : getHiddenItemIds('monthlyLetters')
         const savedPromises = hasPromisesBackup
           ? saveLocalItems('promises', content.promises)
           : getLocalItems('promises')
@@ -357,6 +394,8 @@ function CentroUniversoSection() {
         setLocalReasons(savedReasons)
         setReasonOverrides(savedOverrides)
         setHiddenReasonIds(savedHiddenIds)
+        setMonthlyOverrides(savedMonthlyOverrides)
+        setHiddenMonthlyIds(savedHiddenMonthlyIds)
         setLocalPromises(savedPromises)
         setPromiseOverrides(savedPromiseOverrides)
         setHiddenPromiseIds(savedHiddenPromiseIds)
@@ -367,6 +406,7 @@ function CentroUniversoSection() {
         setTag('')
         resetReasonForm()
         resetBaseReasonForm()
+        resetBaseMonthlyForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
         if (hasPromisesBackup) {
@@ -427,6 +467,14 @@ function CentroUniversoSection() {
     setBasePromiseText('')
     setBasePromiseTag('')
     setEditingBasePromiseId(null)
+  }
+
+  const resetBaseMonthlyForm = () => {
+    setBaseMonthlyMonth('')
+    setBaseMonthlyTitle('')
+    setBaseMonthlyPreview('')
+    setBaseMonthlyContent('')
+    setEditingBaseMonthlyId(null)
   }
 
   const handleReasonSubmit = (event) => {
@@ -663,6 +711,75 @@ function CentroUniversoSection() {
     dispatchContentUpdate('promises')
   }
 
+  const handleBaseMonthlyEdit = (letter) => {
+    setEditingBaseMonthlyId(letter.id)
+    setBaseMonthlyMonth(letter.month || '')
+    setBaseMonthlyTitle(letter.title || '')
+    setBaseMonthlyPreview(letter.preview || '')
+    setBaseMonthlyContent(Array.isArray(letter.content) ? letter.content.join('\n') : '')
+  }
+
+  const handleBaseMonthlySubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBaseMonthlyId || !baseMonthlyMonth.trim() || !baseMonthlyTitle.trim() || !baseMonthlyPreview.trim()) {
+      alert('Selecciona una carta mensual base y completa mes, titulo y preview.')
+      return
+    }
+
+    const contentArray = baseMonthlyContent
+      .split('\n')
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph.length > 0)
+
+    if (contentArray.length === 0) {
+      alert('Agrega al menos un parrafo para la carta.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('monthlyLetters', editingBaseMonthlyId, {
+      month: baseMonthlyMonth.trim(),
+      title: baseMonthlyTitle.trim(),
+      preview: baseMonthlyPreview.trim(),
+      content: contentArray,
+      updatedAt: new Date().toISOString()
+    })
+
+    setMonthlyOverrides(updatedOverrides)
+    resetBaseMonthlyForm()
+    dispatchLettersUpdate('monthlyLetters')
+  }
+
+  const handleBaseMonthlyRestore = (letterId) => {
+    const updatedOverrides = deleteLocalOverride('monthlyLetters', letterId)
+    setMonthlyOverrides(updatedOverrides)
+
+    if (String(editingBaseMonthlyId) === String(letterId)) {
+      resetBaseMonthlyForm()
+    }
+
+    dispatchLettersUpdate('monthlyLetters')
+  }
+
+  const handleBaseMonthlyHide = (letter) => {
+    if (window.confirm('¿Seguro que quieres ocultar esta carta mensual base? Podras restaurarla despues.')) {
+      const updatedHiddenIds = hideDefaultItem('monthlyLetters', letter.id)
+      setHiddenMonthlyIds(updatedHiddenIds)
+
+      if (String(editingBaseMonthlyId) === String(letter.id)) {
+        resetBaseMonthlyForm()
+      }
+
+      dispatchLettersUpdate('monthlyLetters')
+    }
+  }
+
+  const handleBaseMonthlyUnhide = (letterId) => {
+    const updatedHiddenIds = restoreHiddenItem('monthlyLetters', letterId)
+    setHiddenMonthlyIds(updatedHiddenIds)
+    dispatchLettersUpdate('monthlyLetters')
+  }
+
   const handleReset = () => {
     if (
       window.confirm(
@@ -896,7 +1013,7 @@ function CentroUniversoSection() {
       <div className="backup-card">
         <div className="backup-header">
           <h3>Respaldo local del universo</h3>
-          <p>Exporta o restaura cartas locales, razones locales, ediciones de razones originales y razones ocultas.</p>
+          <p>Exporta o restaura cartas locales, ediciones de cartas mensuales, razones, promesas y elementos ocultos.</p>
         </div>
 
         <div className="backup-actions">
@@ -923,6 +1040,161 @@ function CentroUniversoSection() {
             {backupStatus.text}
           </p>
         )}
+      </div>
+
+      {/* Base monthly letters editor */}
+      <div className="base-monthly-editor" id="base-monthly-editor">
+        <div className="base-reasons-panel">
+          <div className="reasons-list-header">
+            <h3>
+              <BookOpen size={18} />
+              Cartas mensuales originales
+            </h3>
+            <span>{monthlyLettersData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <div>
+              <strong>{monthlyLettersData.length}</strong>
+              <span>Base</span>
+            </div>
+            <div>
+              <strong>{editedBaseMonthlyCount}</strong>
+              <span>Editadas</span>
+            </div>
+            <div>
+              <strong>{hiddenBaseMonthlyCount}</strong>
+              <span>Ocultas</span>
+            </div>
+            <div>
+              <strong>{localMonthly.length}</strong>
+              <span>Locales</span>
+            </div>
+          </div>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>Estas ediciones son overrides locales; el JSON original no se modifica.</span>
+          </div>
+
+          <div className="base-reasons-list">
+            {visibleBaseMonthly.map((letter) => (
+              <div
+                className={`base-reason-row ${letter.isOverridden ? 'is-overridden' : ''} ${letter.isHidden ? 'is-hidden' : ''}`}
+                key={letter.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{letter.month} · {letter.title}</strong>
+                  <span>{letter.preview}</span>
+                  <small>
+                    {letter.isHidden ? 'Oculta localmente' : letter.isOverridden ? 'Editada localmente' : letter.locked ? 'Base bloqueada' : 'Base disponible'}
+                  </small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBaseMonthlyEdit(letter)}>
+                    Editar
+                  </button>
+
+                  {letter.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseMonthlyRestore(letter.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {letter.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseMonthlyUnhide(letter.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseMonthlyHide(letter)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {hiddenBaseMonthlyCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Cartas mensuales ocultas</h4>
+              {visibleBaseMonthly.filter((letter) => letter.isHidden).map((letter) => (
+                <button type="button" className="ghost-button" key={letter.id} onClick={() => handleBaseMonthlyUnhide(letter.id)}>
+                  Mostrar {letter.month}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="base-reasons-panel">
+          <h3>
+            <Edit2 size={18} />
+            Override de carta mensual
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBaseMonthlySubmit}>
+            <div className="editor-field">
+              <label htmlFor="baseMonthlyMonth">Mes / etiqueta *</label>
+              <input
+                id="baseMonthlyMonth"
+                type="text"
+                value={baseMonthlyMonth}
+                onChange={(event) => setBaseMonthlyMonth(event.target.value)}
+                disabled={!editingBaseMonthlyId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseMonthlyTitle">Titulo override *</label>
+              <input
+                id="baseMonthlyTitle"
+                type="text"
+                value={baseMonthlyTitle}
+                onChange={(event) => setBaseMonthlyTitle(event.target.value)}
+                disabled={!editingBaseMonthlyId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseMonthlyPreview">Preview override *</label>
+              <input
+                id="baseMonthlyPreview"
+                type="text"
+                value={baseMonthlyPreview}
+                onChange={(event) => setBaseMonthlyPreview(event.target.value)}
+                disabled={!editingBaseMonthlyId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseMonthlyContent">Contenido override (un parrafo por linea) *</label>
+              <textarea
+                id="baseMonthlyContent"
+                rows="6"
+                value={baseMonthlyContent}
+                onChange={(event) => setBaseMonthlyContent(event.target.value)}
+                disabled={!editingBaseMonthlyId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingBaseMonthlyId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseMonthlyForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseMonthlyId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
       {/* Local reasons CRUD editor */}
