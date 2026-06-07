@@ -1,34 +1,38 @@
+import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Shield, Sparkles } from 'lucide-react'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
-function PromisesSection() {
-  const finalPromises = [
-    {
-      id: 1,
-      title: 'Prometo cuidar este espacio',
-      text: 'Ir agregando recuerdos, detalles y señales de amor para que nunca se sienta abandonado.',
-      tag: 'Promesa'
-    },
-    {
-      id: 2,
-      title: 'Prometo no dejar que la distancia sea todo',
-      text: 'Porque aunque pese, también podemos construir formas bonitas de estar cerca.',
-      tag: 'Promesa'
-    },
-    {
-      id: 3,
-      title: 'Prometo hacerte sentir querida',
-      text: 'Con palabras, detalles, tiempo, paciencia y mensadas nuestras.',
-      tag: 'Promesa'
-    },
-    {
-      id: 'soon-promise',
-      title: 'Próximamente',
-      text: 'Aquí después podrá vivir otra promesa pequeña, honesta y real, con la misma vibra del resto de la sección.',
-      tag: 'Espacio reservado',
-      isPlaceholder: true
+function normalizePromise(item) {
+  return {
+    ...item,
+    text: item.text || item.description || '',
+    tag: item.tag || item.footer || 'Promesa'
+  }
+}
+
+function PromisesSection({ promises = [] }) {
+  const [finalPromises, setFinalPromises] = useState(() => {
+    return mergeWithLocalItems(promises, 'promises').map(normalizePromise)
+  })
+
+  useEffect(() => {
+    setFinalPromises(mergeWithLocalItems(promises, 'promises').map(normalizePromise))
+  }, [promises])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (!['promises', 'all'].includes(collection)) return
+      setFinalPromises(mergeWithLocalItems(promises, 'promises').map(normalizePromise))
     }
-  ]
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+
+    return () => {
+      window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+    }
+  }, [promises])
 
   return (
     <section className="section" id="promesas">

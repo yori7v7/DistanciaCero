@@ -1316,7 +1316,8 @@
    EDITOR LOCAL DE RAZONES — Centro del Universo
    =================================================== */
 
-.local-reasons-editor {
+.local-reasons-editor,
+.local-promises-editor {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
   gap: 24px;
@@ -1417,7 +1418,8 @@
   background: rgba(255, 46, 147, 0.06);
 }
 
-.base-reasons-editor {
+.base-reasons-editor,
+.base-promises-editor {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
   gap: 24px;
@@ -1883,12 +1885,14 @@
 
 /* Responsive editor */
 @media (max-width: 760px) {
-  .local-reasons-editor {
+  .local-reasons-editor,
+  .local-promises-editor {
     grid-template-columns: 1fr;
     margin: 28px 12px 0;
   }
 
-  .base-reasons-editor {
+  .base-reasons-editor,
+  .base-promises-editor {
     grid-template-columns: 1fr;
     margin: 24px 12px 0;
   }

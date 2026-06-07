@@ -4,6 +4,7 @@ import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTr
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
 import reasonsData from '../data/reasons.json'
+import promisesData from '../data/promises.json'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -35,6 +36,17 @@ function CentroUniversoSection() {
   const [baseReasonTitle, setBaseReasonTitle] = useState('')
   const [baseReasonText, setBaseReasonText] = useState('')
   const [editingBaseReasonId, setEditingBaseReasonId] = useState(null)
+  const [localPromises, setLocalPromises] = useState([])
+  const [promiseOverrides, setPromiseOverrides] = useState({})
+  const [hiddenPromiseIds, setHiddenPromiseIds] = useState([])
+  const [promiseTitle, setPromiseTitle] = useState('')
+  const [promiseText, setPromiseText] = useState('')
+  const [promiseTag, setPromiseTag] = useState('')
+  const [editingPromiseId, setEditingPromiseId] = useState(null)
+  const [basePromiseTitle, setBasePromiseTitle] = useState('')
+  const [basePromiseText, setBasePromiseText] = useState('')
+  const [basePromiseTag, setBasePromiseTag] = useState('')
+  const [editingBasePromiseId, setEditingBasePromiseId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -54,6 +66,9 @@ function CentroUniversoSection() {
     setLocalReasons(getLocalItems('reasons'))
     setReasonOverrides(getLocalOverrides('reasons'))
     setHiddenReasonIds(getHiddenItemIds('reasons'))
+    setLocalPromises(getLocalItems('promises'))
+    setPromiseOverrides(getLocalOverrides('promises'))
+    setHiddenPromiseIds(getHiddenItemIds('promises'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -105,6 +120,20 @@ function CentroUniversoSection() {
       (reason.text || '').toLowerCase().includes(query)
     )
   })
+  const editedBasePromisesCount = Object.keys(promiseOverrides).length
+  const hiddenBasePromisesCount = hiddenPromiseIds.length
+  const visibleBasePromises = promisesData.map((promise) => {
+    const override = promiseOverrides[String(promise.id)]
+    return {
+      ...promise,
+      ...(override || {}),
+      id: promise.id,
+      text: override?.text || override?.description || promise.text || promise.description || '',
+      tag: override?.tag || override?.footer || promise.tag || promise.footer || 'Promesa',
+      isOverridden: Boolean(override),
+      isHidden: hiddenPromiseIds.includes(String(promise.id))
+    }
+  })
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -137,13 +166,16 @@ function CentroUniversoSection() {
       content: {
         monthlyLetters: readLocalLetters('distancia-cero-local-monthly-letters'),
         openWhenLetters: readLocalLetters('distancia-cero-local-open-when'),
-        reasons: getLocalItems('reasons')
+        reasons: getLocalItems('reasons'),
+        promises: getLocalItems('promises')
       },
       overrides: {
-        reasons: getLocalOverrides('reasons')
+        reasons: getLocalOverrides('reasons'),
+        promises: getLocalOverrides('promises')
       },
       hidden: {
-        reasons: getHiddenItemIds('reasons')
+        reasons: getHiddenItemIds('reasons'),
+        promises: getHiddenItemIds('promises')
       }
     }
 
@@ -266,6 +298,10 @@ function CentroUniversoSection() {
         const content = importedData?.content
         const overrides = importedData?.overrides
         const hidden = importedData?.hidden
+        const hasPromisesBackup =
+          Object.prototype.hasOwnProperty.call(content || {}, 'promises') ||
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'promises') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'promises')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -275,7 +311,11 @@ function CentroUniversoSection() {
           isPlainObject(overrides) &&
           isPlainObject(overrides.reasons) &&
           isPlainObject(hidden) &&
-          Array.isArray(hidden.reasons)
+          Array.isArray(hidden.reasons) &&
+          (!hasPromisesBackup ||
+            (Array.isArray(content.promises) &&
+              isPlainObject(overrides.promises) &&
+              Array.isArray(hidden.promises)))
 
         if (!isValidV2) {
           setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato valido de respaldo v2.' })
@@ -302,12 +342,24 @@ function CentroUniversoSection() {
         const savedReasons = saveLocalItems('reasons', content.reasons)
         const savedOverrides = saveLocalOverrides('reasons', overrides.reasons)
         const savedHiddenIds = saveHiddenItemIds('reasons', hidden.reasons)
+        const savedPromises = hasPromisesBackup
+          ? saveLocalItems('promises', content.promises)
+          : getLocalItems('promises')
+        const savedPromiseOverrides = hasPromisesBackup
+          ? saveLocalOverrides('promises', overrides.promises)
+          : getLocalOverrides('promises')
+        const savedHiddenPromiseIds = hasPromisesBackup
+          ? saveHiddenItemIds('promises', hidden.promises)
+          : getHiddenItemIds('promises')
 
         setLocalMonthly(content.monthlyLetters)
         setLocalOpenWhen(content.openWhenLetters)
         setLocalReasons(savedReasons)
         setReasonOverrides(savedOverrides)
         setHiddenReasonIds(savedHiddenIds)
+        setLocalPromises(savedPromises)
+        setPromiseOverrides(savedPromiseOverrides)
+        setHiddenPromiseIds(savedHiddenPromiseIds)
         setEditingId(null)
         setTitle('')
         setPreview('')
@@ -317,6 +369,9 @@ function CentroUniversoSection() {
         resetBaseReasonForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
+        if (hasPromisesBackup) {
+          dispatchContentUpdate('promises')
+        }
         dispatchLettersUpdate('monthlyLetters')
         dispatchLettersUpdate('openWhenLetters')
         setBackupStatus({ type: 'success', text: 'Respaldo v2 importado correctamente.' })
@@ -358,6 +413,20 @@ function CentroUniversoSection() {
     setBaseReasonTitle('')
     setBaseReasonText('')
     setEditingBaseReasonId(null)
+  }
+
+  const resetPromiseForm = () => {
+    setPromiseTitle('')
+    setPromiseText('')
+    setPromiseTag('')
+    setEditingPromiseId(null)
+  }
+
+  const resetBasePromiseForm = () => {
+    setBasePromiseTitle('')
+    setBasePromiseText('')
+    setBasePromiseTag('')
+    setEditingBasePromiseId(null)
   }
 
   const handleReasonSubmit = (event) => {
@@ -480,6 +549,118 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('reasons', reasonId)
     setHiddenReasonIds(updatedHiddenIds)
     dispatchContentUpdate('reasons')
+  }
+
+  const handlePromiseSubmit = (event) => {
+    event.preventDefault()
+
+    if (!promiseTitle.trim() || !promiseText.trim()) {
+      alert('Por favor, completa titulo y texto de la promesa.')
+      return
+    }
+
+    const patch = {
+      title: promiseTitle.trim(),
+      text: promiseText.trim(),
+      description: promiseText.trim(),
+      tag: promiseTag.trim() || 'Promesa',
+      footer: promiseTag.trim() || 'Promesa',
+      updatedAt: new Date().toISOString()
+    }
+
+    const updatedPromises = editingPromiseId
+      ? updateLocalItem('promises', editingPromiseId, patch)
+      : addLocalItem('promises', {
+          id: `local-promise-${Date.now()}`,
+          ...patch,
+          createdAt: new Date().toISOString()
+        })
+
+    setLocalPromises(updatedPromises)
+    resetPromiseForm()
+    dispatchContentUpdate('promises')
+  }
+
+  const handlePromiseEdit = (promise) => {
+    if (!promise.isLocal) return
+    setEditingPromiseId(promise.id)
+    setPromiseTitle(promise.title || '')
+    setPromiseText(promise.text || promise.description || '')
+    setPromiseTag(promise.tag || promise.footer || '')
+  }
+
+  const handlePromiseDelete = (promise) => {
+    if (!promise.isLocal) return
+
+    if (window.confirm('¿Seguro que quieres eliminar esta promesa local?')) {
+      const updatedPromises = deleteLocalItem('promises', promise.id)
+      setLocalPromises(updatedPromises)
+
+      if (editingPromiseId === promise.id) {
+        resetPromiseForm()
+      }
+
+      dispatchContentUpdate('promises')
+    }
+  }
+
+  const handleBasePromiseEdit = (promise) => {
+    setEditingBasePromiseId(promise.id)
+    setBasePromiseTitle(promise.title || '')
+    setBasePromiseText(promise.text || promise.description || '')
+    setBasePromiseTag(promise.tag || promise.footer || '')
+  }
+
+  const handleBasePromiseSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBasePromiseId || !basePromiseTitle.trim() || !basePromiseText.trim()) {
+      alert('Selecciona una promesa base y completa titulo y texto.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('promises', editingBasePromiseId, {
+      title: basePromiseTitle.trim(),
+      text: basePromiseText.trim(),
+      description: basePromiseText.trim(),
+      tag: basePromiseTag.trim() || 'Promesa',
+      footer: basePromiseTag.trim() || 'Promesa',
+      updatedAt: new Date().toISOString()
+    })
+
+    setPromiseOverrides(updatedOverrides)
+    resetBasePromiseForm()
+    dispatchContentUpdate('promises')
+  }
+
+  const handleBasePromiseRestore = (promiseId) => {
+    const updatedOverrides = deleteLocalOverride('promises', promiseId)
+    setPromiseOverrides(updatedOverrides)
+
+    if (String(editingBasePromiseId) === String(promiseId)) {
+      resetBasePromiseForm()
+    }
+
+    dispatchContentUpdate('promises')
+  }
+
+  const handleBasePromiseHide = (promise) => {
+    if (window.confirm('¿Seguro que quieres ocultar esta promesa base? Podras restaurarla despues.')) {
+      const updatedHiddenIds = hideDefaultItem('promises', promise.id)
+      setHiddenPromiseIds(updatedHiddenIds)
+
+      if (String(editingBasePromiseId) === String(promise.id)) {
+        resetBasePromiseForm()
+      }
+
+      dispatchContentUpdate('promises')
+    }
+  }
+
+  const handleBasePromiseUnhide = (promiseId) => {
+    const updatedHiddenIds = restoreHiddenItem('promises', promiseId)
+    setHiddenPromiseIds(updatedHiddenIds)
+    dispatchContentUpdate('promises')
   }
 
   const handleReset = () => {
@@ -981,6 +1162,230 @@ function CentroUniversoSection() {
               ))}
             </div>
           )}
+        </div>
+      </div>
+
+      <div className="local-promises-editor" id="local-promises-editor">
+        <div className="reasons-editor-card">
+          <h3>
+            <Plus size={18} />
+            Editor local de promesas
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>
+              <strong>Aviso de pruebas</strong>: Las promesas locales y overrides solo viven en este navegador.
+            </span>
+          </div>
+
+          <form className="editor-form" onSubmit={handlePromiseSubmit}>
+            <div className="editor-field">
+              <label htmlFor="promiseTitle">Titulo de la promesa *</label>
+              <input
+                id="promiseTitle"
+                type="text"
+                value={promiseTitle}
+                onChange={(event) => setPromiseTitle(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="promiseText">Texto de la promesa *</label>
+              <textarea
+                id="promiseText"
+                rows="4"
+                value={promiseText}
+                onChange={(event) => setPromiseText(event.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="promiseTag">Etiqueta</label>
+              <input
+                id="promiseTag"
+                type="text"
+                placeholder="Promesa"
+                value={promiseTag}
+                onChange={(event) => setPromiseTag(event.target.value)}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingPromiseId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetPromiseForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn">
+                {editingPromiseId ? 'Actualizar promesa local' : 'Guardar promesa local'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="reasons-list-card">
+          <div className="reasons-list-header">
+            <h3>Promesas locales</h3>
+            <span>{localPromises.length} locales</span>
+          </div>
+
+          {localPromises.length === 0 ? (
+            <p className="no-items">No hay promesas locales creadas.</p>
+          ) : (
+            <div className="reason-items-list">
+              {localPromises.map((promise) => (
+                <div className="reason-item-row" key={promise.id}>
+                  <div className="item-info">
+                    <strong>{promise.title}</strong>
+                    <span>{promise.text || promise.description}</span>
+                  </div>
+
+                  <div className="item-actions">
+                    <button
+                      type="button"
+                      className="action-icon-btn edit"
+                      onClick={() => handlePromiseEdit(promise)}
+                      title="Editar promesa local"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon-btn delete"
+                      onClick={() => handlePromiseDelete(promise)}
+                      title="Eliminar promesa local"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="base-promises-editor">
+        <div className="base-reasons-panel">
+          <div className="reasons-list-header">
+            <h3>Promesas base</h3>
+            <span>{promisesData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <div>
+              <strong>{promisesData.length}</strong>
+              <span>Base totales</span>
+            </div>
+            <div>
+              <strong>{editedBasePromisesCount}</strong>
+              <span>Editadas</span>
+            </div>
+            <div>
+              <strong>{hiddenBasePromisesCount}</strong>
+              <span>Ocultas</span>
+            </div>
+            <div>
+              <strong>{localPromises.length}</strong>
+              <span>Locales</span>
+            </div>
+          </div>
+
+          <div className="base-reasons-list">
+            {visibleBasePromises.map((promise) => (
+              <div
+                className={`base-reason-row ${promise.isOverridden ? 'is-overridden' : ''} ${promise.isHidden ? 'is-hidden' : ''}`}
+                key={promise.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{promise.title}</strong>
+                  <span>{promise.text}</span>
+                  <small>{promise.isHidden ? 'Oculta localmente' : promise.isOverridden ? 'Editada localmente' : promise.tag}</small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBasePromiseEdit(promise)}>
+                    <Edit2 size={14} />
+                    Editar
+                  </button>
+
+                  {promise.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBasePromiseRestore(promise.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {promise.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBasePromiseUnhide(promise.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBasePromiseHide(promise)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="base-reasons-panel">
+          <h3>
+            <Edit2 size={18} />
+            {editingBasePromiseId ? `Editando promesa #${editingBasePromiseId}` : 'Editar promesa base'}
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBasePromiseSubmit}>
+            <div className="editor-field">
+              <label htmlFor="basePromiseTitle">Titulo override *</label>
+              <input
+                id="basePromiseTitle"
+                type="text"
+                value={basePromiseTitle}
+                onChange={(event) => setBasePromiseTitle(event.target.value)}
+                disabled={!editingBasePromiseId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePromiseText">Texto override *</label>
+              <textarea
+                id="basePromiseText"
+                rows="5"
+                value={basePromiseText}
+                onChange={(event) => setBasePromiseText(event.target.value)}
+                disabled={!editingBasePromiseId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePromiseTag">Etiqueta override</label>
+              <input
+                id="basePromiseTag"
+                type="text"
+                value={basePromiseTag}
+                onChange={(event) => setBasePromiseTag(event.target.value)}
+                disabled={!editingBasePromiseId}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingBasePromiseId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBasePromiseForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBasePromiseId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 

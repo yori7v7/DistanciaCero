@@ -1,13 +1,16 @@
 const COLLECTION_KEYS = {
-  reasons: 'distancia-cero-content-reasons'
+  reasons: 'distancia-cero-content-reasons',
+  promises: 'distancia-cero-content-promises'
 }
 
 const OVERRIDE_KEYS = {
-  reasons: 'distancia-cero-content-reasons-overrides'
+  reasons: 'distancia-cero-content-reasons-overrides',
+  promises: 'distancia-cero-content-promises-overrides'
 }
 
 const HIDDEN_KEYS = {
-  reasons: 'distancia-cero-content-reasons-hidden'
+  reasons: 'distancia-cero-content-reasons-hidden',
+  promises: 'distancia-cero-content-promises-hidden'
 }
 
 function getStorageKey(collectionName) {
