@@ -1,12 +1,42 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
 
+function readLocalOpenWhenLetters() {
+  try {
+    const rawValue = localStorage.getItem('distancia-cero-local-open-when')
+    const parsedValue = rawValue ? JSON.parse(rawValue) : []
+    return Array.isArray(parsedValue) ? parsedValue : []
+  } catch (error) {
+    return []
+  }
+}
+
 function OpenWhenSection({ cards = [] }) {
   const [selectedCardId, setSelectedCardId] = useState(null)
+  const [localOpenWhen, setLocalOpenWhen] = useState(() => readLocalOpenWhenLetters())
   const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
-  const finalCards = cards.map((card) => {
+  useEffect(() => {
+    const refreshLocalOpenWhen = () => {
+      setLocalOpenWhen(readLocalOpenWhenLetters())
+    }
+
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (!['openWhenLetters', 'letters', 'all'].includes(collection)) return
+      refreshLocalOpenWhen()
+    }
+
+    refreshLocalOpenWhen()
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+
+    return () => {
+      window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+    }
+  }, [])
+
+  const baseCards = cards.map((card) => {
     if (card.mood === 'Abrir cuando sea un día especial') {
       return {
         ...card,
@@ -17,6 +47,13 @@ function OpenWhenSection({ cards = [] }) {
     }
     return card
   })
+  const finalCards = [...baseCards, ...localOpenWhen]
+
+  useEffect(() => {
+    if (selectedCardId && !finalCards.some((card) => card.id === selectedCardId)) {
+      setSelectedCardId(null)
+    }
+  }, [finalCards, selectedCardId])
 
   const openCard = (card) => {
     const isLocked = isSimUnlocked ? false : card.locked
@@ -104,7 +141,9 @@ function OpenWhenSection({ cards = [] }) {
             <article className={`mini-card open-card ${cardLockedForClick ? 'locked' : ''} ${isOpened ? 'opened-card' : ''} ${isSimUnlocked && card.locked ? 'sim-unlocked-card' : ''} fade-up`} key={card.id}>
               <div className="card-top">
                 <span>{card.mood}</span>
-                {card.locked ? (
+                {card.isLocal ? (
+                  <span className="card-status-badge local-badge"><BookOpen size={12} /> Local</span>
+                ) : card.locked ? (
                   isSimUnlocked ? (
                     <span className="card-status-badge sim-unlocked-badge"><BookOpen size={12} /> Simulado</span>
                   ) : (

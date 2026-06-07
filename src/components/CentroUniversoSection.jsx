@@ -257,6 +257,8 @@ function CentroUniversoSection() {
           setPreview('')
           setContentRaw('')
           setTag('')
+          dispatchLettersUpdate('monthlyLetters')
+          dispatchLettersUpdate('openWhenLetters')
           setBackupStatus({ type: 'success', text: 'Respaldo v1 importado: solo cartas locales.' })
           return
         }
@@ -315,6 +317,8 @@ function CentroUniversoSection() {
         resetBaseReasonForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
+        dispatchLettersUpdate('monthlyLetters')
+        dispatchLettersUpdate('openWhenLetters')
         setBackupStatus({ type: 'success', text: 'Respaldo v2 importado correctamente.' })
       } catch (error) {
         setBackupStatus({ type: 'error', text: 'No se pudo leer el JSON seleccionado.' })
@@ -337,6 +341,11 @@ function CentroUniversoSection() {
         detail: { collection }
       })
     )
+  }
+
+  const dispatchLettersUpdate = (collection) => {
+    dispatchContentUpdate(collection)
+    dispatchContentUpdate('letters')
   }
 
   const resetReasonForm = () => {
@@ -397,7 +406,7 @@ function CentroUniversoSection() {
   const handleReasonDelete = (reason) => {
     if (!reason.isLocal) return
 
-    if (window.confirm('Â¿Seguro que quieres eliminar esta razon local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta razon local?')) {
       const updatedReasons = deleteLocalItem('reasons', reason.id)
       setLocalReasons(updatedReasons)
 
@@ -453,7 +462,7 @@ function CentroUniversoSection() {
   const handleBaseReasonHide = (reason) => {
     if (
       window.confirm(
-        'Â¿Seguro que quieres ocultar esta razon original? No se modificara el JSON y podras restaurarla despues.'
+        '¿Seguro que quieres ocultar esta razon original? No se modificara el JSON y podras restaurarla despues.'
       )
     ) {
       const updatedHiddenIds = hideDefaultItem('reasons', reason.id)
@@ -552,8 +561,10 @@ function CentroUniversoSection() {
     localStorage.setItem(storageKey, JSON.stringify(updatedList))
     if (isMonthly) {
       setLocalMonthly(updatedList)
+      dispatchLettersUpdate('monthlyLetters')
     } else {
       setLocalOpenWhen(updatedList)
+      dispatchLettersUpdate('openWhenLetters')
     }
 
     // Reset Form
@@ -590,8 +601,10 @@ function CentroUniversoSection() {
       localStorage.setItem(storageKey, JSON.stringify(updatedList))
       if (isMonthly) {
         setLocalMonthly(updatedList)
+        dispatchLettersUpdate('monthlyLetters')
       } else {
         setLocalOpenWhen(updatedList)
+        dispatchLettersUpdate('openWhenLetters')
       }
 
       // If we were editing this item, reset form

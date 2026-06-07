@@ -1,15 +1,48 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
 
+function readLocalMonthlyLetters() {
+  try {
+    const rawValue = localStorage.getItem('distancia-cero-local-monthly-letters')
+    const parsedValue = rawValue ? JSON.parse(rawValue) : []
+    return Array.isArray(parsedValue) ? parsedValue : []
+  } catch (error) {
+    return []
+  }
+}
+
 function MonthlyLetters({ letters }) {
   const [selectedLetterId, setSelectedLetterId] = useState(null)
+  const [localLetters, setLocalLetters] = useState(() => readLocalMonthlyLetters())
   const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
 
-  // Load and combine static JSON letters with local letters from localStorage
-  const localLettersRaw = localStorage.getItem('distancia-cero-local-monthly-letters')
-  const localLetters = localLettersRaw ? JSON.parse(localLettersRaw) : []
+  useEffect(() => {
+    const refreshLocalLetters = () => {
+      setLocalLetters(readLocalMonthlyLetters())
+    }
+
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (!['monthlyLetters', 'letters', 'all'].includes(collection)) return
+      refreshLocalLetters()
+    }
+
+    refreshLocalLetters()
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+
+    return () => {
+      window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+    }
+  }, [])
+
   const allLetters = [...letters, ...localLetters]
+
+  useEffect(() => {
+    if (selectedLetterId && !allLetters.some((letter) => letter.id === selectedLetterId)) {
+      setSelectedLetterId(null)
+    }
+  }, [allLetters, selectedLetterId])
 
   const openLetter = (letter) => {
     const isLocked = isSimUnlocked ? false : letter.locked
