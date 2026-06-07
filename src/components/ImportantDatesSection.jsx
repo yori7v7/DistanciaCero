@@ -1,19 +1,39 @@
+import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { CalendarDays, Heart } from 'lucide-react'
-import importantDates from '../data/importantDates.json'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
-function ImportantDatesSection() {
-  const items = [
-    ...importantDates,
-    {
-      id: 'soon-date',
-      date: '----',
-      title: 'Próximamente',
-      description: 'Aquí podremos agregar otra festividad, una fecha especial o algún día bonito que queramos guardar después.',
-      tag: 'Espacio reservado',
-      isPlaceholder: true
+const placeholderDate = {
+  id: 'soon-date',
+  date: '----',
+  title: 'Próximamente',
+  description: 'Aquí podremos agregar otra festividad, una fecha especial o algún día bonito que queramos guardar después.',
+  tag: 'Espacio reservado',
+  isPlaceholder: true
+}
+
+function ImportantDatesSection({ dates = [] }) {
+  const [editableDates, setEditableDates] = useState(() => mergeWithLocalItems(dates, 'importantDates'))
+
+  useEffect(() => {
+    setEditableDates(mergeWithLocalItems(dates, 'importantDates'))
+  }, [dates])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (!['importantDates', 'all'].includes(collection)) return
+      setEditableDates(mergeWithLocalItems(dates, 'importantDates'))
     }
-  ]
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+
+    return () => {
+      window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+    }
+  }, [dates])
+
+  const items = [...editableDates, placeholderDate]
 
   return (
     <section className="section" id="fechas">

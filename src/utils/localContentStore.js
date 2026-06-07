@@ -1,20 +1,23 @@
 const COLLECTION_KEYS = {
   reasons: 'distancia-cero-content-reasons',
-  promises: 'distancia-cero-content-promises'
+  promises: 'distancia-cero-content-promises',
+  importantDates: 'distancia-cero-content-importantDates'
 }
 
 const OVERRIDE_KEYS = {
   reasons: 'distancia-cero-content-reasons-overrides',
   promises: 'distancia-cero-content-promises-overrides',
   monthlyLetters: 'distancia-cero-content-monthlyLetters-overrides',
-  openWhenLetters: 'distancia-cero-content-openWhenLetters-overrides'
+  openWhenLetters: 'distancia-cero-content-openWhenLetters-overrides',
+  importantDates: 'distancia-cero-content-importantDates-overrides'
 }
 
 const HIDDEN_KEYS = {
   reasons: 'distancia-cero-content-reasons-hidden',
   promises: 'distancia-cero-content-promises-hidden',
   monthlyLetters: 'distancia-cero-content-monthlyLetters-hidden',
-  openWhenLetters: 'distancia-cero-content-openWhenLetters-hidden'
+  openWhenLetters: 'distancia-cero-content-openWhenLetters-hidden',
+  importantDates: 'distancia-cero-content-importantDates-hidden'
 }
 
 function getStorageKey(collectionName) {

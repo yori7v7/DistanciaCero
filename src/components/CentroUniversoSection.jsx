@@ -5,6 +5,7 @@ import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
 import reasonsData from '../data/reasons.json'
 import promisesData from '../data/promises.json'
+import importantDatesData from '../data/importantDates.json'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -63,6 +64,19 @@ function CentroUniversoSection() {
   const [baseOpenWhenContent, setBaseOpenWhenContent] = useState('')
   const [baseOpenWhenLocked, setBaseOpenWhenLocked] = useState(false)
   const [editingBaseOpenWhenId, setEditingBaseOpenWhenId] = useState(null)
+  const [localImportantDates, setLocalImportantDates] = useState([])
+  const [importantDateOverrides, setImportantDateOverrides] = useState({})
+  const [hiddenImportantDateIds, setHiddenImportantDateIds] = useState([])
+  const [importantDateDate, setImportantDateDate] = useState('')
+  const [importantDateTitle, setImportantDateTitle] = useState('')
+  const [importantDateDescription, setImportantDateDescription] = useState('')
+  const [importantDateTag, setImportantDateTag] = useState('')
+  const [editingImportantDateId, setEditingImportantDateId] = useState(null)
+  const [baseImportantDateDate, setBaseImportantDateDate] = useState('')
+  const [baseImportantDateTitle, setBaseImportantDateTitle] = useState('')
+  const [baseImportantDateDescription, setBaseImportantDateDescription] = useState('')
+  const [baseImportantDateTag, setBaseImportantDateTag] = useState('')
+  const [editingBaseImportantDateId, setEditingBaseImportantDateId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -90,6 +104,9 @@ function CentroUniversoSection() {
     setHiddenMonthlyIds(getHiddenItemIds('monthlyLetters'))
     setOpenWhenOverrides(getLocalOverrides('openWhenLetters'))
     setHiddenOpenWhenIds(getHiddenItemIds('openWhenLetters'))
+    setLocalImportantDates(getLocalItems('importantDates'))
+    setImportantDateOverrides(getLocalOverrides('importantDates'))
+    setHiddenImportantDateIds(getHiddenItemIds('importantDates'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -182,6 +199,18 @@ function CentroUniversoSection() {
       isHidden: hiddenPromiseIds.includes(String(promise.id))
     }
   })
+  const editedBaseImportantDatesCount = Object.keys(importantDateOverrides).length
+  const hiddenBaseImportantDatesCount = hiddenImportantDateIds.length
+  const visibleBaseImportantDates = importantDatesData.map((dateItem) => {
+    const override = importantDateOverrides[String(dateItem.id)]
+    return {
+      ...dateItem,
+      ...(override || {}),
+      id: dateItem.id,
+      isOverridden: Boolean(override),
+      isHidden: hiddenImportantDateIds.includes(String(dateItem.id))
+    }
+  })
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -215,19 +244,22 @@ function CentroUniversoSection() {
         monthlyLetters: readLocalLetters('distancia-cero-local-monthly-letters'),
         openWhenLetters: readLocalLetters('distancia-cero-local-open-when'),
         reasons: getLocalItems('reasons'),
-        promises: getLocalItems('promises')
+        promises: getLocalItems('promises'),
+        importantDates: getLocalItems('importantDates')
       },
       overrides: {
         monthlyLetters: getLocalOverrides('monthlyLetters'),
         openWhenLetters: getLocalOverrides('openWhenLetters'),
         reasons: getLocalOverrides('reasons'),
-        promises: getLocalOverrides('promises')
+        promises: getLocalOverrides('promises'),
+        importantDates: getLocalOverrides('importantDates')
       },
       hidden: {
         monthlyLetters: getHiddenItemIds('monthlyLetters'),
         openWhenLetters: getHiddenItemIds('openWhenLetters'),
         reasons: getHiddenItemIds('reasons'),
-        promises: getHiddenItemIds('promises')
+        promises: getHiddenItemIds('promises'),
+        importantDates: getHiddenItemIds('importantDates')
       }
     }
 
@@ -362,6 +394,10 @@ function CentroUniversoSection() {
         const hasOpenWhenBaseBackup =
           Object.prototype.hasOwnProperty.call(overrides || {}, 'openWhenLetters') ||
           Object.prototype.hasOwnProperty.call(hidden || {}, 'openWhenLetters')
+        const hasImportantDatesBackup =
+          Object.prototype.hasOwnProperty.call(content || {}, 'importantDates') ||
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'importantDates') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'importantDates')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -378,6 +414,10 @@ function CentroUniversoSection() {
             (isPlainObject(overrides.openWhenLetters) &&
               Array.isArray(hidden.openWhenLetters))) &&
           Array.isArray(hidden.reasons) &&
+          (!hasImportantDatesBackup ||
+            (Array.isArray(content.importantDates) &&
+              isPlainObject(overrides.importantDates) &&
+              Array.isArray(hidden.importantDates))) &&
           (!hasPromisesBackup ||
             (Array.isArray(content.promises) &&
               isPlainObject(overrides.promises) &&
@@ -420,6 +460,15 @@ function CentroUniversoSection() {
         const savedHiddenOpenWhenIds = hasOpenWhenBaseBackup
           ? saveHiddenItemIds('openWhenLetters', hidden.openWhenLetters)
           : getHiddenItemIds('openWhenLetters')
+        const savedImportantDates = hasImportantDatesBackup
+          ? saveLocalItems('importantDates', content.importantDates)
+          : getLocalItems('importantDates')
+        const savedImportantDateOverrides = hasImportantDatesBackup
+          ? saveLocalOverrides('importantDates', overrides.importantDates)
+          : getLocalOverrides('importantDates')
+        const savedHiddenImportantDateIds = hasImportantDatesBackup
+          ? saveHiddenItemIds('importantDates', hidden.importantDates)
+          : getHiddenItemIds('importantDates')
         const savedPromises = hasPromisesBackup
           ? saveLocalItems('promises', content.promises)
           : getLocalItems('promises')
@@ -439,6 +488,9 @@ function CentroUniversoSection() {
         setHiddenMonthlyIds(savedHiddenMonthlyIds)
         setOpenWhenOverrides(savedOpenWhenOverrides)
         setHiddenOpenWhenIds(savedHiddenOpenWhenIds)
+        setLocalImportantDates(savedImportantDates)
+        setImportantDateOverrides(savedImportantDateOverrides)
+        setHiddenImportantDateIds(savedHiddenImportantDateIds)
         setLocalPromises(savedPromises)
         setPromiseOverrides(savedPromiseOverrides)
         setHiddenPromiseIds(savedHiddenPromiseIds)
@@ -452,10 +504,15 @@ function CentroUniversoSection() {
         resetBaseReasonForm()
         resetBaseMonthlyForm()
         resetBaseOpenWhenForm()
+        resetImportantDateForm()
+        resetBaseImportantDateForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
         if (hasPromisesBackup) {
           dispatchContentUpdate('promises')
+        }
+        if (hasImportantDatesBackup) {
+          dispatchContentUpdate('importantDates')
         }
         dispatchLettersUpdate('monthlyLetters')
         dispatchLettersUpdate('openWhenLetters')
@@ -530,6 +587,22 @@ function CentroUniversoSection() {
     setBaseOpenWhenContent('')
     setBaseOpenWhenLocked(false)
     setEditingBaseOpenWhenId(null)
+  }
+
+  const resetImportantDateForm = () => {
+    setImportantDateDate('')
+    setImportantDateTitle('')
+    setImportantDateDescription('')
+    setImportantDateTag('')
+    setEditingImportantDateId(null)
+  }
+
+  const resetBaseImportantDateForm = () => {
+    setBaseImportantDateDate('')
+    setBaseImportantDateTitle('')
+    setBaseImportantDateDescription('')
+    setBaseImportantDateTag('')
+    setEditingBaseImportantDateId(null)
   }
 
   const handleReasonSubmit = (event) => {
@@ -906,6 +979,118 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('openWhenLetters', cardId)
     setHiddenOpenWhenIds(updatedHiddenIds)
     dispatchLettersUpdate('openWhenLetters')
+  }
+
+  const handleImportantDateSubmit = (event) => {
+    event.preventDefault()
+
+    if (!importantDateDate.trim() || !importantDateTitle.trim() || !importantDateDescription.trim()) {
+      alert('Por favor, completa fecha, titulo y descripcion.')
+      return
+    }
+
+    const patch = {
+      date: importantDateDate.trim(),
+      title: importantDateTitle.trim(),
+      description: importantDateDescription.trim(),
+      tag: importantDateTag.trim() || 'Fecha importante',
+      updatedAt: new Date().toISOString()
+    }
+
+    const updatedDates = editingImportantDateId
+      ? updateLocalItem('importantDates', editingImportantDateId, patch)
+      : addLocalItem('importantDates', {
+          id: `local-date-${Date.now()}`,
+          ...patch,
+          createdAt: new Date().toISOString()
+        })
+
+    setLocalImportantDates(updatedDates)
+    resetImportantDateForm()
+    dispatchContentUpdate('importantDates')
+  }
+
+  const handleImportantDateEdit = (dateItem) => {
+    if (!dateItem.isLocal) return
+    setEditingImportantDateId(dateItem.id)
+    setImportantDateDate(dateItem.date || '')
+    setImportantDateTitle(dateItem.title || '')
+    setImportantDateDescription(dateItem.description || '')
+    setImportantDateTag(dateItem.tag || '')
+  }
+
+  const handleImportantDateDelete = (dateItem) => {
+    if (!dateItem.isLocal) return
+
+    if (window.confirm('¿Seguro que quieres eliminar esta fecha local?')) {
+      const updatedDates = deleteLocalItem('importantDates', dateItem.id)
+      setLocalImportantDates(updatedDates)
+
+      if (editingImportantDateId === dateItem.id) {
+        resetImportantDateForm()
+      }
+
+      dispatchContentUpdate('importantDates')
+    }
+  }
+
+  const handleBaseImportantDateEdit = (dateItem) => {
+    setEditingBaseImportantDateId(dateItem.id)
+    setBaseImportantDateDate(dateItem.date || '')
+    setBaseImportantDateTitle(dateItem.title || '')
+    setBaseImportantDateDescription(dateItem.description || '')
+    setBaseImportantDateTag(dateItem.tag || '')
+  }
+
+  const handleBaseImportantDateSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBaseImportantDateId || !baseImportantDateDate.trim() || !baseImportantDateTitle.trim() || !baseImportantDateDescription.trim()) {
+      alert('Selecciona una fecha base y completa fecha, titulo y descripcion.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('importantDates', editingBaseImportantDateId, {
+      date: baseImportantDateDate.trim(),
+      title: baseImportantDateTitle.trim(),
+      description: baseImportantDateDescription.trim(),
+      tag: baseImportantDateTag.trim() || 'Fecha importante',
+      updatedAt: new Date().toISOString()
+    })
+
+    setImportantDateOverrides(updatedOverrides)
+    resetBaseImportantDateForm()
+    dispatchContentUpdate('importantDates')
+  }
+
+  const handleBaseImportantDateRestore = (dateId) => {
+    const updatedOverrides = deleteLocalOverride('importantDates', dateId)
+    setImportantDateOverrides(updatedOverrides)
+
+    if (String(editingBaseImportantDateId) === String(dateId)) {
+      resetBaseImportantDateForm()
+    }
+
+    dispatchContentUpdate('importantDates')
+  }
+
+  const handleBaseImportantDateHide = (dateItem) => {
+    if (window.confirm('¿Seguro que quieres ocultar esta fecha base? Podras restaurarla despues.')) {
+      const updatedHiddenIds = hideDefaultItem('importantDates', dateItem.id)
+      setHiddenImportantDateIds(updatedHiddenIds)
+
+      if (String(editingBaseImportantDateId) === String(dateItem.id)) {
+        resetBaseImportantDateForm()
+      }
+
+      dispatchContentUpdate('importantDates')
+    }
+  }
+
+  const handleBaseImportantDateUnhide = (dateId) => {
+    const updatedHiddenIds = restoreHiddenItem('importantDates', dateId)
+    setHiddenImportantDateIds(updatedHiddenIds)
+    dispatchContentUpdate('importantDates')
   }
 
   const handleReset = () => {
@@ -1754,6 +1939,264 @@ function CentroUniversoSection() {
                 <button type="button" className="ghost-button" key={reason.id} onClick={() => handleBaseReasonUnhide(reason.id)}>
                   Mostrar #{reason.id}
                 </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="base-dates-editor" id="base-dates-editor">
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
+          <div className="reasons-list-header">
+            <h3>Fechas importantes originales</h3>
+            <span>{importantDatesData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <div>
+              <strong>{importantDatesData.length}</strong>
+              <span>Base</span>
+            </div>
+            <div>
+              <strong>{editedBaseImportantDatesCount}</strong>
+              <span>Editadas</span>
+            </div>
+            <div>
+              <strong>{hiddenBaseImportantDatesCount}</strong>
+              <span>Ocultas</span>
+            </div>
+            <div>
+              <strong>{localImportantDates.length}</strong>
+              <span>Locales</span>
+            </div>
+          </div>
+
+          <div className="base-reasons-list">
+            {visibleBaseImportantDates.map((dateItem) => (
+              <div
+                className={`base-reason-row ${dateItem.isOverridden ? 'is-overridden' : ''} ${dateItem.isHidden ? 'is-hidden' : ''}`}
+                key={dateItem.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{dateItem.date} · {dateItem.title}</strong>
+                  <span>{dateItem.description}</span>
+                  <small>{dateItem.isHidden ? 'Oculta localmente' : dateItem.isOverridden ? 'Editada localmente' : dateItem.tag}</small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBaseImportantDateEdit(dateItem)}>
+                    Editar
+                  </button>
+
+                  {dateItem.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseImportantDateRestore(dateItem.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {dateItem.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseImportantDateUnhide(dateItem.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseImportantDateHide(dateItem)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {hiddenBaseImportantDatesCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Fechas ocultas</h4>
+              {visibleBaseImportantDates.filter((dateItem) => dateItem.isHidden).map((dateItem) => (
+                <button type="button" className="ghost-button" key={dateItem.id} onClick={() => handleBaseImportantDateUnhide(dateItem.id)}>
+                  Mostrar {dateItem.date}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
+          <h3>
+            <Edit2 size={18} />
+            Override de fecha importante
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBaseImportantDateSubmit}>
+            <div className="editor-field">
+              <label htmlFor="baseImportantDateDate">Fecha *</label>
+              <input
+                id="baseImportantDateDate"
+                type="text"
+                value={baseImportantDateDate}
+                onChange={(event) => setBaseImportantDateDate(event.target.value)}
+                disabled={!editingBaseImportantDateId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseImportantDateTitle">Titulo override *</label>
+              <input
+                id="baseImportantDateTitle"
+                type="text"
+                value={baseImportantDateTitle}
+                onChange={(event) => setBaseImportantDateTitle(event.target.value)}
+                disabled={!editingBaseImportantDateId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseImportantDateDescription">Descripcion override *</label>
+              <textarea
+                id="baseImportantDateDescription"
+                rows="5"
+                value={baseImportantDateDescription}
+                onChange={(event) => setBaseImportantDateDescription(event.target.value)}
+                disabled={!editingBaseImportantDateId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseImportantDateTag">Etiqueta override</label>
+              <input
+                id="baseImportantDateTag"
+                type="text"
+                value={baseImportantDateTag}
+                onChange={(event) => setBaseImportantDateTag(event.target.value)}
+                disabled={!editingBaseImportantDateId}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingBaseImportantDateId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseImportantDateForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseImportantDateId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="local-dates-editor" id="local-dates-editor">
+        <div className="reasons-editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
+          <h3>
+            <Plus size={18} />
+            Editor local de fechas importantes
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>Estas fechas son locales; el JSON original no se modifica.</span>
+          </div>
+
+          <form className="editor-form" onSubmit={handleImportantDateSubmit}>
+            <div className="editor-field">
+              <label htmlFor="importantDateDate">Fecha *</label>
+              <input
+                id="importantDateDate"
+                type="text"
+                value={importantDateDate}
+                onChange={(event) => setImportantDateDate(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="importantDateTitle">Titulo *</label>
+              <input
+                id="importantDateTitle"
+                type="text"
+                value={importantDateTitle}
+                onChange={(event) => setImportantDateTitle(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="importantDateDescription">Descripcion *</label>
+              <textarea
+                id="importantDateDescription"
+                rows="4"
+                value={importantDateDescription}
+                onChange={(event) => setImportantDateDescription(event.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="importantDateTag">Etiqueta</label>
+              <input
+                id="importantDateTag"
+                type="text"
+                value={importantDateTag}
+                onChange={(event) => setImportantDateTag(event.target.value)}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingImportantDateId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetImportantDateForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn">
+                {editingImportantDateId ? 'Actualizar fecha local' : 'Guardar fecha local'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="reasons-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
+          <div className="reasons-list-header">
+            <h3>Fechas locales</h3>
+            <span>{localImportantDates.length} locales</span>
+          </div>
+
+          {localImportantDates.length === 0 ? (
+            <p className="no-items">No hay fechas locales creadas.</p>
+          ) : (
+            <div className="reason-items-list">
+              {localImportantDates.map((dateItem) => (
+                <div className="reason-item-row" key={dateItem.id}>
+                  <div className="item-info">
+                    <strong>{dateItem.date} · {dateItem.title}</strong>
+                    <span>{dateItem.description}</span>
+                  </div>
+
+                  <div className="item-actions">
+                    <button
+                      type="button"
+                      className="action-icon-btn edit"
+                      onClick={() => handleImportantDateEdit(dateItem)}
+                      title="Editar fecha local"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon-btn delete"
+                      onClick={() => handleImportantDateDelete(dateItem)}
+                      title="Eliminar fecha local"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           )}

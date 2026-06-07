@@ -1004,6 +1004,14 @@
   order: 50;
 }
 
+.base-dates-editor {
+  order: 55;
+}
+
+.local-dates-editor {
+  order: 56;
+}
+
 .local-promises-editor {
   order: 60;
 }
@@ -1347,6 +1355,7 @@
    =================================================== */
 
 .local-reasons-editor,
+.local-dates-editor,
 .local-promises-editor {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
@@ -1372,12 +1381,14 @@
 }
 
 .local-reasons-editor .reasons-list-card,
+.local-dates-editor .reasons-list-card,
 .local-promises-editor .reasons-list-card,
 .local-editor-container .local-list-card {
   order: 1;
 }
 
 .local-reasons-editor .reasons-editor-card,
+.local-dates-editor .reasons-editor-card,
 .local-promises-editor .reasons-editor-card,
 .local-editor-container .editor-card {
   order: 2;
@@ -1479,6 +1490,7 @@
 .base-reasons-editor,
 .base-monthly-editor,
 .base-openwhen-editor,
+.base-dates-editor,
 .base-promises-editor {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
@@ -1946,6 +1958,7 @@
 /* Responsive editor */
 @media (max-width: 760px) {
   .local-reasons-editor,
+  .local-dates-editor,
   .local-promises-editor {
     grid-template-columns: 1fr;
     margin: 28px 12px 0;
@@ -1954,6 +1967,7 @@
   .base-reasons-editor,
   .base-monthly-editor,
   .base-openwhen-editor,
+  .base-dates-editor,
   .base-promises-editor {
     grid-template-columns: 1fr;
     margin: 24px 12px 0;
