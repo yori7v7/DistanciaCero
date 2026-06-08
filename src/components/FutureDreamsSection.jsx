@@ -1,34 +1,48 @@
+import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Sparkles } from 'lucide-react'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
-function FutureDreamsSection() {
-  const dreams = [
-    {
-      id: 1,
-      title: 'Vernos sin pantalla de por medio',
-      text: 'Un plan futuro para transformar la distancia en abrazo.',
-      tag: 'Por vivir'
-    },
-    {
-      id: 2,
-      title: 'Tomarnos fotos bonitas',
-      text: 'Fotos reales para llenar esta página con momentos de verdad.',
-      tag: 'Por vivir'
-    },
-    {
-      id: 3,
-      title: 'Construir más historias',
-      text: 'Cosas pequeñas, días normales y momentos que luego se vuelven importantes.',
-      tag: 'Por vivir'
-    },
-    {
-      id: 'soon-plan',
-      title: 'Próximamente',
-      text: 'Este cuadrito queda listo para alguna otra idea, salida, plan o cosita que quieras vivir con Ale.',
-      tag: 'Pendiente',
-      isPlaceholder: true
+const placeholderDream = {
+  id: 'soon-plan',
+  title: 'Próximamente',
+  description: 'Este cuadrito queda listo para alguna otra idea, salida, plan o cosita que quieras vivir con Ale.',
+  category: 'Pendiente',
+  isPlaceholder: true
+}
+
+function normalizeDream(item) {
+  return {
+    ...item,
+    description: item.description || item.text || '',
+    category: item.category || item.tag || 'Por vivir'
+  }
+}
+
+function FutureDreamsSection({ dreams = [] }) {
+  const [editableDreams, setEditableDreams] = useState(() => {
+    return mergeWithLocalItems(dreams, 'futureDreams').map(normalizeDream)
+  })
+
+  useEffect(() => {
+    setEditableDreams(mergeWithLocalItems(dreams, 'futureDreams').map(normalizeDream))
+  }, [dreams])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (!['futureDreams', 'all'].includes(collection)) return
+      setEditableDreams(mergeWithLocalItems(dreams, 'futureDreams').map(normalizeDream))
     }
-  ]
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+
+    return () => {
+      window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+    }
+  }, [dreams])
+
+  const items = [...editableDreams, placeholderDream]
 
   return (
     <section className="section" id="wishlist">
@@ -39,7 +53,7 @@ function FutureDreamsSection() {
       />
 
       <div className="universe-grid universe-grid-4">
-        {dreams.map((item) => (
+        {items.map((item) => (
           <article
             className={`universe-card universe-plan-card fade-up ${item.isPlaceholder ? 'coming-soon-card coming-soon-plan' : ''}`}
             key={item.id}
@@ -49,8 +63,8 @@ function FutureDreamsSection() {
             </div>
 
             <h3>{item.title}</h3>
-            <p>{item.text}</p>
-            <span className="soft-tag">{item.tag}</span>
+            <p>{item.description}</p>
+            <span className="soft-tag">{item.category}</span>
           </article>
         ))}
       </div>

@@ -6,6 +6,7 @@ import openWhenData from '../data/openWhen.json'
 import reasonsData from '../data/reasons.json'
 import promisesData from '../data/promises.json'
 import importantDatesData from '../data/importantDates.json'
+import futureDreamsData from '../data/futureDreams.json'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -77,6 +78,17 @@ function CentroUniversoSection() {
   const [baseImportantDateDescription, setBaseImportantDateDescription] = useState('')
   const [baseImportantDateTag, setBaseImportantDateTag] = useState('')
   const [editingBaseImportantDateId, setEditingBaseImportantDateId] = useState(null)
+  const [localFutureDreams, setLocalFutureDreams] = useState([])
+  const [futureDreamOverrides, setFutureDreamOverrides] = useState({})
+  const [hiddenFutureDreamIds, setHiddenFutureDreamIds] = useState([])
+  const [futureDreamCategory, setFutureDreamCategory] = useState('')
+  const [futureDreamTitle, setFutureDreamTitle] = useState('')
+  const [futureDreamDescription, setFutureDreamDescription] = useState('')
+  const [editingFutureDreamId, setEditingFutureDreamId] = useState(null)
+  const [baseFutureDreamCategory, setBaseFutureDreamCategory] = useState('')
+  const [baseFutureDreamTitle, setBaseFutureDreamTitle] = useState('')
+  const [baseFutureDreamDescription, setBaseFutureDreamDescription] = useState('')
+  const [editingBaseFutureDreamId, setEditingBaseFutureDreamId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -107,6 +119,9 @@ function CentroUniversoSection() {
     setLocalImportantDates(getLocalItems('importantDates'))
     setImportantDateOverrides(getLocalOverrides('importantDates'))
     setHiddenImportantDateIds(getHiddenItemIds('importantDates'))
+    setLocalFutureDreams(getLocalItems('futureDreams'))
+    setFutureDreamOverrides(getLocalOverrides('futureDreams'))
+    setHiddenFutureDreamIds(getHiddenItemIds('futureDreams'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -211,6 +226,20 @@ function CentroUniversoSection() {
       isHidden: hiddenImportantDateIds.includes(String(dateItem.id))
     }
   })
+  const editedBaseFutureDreamsCount = Object.keys(futureDreamOverrides).length
+  const hiddenBaseFutureDreamsCount = hiddenFutureDreamIds.length
+  const visibleBaseFutureDreams = futureDreamsData.map((dream) => {
+    const override = futureDreamOverrides[String(dream.id)]
+    return {
+      ...dream,
+      ...(override || {}),
+      id: dream.id,
+      description: override?.description || override?.text || dream.description || dream.text || '',
+      category: override?.category || override?.tag || dream.category || dream.tag || 'Por vivir',
+      isOverridden: Boolean(override),
+      isHidden: hiddenFutureDreamIds.includes(String(dream.id))
+    }
+  })
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -245,21 +274,24 @@ function CentroUniversoSection() {
         openWhenLetters: readLocalLetters('distancia-cero-local-open-when'),
         reasons: getLocalItems('reasons'),
         promises: getLocalItems('promises'),
-        importantDates: getLocalItems('importantDates')
+        importantDates: getLocalItems('importantDates'),
+        futureDreams: getLocalItems('futureDreams')
       },
       overrides: {
         monthlyLetters: getLocalOverrides('monthlyLetters'),
         openWhenLetters: getLocalOverrides('openWhenLetters'),
         reasons: getLocalOverrides('reasons'),
         promises: getLocalOverrides('promises'),
-        importantDates: getLocalOverrides('importantDates')
+        importantDates: getLocalOverrides('importantDates'),
+        futureDreams: getLocalOverrides('futureDreams')
       },
       hidden: {
         monthlyLetters: getHiddenItemIds('monthlyLetters'),
         openWhenLetters: getHiddenItemIds('openWhenLetters'),
         reasons: getHiddenItemIds('reasons'),
         promises: getHiddenItemIds('promises'),
-        importantDates: getHiddenItemIds('importantDates')
+        importantDates: getHiddenItemIds('importantDates'),
+        futureDreams: getHiddenItemIds('futureDreams')
       }
     }
 
@@ -398,6 +430,10 @@ function CentroUniversoSection() {
           Object.prototype.hasOwnProperty.call(content || {}, 'importantDates') ||
           Object.prototype.hasOwnProperty.call(overrides || {}, 'importantDates') ||
           Object.prototype.hasOwnProperty.call(hidden || {}, 'importantDates')
+        const hasFutureDreamsBackup =
+          Object.prototype.hasOwnProperty.call(content || {}, 'futureDreams') ||
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'futureDreams') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'futureDreams')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -418,6 +454,10 @@ function CentroUniversoSection() {
             (Array.isArray(content.importantDates) &&
               isPlainObject(overrides.importantDates) &&
               Array.isArray(hidden.importantDates))) &&
+          (!hasFutureDreamsBackup ||
+            (Array.isArray(content.futureDreams) &&
+              isPlainObject(overrides.futureDreams) &&
+              Array.isArray(hidden.futureDreams))) &&
           (!hasPromisesBackup ||
             (Array.isArray(content.promises) &&
               isPlainObject(overrides.promises) &&
@@ -469,6 +509,15 @@ function CentroUniversoSection() {
         const savedHiddenImportantDateIds = hasImportantDatesBackup
           ? saveHiddenItemIds('importantDates', hidden.importantDates)
           : getHiddenItemIds('importantDates')
+        const savedFutureDreams = hasFutureDreamsBackup
+          ? saveLocalItems('futureDreams', content.futureDreams)
+          : getLocalItems('futureDreams')
+        const savedFutureDreamOverrides = hasFutureDreamsBackup
+          ? saveLocalOverrides('futureDreams', overrides.futureDreams)
+          : getLocalOverrides('futureDreams')
+        const savedHiddenFutureDreamIds = hasFutureDreamsBackup
+          ? saveHiddenItemIds('futureDreams', hidden.futureDreams)
+          : getHiddenItemIds('futureDreams')
         const savedPromises = hasPromisesBackup
           ? saveLocalItems('promises', content.promises)
           : getLocalItems('promises')
@@ -491,6 +540,9 @@ function CentroUniversoSection() {
         setLocalImportantDates(savedImportantDates)
         setImportantDateOverrides(savedImportantDateOverrides)
         setHiddenImportantDateIds(savedHiddenImportantDateIds)
+        setLocalFutureDreams(savedFutureDreams)
+        setFutureDreamOverrides(savedFutureDreamOverrides)
+        setHiddenFutureDreamIds(savedHiddenFutureDreamIds)
         setLocalPromises(savedPromises)
         setPromiseOverrides(savedPromiseOverrides)
         setHiddenPromiseIds(savedHiddenPromiseIds)
@@ -506,6 +558,8 @@ function CentroUniversoSection() {
         resetBaseOpenWhenForm()
         resetImportantDateForm()
         resetBaseImportantDateForm()
+        resetFutureDreamForm()
+        resetBaseFutureDreamForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
         if (hasPromisesBackup) {
@@ -513,6 +567,9 @@ function CentroUniversoSection() {
         }
         if (hasImportantDatesBackup) {
           dispatchContentUpdate('importantDates')
+        }
+        if (hasFutureDreamsBackup) {
+          dispatchContentUpdate('futureDreams')
         }
         dispatchLettersUpdate('monthlyLetters')
         dispatchLettersUpdate('openWhenLetters')
@@ -603,6 +660,20 @@ function CentroUniversoSection() {
     setBaseImportantDateDescription('')
     setBaseImportantDateTag('')
     setEditingBaseImportantDateId(null)
+  }
+
+  const resetFutureDreamForm = () => {
+    setFutureDreamCategory('')
+    setFutureDreamTitle('')
+    setFutureDreamDescription('')
+    setEditingFutureDreamId(null)
+  }
+
+  const resetBaseFutureDreamForm = () => {
+    setBaseFutureDreamCategory('')
+    setBaseFutureDreamTitle('')
+    setBaseFutureDreamDescription('')
+    setEditingBaseFutureDreamId(null)
   }
 
   const handleReasonSubmit = (event) => {
@@ -1091,6 +1162,114 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('importantDates', dateId)
     setHiddenImportantDateIds(updatedHiddenIds)
     dispatchContentUpdate('importantDates')
+  }
+
+  const handleFutureDreamSubmit = (event) => {
+    event.preventDefault()
+
+    if (!futureDreamCategory.trim() || !futureDreamTitle.trim() || !futureDreamDescription.trim()) {
+      alert('Por favor, completa categoria, titulo y descripcion.')
+      return
+    }
+
+    const patch = {
+      category: futureDreamCategory.trim(),
+      title: futureDreamTitle.trim(),
+      description: futureDreamDescription.trim(),
+      updatedAt: new Date().toISOString()
+    }
+
+    const updatedDreams = editingFutureDreamId
+      ? updateLocalItem('futureDreams', editingFutureDreamId, patch)
+      : addLocalItem('futureDreams', {
+          id: `local-dream-${Date.now()}`,
+          ...patch,
+          createdAt: new Date().toISOString()
+        })
+
+    setLocalFutureDreams(updatedDreams)
+    resetFutureDreamForm()
+    dispatchContentUpdate('futureDreams')
+  }
+
+  const handleFutureDreamEdit = (dream) => {
+    if (!dream.isLocal) return
+    setEditingFutureDreamId(dream.id)
+    setFutureDreamCategory(dream.category || dream.tag || '')
+    setFutureDreamTitle(dream.title || '')
+    setFutureDreamDescription(dream.description || dream.text || '')
+  }
+
+  const handleFutureDreamDelete = (dream) => {
+    if (!dream.isLocal) return
+
+    if (window.confirm('¿Seguro que quieres eliminar este plan local?')) {
+      const updatedDreams = deleteLocalItem('futureDreams', dream.id)
+      setLocalFutureDreams(updatedDreams)
+
+      if (editingFutureDreamId === dream.id) {
+        resetFutureDreamForm()
+      }
+
+      dispatchContentUpdate('futureDreams')
+    }
+  }
+
+  const handleBaseFutureDreamEdit = (dream) => {
+    setEditingBaseFutureDreamId(dream.id)
+    setBaseFutureDreamCategory(dream.category || dream.tag || '')
+    setBaseFutureDreamTitle(dream.title || '')
+    setBaseFutureDreamDescription(dream.description || dream.text || '')
+  }
+
+  const handleBaseFutureDreamSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBaseFutureDreamId || !baseFutureDreamCategory.trim() || !baseFutureDreamTitle.trim() || !baseFutureDreamDescription.trim()) {
+      alert('Selecciona un plan base y completa categoria, titulo y descripcion.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('futureDreams', editingBaseFutureDreamId, {
+      category: baseFutureDreamCategory.trim(),
+      title: baseFutureDreamTitle.trim(),
+      description: baseFutureDreamDescription.trim(),
+      updatedAt: new Date().toISOString()
+    })
+
+    setFutureDreamOverrides(updatedOverrides)
+    resetBaseFutureDreamForm()
+    dispatchContentUpdate('futureDreams')
+  }
+
+  const handleBaseFutureDreamRestore = (dreamId) => {
+    const updatedOverrides = deleteLocalOverride('futureDreams', dreamId)
+    setFutureDreamOverrides(updatedOverrides)
+
+    if (String(editingBaseFutureDreamId) === String(dreamId)) {
+      resetBaseFutureDreamForm()
+    }
+
+    dispatchContentUpdate('futureDreams')
+  }
+
+  const handleBaseFutureDreamHide = (dream) => {
+    if (window.confirm('¿Seguro que quieres ocultar este plan base? Podras restaurarlo despues.')) {
+      const updatedHiddenIds = hideDefaultItem('futureDreams', dream.id)
+      setHiddenFutureDreamIds(updatedHiddenIds)
+
+      if (String(editingBaseFutureDreamId) === String(dream.id)) {
+        resetBaseFutureDreamForm()
+      }
+
+      dispatchContentUpdate('futureDreams')
+    }
+  }
+
+  const handleBaseFutureDreamUnhide = (dreamId) => {
+    const updatedHiddenIds = restoreHiddenItem('futureDreams', dreamId)
+    setHiddenFutureDreamIds(updatedHiddenIds)
+    dispatchContentUpdate('futureDreams')
   }
 
   const handleReset = () => {
@@ -2192,6 +2371,243 @@ function CentroUniversoSection() {
                       className="action-icon-btn delete"
                       onClick={() => handleImportantDateDelete(dateItem)}
                       title="Eliminar fecha local"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="base-dreams-editor" id="base-dreams-editor">
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
+          <div className="reasons-list-header">
+            <h3>Wishlist original</h3>
+            <span>{futureDreamsData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <div>
+              <strong>{futureDreamsData.length}</strong>
+              <span>Base</span>
+            </div>
+            <div>
+              <strong>{editedBaseFutureDreamsCount}</strong>
+              <span>Editadas</span>
+            </div>
+            <div>
+              <strong>{hiddenBaseFutureDreamsCount}</strong>
+              <span>Ocultas</span>
+            </div>
+            <div>
+              <strong>{localFutureDreams.length}</strong>
+              <span>Locales</span>
+            </div>
+          </div>
+
+          <div className="base-reasons-list">
+            {visibleBaseFutureDreams.map((dream) => (
+              <div
+                className={`base-reason-row ${dream.isOverridden ? 'is-overridden' : ''} ${dream.isHidden ? 'is-hidden' : ''}`}
+                key={dream.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{dream.category} · {dream.title}</strong>
+                  <span>{dream.description}</span>
+                  <small>{dream.isHidden ? 'Oculto localmente' : dream.isOverridden ? 'Editado localmente' : 'Original'}</small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBaseFutureDreamEdit(dream)}>
+                    Editar
+                  </button>
+
+                  {dream.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseFutureDreamRestore(dream.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {dream.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseFutureDreamUnhide(dream.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseFutureDreamHide(dream)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {hiddenBaseFutureDreamsCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Planes ocultos</h4>
+              {visibleBaseFutureDreams.filter((dream) => dream.isHidden).map((dream) => (
+                <button type="button" className="ghost-button" key={dream.id} onClick={() => handleBaseFutureDreamUnhide(dream.id)}>
+                  Mostrar {dream.title}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
+          <h3>
+            <Edit2 size={18} />
+            Override de Wishlist
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBaseFutureDreamSubmit}>
+            <div className="editor-field">
+              <label htmlFor="baseFutureDreamCategory">Categoria *</label>
+              <input
+                id="baseFutureDreamCategory"
+                type="text"
+                value={baseFutureDreamCategory}
+                onChange={(event) => setBaseFutureDreamCategory(event.target.value)}
+                disabled={!editingBaseFutureDreamId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseFutureDreamTitle">Titulo override *</label>
+              <input
+                id="baseFutureDreamTitle"
+                type="text"
+                value={baseFutureDreamTitle}
+                onChange={(event) => setBaseFutureDreamTitle(event.target.value)}
+                disabled={!editingBaseFutureDreamId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseFutureDreamDescription">Descripcion override *</label>
+              <textarea
+                id="baseFutureDreamDescription"
+                rows="5"
+                value={baseFutureDreamDescription}
+                onChange={(event) => setBaseFutureDreamDescription(event.target.value)}
+                disabled={!editingBaseFutureDreamId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingBaseFutureDreamId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseFutureDreamForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseFutureDreamId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="local-dreams-editor" id="local-dreams-editor">
+        <div className="reasons-editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
+          <h3>
+            <Plus size={18} />
+            Editor local de Wishlist
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>Estos planes son locales; el JSON original no se modifica.</span>
+          </div>
+
+          <form className="editor-form" onSubmit={handleFutureDreamSubmit}>
+            <div className="editor-field">
+              <label htmlFor="futureDreamCategory">Categoria *</label>
+              <input
+                id="futureDreamCategory"
+                type="text"
+                value={futureDreamCategory}
+                onChange={(event) => setFutureDreamCategory(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="futureDreamTitle">Titulo *</label>
+              <input
+                id="futureDreamTitle"
+                type="text"
+                value={futureDreamTitle}
+                onChange={(event) => setFutureDreamTitle(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="futureDreamDescription">Descripcion *</label>
+              <textarea
+                id="futureDreamDescription"
+                rows="4"
+                value={futureDreamDescription}
+                onChange={(event) => setFutureDreamDescription(event.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              {editingFutureDreamId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetFutureDreamForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn">
+                {editingFutureDreamId ? 'Actualizar plan local' : 'Guardar plan local'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="reasons-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
+          <div className="reasons-list-header">
+            <h3>Wishlist local</h3>
+            <span>{localFutureDreams.length} locales</span>
+          </div>
+
+          {localFutureDreams.length === 0 ? (
+            <p className="no-items">No hay planes locales creados.</p>
+          ) : (
+            <div className="reason-items-list">
+              {localFutureDreams.map((dream) => (
+                <div className="reason-item-row" key={dream.id}>
+                  <div className="item-info">
+                    <strong>{dream.category} · {dream.title}</strong>
+                    <span>{dream.description}</span>
+                  </div>
+
+                  <div className="item-actions">
+                    <button
+                      type="button"
+                      className="action-icon-btn edit"
+                      onClick={() => handleFutureDreamEdit(dream)}
+                      title="Editar plan local"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon-btn delete"
+                      onClick={() => handleFutureDreamDelete(dream)}
+                      title="Eliminar plan local"
                     >
                       <Trash2 size={14} />
                     </button>
