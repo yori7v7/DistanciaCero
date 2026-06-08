@@ -2373,6 +2373,7 @@ function CentroUniversoSection() {
               <input
                 id="importantDateDate"
                 type="text"
+                placeholder="Ej. 17 May"
                 value={importantDateDate}
                 onChange={(event) => setImportantDateDate(event.target.value)}
                 required
@@ -2384,6 +2385,7 @@ function CentroUniversoSection() {
               <input
                 id="importantDateTitle"
                 type="text"
+                placeholder="Ej. Nuestro aniversario"
                 value={importantDateTitle}
                 onChange={(event) => setImportantDateTitle(event.target.value)}
                 required
@@ -2395,6 +2397,7 @@ function CentroUniversoSection() {
               <textarea
                 id="importantDateDescription"
                 rows="4"
+                placeholder="Ej. El día en que empezó oficialmente esta historia bonita."
                 value={importantDateDescription}
                 onChange={(event) => setImportantDateDescription(event.target.value)}
                 required
@@ -2406,6 +2409,7 @@ function CentroUniversoSection() {
               <input
                 id="importantDateTag"
                 type="text"
+                placeholder="Ej. Nuestra fecha"
                 value={importantDateTag}
                 onChange={(event) => setImportantDateTag(event.target.value)}
               />
@@ -2620,6 +2624,7 @@ function CentroUniversoSection() {
               <input
                 id="futureDreamCategory"
                 type="text"
+                placeholder="Ej. Cita"
                 value={futureDreamCategory}
                 onChange={(event) => setFutureDreamCategory(event.target.value)}
                 required
@@ -2631,6 +2636,7 @@ function CentroUniversoSection() {
               <input
                 id="futureDreamTitle"
                 type="text"
+                placeholder="Ej. Comer milanesas juntos"
                 value={futureDreamTitle}
                 onChange={(event) => setFutureDreamTitle(event.target.value)}
                 required
@@ -2642,6 +2648,7 @@ function CentroUniversoSection() {
               <textarea
                 id="futureDreamDescription"
                 rows="4"
+                placeholder="Ej. Un plan pequeñito pero perfecto para guardar como recuerdo."
                 value={futureDreamDescription}
                 onChange={(event) => setFutureDreamDescription(event.target.value)}
                 required
@@ -2725,6 +2732,7 @@ function CentroUniversoSection() {
               <input
                 id="promiseTitle"
                 type="text"
+                placeholder="Ej. Prometo cuidar este espacio"
                 value={promiseTitle}
                 onChange={(event) => setPromiseTitle(event.target.value)}
                 required
@@ -2736,6 +2744,7 @@ function CentroUniversoSection() {
               <textarea
                 id="promiseText"
                 rows="4"
+                placeholder="Ej. Porque incluso en los días difíciles quiero elegirnos con paciencia."
                 value={promiseText}
                 onChange={(event) => setPromiseText(event.target.value)}
                 required
@@ -2747,7 +2756,7 @@ function CentroUniversoSection() {
               <input
                 id="promiseTag"
                 type="text"
-                placeholder="Promesa"
+                placeholder="Ej. Promesa de Yori"
                 value={promiseTag}
                 onChange={(event) => setPromiseTag(event.target.value)}
               />
