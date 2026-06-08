@@ -98,6 +98,22 @@ function CentroUniversoSection() {
   const [tag, setTag] = useState('')
   const [letterLocked, setLetterLocked] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const [activeCrudModule, setActiveCrudModule] = useState('monthlyLetters')
+  const [activeCrudAction, setActiveCrudAction] = useState('originals')
+
+  const crudModules = [
+    { id: 'monthlyLetters', label: 'Cartas mensuales' },
+    { id: 'openWhenLetters', label: 'Abrir cuando' },
+    { id: 'reasons', label: 'Razones' },
+    { id: 'promises', label: 'Promesas' },
+    { id: 'importantDates', label: 'Fechas importantes' },
+    { id: 'futureDreams', label: 'Wishlist' }
+  ]
+  const crudActions = [
+    { id: 'originals', label: 'Ver / editar originales' },
+    { id: 'local', label: 'Ver creados por ti' },
+    { id: 'create', label: 'Crear nuevo' }
+  ]
 
   useEffect(() => {
     setIsSimUnlocked(localStorage.getItem('distancia-cero-sim-unlocked') === '1')
@@ -709,6 +725,7 @@ function CentroUniversoSection() {
 
   const handleReasonEdit = (reason) => {
     if (!reason.isLocal) return
+    setActiveCrudAction('create')
     setEditingReasonId(reason.id)
     setReasonTitle(reason.title || '')
     setReasonText(reason.text || '')
@@ -830,6 +847,7 @@ function CentroUniversoSection() {
 
   const handlePromiseEdit = (promise) => {
     if (!promise.isLocal) return
+    setActiveCrudAction('create')
     setEditingPromiseId(promise.id)
     setPromiseTitle(promise.title || '')
     setPromiseText(promise.text || promise.description || '')
@@ -1083,6 +1101,7 @@ function CentroUniversoSection() {
 
   const handleImportantDateEdit = (dateItem) => {
     if (!dateItem.isLocal) return
+    setActiveCrudAction('create')
     setEditingImportantDateId(dateItem.id)
     setImportantDateDate(dateItem.date || '')
     setImportantDateTitle(dateItem.title || '')
@@ -1194,6 +1213,7 @@ function CentroUniversoSection() {
 
   const handleFutureDreamEdit = (dream) => {
     if (!dream.isLocal) return
+    setActiveCrudAction('create')
     setEditingFutureDreamId(dream.id)
     setFutureDreamCategory(dream.category || dream.tag || '')
     setFutureDreamTitle(dream.title || '')
@@ -1368,6 +1388,7 @@ function CentroUniversoSection() {
   }
 
   const handleEdit = (item, type) => {
+    setActiveCrudAction('create')
     setLetterType(type)
     setEditingId(item.id)
     setTitle(item.title)
@@ -1410,6 +1431,36 @@ function CentroUniversoSection() {
         setLetterLocked(false)
       }
     }
+  }
+
+  const resetCrudEditingState = (nextModule = activeCrudModule) => {
+    setEditingId(null)
+    setTitle('')
+    setPreview('')
+    setContentRaw('')
+    setTag('')
+    setLetterLocked(false)
+    setLetterType(nextModule === 'openWhenLetters' ? 'openwhen' : 'monthly')
+    resetReasonForm()
+    resetBaseReasonForm()
+    resetPromiseForm()
+    resetBasePromiseForm()
+    resetBaseMonthlyForm()
+    resetBaseOpenWhenForm()
+    resetImportantDateForm()
+    resetBaseImportantDateForm()
+    resetFutureDreamForm()
+    resetBaseFutureDreamForm()
+  }
+
+  const handleCrudModuleChange = (moduleId) => {
+    resetCrudEditingState(moduleId)
+    setActiveCrudModule(moduleId)
+  }
+
+  const handleCrudActionChange = (actionId) => {
+    resetCrudEditingState()
+    setActiveCrudAction(actionId)
   }
 
   return (
@@ -1538,8 +1589,42 @@ function CentroUniversoSection() {
         )}
       </div>
 
+      <div className="crud-central-shell">
+        <div className="crud-selector-block">
+          <h3>¿Qué quieres editar?</h3>
+          <div className="crud-selector-grid">
+            {crudModules.map((module) => (
+              <button
+                className={`crud-selector-btn ${activeCrudModule === module.id ? 'active' : ''}`}
+                key={module.id}
+                onClick={() => handleCrudModuleChange(module.id)}
+                type="button"
+              >
+                {module.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="crud-selector-block">
+          <h3>¿Qué quieres hacer?</h3>
+          <div className="crud-selector-grid compact">
+            {crudActions.map((action) => (
+              <button
+                className={`crud-selector-btn ${activeCrudAction === action.id ? 'active' : ''}`}
+                key={action.id}
+                onClick={() => handleCrudActionChange(action.id)}
+                type="button"
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Base monthly letters editor */}
-      <div className="base-monthly-editor" id="base-monthly-editor">
+      <div className={`base-monthly-editor ${activeCrudModule === 'monthlyLetters' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-monthly-editor">
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
@@ -1710,7 +1795,7 @@ function CentroUniversoSection() {
       </div>
 
       {/* Base open when letters editor */}
-      <div className="base-openwhen-editor" id="base-openwhen-editor">
+      <div className={`base-openwhen-editor ${activeCrudModule === 'openWhenLetters' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-openwhen-editor">
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
@@ -1881,7 +1966,7 @@ function CentroUniversoSection() {
       </div>
 
       {/* Local reasons CRUD editor */}
-      <div className="local-reasons-editor" id="local-reasons-editor">
+      <div className={`local-reasons-editor ${activeCrudModule === 'reasons' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-reasons-editor">
         <div className="reasons-editor-card">
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
@@ -1978,7 +2063,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="base-reasons-editor" id="base-reasons-editor">
+      <div className={`base-reasons-editor ${activeCrudModule === 'reasons' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-reasons-editor">
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
@@ -2124,7 +2209,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="base-dates-editor" id="base-dates-editor">
+      <div className={`base-dates-editor ${activeCrudModule === 'importantDates' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-dates-editor">
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
@@ -2269,7 +2354,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="local-dates-editor" id="local-dates-editor">
+      <div className={`local-dates-editor ${activeCrudModule === 'importantDates' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-dates-editor">
         <div className="reasons-editor-card">
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
@@ -2382,7 +2467,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="base-dreams-editor" id="base-dreams-editor">
+      <div className={`base-dreams-editor ${activeCrudModule === 'futureDreams' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-dreams-editor">
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
@@ -2516,7 +2601,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="local-dreams-editor" id="local-dreams-editor">
+      <div className={`local-dreams-editor ${activeCrudModule === 'futureDreams' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-dreams-editor">
         <div className="reasons-editor-card">
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
@@ -2619,7 +2704,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="local-promises-editor" id="local-promises-editor">
+      <div className={`local-promises-editor ${activeCrudModule === 'promises' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-promises-editor">
         <div className="reasons-editor-card">
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
@@ -2724,7 +2809,7 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      <div className="base-promises-editor">
+      <div className={`base-promises-editor ${activeCrudModule === 'promises' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`}>
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
           <div className="reasons-list-header">
@@ -2848,7 +2933,7 @@ function CentroUniversoSection() {
       </div>
 
       {/* Local letters CRUD editor */}
-      <div className="local-editor-container" id="local-editor-form">
+      <div className={`local-editor-container ${['monthlyLetters', 'openWhenLetters'].includes(activeCrudModule) && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction} crud-module-${activeCrudModule}` : 'crud-panel-hidden'}`} id="local-editor-form">
         <div className="editor-card">
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
@@ -2870,7 +2955,7 @@ function CentroUniversoSection() {
                   id="letterType"
                   value={letterType}
                   onChange={(e) => setLetterType(e.target.value)}
-                  disabled={!!editingId}
+                  disabled={!!editingId || ['monthlyLetters', 'openWhenLetters'].includes(activeCrudModule)}
                 >
                   <option value="monthly">Carta Mensual</option>
                   <option value="openwhen">Carta Abrir cuando...</option>
@@ -2976,7 +3061,7 @@ function CentroUniversoSection() {
           
           <div className="local-lists-split">
             {/* Monthly Local List */}
-            <div className="list-column">
+            <div className="list-column monthly-local-column">
               <h4>Mensuales ({localMonthly.length})</h4>
               {localMonthly.length === 0 ? (
                 <p className="no-items">No hay cartas mensuales locales.</p>
@@ -3013,7 +3098,7 @@ function CentroUniversoSection() {
             </div>
 
             {/* Open When Local List */}
-            <div className="list-column">
+            <div className="list-column openwhen-local-column">
               <h4>Abrir cuando ({localOpenWhen.length})</h4>
               {localOpenWhen.length === 0 ? (
                 <p className="no-items">No hay cartas abrir cuando locales.</p>

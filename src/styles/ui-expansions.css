@@ -1232,6 +1232,79 @@
   pointer-events: none;
 }
 
+.crud-central-shell {
+  width: min(900px, calc(100% - 24px));
+  margin: 30px auto 0;
+  display: grid;
+  gap: 18px;
+  text-align: left;
+}
+
+.crud-selector-block {
+  border: 1px solid rgba(255, 46, 147, 0.2);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(255, 46, 147, 0.12), transparent 34%),
+    linear-gradient(145deg, rgba(14, 4, 24, 0.94), rgba(28, 8, 39, 0.88));
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.26);
+  padding: 20px 22px;
+}
+
+.crud-selector-block h3 {
+  margin: 0 0 14px;
+  color: #ffb3df;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.crud-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.crud-selector-grid.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.crud-selector-btn {
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 224, 239, 0.72);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.crud-selector-btn:hover,
+.crud-selector-btn.active {
+  border-color: rgba(255, 46, 147, 0.45);
+  background: rgba(255, 46, 147, 0.12);
+  color: #ffe0ef;
+}
+
+.crud-panel-hidden {
+  display: none !important;
+}
+
+.crud-show-local .reasons-editor-card,
+.crud-show-create .reasons-list-card,
+.crud-show-local .editor-card,
+.crud-show-create .local-list-card {
+  display: none;
+}
+
+.crud-module-monthlyLetters .openwhen-local-column,
+.crud-module-openWhenLetters .monthly-local-column {
+  display: none;
+}
+
 .backup-header,
 .backup-actions,
 .backup-status {
@@ -1345,6 +1418,11 @@
   .backup-card {
     margin: 24px 12px 0;
     padding: 20px 18px;
+  }
+
+  .crud-selector-grid,
+  .crud-selector-grid.compact {
+    grid-template-columns: 1fr;
   }
 
   .backup-actions {
