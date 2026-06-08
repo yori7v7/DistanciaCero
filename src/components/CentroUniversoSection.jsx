@@ -122,6 +122,7 @@ function CentroUniversoSection() {
   const [editingId, setEditingId] = useState(null)
   const [activeCrudModule, setActiveCrudModule] = useState('monthlyLetters')
   const [activeCrudAction, setActiveCrudAction] = useState('originals')
+  const [activeCrudFilter, setActiveCrudFilter] = useState('all')
 
   const crudModules = [
     { id: 'monthlyLetters', label: 'Cartas mensuales' },
@@ -137,6 +138,16 @@ function CentroUniversoSection() {
     { id: 'local', label: 'Ver creados por ti' },
     { id: 'create', label: 'Crear nuevo' }
   ]
+  const CrudStatButton = ({ filter, value, label }) => (
+    <button
+      type="button"
+      className={`crud-stat-button ${activeCrudFilter === filter ? 'is-active' : ''}`}
+      onClick={() => handleCrudFilterClick(filter)}
+    >
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </button>
+  )
 
   useEffect(() => {
     setIsSimUnlocked(localStorage.getItem('distancia-cero-sim-unlocked') === '1')
@@ -295,6 +306,20 @@ function CentroUniversoSection() {
       isHidden: hiddenTimelineIds.includes(String(page.id))
     }
   })
+  const filterBaseItemsByCrudFilter = (items) => {
+    if (activeCrudFilter === 'base') return items.filter((item) => !item.isHidden && !item.isOverridden)
+    if (activeCrudFilter === 'edited') return items.filter((item) => item.isOverridden)
+    if (activeCrudFilter === 'hidden') return items.filter((item) => item.isHidden)
+    return items
+  }
+  const getNormalBaseCount = (items) => items.filter((item) => !item.isHidden && !item.isOverridden).length
+  const filteredBaseMonthly = filterBaseItemsByCrudFilter(visibleBaseMonthly)
+  const filteredBaseOpenWhen = filterBaseItemsByCrudFilter(visibleBaseOpenWhen)
+  const filteredVisibleBaseReasons = filterBaseItemsByCrudFilter(filteredBaseReasons)
+  const filteredBasePromises = filterBaseItemsByCrudFilter(visibleBasePromises)
+  const filteredBaseImportantDates = filterBaseItemsByCrudFilter(visibleBaseImportantDates)
+  const filteredBaseFutureDreams = filterBaseItemsByCrudFilter(visibleBaseFutureDreams)
+  const filteredBaseTimelinePages = filterBaseItemsByCrudFilter(visibleBaseTimelinePages)
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -1765,11 +1790,24 @@ function CentroUniversoSection() {
   const handleCrudModuleChange = (moduleId) => {
     resetCrudEditingState(moduleId)
     setActiveCrudModule(moduleId)
+    setActiveCrudFilter('all')
   }
 
   const handleCrudActionChange = (actionId) => {
     resetCrudEditingState()
     setActiveCrudAction(actionId)
+    if (actionId === 'create') {
+      setActiveCrudFilter('all')
+    } else if (actionId === 'local') {
+      setActiveCrudFilter('local')
+    } else if (activeCrudFilter === 'local') {
+      setActiveCrudFilter('all')
+    }
+  }
+
+  const handleCrudFilterClick = (filter) => {
+    setActiveCrudFilter(filter)
+    setActiveCrudAction(filter === 'local' ? 'local' : 'originals')
   }
 
   return (
@@ -1945,22 +1983,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{monthlyLettersData.length}</strong>
-              <span>Base</span>
-            </div>
-            <div>
-              <strong>{editedBaseMonthlyCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBaseMonthlyCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localMonthly.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseMonthly)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseMonthlyCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseMonthlyCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localMonthly.length} label="Locales" />
           </div>
 
           <div className="editor-warning">
@@ -1969,7 +1995,9 @@ function CentroUniversoSection() {
           </div>
 
           <div className="base-reasons-list">
-            {visibleBaseMonthly.map((letter) => (
+            {filteredBaseMonthly.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBaseMonthly.map((letter) => (
               <div
                 className={`base-reason-row ${letter.isOverridden ? 'is-overridden' : ''} ${letter.isHidden ? 'is-hidden' : ''}`}
                 key={letter.id}
@@ -2116,22 +2144,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{openWhenData.length}</strong>
-              <span>Base</span>
-            </div>
-            <div>
-              <strong>{editedBaseOpenWhenCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBaseOpenWhenCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localOpenWhen.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseOpenWhen)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseOpenWhenCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseOpenWhenCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localOpenWhen.length} label="Locales" />
           </div>
 
           <div className="editor-warning">
@@ -2140,7 +2156,9 @@ function CentroUniversoSection() {
           </div>
 
           <div className="base-reasons-list">
-            {visibleBaseOpenWhen.map((card) => (
+            {filteredBaseOpenWhen.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBaseOpenWhen.map((card) => (
               <div
                 className={`base-reason-row ${card.isOverridden ? 'is-overridden' : ''} ${card.isHidden ? 'is-hidden' : ''}`}
                 key={card.id}
@@ -2381,22 +2399,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{reasonsData.length}</strong>
-              <span>Base totales</span>
-            </div>
-            <div>
-              <strong>{editedBaseReasonsCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBaseReasonsCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localReasons.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseReasons)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseReasonsCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseReasonsCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localReasons.length} label="Locales" />
           </div>
 
           <div className="editor-field">
@@ -2411,7 +2417,9 @@ function CentroUniversoSection() {
           </div>
 
           <div className="base-reasons-list">
-            {filteredBaseReasons.map((reason) => (
+            {filteredVisibleBaseReasons.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredVisibleBaseReasons.map((reason) => (
               <div
                 className={`base-reason-row ${reason.isOverridden ? 'is-overridden' : ''} ${reason.isHidden ? 'is-hidden' : ''}`}
                 key={reason.id}
@@ -2527,26 +2535,16 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{importantDatesData.length}</strong>
-              <span>Base</span>
-            </div>
-            <div>
-              <strong>{editedBaseImportantDatesCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBaseImportantDatesCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localImportantDates.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseImportantDates)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseImportantDatesCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseImportantDatesCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localImportantDates.length} label="Locales" />
           </div>
 
           <div className="base-reasons-list">
-            {visibleBaseImportantDates.map((dateItem) => (
+            {filteredBaseImportantDates.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBaseImportantDates.map((dateItem) => (
               <div
                 className={`base-reason-row ${dateItem.isOverridden ? 'is-overridden' : ''} ${dateItem.isHidden ? 'is-hidden' : ''}`}
                 key={dateItem.id}
@@ -2789,26 +2787,16 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{futureDreamsData.length}</strong>
-              <span>Base</span>
-            </div>
-            <div>
-              <strong>{editedBaseFutureDreamsCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBaseFutureDreamsCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localFutureDreams.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseFutureDreams)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseFutureDreamsCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseFutureDreamsCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localFutureDreams.length} label="Locales" />
           </div>
 
           <div className="base-reasons-list">
-            {visibleBaseFutureDreams.map((dream) => (
+            {filteredBaseFutureDreams.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBaseFutureDreams.map((dream) => (
               <div
                 className={`base-reason-row ${dream.isOverridden ? 'is-overridden' : ''} ${dream.isHidden ? 'is-hidden' : ''}`}
                 key={dream.id}
@@ -3029,26 +3017,16 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{timelineData.length}</strong>
-              <span>Base</span>
-            </div>
-            <div>
-              <strong>{editedBaseTimelineCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBaseTimelineCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localTimelinePages.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseTimelinePages)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseTimelineCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseTimelineCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localTimelinePages.length} label="Locales" />
           </div>
 
           <div className="base-reasons-list">
-            {visibleBaseTimelinePages.map((page) => (
+            {filteredBaseTimelinePages.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBaseTimelinePages.map((page) => (
               <div
                 className={`base-reason-row ${page.isOverridden ? 'is-overridden' : ''} ${page.isHidden ? 'is-hidden' : ''}`}
                 key={page.id}
@@ -3487,26 +3465,16 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <div>
-              <strong>{promisesData.length}</strong>
-              <span>Base totales</span>
-            </div>
-            <div>
-              <strong>{editedBasePromisesCount}</strong>
-              <span>Editadas</span>
-            </div>
-            <div>
-              <strong>{hiddenBasePromisesCount}</strong>
-              <span>Ocultas</span>
-            </div>
-            <div>
-              <strong>{localPromises.length}</strong>
-              <span>Locales</span>
-            </div>
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBasePromises)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBasePromisesCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBasePromisesCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localPromises.length} label="Locales" />
           </div>
 
           <div className="base-reasons-list">
-            {visibleBasePromises.map((promise) => (
+            {filteredBasePromises.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBasePromises.map((promise) => (
               <div
                 className={`base-reason-row ${promise.isOverridden ? 'is-overridden' : ''} ${promise.isHidden ? 'is-hidden' : ''}`}
                 key={promise.id}
