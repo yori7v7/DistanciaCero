@@ -1,6 +1,7 @@
-﻿import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { BookOpen, ChevronLeft, ChevronRight, Feather, Heart, MoonStar, Sparkles } from 'lucide-react'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
 const fallbackPages = [
   {
@@ -16,7 +17,71 @@ const fallbackPages = [
   }
 ]
 
+const spanishMonths = {
+  enero: 0,
+  febrero: 1,
+  marzo: 2,
+  abril: 3,
+  mayo: 4,
+  junio: 5,
+  julio: 6,
+  agosto: 7,
+  septiembre: 8,
+  setiembre: 8,
+  octubre: 9,
+  noviembre: 10,
+  diciembre: 11
+}
+
+function isFuturePage(page) {
+  const combinedText = `${page.id || ''} ${page.date || ''} ${page.title || ''}`.toLowerCase()
+  return page.id === 'futuro' || combinedText.includes('próximamente') || combinedText.includes('proximamente')
+}
+
+function getTimelineSortDate(page) {
+  const rawDate = String(page.date || '').trim().toLowerCase()
+  const isoMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+
+  if (isoMatch) {
+    return new Date(Number(isoMatch[1]), Number(isoMatch[2]) - 1, Number(isoMatch[3])).getTime()
+  }
+
+  const spanishMatch = rawDate.match(/(\d{1,2})\s+de\s+([a-záéíóúñ]+)(?:\s+de\s+(\d{4}))?/)
+  if (!spanishMatch) return null
+
+  const month = spanishMonths[spanishMatch[2].normalize('NFD').replace(/[\u0300-\u036f]/g, '')]
+  if (month === undefined) return null
+
+  return new Date(Number(spanishMatch[3]) || 2026, month, Number(spanishMatch[1])).getTime()
+}
+
+function sortTimelinePages(pages) {
+  return [...pages].sort((leftPage, rightPage) => {
+    const leftIsFuture = isFuturePage(leftPage)
+    const rightIsFuture = isFuturePage(rightPage)
+
+    if (leftIsFuture && !rightIsFuture) return 1
+    if (!leftIsFuture && rightIsFuture) return -1
+    if (leftIsFuture && rightIsFuture) return 0
+
+    const leftDate = getTimelineSortDate(leftPage)
+    const rightDate = getTimelineSortDate(rightPage)
+
+    if (leftDate !== null && rightDate !== null) return leftDate - rightDate
+    if (leftDate !== null) return -1
+    if (rightDate !== null) return 1
+
+    return 0
+  })
+}
+
 function normalizePage(page, index) {
+  const normalizedDetails = Array.isArray(page.details)
+    ? page.details
+    : Array.isArray(page.features)
+      ? page.features
+      : []
+
   return {
     id: page.id || `page-${index + 1}`,
     chapter: page.chapter || `Capítulo ${index + 1}`,
@@ -25,20 +90,41 @@ function normalizePage(page, index) {
     subtitle: page.subtitle || page.description || 'Una página de nuestra historia.',
     description: page.description || page.text || page.caption || 'Ale, esta página existe para guardar algo bonito de nosotros.',
     quote: page.quote || 'Hay recuerdos que se quedan brillando.',
-    details: page.details || page.features || [],
+    details: normalizedDetails,
     mood: page.mood || page.type || 'Recuerdo'
   }
 }
 
 function StoryTimeline({ timeline = [] }) {
-  const pages = useMemo(() => {
-    const source = Array.isArray(timeline) && timeline.length > 0 ? timeline : fallbackPages
-    return source.map(normalizePage)
-  }, [timeline])
-
+  const [localVersion, setLocalVersion] = useState(0)
   const [currentPage, setCurrentPage] = useState(0)
   const [turnDirection, setTurnDirection] = useState('next')
   const [isTurning, setIsTurning] = useState(false)
+
+  const pages = useMemo(() => {
+    const mergedPages = mergeWithLocalItems(Array.isArray(timeline) ? timeline : [], 'timeline')
+    const source = mergedPages.length > 0 ? sortTimelinePages(mergedPages) : fallbackPages
+    return source.map(normalizePage)
+  }, [timeline, localVersion])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (collection === 'timeline' || collection === 'all') {
+        setLocalVersion((version) => version + 1)
+      }
+    }
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+    return () => window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+  }, [])
+
+  useEffect(() => {
+    if (currentPage >= pages.length) {
+      setCurrentPage(Math.max(0, pages.length - 1))
+      setIsTurning(false)
+    }
+  }, [currentPage, pages.length])
 
   const page = pages[currentPage]
   const total = pages.length

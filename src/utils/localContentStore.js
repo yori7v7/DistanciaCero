@@ -2,7 +2,8 @@ const COLLECTION_KEYS = {
   reasons: 'distancia-cero-content-reasons',
   promises: 'distancia-cero-content-promises',
   importantDates: 'distancia-cero-content-importantDates',
-  futureDreams: 'distancia-cero-content-futureDreams'
+  futureDreams: 'distancia-cero-content-futureDreams',
+  timeline: 'distancia-cero-content-timeline'
 }
 
 const OVERRIDE_KEYS = {
@@ -11,7 +12,8 @@ const OVERRIDE_KEYS = {
   monthlyLetters: 'distancia-cero-content-monthlyLetters-overrides',
   openWhenLetters: 'distancia-cero-content-openWhenLetters-overrides',
   importantDates: 'distancia-cero-content-importantDates-overrides',
-  futureDreams: 'distancia-cero-content-futureDreams-overrides'
+  futureDreams: 'distancia-cero-content-futureDreams-overrides',
+  timeline: 'distancia-cero-content-timeline-overrides'
 }
 
 const HIDDEN_KEYS = {
@@ -20,7 +22,8 @@ const HIDDEN_KEYS = {
   monthlyLetters: 'distancia-cero-content-monthlyLetters-hidden',
   openWhenLetters: 'distancia-cero-content-openWhenLetters-hidden',
   importantDates: 'distancia-cero-content-importantDates-hidden',
-  futureDreams: 'distancia-cero-content-futureDreams-hidden'
+  futureDreams: 'distancia-cero-content-futureDreams-hidden',
+  timeline: 'distancia-cero-content-timeline-hidden'
 }
 
 function getStorageKey(collectionName) {
