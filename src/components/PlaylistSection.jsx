@@ -1,6 +1,8 @@
 import SectionTitle from './SectionTitle'
 import { ExternalLink, Headphones, Music, Pause, Play, Sparkles, Square } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAudio } from '../context/AudioContext'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
 function PlaylistSection({ playlist = [] }) {
   const {
@@ -11,10 +13,27 @@ function PlaylistSection({ playlist = [] }) {
     stopTrack,
     openExternalLink
   } = useAudio()
+  const [localVersion, setLocalVersion] = useState(0)
 
-  const mainTrack = playlist[0]
+  const visiblePlaylist = useMemo(() => {
+    return mergeWithLocalItems(Array.isArray(playlist) ? playlist : [], 'playlist').filter(Boolean)
+  }, [playlist, localVersion])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (collection === 'playlist' || collection === 'all') {
+        setLocalVersion((version) => version + 1)
+      }
+    }
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+    return () => window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+  }, [])
+
+  const mainTrack = visiblePlaylist[0]
   const items = [
-    ...playlist.slice(1),
+    ...visiblePlaylist.slice(1),
     {
       id: 'soon-playlist',
       title: 'Proximamente',

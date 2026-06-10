@@ -9,6 +9,7 @@ import importantDatesData from '../data/importantDates.json'
 import futureDreamsData from '../data/futureDreams.json'
 import timelineData from '../data/timeline.json'
 import blackHoleGalleryData from '../data/blackHoleGallery.json'
+import playlistData from '../data/playlist.json'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -133,6 +134,25 @@ function CentroUniversoSection() {
   const [baseBlackHoleVideoUrl, setBaseBlackHoleVideoUrl] = useState('')
   const [baseBlackHoleImageStatus, setBaseBlackHoleImageStatus] = useState('')
   const [editingBaseBlackHoleId, setEditingBaseBlackHoleId] = useState(null)
+  const [localPlaylist, setLocalPlaylist] = useState([])
+  const [playlistOverrides, setPlaylistOverrides] = useState({})
+  const [hiddenPlaylistIds, setHiddenPlaylistIds] = useState([])
+  const [playlistTitle, setPlaylistTitle] = useState('')
+  const [playlistArtist, setPlaylistArtist] = useState('')
+  const [playlistDescription, setPlaylistDescription] = useState('')
+  const [playlistSourceType, setPlaylistSourceType] = useState('local')
+  const [playlistSrc, setPlaylistSrc] = useState('')
+  const [playlistLink, setPlaylistLink] = useState('')
+  const [playlistTag, setPlaylistTag] = useState('')
+  const [editingPlaylistId, setEditingPlaylistId] = useState(null)
+  const [basePlaylistTitle, setBasePlaylistTitle] = useState('')
+  const [basePlaylistArtist, setBasePlaylistArtist] = useState('')
+  const [basePlaylistDescription, setBasePlaylistDescription] = useState('')
+  const [basePlaylistSourceType, setBasePlaylistSourceType] = useState('local')
+  const [basePlaylistSrc, setBasePlaylistSrc] = useState('')
+  const [basePlaylistLink, setBasePlaylistLink] = useState('')
+  const [basePlaylistTag, setBasePlaylistTag] = useState('')
+  const [editingBasePlaylistId, setEditingBasePlaylistId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -154,7 +174,8 @@ function CentroUniversoSection() {
     { id: 'importantDates', label: 'Fechas importantes' },
     { id: 'futureDreams', label: 'Wishlist' },
     { id: 'timeline', label: 'Nuestra historia' },
-    { id: 'blackHoleGallery', label: 'Agujero negro / Galería' }
+    { id: 'blackHoleGallery', label: 'Agujero negro / Galería' },
+    { id: 'playlist', label: 'Playlist' }
   ]
   const crudActions = [
     { id: 'originals', label: 'Ver / editar originales' },
@@ -201,6 +222,9 @@ function CentroUniversoSection() {
     setLocalBlackHoleGallery(getLocalItems('blackHoleGallery'))
     setBlackHoleGalleryOverrides(getLocalOverrides('blackHoleGallery'))
     setHiddenBlackHoleGalleryIds(getHiddenItemIds('blackHoleGallery'))
+    setLocalPlaylist(getLocalItems('playlist'))
+    setPlaylistOverrides(getLocalOverrides('playlist'))
+    setHiddenPlaylistIds(getHiddenItemIds('playlist'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -344,6 +368,18 @@ function CentroUniversoSection() {
       isHidden: hiddenBlackHoleGalleryIds.includes(String(item.id))
     }
   })
+  const editedBasePlaylistCount = Object.keys(playlistOverrides).length
+  const hiddenBasePlaylistCount = hiddenPlaylistIds.length
+  const visibleBasePlaylist = playlistData.map((item) => {
+    const override = playlistOverrides[String(item.id)]
+    return {
+      ...item,
+      ...(override || {}),
+      id: item.id,
+      isOverridden: Boolean(override),
+      isHidden: hiddenPlaylistIds.includes(String(item.id))
+    }
+  })
   const filterBaseItemsByCrudFilter = (items) => {
     if (activeCrudFilter === 'base') return items.filter((item) => !item.isHidden && !item.isOverridden)
     if (activeCrudFilter === 'edited') return items.filter((item) => item.isOverridden)
@@ -359,6 +395,7 @@ function CentroUniversoSection() {
   const filteredBaseFutureDreams = filterBaseItemsByCrudFilter(visibleBaseFutureDreams)
   const filteredBaseTimelinePages = filterBaseItemsByCrudFilter(visibleBaseTimelinePages)
   const filteredBaseBlackHoleGallery = filterBaseItemsByCrudFilter(visibleBaseBlackHoleGallery)
+  const filteredBasePlaylist = filterBaseItemsByCrudFilter(visibleBasePlaylist)
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -396,7 +433,8 @@ function CentroUniversoSection() {
         importantDates: getLocalItems('importantDates'),
         futureDreams: getLocalItems('futureDreams'),
         timeline: getLocalItems('timeline'),
-        blackHoleGallery: getLocalItems('blackHoleGallery')
+        blackHoleGallery: getLocalItems('blackHoleGallery'),
+        playlist: getLocalItems('playlist')
       },
       overrides: {
         monthlyLetters: getLocalOverrides('monthlyLetters'),
@@ -406,7 +444,8 @@ function CentroUniversoSection() {
         importantDates: getLocalOverrides('importantDates'),
         futureDreams: getLocalOverrides('futureDreams'),
         timeline: getLocalOverrides('timeline'),
-        blackHoleGallery: getLocalOverrides('blackHoleGallery')
+        blackHoleGallery: getLocalOverrides('blackHoleGallery'),
+        playlist: getLocalOverrides('playlist')
       },
       hidden: {
         monthlyLetters: getHiddenItemIds('monthlyLetters'),
@@ -416,7 +455,8 @@ function CentroUniversoSection() {
         importantDates: getHiddenItemIds('importantDates'),
         futureDreams: getHiddenItemIds('futureDreams'),
         timeline: getHiddenItemIds('timeline'),
-        blackHoleGallery: getHiddenItemIds('blackHoleGallery')
+        blackHoleGallery: getHiddenItemIds('blackHoleGallery'),
+        playlist: getHiddenItemIds('playlist')
       }
     }
 
@@ -567,6 +607,10 @@ function CentroUniversoSection() {
           Object.prototype.hasOwnProperty.call(content || {}, 'blackHoleGallery') ||
           Object.prototype.hasOwnProperty.call(overrides || {}, 'blackHoleGallery') ||
           Object.prototype.hasOwnProperty.call(hidden || {}, 'blackHoleGallery')
+        const hasPlaylistBackup =
+          Object.prototype.hasOwnProperty.call(content || {}, 'playlist') ||
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'playlist') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'playlist')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -599,6 +643,10 @@ function CentroUniversoSection() {
             (Array.isArray(content.blackHoleGallery) &&
               isPlainObject(overrides.blackHoleGallery) &&
               Array.isArray(hidden.blackHoleGallery))) &&
+          (!hasPlaylistBackup ||
+            (Array.isArray(content.playlist) &&
+              isPlainObject(overrides.playlist) &&
+              Array.isArray(hidden.playlist))) &&
           (!hasPromisesBackup ||
             (Array.isArray(content.promises) &&
               isPlainObject(overrides.promises) &&
@@ -677,6 +725,15 @@ function CentroUniversoSection() {
         const savedHiddenBlackHoleGalleryIds = hasBlackHoleGalleryBackup
           ? saveHiddenItemIds('blackHoleGallery', hidden.blackHoleGallery)
           : getHiddenItemIds('blackHoleGallery')
+        const savedPlaylist = hasPlaylistBackup
+          ? saveLocalItems('playlist', content.playlist)
+          : getLocalItems('playlist')
+        const savedPlaylistOverrides = hasPlaylistBackup
+          ? saveLocalOverrides('playlist', overrides.playlist)
+          : getLocalOverrides('playlist')
+        const savedHiddenPlaylistIds = hasPlaylistBackup
+          ? saveHiddenItemIds('playlist', hidden.playlist)
+          : getHiddenItemIds('playlist')
         const savedPromises = hasPromisesBackup
           ? saveLocalItems('promises', content.promises)
           : getLocalItems('promises')
@@ -708,6 +765,9 @@ function CentroUniversoSection() {
         setLocalBlackHoleGallery(savedBlackHoleGallery)
         setBlackHoleGalleryOverrides(savedBlackHoleGalleryOverrides)
         setHiddenBlackHoleGalleryIds(savedHiddenBlackHoleGalleryIds)
+        setLocalPlaylist(savedPlaylist)
+        setPlaylistOverrides(savedPlaylistOverrides)
+        setHiddenPlaylistIds(savedHiddenPlaylistIds)
         setLocalPromises(savedPromises)
         setPromiseOverrides(savedPromiseOverrides)
         setHiddenPromiseIds(savedHiddenPromiseIds)
@@ -729,6 +789,8 @@ function CentroUniversoSection() {
         resetBaseTimelineForm()
         resetBlackHoleForm()
         resetBaseBlackHoleForm()
+        resetPlaylistForm()
+        resetBasePlaylistForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
         if (hasPromisesBackup) {
@@ -745,6 +807,9 @@ function CentroUniversoSection() {
         }
         if (hasBlackHoleGalleryBackup) {
           dispatchContentUpdate('blackHoleGallery')
+        }
+        if (hasPlaylistBackup) {
+          dispatchContentUpdate('playlist')
         }
         dispatchLettersUpdate('monthlyLetters')
         dispatchLettersUpdate('openWhenLetters')
@@ -965,6 +1030,28 @@ function CentroUniversoSection() {
     setBaseBlackHoleVideoUrl('')
     setBaseBlackHoleImageStatus('')
     setEditingBaseBlackHoleId(null)
+  }
+
+  const resetPlaylistForm = () => {
+    setPlaylistTitle('')
+    setPlaylistArtist('')
+    setPlaylistDescription('')
+    setPlaylistSourceType('local')
+    setPlaylistSrc('')
+    setPlaylistLink('')
+    setPlaylistTag('')
+    setEditingPlaylistId(null)
+  }
+
+  const resetBasePlaylistForm = () => {
+    setBasePlaylistTitle('')
+    setBasePlaylistArtist('')
+    setBasePlaylistDescription('')
+    setBasePlaylistSourceType('local')
+    setBasePlaylistSrc('')
+    setBasePlaylistLink('')
+    setBasePlaylistTag('')
+    setEditingBasePlaylistId(null)
   }
 
   const handleBlackHoleImageFile = (event, target = 'local') => {
@@ -1909,6 +1996,167 @@ function CentroUniversoSection() {
     dispatchContentUpdate('blackHoleGallery')
   }
 
+  const buildPlaylistPatch = ({
+    title,
+    artist,
+    description,
+    sourceType,
+    src,
+    link,
+    tag
+  }) => ({
+    title: title.trim(),
+    artist: artist.trim(),
+    description: description.trim(),
+    sourceType,
+    src: src.trim(),
+    link: link.trim(),
+    tag: tag.trim(),
+    updatedAt: new Date().toISOString()
+  })
+
+  const isPlaylistFormValid = ({ title, description, sourceType, src, link }) => {
+    if (!title.trim() || !description.trim()) return false
+    if (sourceType === 'local') return Boolean(src.trim())
+    if (sourceType === 'external') return Boolean(link.trim())
+    return false
+  }
+
+  const handlePlaylistSubmit = (event) => {
+    event.preventDefault()
+
+    if (!isPlaylistFormValid({
+      title: playlistTitle,
+      description: playlistDescription,
+      sourceType: playlistSourceType,
+      src: playlistSrc,
+      link: playlistLink
+    })) {
+      alert('Completa titulo, descripcion y la ruta/enlace segun el tipo de cancion.')
+      return
+    }
+
+    const patch = buildPlaylistPatch({
+      title: playlistTitle,
+      artist: playlistArtist,
+      description: playlistDescription,
+      sourceType: playlistSourceType,
+      src: playlistSrc,
+      link: playlistLink,
+      tag: playlistTag
+    })
+
+    const updatedItems = editingPlaylistId
+      ? updateLocalItem('playlist', editingPlaylistId, patch)
+      : addLocalItem('playlist', {
+          id: `local-playlist-${Date.now()}`,
+          ...patch,
+          createdAt: new Date().toISOString()
+        })
+
+    setLocalPlaylist(updatedItems)
+    resetPlaylistForm()
+    dispatchContentUpdate('playlist')
+  }
+
+  const handlePlaylistEdit = (item) => {
+    if (!item.isLocal) return
+    setActiveCrudAction('create')
+    setEditingPlaylistId(item.id)
+    setPlaylistTitle(item.title || '')
+    setPlaylistArtist(item.artist || '')
+    setPlaylistDescription(item.description || '')
+    setPlaylistSourceType(item.sourceType === 'external' ? 'external' : 'local')
+    setPlaylistSrc(item.src || '')
+    setPlaylistLink(item.link || '')
+    setPlaylistTag(item.tag || '')
+  }
+
+  const handlePlaylistDelete = (item) => {
+    if (!item.isLocal) return
+
+    if (window.confirm('Â¿Seguro que quieres eliminar esta cancion local?')) {
+      const updatedItems = deleteLocalItem('playlist', item.id)
+      setLocalPlaylist(updatedItems)
+
+      if (editingPlaylistId === item.id) {
+        resetPlaylistForm()
+      }
+
+      dispatchContentUpdate('playlist')
+    }
+  }
+
+  const handleBasePlaylistEdit = (item) => {
+    setEditingBasePlaylistId(item.id)
+    setBasePlaylistTitle(item.title || '')
+    setBasePlaylistArtist(item.artist || '')
+    setBasePlaylistDescription(item.description || '')
+    setBasePlaylistSourceType(item.sourceType === 'external' ? 'external' : 'local')
+    setBasePlaylistSrc(item.src || '')
+    setBasePlaylistLink(item.link || '')
+    setBasePlaylistTag(item.tag || '')
+  }
+
+  const handleBasePlaylistSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBasePlaylistId || !isPlaylistFormValid({
+      title: basePlaylistTitle,
+      description: basePlaylistDescription,
+      sourceType: basePlaylistSourceType,
+      src: basePlaylistSrc,
+      link: basePlaylistLink
+    })) {
+      alert('Selecciona una cancion base y completa titulo, descripcion y ruta/enlace segun el tipo.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('playlist', editingBasePlaylistId, buildPlaylistPatch({
+      title: basePlaylistTitle,
+      artist: basePlaylistArtist,
+      description: basePlaylistDescription,
+      sourceType: basePlaylistSourceType,
+      src: basePlaylistSrc,
+      link: basePlaylistLink,
+      tag: basePlaylistTag
+    }))
+
+    setPlaylistOverrides(updatedOverrides)
+    resetBasePlaylistForm()
+    dispatchContentUpdate('playlist')
+  }
+
+  const handleBasePlaylistRestore = (itemId) => {
+    const updatedOverrides = deleteLocalOverride('playlist', itemId)
+    setPlaylistOverrides(updatedOverrides)
+
+    if (String(editingBasePlaylistId) === String(itemId)) {
+      resetBasePlaylistForm()
+    }
+
+    dispatchContentUpdate('playlist')
+  }
+
+  const handleBasePlaylistHide = (item) => {
+    if (window.confirm('Â¿Seguro que quieres ocultar esta cancion base? Podras restaurarla despues.')) {
+      const updatedHiddenIds = hideDefaultItem('playlist', item.id)
+      setHiddenPlaylistIds(updatedHiddenIds)
+
+      if (String(editingBasePlaylistId) === String(item.id)) {
+        resetBasePlaylistForm()
+      }
+
+      dispatchContentUpdate('playlist')
+    }
+  }
+
+  const handleBasePlaylistUnhide = (itemId) => {
+    const updatedHiddenIds = restoreHiddenItem('playlist', itemId)
+    setHiddenPlaylistIds(updatedHiddenIds)
+    dispatchContentUpdate('playlist')
+  }
+
   const handleReset = () => {
     if (
       window.confirm(
@@ -2072,6 +2320,8 @@ function CentroUniversoSection() {
     resetBaseTimelineForm()
     resetBlackHoleForm()
     resetBaseBlackHoleForm()
+    resetPlaylistForm()
+    resetBasePlaylistForm()
   }
 
   const handleCrudModuleChange = (moduleId) => {
@@ -3996,6 +4246,325 @@ function CentroUniversoSection() {
                       className="action-icon-btn delete"
                       onClick={() => handleBlackHoleDelete(item)}
                       title="Eliminar recuerdo local"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className={`base-playlist-editor ${activeCrudModule === 'playlist' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-playlist-editor">
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
+          <div className="reasons-list-header">
+            <h3>Playlist original</h3>
+            <span>{playlistData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBasePlaylist)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBasePlaylistCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBasePlaylistCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localPlaylist.length} label="Locales" />
+          </div>
+
+          <div className="base-reasons-list">
+            {filteredBasePlaylist.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBasePlaylist.map((item) => (
+              <div
+                className={`base-reason-row ${item.isOverridden ? 'is-overridden' : ''} ${item.isHidden ? 'is-hidden' : ''}`}
+                key={item.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{item.title} · {item.artist || 'Sin artista'}</strong>
+                  <span>{item.description}</span>
+                  <small>{item.isHidden ? 'Oculta localmente' : item.isOverridden ? 'Editada localmente' : item.sourceType === 'local' ? 'Archivo local' : 'Enlace externo'}</small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBasePlaylistEdit(item)}>
+                    Editar
+                  </button>
+
+                  {item.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBasePlaylistRestore(item.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {item.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBasePlaylistUnhide(item.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBasePlaylistHide(item)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {hiddenBasePlaylistCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Canciones ocultas</h4>
+              {visibleBasePlaylist.filter((item) => item.isHidden).map((item) => (
+                <button type="button" className="ghost-button" key={item.id} onClick={() => handleBasePlaylistUnhide(item.id)}>
+                  Mostrar {item.title}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
+          <h3>
+            <Edit2 size={18} />
+            Override de Playlist
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBasePlaylistSubmit}>
+            <div className="editor-field">
+              <label htmlFor="basePlaylistTitle">Titulo *</label>
+              <input
+                id="basePlaylistTitle"
+                type="text"
+                value={basePlaylistTitle}
+                onChange={(event) => setBasePlaylistTitle(event.target.value)}
+                disabled={!editingBasePlaylistId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePlaylistArtist">Artista</label>
+              <input
+                id="basePlaylistArtist"
+                type="text"
+                value={basePlaylistArtist}
+                onChange={(event) => setBasePlaylistArtist(event.target.value)}
+                disabled={!editingBasePlaylistId}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePlaylistDescription">Descripcion *</label>
+              <textarea
+                id="basePlaylistDescription"
+                rows="4"
+                value={basePlaylistDescription}
+                onChange={(event) => setBasePlaylistDescription(event.target.value)}
+                disabled={!editingBasePlaylistId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePlaylistSourceType">Tipo *</label>
+              <select
+                id="basePlaylistSourceType"
+                value={basePlaylistSourceType}
+                onChange={(event) => setBasePlaylistSourceType(event.target.value)}
+                disabled={!editingBasePlaylistId}
+              >
+                <option value="local">Local</option>
+                <option value="external">External</option>
+              </select>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePlaylistSrc">Ruta local</label>
+              <input
+                id="basePlaylistSrc"
+                type="text"
+                value={basePlaylistSrc}
+                onChange={(event) => setBasePlaylistSrc(event.target.value)}
+                disabled={!editingBasePlaylistId}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePlaylistLink">Link externo</label>
+              <input
+                id="basePlaylistLink"
+                type="text"
+                value={basePlaylistLink}
+                onChange={(event) => setBasePlaylistLink(event.target.value)}
+                disabled={!editingBasePlaylistId}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="basePlaylistTag">Etiqueta</label>
+              <input
+                id="basePlaylistTag"
+                type="text"
+                value={basePlaylistTag}
+                onChange={(event) => setBasePlaylistTag(event.target.value)}
+                disabled={!editingBasePlaylistId}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingBasePlaylistId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBasePlaylistForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBasePlaylistId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className={`local-playlist-editor ${activeCrudModule === 'playlist' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-playlist-editor">
+        <div className="reasons-editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
+          <h3>
+            <Plus size={18} />
+            Editor local de Playlist
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>Estas canciones son locales; el JSON original no se modifica.</span>
+          </div>
+
+          <form className="editor-form" onSubmit={handlePlaylistSubmit}>
+            <div className="editor-field">
+              <label htmlFor="playlistTitle">Titulo *</label>
+              <input
+                id="playlistTitle"
+                type="text"
+                placeholder="Ej. Cancion para Ale"
+                value={playlistTitle}
+                onChange={(event) => setPlaylistTitle(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="playlistArtist">Artista</label>
+              <input
+                id="playlistArtist"
+                type="text"
+                placeholder="Ej. Ale & Yori"
+                value={playlistArtist}
+                onChange={(event) => setPlaylistArtist(event.target.value)}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="playlistDescription">Descripcion *</label>
+              <textarea
+                id="playlistDescription"
+                rows="4"
+                placeholder="Ej. Una cancion para guardar en nuestro universo."
+                value={playlistDescription}
+                onChange={(event) => setPlaylistDescription(event.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="playlistSourceType">Tipo *</label>
+              <select
+                id="playlistSourceType"
+                value={playlistSourceType}
+                onChange={(event) => setPlaylistSourceType(event.target.value)}
+              >
+                <option value="local">Local</option>
+                <option value="external">External</option>
+              </select>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="playlistSrc">Ruta local</label>
+              <input
+                id="playlistSrc"
+                type="text"
+                placeholder="/audio/cancion.mp3"
+                value={playlistSrc}
+                onChange={(event) => setPlaylistSrc(event.target.value)}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="playlistLink">Link externo</label>
+              <input
+                id="playlistLink"
+                type="text"
+                placeholder="https://open.spotify.com/..."
+                value={playlistLink}
+                onChange={(event) => setPlaylistLink(event.target.value)}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="playlistTag">Etiqueta</label>
+              <input
+                id="playlistTag"
+                type="text"
+                placeholder="Ej. Spotify"
+                value={playlistTag}
+                onChange={(event) => setPlaylistTag(event.target.value)}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingPlaylistId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetPlaylistForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn">
+                {editingPlaylistId ? 'Actualizar cancion local' : 'Guardar cancion local'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="reasons-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
+          <div className="reasons-list-header">
+            <h3>Playlist local</h3>
+            <span>{localPlaylist.length} locales</span>
+          </div>
+
+          {localPlaylist.length === 0 ? (
+            <p className="no-items">No hay canciones locales creadas.</p>
+          ) : (
+            <div className="reason-items-list">
+              {localPlaylist.map((item) => (
+                <div className="reason-item-row" key={item.id}>
+                  <div className="item-info">
+                    <strong>{item.title} · {item.artist || 'Sin artista'}</strong>
+                    <span>{item.description}</span>
+                  </div>
+
+                  <div className="item-actions">
+                    <button
+                      type="button"
+                      className="action-icon-btn edit"
+                      onClick={() => handlePlaylistEdit(item)}
+                      title="Editar cancion local"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon-btn delete"
+                      onClick={() => handlePlaylistDelete(item)}
+                      title="Eliminar cancion local"
                     >
                       <Trash2 size={14} />
                     </button>
