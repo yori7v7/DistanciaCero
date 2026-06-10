@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Shield, Sparkles } from 'lucide-react'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 function normalizePromise(item) {
   return {
@@ -13,18 +13,18 @@ function normalizePromise(item) {
 
 function PromisesSection({ promises = [] }) {
   const [finalPromises, setFinalPromises] = useState(() => {
-    return mergeWithLocalItems(promises, 'promises').map(normalizePromise)
+    return mergeCollectionWithLocal(promises, 'promises').map(normalizePromise)
   })
 
   useEffect(() => {
-    setFinalPromises(mergeWithLocalItems(promises, 'promises').map(normalizePromise))
+    setFinalPromises(mergeCollectionWithLocal(promises, 'promises').map(normalizePromise))
   }, [promises])
 
   useEffect(() => {
     const handleContentUpdate = (event) => {
       const collection = event.detail?.collection
       if (!['promises', 'all'].includes(collection)) return
-      setFinalPromises(mergeWithLocalItems(promises, 'promises').map(normalizePromise))
+      setFinalPromises(mergeCollectionWithLocal(promises, 'promises').map(normalizePromise))
     }
 
     window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
