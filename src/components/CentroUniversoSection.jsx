@@ -31,6 +31,7 @@ function CentroUniversoSection() {
   const [localMonthly, setLocalMonthly] = useState([])
   const [localOpenWhen, setLocalOpenWhen] = useState([])
   const [backupStatus, setBackupStatus] = useState(null)
+  const [crudNotice, setCrudNotice] = useState(null)
   const [localReasons, setLocalReasons] = useState([])
   const [reasonTitle, setReasonTitle] = useState('')
   const [reasonText, setReasonText] = useState('')
@@ -226,6 +227,16 @@ function CentroUniversoSection() {
     setPlaylistOverrides(getLocalOverrides('playlist'))
     setHiddenPlaylistIds(getHiddenItemIds('playlist'))
   }, [])
+
+  useEffect(() => {
+    if (!crudNotice) return undefined
+
+    const timer = window.setTimeout(() => {
+      setCrudNotice(null)
+    }, 3600)
+
+    return () => window.clearTimeout(timer)
+  }, [crudNotice])
 
   // Map open when cards to lock 'special day' card
   const mappedOpenWhen = openWhenData.map((card) => {
@@ -842,6 +853,14 @@ function CentroUniversoSection() {
     dispatchContentUpdate('letters')
   }
 
+  const showCrudNotice = (message, type = 'success') => {
+    setCrudNotice({
+      message,
+      type,
+      timestamp: Date.now()
+    })
+  }
+
   const resetReasonForm = () => {
     setReasonTitle('')
     setReasonText('')
@@ -1131,6 +1150,7 @@ function CentroUniversoSection() {
     }
 
     setLocalReasons(updatedReasons)
+    showCrudNotice(editingReasonId ? 'Se editó una razón correctamente.' : 'Se agregó una razón correctamente.')
     resetReasonForm()
     dispatchContentUpdate('reasons')
   }
@@ -1160,6 +1180,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('reasons')
+      showCrudNotice('Se eliminó una razón correctamente.')
     }
   }
 
@@ -1191,6 +1212,7 @@ function CentroUniversoSection() {
     setReasonOverrides(updatedOverrides)
     resetBaseReasonForm()
     dispatchContentUpdate('reasons')
+    showCrudNotice('Se editó una razón correctamente.')
   }
 
   const handleBaseReasonRestore = (reasonId) => {
@@ -1202,6 +1224,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('reasons')
+    showCrudNotice('Se restauró una razón correctamente.')
   }
 
   const handleBaseReasonHide = (reason) => {
@@ -1218,6 +1241,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('reasons')
+      showCrudNotice('Se ocultó una razón correctamente.')
     }
   }
 
@@ -1225,6 +1249,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('reasons', reasonId)
     setHiddenReasonIds(updatedHiddenIds)
     dispatchContentUpdate('reasons')
+    showCrudNotice('Se restauró una razón correctamente.')
   }
 
   const handlePromiseSubmit = (event) => {
@@ -1253,6 +1278,7 @@ function CentroUniversoSection() {
         })
 
     setLocalPromises(updatedPromises)
+    showCrudNotice(editingPromiseId ? 'Se editó una promesa correctamente.' : 'Se agregó una promesa correctamente.')
     resetPromiseForm()
     dispatchContentUpdate('promises')
   }
@@ -1278,6 +1304,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('promises')
+      showCrudNotice('Se eliminó una promesa correctamente.')
     }
   }
 
@@ -1308,6 +1335,7 @@ function CentroUniversoSection() {
     setPromiseOverrides(updatedOverrides)
     resetBasePromiseForm()
     dispatchContentUpdate('promises')
+    showCrudNotice('Se editó una promesa correctamente.')
   }
 
   const handleBasePromiseRestore = (promiseId) => {
@@ -1319,6 +1347,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('promises')
+    showCrudNotice('Se restauró una promesa correctamente.')
   }
 
   const handleBasePromiseHide = (promise) => {
@@ -1331,6 +1360,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('promises')
+      showCrudNotice('Se ocultó una promesa correctamente.')
     }
   }
 
@@ -1338,6 +1368,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('promises', promiseId)
     setHiddenPromiseIds(updatedHiddenIds)
     dispatchContentUpdate('promises')
+    showCrudNotice('Se restauró una promesa correctamente.')
   }
 
   const handleBaseMonthlyEdit = (letter) => {
@@ -1379,6 +1410,7 @@ function CentroUniversoSection() {
     setMonthlyOverrides(updatedOverrides)
     resetBaseMonthlyForm()
     dispatchLettersUpdate('monthlyLetters')
+    showCrudNotice('Se editó una carta mensual correctamente.')
   }
 
   const handleBaseMonthlyRestore = (letterId) => {
@@ -1390,6 +1422,7 @@ function CentroUniversoSection() {
     }
 
     dispatchLettersUpdate('monthlyLetters')
+    showCrudNotice('Se restauró una carta mensual correctamente.')
   }
 
   const handleBaseMonthlyHide = (letter) => {
@@ -1402,6 +1435,7 @@ function CentroUniversoSection() {
       }
 
       dispatchLettersUpdate('monthlyLetters')
+      showCrudNotice('Se ocultó una carta mensual correctamente.')
     }
   }
 
@@ -1409,6 +1443,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('monthlyLetters', letterId)
     setHiddenMonthlyIds(updatedHiddenIds)
     dispatchLettersUpdate('monthlyLetters')
+    showCrudNotice('Se restauró una carta mensual correctamente.')
   }
 
   const handleBaseOpenWhenEdit = (card) => {
@@ -1450,6 +1485,7 @@ function CentroUniversoSection() {
     setOpenWhenOverrides(updatedOverrides)
     resetBaseOpenWhenForm()
     dispatchLettersUpdate('openWhenLetters')
+    showCrudNotice('Se editó una carta Abrir cuando correctamente.')
   }
 
   const handleBaseOpenWhenRestore = (cardId) => {
@@ -1461,6 +1497,7 @@ function CentroUniversoSection() {
     }
 
     dispatchLettersUpdate('openWhenLetters')
+    showCrudNotice('Se restauró una carta Abrir cuando correctamente.')
   }
 
   const handleBaseOpenWhenHide = (card) => {
@@ -1473,6 +1510,7 @@ function CentroUniversoSection() {
       }
 
       dispatchLettersUpdate('openWhenLetters')
+      showCrudNotice('Se ocultó una carta Abrir cuando correctamente.')
     }
   }
 
@@ -1480,6 +1518,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('openWhenLetters', cardId)
     setHiddenOpenWhenIds(updatedHiddenIds)
     dispatchLettersUpdate('openWhenLetters')
+    showCrudNotice('Se restauró una carta Abrir cuando correctamente.')
   }
 
   const handleImportantDateSubmit = (event) => {
@@ -1507,6 +1546,7 @@ function CentroUniversoSection() {
         })
 
     setLocalImportantDates(updatedDates)
+    showCrudNotice(editingImportantDateId ? 'Se editó una fecha importante correctamente.' : 'Se agregó una fecha importante correctamente.')
     resetImportantDateForm()
     dispatchContentUpdate('importantDates')
   }
@@ -1533,6 +1573,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('importantDates')
+      showCrudNotice('Se eliminó una fecha importante correctamente.')
     }
   }
 
@@ -1563,6 +1604,7 @@ function CentroUniversoSection() {
     setImportantDateOverrides(updatedOverrides)
     resetBaseImportantDateForm()
     dispatchContentUpdate('importantDates')
+    showCrudNotice('Se editó una fecha importante correctamente.')
   }
 
   const handleBaseImportantDateRestore = (dateId) => {
@@ -1574,6 +1616,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('importantDates')
+    showCrudNotice('Se restauró una fecha importante correctamente.')
   }
 
   const handleBaseImportantDateHide = (dateItem) => {
@@ -1586,6 +1629,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('importantDates')
+      showCrudNotice('Se ocultó una fecha importante correctamente.')
     }
   }
 
@@ -1593,6 +1637,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('importantDates', dateId)
     setHiddenImportantDateIds(updatedHiddenIds)
     dispatchContentUpdate('importantDates')
+    showCrudNotice('Se restauró una fecha importante correctamente.')
   }
 
   const handleFutureDreamSubmit = (event) => {
@@ -1619,6 +1664,7 @@ function CentroUniversoSection() {
         })
 
     setLocalFutureDreams(updatedDreams)
+    showCrudNotice(editingFutureDreamId ? 'Se editó un plan correctamente.' : 'Se agregó un plan correctamente.')
     resetFutureDreamForm()
     dispatchContentUpdate('futureDreams')
   }
@@ -1644,6 +1690,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('futureDreams')
+      showCrudNotice('Se eliminó un plan correctamente.')
     }
   }
 
@@ -1672,6 +1719,7 @@ function CentroUniversoSection() {
     setFutureDreamOverrides(updatedOverrides)
     resetBaseFutureDreamForm()
     dispatchContentUpdate('futureDreams')
+    showCrudNotice('Se editó un plan correctamente.')
   }
 
   const handleBaseFutureDreamRestore = (dreamId) => {
@@ -1683,6 +1731,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('futureDreams')
+    showCrudNotice('Se restauró un plan correctamente.')
   }
 
   const handleBaseFutureDreamHide = (dream) => {
@@ -1695,6 +1744,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('futureDreams')
+      showCrudNotice('Se ocultó un plan correctamente.')
     }
   }
 
@@ -1702,6 +1752,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('futureDreams', dreamId)
     setHiddenFutureDreamIds(updatedHiddenIds)
     dispatchContentUpdate('futureDreams')
+    showCrudNotice('Se restauró un plan correctamente.')
   }
 
   const buildTimelinePatch = ({
@@ -1755,6 +1806,7 @@ function CentroUniversoSection() {
     setLocalTimelinePages(updatedPages)
     resetTimelineForm()
     dispatchContentUpdate('timeline')
+    showCrudNotice(editingTimelineId ? 'Se editó una página del diario correctamente.' : 'Se agregó una página del diario correctamente.')
   }
 
   const handleTimelineEdit = (page) => {
@@ -1783,6 +1835,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('timeline')
+      showCrudNotice('Se eliminó una página del diario correctamente.')
     }
   }
 
@@ -1820,6 +1873,7 @@ function CentroUniversoSection() {
     setTimelineOverrides(updatedOverrides)
     resetBaseTimelineForm()
     dispatchContentUpdate('timeline')
+    showCrudNotice('Se editó una página del diario correctamente.')
   }
 
   const handleBaseTimelineRestore = (pageId) => {
@@ -1831,6 +1885,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('timeline')
+    showCrudNotice('Se restauró una página del diario correctamente.')
   }
 
   const handleBaseTimelineHide = (page) => {
@@ -1843,6 +1898,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('timeline')
+      showCrudNotice('Se ocultó una página del diario correctamente.')
     }
   }
 
@@ -1850,6 +1906,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('timeline', pageId)
     setHiddenTimelineIds(updatedHiddenIds)
     dispatchContentUpdate('timeline')
+    showCrudNotice('Se restauró una página del diario correctamente.')
   }
 
   const buildBlackHolePatch = ({
@@ -1900,6 +1957,7 @@ function CentroUniversoSection() {
     setLocalBlackHoleGallery(updatedItems)
     resetBlackHoleForm()
     dispatchContentUpdate('blackHoleGallery')
+    showCrudNotice(editingBlackHoleId ? 'Se editó un recuerdo correctamente.' : 'Se agregó un recuerdo correctamente.')
   }
 
   const handleBlackHoleEdit = (item) => {
@@ -1928,6 +1986,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('blackHoleGallery')
+      showCrudNotice('Se eliminó un recuerdo correctamente.')
     }
   }
 
@@ -1964,6 +2023,7 @@ function CentroUniversoSection() {
     setBlackHoleGalleryOverrides(updatedOverrides)
     resetBaseBlackHoleForm()
     dispatchContentUpdate('blackHoleGallery')
+    showCrudNotice('Se editó un recuerdo correctamente.')
   }
 
   const handleBaseBlackHoleRestore = (itemId) => {
@@ -1975,6 +2035,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('blackHoleGallery')
+    showCrudNotice('Se restauró un recuerdo correctamente.')
   }
 
   const handleBaseBlackHoleHide = (item) => {
@@ -1987,6 +2048,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('blackHoleGallery')
+      showCrudNotice('Se ocultó un recuerdo correctamente.')
     }
   }
 
@@ -1994,6 +2056,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('blackHoleGallery', itemId)
     setHiddenBlackHoleGalleryIds(updatedHiddenIds)
     dispatchContentUpdate('blackHoleGallery')
+    showCrudNotice('Se restauró un recuerdo correctamente.')
   }
 
   const buildPlaylistPatch = ({
@@ -2057,6 +2120,7 @@ function CentroUniversoSection() {
     setLocalPlaylist(updatedItems)
     resetPlaylistForm()
     dispatchContentUpdate('playlist')
+    showCrudNotice(editingPlaylistId ? 'Se editó una canción correctamente.' : 'Se agregó una canción correctamente.')
   }
 
   const handlePlaylistEdit = (item) => {
@@ -2084,6 +2148,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('playlist')
+      showCrudNotice('Se eliminó una canción correctamente.')
     }
   }
 
@@ -2125,6 +2190,7 @@ function CentroUniversoSection() {
     setPlaylistOverrides(updatedOverrides)
     resetBasePlaylistForm()
     dispatchContentUpdate('playlist')
+    showCrudNotice('Se editó una canción correctamente.')
   }
 
   const handleBasePlaylistRestore = (itemId) => {
@@ -2136,6 +2202,7 @@ function CentroUniversoSection() {
     }
 
     dispatchContentUpdate('playlist')
+    showCrudNotice('Se restauró una canción correctamente.')
   }
 
   const handleBasePlaylistHide = (item) => {
@@ -2148,6 +2215,7 @@ function CentroUniversoSection() {
       }
 
       dispatchContentUpdate('playlist')
+      showCrudNotice('Se ocultó una canción correctamente.')
     }
   }
 
@@ -2155,6 +2223,7 @@ function CentroUniversoSection() {
     const updatedHiddenIds = restoreHiddenItem('playlist', itemId)
     setHiddenPlaylistIds(updatedHiddenIds)
     dispatchContentUpdate('playlist')
+    showCrudNotice('Se restauró una canción correctamente.')
   }
 
   const handleReset = () => {
@@ -2199,6 +2268,7 @@ function CentroUniversoSection() {
       ? 'distancia-cero-local-monthly-letters'
       : 'distancia-cero-local-open-when'
     const currentList = isMonthly ? localMonthly : localOpenWhen
+    const wasEditing = Boolean(editingId)
 
     let updatedList
     if (editingId) {
@@ -2242,6 +2312,11 @@ function CentroUniversoSection() {
       setLocalOpenWhen(updatedList)
       dispatchLettersUpdate('openWhenLetters')
     }
+    showCrudNotice(
+      wasEditing
+        ? (isMonthly ? 'Se editó una carta mensual correctamente.' : 'Se editó una carta Abrir cuando correctamente.')
+        : (isMonthly ? 'Se agregó una carta mensual correctamente.' : 'Se agregó una carta Abrir cuando correctamente.')
+    )
 
     // Reset Form
     setTitle('')
@@ -2285,6 +2360,7 @@ function CentroUniversoSection() {
         setLocalOpenWhen(updatedList)
         dispatchLettersUpdate('openWhenLetters')
       }
+      showCrudNotice(isMonthly ? 'Se eliminó una carta mensual correctamente.' : 'Se eliminó una carta Abrir cuando correctamente.')
 
       // If we were editing this item, reset form
       if (editingId === id) {
@@ -2506,6 +2582,15 @@ function CentroUniversoSection() {
           </div>
         </div>
       </div>
+
+      {crudNotice && (
+        <div className={`crud-notice ${crudNotice.type}`} role="status" aria-live="polite">
+          <span>{crudNotice.message}</span>
+          <button type="button" onClick={() => setCrudNotice(null)} aria-label="Cerrar aviso">
+            ×
+          </button>
+        </div>
+      )}
 
       {/* Base monthly letters editor */}
       <div className={`base-monthly-editor ${activeCrudModule === 'monthlyLetters' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-monthly-editor">
