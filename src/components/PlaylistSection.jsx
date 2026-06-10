@@ -78,7 +78,7 @@ function PlaylistSection({ playlist = [] }) {
             {backgroundPlaying && (
               <span className="now-playing-pill">
                 <Music size={14} />
-                Sonando ahora
+                Ambiente activo
               </span>
             )}
 
@@ -87,7 +87,7 @@ function PlaylistSection({ playlist = [] }) {
 
             <button className="main-button playlist-main-button" onClick={toggleBackground}>
               {backgroundPlaying ? <Pause size={18} /> : <Play size={18} />}
-              {backgroundPlaying ? 'Pausar tema principal' : 'Reproducir tema principal'}
+              {backgroundPlaying ? 'Pausar ambiente' : 'Reproducir ambiente'}
             </button>
           </div>
         )}
