@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Sparkles } from 'lucide-react'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 const placeholderDream = {
   id: 'soon-plan',
@@ -21,18 +21,18 @@ function normalizeDream(item) {
 
 function FutureDreamsSection({ dreams = [] }) {
   const [editableDreams, setEditableDreams] = useState(() => {
-    return mergeWithLocalItems(dreams, 'futureDreams').map(normalizeDream)
+    return mergeCollectionWithLocal(dreams, 'futureDreams').map(normalizeDream)
   })
 
   useEffect(() => {
-    setEditableDreams(mergeWithLocalItems(dreams, 'futureDreams').map(normalizeDream))
+    setEditableDreams(mergeCollectionWithLocal(dreams, 'futureDreams').map(normalizeDream))
   }, [dreams])
 
   useEffect(() => {
     const handleContentUpdate = (event) => {
       const collection = event.detail?.collection
       if (!['futureDreams', 'all'].includes(collection)) return
-      setEditableDreams(mergeWithLocalItems(dreams, 'futureDreams').map(normalizeDream))
+      setEditableDreams(mergeCollectionWithLocal(dreams, 'futureDreams').map(normalizeDream))
     }
 
     window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
