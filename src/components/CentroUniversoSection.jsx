@@ -500,7 +500,7 @@ function CentroUniversoSection() {
           Array.isArray(importedData.openWhenLetters)
 
         if (!isValidBackup) {
-          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato valido de respaldo.' })
+          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato válido de respaldo.' })
           return
         }
 
@@ -509,7 +509,7 @@ function CentroUniversoSection() {
         )
 
         if (!confirmed) {
-          setBackupStatus({ type: 'error', text: 'Importacion cancelada. No se cambiaron las cartas locales.' })
+          setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron las cartas locales.' })
           return
         }
 
@@ -563,7 +563,7 @@ function CentroUniversoSection() {
           )
 
           if (!confirmed) {
-            setBackupStatus({ type: 'error', text: 'Importacion cancelada. No se cambiaron datos locales.' })
+            setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron datos locales.' })
             return
           }
 
@@ -664,7 +664,7 @@ function CentroUniversoSection() {
               Array.isArray(hidden.promises)))
 
         if (!isValidV2) {
-          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato valido de respaldo v2.' })
+          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato válido de respaldo v2.' })
           return
         }
 
@@ -673,7 +673,7 @@ function CentroUniversoSection() {
         )
 
         if (!confirmed) {
-          setBackupStatus({ type: 'error', text: 'Importacion cancelada. No se cambiaron datos locales.' })
+          setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron datos locales.' })
           return
         }
 
@@ -1079,7 +1079,7 @@ function CentroUniversoSection() {
     if (!file) return
 
     if (!file.type.startsWith('image/')) {
-      const message = 'Selecciona un archivo de imagen valido.'
+      const message = 'Selecciona un archivo de imagen válido.'
       target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
       return
     }
@@ -1230,7 +1230,7 @@ function CentroUniversoSection() {
   const handleBaseReasonHide = (reason) => {
     if (
       window.confirm(
-        '¿Seguro que quieres ocultar esta razon original? No se modificara el JSON y podras restaurarla despues.'
+        '¿Seguro que quieres ocultar esta razon original? No se modificara el JSON y podrás restaurarla después.'
       )
     ) {
       const updatedHiddenIds = hideDefaultItem('reasons', reason.id)
@@ -1351,7 +1351,7 @@ function CentroUniversoSection() {
   }
 
   const handleBasePromiseHide = (promise) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta promesa base? Podras restaurarla despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar esta promesa base? Podrás restaurarla después.')) {
       const updatedHiddenIds = hideDefaultItem('promises', promise.id)
       setHiddenPromiseIds(updatedHiddenIds)
 
@@ -1426,7 +1426,7 @@ function CentroUniversoSection() {
   }
 
   const handleBaseMonthlyHide = (letter) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta carta mensual base? Podras restaurarla despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar esta carta mensual base? Podrás restaurarla después.')) {
       const updatedHiddenIds = hideDefaultItem('monthlyLetters', letter.id)
       setHiddenMonthlyIds(updatedHiddenIds)
 
@@ -1501,7 +1501,7 @@ function CentroUniversoSection() {
   }
 
   const handleBaseOpenWhenHide = (card) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta carta Abrir cuando base? Podras restaurarla despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar esta carta Abrir cuando base? Podrás restaurarla después.')) {
       const updatedHiddenIds = hideDefaultItem('openWhenLetters', card.id)
       setHiddenOpenWhenIds(updatedHiddenIds)
 
@@ -1620,7 +1620,7 @@ function CentroUniversoSection() {
   }
 
   const handleBaseImportantDateHide = (dateItem) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta fecha base? Podras restaurarla despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar esta fecha base? Podrás restaurarla después.')) {
       const updatedHiddenIds = hideDefaultItem('importantDates', dateItem.id)
       setHiddenImportantDateIds(updatedHiddenIds)
 
@@ -1735,7 +1735,7 @@ function CentroUniversoSection() {
   }
 
   const handleBaseFutureDreamHide = (dream) => {
-    if (window.confirm('¿Seguro que quieres ocultar este plan base? Podras restaurarlo despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar este plan base? Podrás restaurarlo después.')) {
       const updatedHiddenIds = hideDefaultItem('futureDreams', dream.id)
       setHiddenFutureDreamIds(updatedHiddenIds)
 
@@ -1826,7 +1826,7 @@ function CentroUniversoSection() {
   const handleTimelineDelete = (page) => {
     if (!page.isLocal) return
 
-    if (window.confirm('Â¿Seguro que quieres eliminar esta pagina local del diario?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta página local del diario?')) {
       const updatedPages = deleteLocalItem('timeline', page.id)
       setLocalTimelinePages(updatedPages)
 
@@ -1855,7 +1855,7 @@ function CentroUniversoSection() {
     event.preventDefault()
 
     if (!editingBaseTimelineId || !baseTimelineChapter.trim() || !baseTimelineDate.trim() || !baseTimelineTitle.trim() || !baseTimelineDescription.trim()) {
-      alert('Selecciona una pagina base y completa capitulo, fecha, titulo y descripcion.')
+      alert('Selecciona una página base y completa capitulo, fecha, titulo y descripcion.')
       return
     }
 
@@ -1889,7 +1889,7 @@ function CentroUniversoSection() {
   }
 
   const handleBaseTimelineHide = (page) => {
-    if (window.confirm('Â¿Seguro que quieres ocultar esta pagina base del diario? Podras restaurarla despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar esta página base del diario? Podrás restaurarla después.')) {
       const updatedHiddenIds = hideDefaultItem('timeline', page.id)
       setHiddenTimelineIds(updatedHiddenIds)
 
@@ -1977,7 +1977,7 @@ function CentroUniversoSection() {
   const handleBlackHoleDelete = (item) => {
     if (!item.isLocal) return
 
-    if (window.confirm('Â¿Seguro que quieres eliminar este recuerdo local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar este recuerdo local?')) {
       const updatedItems = deleteLocalItem('blackHoleGallery', item.id)
       setLocalBlackHoleGallery(updatedItems)
 
@@ -2039,7 +2039,7 @@ function CentroUniversoSection() {
   }
 
   const handleBaseBlackHoleHide = (item) => {
-    if (window.confirm('Â¿Seguro que quieres ocultar este recuerdo base? Podras restaurarlo despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar este recuerdo base? Podrás restaurarlo después.')) {
       const updatedHiddenIds = hideDefaultItem('blackHoleGallery', item.id)
       setHiddenBlackHoleGalleryIds(updatedHiddenIds)
 
@@ -2095,7 +2095,7 @@ function CentroUniversoSection() {
       src: playlistSrc,
       link: playlistLink
     })) {
-      alert('Completa titulo, descripcion y la ruta/enlace segun el tipo de cancion.')
+      alert('Completa titulo, descripcion y la ruta/enlace segun el tipo de canción.')
       return
     }
 
@@ -2139,7 +2139,7 @@ function CentroUniversoSection() {
   const handlePlaylistDelete = (item) => {
     if (!item.isLocal) return
 
-    if (window.confirm('Â¿Seguro que quieres eliminar esta cancion local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta canción local?')) {
       const updatedItems = deleteLocalItem('playlist', item.id)
       setLocalPlaylist(updatedItems)
 
@@ -2173,7 +2173,7 @@ function CentroUniversoSection() {
       src: basePlaylistSrc,
       link: basePlaylistLink
     })) {
-      alert('Selecciona una cancion base y completa titulo, descripcion y ruta/enlace segun el tipo.')
+      alert('Selecciona una canción base y completa titulo, descripcion y ruta/enlace segun el tipo.')
       return
     }
 
@@ -2206,7 +2206,7 @@ function CentroUniversoSection() {
   }
 
   const handleBasePlaylistHide = (item) => {
-    if (window.confirm('Â¿Seguro que quieres ocultar esta cancion base? Podras restaurarla despues.')) {
+    if (window.confirm('¿Seguro que quieres ocultar esta canción base? Podrás restaurarla después.')) {
       const updatedHiddenIds = hideDefaultItem('playlist', item.id)
       setHiddenPlaylistIds(updatedHiddenIds)
 
@@ -2324,7 +2324,6 @@ function CentroUniversoSection() {
     setContentRaw('')
     setTag('')
     setLetterLocked(false)
-    alert('Carta local guardada con éxito. Compruébala en su respectiva sección.')
   }
 
   const handleEdit = (item, type) => {
@@ -3820,7 +3819,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estas paginas son locales; el JSON original no se modifica.</span>
+            <span>Estas páginas son locales; el JSON original no se modifica.</span>
           </div>
 
           <form className="editor-form" onSubmit={handleTimelineSubmit}>
@@ -3852,7 +3851,7 @@ function CentroUniversoSection() {
               <input
                 id="timelineTitle"
                 type="text"
-                placeholder="Ej. Una pagina nueva"
+                placeholder="Ej. Una página nueva"
                 value={timelineTitle}
                 onChange={(event) => setTimelineTitle(event.target.value)}
                 required
@@ -3875,7 +3874,7 @@ function CentroUniversoSection() {
               <textarea
                 id="timelineDescription"
                 rows="4"
-                placeholder="Ej. Este dia se queda guardado como una pagina bonita de nuestra historia."
+                placeholder="Ej. Este dia se queda guardado como una página bonita de nuestra historia."
                 value={timelineDescription}
                 onChange={(event) => setTimelineDescription(event.target.value)}
                 required
@@ -3922,7 +3921,7 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn">
-                {editingTimelineId ? 'Actualizar pagina local' : 'Guardar pagina local'}
+                {editingTimelineId ? 'Actualizar página local' : 'Guardar página local'}
               </button>
             </div>
           </form>
@@ -3936,7 +3935,7 @@ function CentroUniversoSection() {
           </div>
 
           {localTimelinePages.length === 0 ? (
-            <p className="no-items">No hay paginas locales creadas.</p>
+            <p className="no-items">No hay páginas locales creadas.</p>
           ) : (
             <div className="reason-items-list">
               {localTimelinePages.map((page) => (
@@ -3951,7 +3950,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handleTimelineEdit(page)}
-                      title="Editar pagina local"
+                      title="Editar página local"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -3959,7 +3958,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handleTimelineDelete(page)}
-                      title="Eliminar pagina local"
+                      title="Eliminar página local"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -4553,7 +4552,7 @@ function CentroUniversoSection() {
               <textarea
                 id="playlistDescription"
                 rows="4"
-                placeholder="Ej. Una cancion para guardar en nuestro universo."
+                placeholder="Ej. Una canción para guardar en nuestro universo."
                 value={playlistDescription}
                 onChange={(event) => setPlaylistDescription(event.target.value)}
                 required
@@ -4612,7 +4611,7 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn">
-                {editingPlaylistId ? 'Actualizar cancion local' : 'Guardar cancion local'}
+                {editingPlaylistId ? 'Actualizar canción local' : 'Guardar canción local'}
               </button>
             </div>
           </form>
@@ -4641,7 +4640,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handlePlaylistEdit(item)}
-                      title="Editar cancion local"
+                      title="Editar canción local"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -4649,7 +4648,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handlePlaylistDelete(item)}
-                      title="Eliminar cancion local"
+                      title="Eliminar canción local"
                     >
                       <Trash2 size={14} />
                     </button>
