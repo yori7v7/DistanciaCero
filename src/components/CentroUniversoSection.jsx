@@ -8,6 +8,7 @@ import promisesData from '../data/promises.json'
 import importantDatesData from '../data/importantDates.json'
 import futureDreamsData from '../data/futureDreams.json'
 import timelineData from '../data/timeline.json'
+import blackHoleGalleryData from '../data/blackHoleGallery.json'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -111,6 +112,27 @@ function CentroUniversoSection() {
   const [baseTimelineDetails, setBaseTimelineDetails] = useState('')
   const [baseTimelineMood, setBaseTimelineMood] = useState('')
   const [editingBaseTimelineId, setEditingBaseTimelineId] = useState(null)
+  const [localBlackHoleGallery, setLocalBlackHoleGallery] = useState([])
+  const [blackHoleGalleryOverrides, setBlackHoleGalleryOverrides] = useState({})
+  const [hiddenBlackHoleGalleryIds, setHiddenBlackHoleGalleryIds] = useState([])
+  const [blackHoleDate, setBlackHoleDate] = useState('')
+  const [blackHoleTitle, setBlackHoleTitle] = useState('')
+  const [blackHoleDescription, setBlackHoleDescription] = useState('')
+  const [blackHoleImage, setBlackHoleImage] = useState('')
+  const [blackHoleAlt, setBlackHoleAlt] = useState('')
+  const [blackHoleTag, setBlackHoleTag] = useState('')
+  const [blackHoleVideoUrl, setBlackHoleVideoUrl] = useState('')
+  const [blackHoleImageStatus, setBlackHoleImageStatus] = useState('')
+  const [editingBlackHoleId, setEditingBlackHoleId] = useState(null)
+  const [baseBlackHoleDate, setBaseBlackHoleDate] = useState('')
+  const [baseBlackHoleTitle, setBaseBlackHoleTitle] = useState('')
+  const [baseBlackHoleDescription, setBaseBlackHoleDescription] = useState('')
+  const [baseBlackHoleImage, setBaseBlackHoleImage] = useState('')
+  const [baseBlackHoleAlt, setBaseBlackHoleAlt] = useState('')
+  const [baseBlackHoleTag, setBaseBlackHoleTag] = useState('')
+  const [baseBlackHoleVideoUrl, setBaseBlackHoleVideoUrl] = useState('')
+  const [baseBlackHoleImageStatus, setBaseBlackHoleImageStatus] = useState('')
+  const [editingBaseBlackHoleId, setEditingBaseBlackHoleId] = useState(null)
 
   // Form states
   const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
@@ -131,7 +153,8 @@ function CentroUniversoSection() {
     { id: 'promises', label: 'Promesas' },
     { id: 'importantDates', label: 'Fechas importantes' },
     { id: 'futureDreams', label: 'Wishlist' },
-    { id: 'timeline', label: 'Nuestra historia' }
+    { id: 'timeline', label: 'Nuestra historia' },
+    { id: 'blackHoleGallery', label: 'Agujero negro / Galería' }
   ]
   const crudActions = [
     { id: 'originals', label: 'Ver / editar originales' },
@@ -175,6 +198,9 @@ function CentroUniversoSection() {
     setLocalTimelinePages(getLocalItems('timeline'))
     setTimelineOverrides(getLocalOverrides('timeline'))
     setHiddenTimelineIds(getHiddenItemIds('timeline'))
+    setLocalBlackHoleGallery(getLocalItems('blackHoleGallery'))
+    setBlackHoleGalleryOverrides(getLocalOverrides('blackHoleGallery'))
+    setHiddenBlackHoleGalleryIds(getHiddenItemIds('blackHoleGallery'))
   }, [])
 
   // Map open when cards to lock 'special day' card
@@ -306,6 +332,18 @@ function CentroUniversoSection() {
       isHidden: hiddenTimelineIds.includes(String(page.id))
     }
   })
+  const editedBaseBlackHoleGalleryCount = Object.keys(blackHoleGalleryOverrides).length
+  const hiddenBaseBlackHoleGalleryCount = hiddenBlackHoleGalleryIds.length
+  const visibleBaseBlackHoleGallery = blackHoleGalleryData.map((item) => {
+    const override = blackHoleGalleryOverrides[String(item.id)]
+    return {
+      ...item,
+      ...(override || {}),
+      id: item.id,
+      isOverridden: Boolean(override),
+      isHidden: hiddenBlackHoleGalleryIds.includes(String(item.id))
+    }
+  })
   const filterBaseItemsByCrudFilter = (items) => {
     if (activeCrudFilter === 'base') return items.filter((item) => !item.isHidden && !item.isOverridden)
     if (activeCrudFilter === 'edited') return items.filter((item) => item.isOverridden)
@@ -320,6 +358,7 @@ function CentroUniversoSection() {
   const filteredBaseImportantDates = filterBaseItemsByCrudFilter(visibleBaseImportantDates)
   const filteredBaseFutureDreams = filterBaseItemsByCrudFilter(visibleBaseFutureDreams)
   const filteredBaseTimelinePages = filterBaseItemsByCrudFilter(visibleBaseTimelinePages)
+  const filteredBaseBlackHoleGallery = filterBaseItemsByCrudFilter(visibleBaseBlackHoleGallery)
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
@@ -356,7 +395,8 @@ function CentroUniversoSection() {
         promises: getLocalItems('promises'),
         importantDates: getLocalItems('importantDates'),
         futureDreams: getLocalItems('futureDreams'),
-        timeline: getLocalItems('timeline')
+        timeline: getLocalItems('timeline'),
+        blackHoleGallery: getLocalItems('blackHoleGallery')
       },
       overrides: {
         monthlyLetters: getLocalOverrides('monthlyLetters'),
@@ -365,7 +405,8 @@ function CentroUniversoSection() {
         promises: getLocalOverrides('promises'),
         importantDates: getLocalOverrides('importantDates'),
         futureDreams: getLocalOverrides('futureDreams'),
-        timeline: getLocalOverrides('timeline')
+        timeline: getLocalOverrides('timeline'),
+        blackHoleGallery: getLocalOverrides('blackHoleGallery')
       },
       hidden: {
         monthlyLetters: getHiddenItemIds('monthlyLetters'),
@@ -374,7 +415,8 @@ function CentroUniversoSection() {
         promises: getHiddenItemIds('promises'),
         importantDates: getHiddenItemIds('importantDates'),
         futureDreams: getHiddenItemIds('futureDreams'),
-        timeline: getHiddenItemIds('timeline')
+        timeline: getHiddenItemIds('timeline'),
+        blackHoleGallery: getHiddenItemIds('blackHoleGallery')
       }
     }
 
@@ -521,6 +563,10 @@ function CentroUniversoSection() {
           Object.prototype.hasOwnProperty.call(content || {}, 'timeline') ||
           Object.prototype.hasOwnProperty.call(overrides || {}, 'timeline') ||
           Object.prototype.hasOwnProperty.call(hidden || {}, 'timeline')
+        const hasBlackHoleGalleryBackup =
+          Object.prototype.hasOwnProperty.call(content || {}, 'blackHoleGallery') ||
+          Object.prototype.hasOwnProperty.call(overrides || {}, 'blackHoleGallery') ||
+          Object.prototype.hasOwnProperty.call(hidden || {}, 'blackHoleGallery')
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -549,6 +595,10 @@ function CentroUniversoSection() {
             (Array.isArray(content.timeline) &&
               isPlainObject(overrides.timeline) &&
               Array.isArray(hidden.timeline))) &&
+          (!hasBlackHoleGalleryBackup ||
+            (Array.isArray(content.blackHoleGallery) &&
+              isPlainObject(overrides.blackHoleGallery) &&
+              Array.isArray(hidden.blackHoleGallery))) &&
           (!hasPromisesBackup ||
             (Array.isArray(content.promises) &&
               isPlainObject(overrides.promises) &&
@@ -618,6 +668,15 @@ function CentroUniversoSection() {
         const savedHiddenTimelineIds = hasTimelineBackup
           ? saveHiddenItemIds('timeline', hidden.timeline)
           : getHiddenItemIds('timeline')
+        const savedBlackHoleGallery = hasBlackHoleGalleryBackup
+          ? saveLocalItems('blackHoleGallery', content.blackHoleGallery)
+          : getLocalItems('blackHoleGallery')
+        const savedBlackHoleGalleryOverrides = hasBlackHoleGalleryBackup
+          ? saveLocalOverrides('blackHoleGallery', overrides.blackHoleGallery)
+          : getLocalOverrides('blackHoleGallery')
+        const savedHiddenBlackHoleGalleryIds = hasBlackHoleGalleryBackup
+          ? saveHiddenItemIds('blackHoleGallery', hidden.blackHoleGallery)
+          : getHiddenItemIds('blackHoleGallery')
         const savedPromises = hasPromisesBackup
           ? saveLocalItems('promises', content.promises)
           : getLocalItems('promises')
@@ -646,6 +705,9 @@ function CentroUniversoSection() {
         setLocalTimelinePages(savedTimelinePages)
         setTimelineOverrides(savedTimelineOverrides)
         setHiddenTimelineIds(savedHiddenTimelineIds)
+        setLocalBlackHoleGallery(savedBlackHoleGallery)
+        setBlackHoleGalleryOverrides(savedBlackHoleGalleryOverrides)
+        setHiddenBlackHoleGalleryIds(savedHiddenBlackHoleGalleryIds)
         setLocalPromises(savedPromises)
         setPromiseOverrides(savedPromiseOverrides)
         setHiddenPromiseIds(savedHiddenPromiseIds)
@@ -665,6 +727,8 @@ function CentroUniversoSection() {
         resetBaseFutureDreamForm()
         resetTimelineForm()
         resetBaseTimelineForm()
+        resetBlackHoleForm()
+        resetBaseBlackHoleForm()
         dispatchContentUpdate('all')
         dispatchContentUpdate('reasons')
         if (hasPromisesBackup) {
@@ -678,6 +742,9 @@ function CentroUniversoSection() {
         }
         if (hasTimelineBackup) {
           dispatchContentUpdate('timeline')
+        }
+        if (hasBlackHoleGalleryBackup) {
+          dispatchContentUpdate('blackHoleGallery')
         }
         dispatchLettersUpdate('monthlyLetters')
         dispatchLettersUpdate('openWhenLetters')
@@ -874,6 +941,80 @@ function CentroUniversoSection() {
     setBaseTimelineDetails('')
     setBaseTimelineMood('')
     setEditingBaseTimelineId(null)
+  }
+
+  const resetBlackHoleForm = () => {
+    setBlackHoleDate('')
+    setBlackHoleTitle('')
+    setBlackHoleDescription('')
+    setBlackHoleImage('')
+    setBlackHoleAlt('')
+    setBlackHoleTag('')
+    setBlackHoleVideoUrl('')
+    setBlackHoleImageStatus('')
+    setEditingBlackHoleId(null)
+  }
+
+  const resetBaseBlackHoleForm = () => {
+    setBaseBlackHoleDate('')
+    setBaseBlackHoleTitle('')
+    setBaseBlackHoleDescription('')
+    setBaseBlackHoleImage('')
+    setBaseBlackHoleAlt('')
+    setBaseBlackHoleTag('')
+    setBaseBlackHoleVideoUrl('')
+    setBaseBlackHoleImageStatus('')
+    setEditingBaseBlackHoleId(null)
+  }
+
+  const handleBlackHoleImageFile = (event, target = 'local') => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      const message = 'Selecciona un archivo de imagen valido.'
+      target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
+      return
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      const message = 'La imagen supera 2 MB. Elige una imagen mas ligera.'
+      target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : ''
+      if (target === 'base') {
+        setBaseBlackHoleImage(result)
+        setBaseBlackHoleImageStatus('Imagen cargada como respaldo local.')
+      } else {
+        setBlackHoleImage(result)
+        setBlackHoleImageStatus('Imagen cargada como respaldo local.')
+      }
+    }
+    reader.onerror = () => {
+      const message = 'No se pudo leer la imagen seleccionada.'
+      target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const clearBlackHoleImage = (target = 'local') => {
+    if (target === 'base') {
+      setBaseBlackHoleImage('')
+      setBaseBlackHoleImageStatus('')
+      const fileInput = document.getElementById('baseBlackHoleImageFile')
+      if (fileInput) fileInput.value = ''
+      return
+    }
+
+    setBlackHoleImage('')
+    setBlackHoleImageStatus('')
+    const fileInput = document.getElementById('blackHoleImageFile')
+    if (fileInput) fileInput.value = ''
   }
 
   const handleReasonSubmit = (event) => {
@@ -1624,6 +1765,150 @@ function CentroUniversoSection() {
     dispatchContentUpdate('timeline')
   }
 
+  const buildBlackHolePatch = ({
+    date,
+    title,
+    description,
+    image,
+    alt,
+    tag,
+    videoUrl
+  }) => ({
+    date: date.trim(),
+    title: title.trim(),
+    description: description.trim(),
+    image: image.trim(),
+    alt: alt.trim(),
+    tag: tag.trim(),
+    videoUrl: videoUrl.trim(),
+    updatedAt: new Date().toISOString()
+  })
+
+  const handleBlackHoleSubmit = (event) => {
+    event.preventDefault()
+
+    if (!blackHoleDate.trim() || !blackHoleTitle.trim() || !blackHoleDescription.trim()) {
+      alert('Por favor, completa fecha, titulo y descripcion del recuerdo.')
+      return
+    }
+
+    const patch = buildBlackHolePatch({
+      date: blackHoleDate,
+      title: blackHoleTitle,
+      description: blackHoleDescription,
+      image: blackHoleImage,
+      alt: blackHoleAlt,
+      tag: blackHoleTag,
+      videoUrl: blackHoleVideoUrl
+    })
+
+    const updatedItems = editingBlackHoleId
+      ? updateLocalItem('blackHoleGallery', editingBlackHoleId, patch)
+      : addLocalItem('blackHoleGallery', {
+          id: `local-blackhole-${Date.now()}`,
+          ...patch,
+          createdAt: new Date().toISOString()
+        })
+
+    setLocalBlackHoleGallery(updatedItems)
+    resetBlackHoleForm()
+    dispatchContentUpdate('blackHoleGallery')
+  }
+
+  const handleBlackHoleEdit = (item) => {
+    if (!item.isLocal) return
+    setActiveCrudAction('create')
+    setEditingBlackHoleId(item.id)
+    setBlackHoleDate(item.date || '')
+    setBlackHoleTitle(item.title || '')
+    setBlackHoleDescription(item.description || item.caption || '')
+    setBlackHoleImage(item.image || '')
+    setBlackHoleAlt(item.alt || '')
+    setBlackHoleTag(item.tag || '')
+    setBlackHoleVideoUrl(item.videoUrl || '')
+    setBlackHoleImageStatus('')
+  }
+
+  const handleBlackHoleDelete = (item) => {
+    if (!item.isLocal) return
+
+    if (window.confirm('Â¿Seguro que quieres eliminar este recuerdo local?')) {
+      const updatedItems = deleteLocalItem('blackHoleGallery', item.id)
+      setLocalBlackHoleGallery(updatedItems)
+
+      if (editingBlackHoleId === item.id) {
+        resetBlackHoleForm()
+      }
+
+      dispatchContentUpdate('blackHoleGallery')
+    }
+  }
+
+  const handleBaseBlackHoleEdit = (item) => {
+    setEditingBaseBlackHoleId(item.id)
+    setBaseBlackHoleDate(item.date || '')
+    setBaseBlackHoleTitle(item.title || '')
+    setBaseBlackHoleDescription(item.description || item.caption || '')
+    setBaseBlackHoleImage(item.image || '')
+    setBaseBlackHoleAlt(item.alt || '')
+    setBaseBlackHoleTag(item.tag || '')
+    setBaseBlackHoleVideoUrl(item.videoUrl || '')
+    setBaseBlackHoleImageStatus('')
+  }
+
+  const handleBaseBlackHoleSubmit = (event) => {
+    event.preventDefault()
+
+    if (!editingBaseBlackHoleId || !baseBlackHoleDate.trim() || !baseBlackHoleTitle.trim() || !baseBlackHoleDescription.trim()) {
+      alert('Selecciona un recuerdo base y completa fecha, titulo y descripcion.')
+      return
+    }
+
+    const updatedOverrides = setLocalOverride('blackHoleGallery', editingBaseBlackHoleId, buildBlackHolePatch({
+      date: baseBlackHoleDate,
+      title: baseBlackHoleTitle,
+      description: baseBlackHoleDescription,
+      image: baseBlackHoleImage,
+      alt: baseBlackHoleAlt,
+      tag: baseBlackHoleTag,
+      videoUrl: baseBlackHoleVideoUrl
+    }))
+
+    setBlackHoleGalleryOverrides(updatedOverrides)
+    resetBaseBlackHoleForm()
+    dispatchContentUpdate('blackHoleGallery')
+  }
+
+  const handleBaseBlackHoleRestore = (itemId) => {
+    const updatedOverrides = deleteLocalOverride('blackHoleGallery', itemId)
+    setBlackHoleGalleryOverrides(updatedOverrides)
+
+    if (String(editingBaseBlackHoleId) === String(itemId)) {
+      resetBaseBlackHoleForm()
+    }
+
+    dispatchContentUpdate('blackHoleGallery')
+  }
+
+  const handleBaseBlackHoleHide = (item) => {
+    if (window.confirm('Â¿Seguro que quieres ocultar este recuerdo base? Podras restaurarlo despues.')) {
+      const updatedHiddenIds = hideDefaultItem('blackHoleGallery', item.id)
+      setHiddenBlackHoleGalleryIds(updatedHiddenIds)
+
+      if (String(editingBaseBlackHoleId) === String(item.id)) {
+        resetBaseBlackHoleForm()
+      }
+
+      dispatchContentUpdate('blackHoleGallery')
+    }
+  }
+
+  const handleBaseBlackHoleUnhide = (itemId) => {
+    const updatedHiddenIds = restoreHiddenItem('blackHoleGallery', itemId)
+    setHiddenBlackHoleGalleryIds(updatedHiddenIds)
+    dispatchContentUpdate('blackHoleGallery')
+  }
+
   const handleReset = () => {
     if (
       window.confirm(
@@ -1785,6 +2070,8 @@ function CentroUniversoSection() {
     resetBaseFutureDreamForm()
     resetTimelineForm()
     resetBaseTimelineForm()
+    resetBlackHoleForm()
+    resetBaseBlackHoleForm()
   }
 
   const handleCrudModuleChange = (moduleId) => {
@@ -3338,6 +3625,377 @@ function CentroUniversoSection() {
                       className="action-icon-btn delete"
                       onClick={() => handleTimelineDelete(page)}
                       title="Eliminar pagina local"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className={`base-blackhole-editor ${activeCrudModule === 'blackHoleGallery' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-blackhole-editor">
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
+          <div className="reasons-list-header">
+            <h3>Agujero negro original</h3>
+            <span>{blackHoleGalleryData.length} base</span>
+          </div>
+
+          <div className="reason-stats-grid">
+            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseBlackHoleGallery)} label="Base" />
+            <CrudStatButton filter="edited" value={editedBaseBlackHoleGalleryCount} label="Editadas" />
+            <CrudStatButton filter="hidden" value={hiddenBaseBlackHoleGalleryCount} label="Ocultas" />
+            <CrudStatButton filter="local" value={localBlackHoleGallery.length} label="Locales" />
+          </div>
+
+          <div className="base-reasons-list">
+            {filteredBaseBlackHoleGallery.length === 0 ? (
+              <p className="no-items">No hay elementos en este filtro.</p>
+            ) : filteredBaseBlackHoleGallery.map((item) => (
+              <div
+                className={`base-reason-row ${item.isOverridden ? 'is-overridden' : ''} ${item.isHidden ? 'is-hidden' : ''}`}
+                key={item.id}
+              >
+                <div className="base-reason-copy">
+                  <strong>{item.date} · {item.title}</strong>
+                  <span>{item.description}</span>
+                  <small>{item.isHidden ? 'Oculto localmente' : item.isOverridden ? 'Editado localmente' : 'Original'}</small>
+                </div>
+
+                <div className="base-reason-actions">
+                  <button type="button" className="ghost-button" onClick={() => handleBaseBlackHoleEdit(item)}>
+                    Editar
+                  </button>
+
+                  {item.isOverridden && (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseBlackHoleRestore(item.id)}>
+                      Restaurar
+                    </button>
+                  )}
+
+                  {item.isHidden ? (
+                    <button type="button" className="ghost-button" onClick={() => handleBaseBlackHoleUnhide(item.id)}>
+                      Mostrar
+                    </button>
+                  ) : (
+                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseBlackHoleHide(item)}>
+                      Ocultar
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {hiddenBaseBlackHoleGalleryCount > 0 && (
+            <div className="hidden-reasons-box">
+              <h4>Recuerdos ocultos</h4>
+              {visibleBaseBlackHoleGallery.filter((item) => item.isHidden).map((item) => (
+                <button type="button" className="ghost-button" key={item.id} onClick={() => handleBaseBlackHoleUnhide(item.id)}>
+                  Mostrar {item.title}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="base-reasons-panel">
+          <div className="crud-subsection-title">Editar original</div>
+          <h3>
+            <Edit2 size={18} />
+            Override del agujero negro
+          </h3>
+
+          <form className="editor-form" onSubmit={handleBaseBlackHoleSubmit}>
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleDate">Fecha / etiqueta *</label>
+              <input
+                id="baseBlackHoleDate"
+                type="text"
+                value={baseBlackHoleDate}
+                onChange={(event) => setBaseBlackHoleDate(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleTitle">Titulo *</label>
+              <input
+                id="baseBlackHoleTitle"
+                type="text"
+                value={baseBlackHoleTitle}
+                onChange={(event) => setBaseBlackHoleTitle(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleDescription">Descripcion *</label>
+              <textarea
+                id="baseBlackHoleDescription"
+                rows="4"
+                value={baseBlackHoleDescription}
+                onChange={(event) => setBaseBlackHoleDescription(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleImage">Imagen / URL</label>
+              <input
+                id="baseBlackHoleImage"
+                type="text"
+                value={baseBlackHoleImage}
+                onChange={(event) => setBaseBlackHoleImage(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleImageFile">Cargar foto</label>
+              <input
+                id="baseBlackHoleImageFile"
+                type="file"
+                accept="image/*"
+                onChange={(event) => handleBlackHoleImageFile(event, 'base')}
+                disabled={!editingBaseBlackHoleId}
+              />
+              {baseBlackHoleImageStatus && <small className="editor-file-hint">{baseBlackHoleImageStatus}</small>}
+            </div>
+
+            {baseBlackHoleImage && (
+              <div className="editor-image-preview">
+                <button
+                  type="button"
+                  className="editor-image-remove"
+                  onClick={() => clearBlackHoleImage('base')}
+                  aria-label="Quitar imagen"
+                  title="Quitar imagen"
+                >
+                  ×
+                </button>
+                <img src={baseBlackHoleImage} alt={baseBlackHoleAlt || baseBlackHoleTitle || 'Preview'} />
+              </div>
+            )}
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleAlt">Texto alt</label>
+              <input
+                id="baseBlackHoleAlt"
+                type="text"
+                value={baseBlackHoleAlt}
+                onChange={(event) => setBaseBlackHoleAlt(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleTag">Etiqueta</label>
+              <input
+                id="baseBlackHoleTag"
+                type="text"
+                value={baseBlackHoleTag}
+                onChange={(event) => setBaseBlackHoleTag(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="baseBlackHoleVideoUrl">URL de video opcional</label>
+              <input
+                id="baseBlackHoleVideoUrl"
+                type="text"
+                value={baseBlackHoleVideoUrl}
+                onChange={(event) => setBaseBlackHoleVideoUrl(event.target.value)}
+                disabled={!editingBaseBlackHoleId}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingBaseBlackHoleId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseBlackHoleForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseBlackHoleId}>
+                Guardar override
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className={`local-blackhole-editor ${activeCrudModule === 'blackHoleGallery' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-blackhole-editor">
+        <div className="reasons-editor-card">
+          <div className="crud-subsection-title">Crear nueva</div>
+          <h3>
+            <Plus size={18} />
+            Editor local del agujero negro
+          </h3>
+
+          <div className="editor-warning">
+            <AlertTriangle size={15} />
+            <span>Estos recuerdos son locales; el JSON original no se modifica.</span>
+          </div>
+
+          <form className="editor-form" onSubmit={handleBlackHoleSubmit}>
+            <div className="editor-field">
+              <label htmlFor="blackHoleDate">Fecha / etiqueta *</label>
+              <input
+                id="blackHoleDate"
+                type="text"
+                placeholder="Ej. Un recuerdo bonito"
+                value={blackHoleDate}
+                onChange={(event) => setBlackHoleDate(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleTitle">Titulo *</label>
+              <input
+                id="blackHoleTitle"
+                type="text"
+                placeholder="Ej. Una foto que quiero guardar"
+                value={blackHoleTitle}
+                onChange={(event) => setBlackHoleTitle(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleDescription">Descripcion *</label>
+              <textarea
+                id="blackHoleDescription"
+                rows="4"
+                placeholder="Ej. Este recuerdo se queda orbitando aqui porque significa mucho."
+                value={blackHoleDescription}
+                onChange={(event) => setBlackHoleDescription(event.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleImage">Imagen / URL</label>
+              <input
+                id="blackHoleImage"
+                type="text"
+                placeholder="/DistanciaCero/images/blackhole-gallery/foto.jpg"
+                value={blackHoleImage}
+                onChange={(event) => setBlackHoleImage(event.target.value)}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleImageFile">Cargar foto</label>
+              <input
+                id="blackHoleImageFile"
+                type="file"
+                accept="image/*"
+                onChange={(event) => handleBlackHoleImageFile(event, 'local')}
+              />
+              {blackHoleImageStatus && <small className="editor-file-hint">{blackHoleImageStatus}</small>}
+            </div>
+
+            {blackHoleImage && (
+              <div className="editor-image-preview">
+                <button
+                  type="button"
+                  className="editor-image-remove"
+                  onClick={() => clearBlackHoleImage('local')}
+                  aria-label="Quitar imagen"
+                  title="Quitar imagen"
+                >
+                  ×
+                </button>
+                <img src={blackHoleImage} alt={blackHoleAlt || blackHoleTitle || 'Preview'} />
+              </div>
+            )}
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleAlt">Texto alt</label>
+              <input
+                id="blackHoleAlt"
+                type="text"
+                placeholder="Ej. Recuerdo bonito de Ale y Yori"
+                value={blackHoleAlt}
+                onChange={(event) => setBlackHoleAlt(event.target.value)}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleTag">Etiqueta</label>
+              <input
+                id="blackHoleTag"
+                type="text"
+                placeholder="Ej. Mi lugar favorito"
+                value={blackHoleTag}
+                onChange={(event) => setBlackHoleTag(event.target.value)}
+              />
+            </div>
+
+            <div className="editor-field">
+              <label htmlFor="blackHoleVideoUrl">URL de video opcional</label>
+              <input
+                id="blackHoleVideoUrl"
+                type="text"
+                placeholder="Opcional, no se reproduce todavia"
+                value={blackHoleVideoUrl}
+                onChange={(event) => setBlackHoleVideoUrl(event.target.value)}
+              />
+            </div>
+
+            <div className="form-actions">
+              {editingBlackHoleId && (
+                <button type="button" className="ghost-button cancel-btn" onClick={resetBlackHoleForm}>
+                  Cancelar
+                </button>
+              )}
+              <button type="submit" className="control-btn submit-btn">
+                {editingBlackHoleId ? 'Actualizar recuerdo local' : 'Guardar recuerdo local'}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="reasons-list-card">
+          <div className="crud-subsection-title">Creadas por ti</div>
+          <div className="reasons-list-header">
+            <h3>Recuerdos locales</h3>
+            <span>{localBlackHoleGallery.length} locales</span>
+          </div>
+
+          {localBlackHoleGallery.length === 0 ? (
+            <p className="no-items">No hay recuerdos locales creados.</p>
+          ) : (
+            <div className="reason-items-list">
+              {localBlackHoleGallery.map((item) => (
+                <div className="reason-item-row" key={item.id}>
+                  <div className="item-info">
+                    <strong>{item.date} · {item.title}</strong>
+                    <span>{item.description}</span>
+                  </div>
+
+                  <div className="item-actions">
+                    <button
+                      type="button"
+                      className="action-icon-btn edit"
+                      onClick={() => handleBlackHoleEdit(item)}
+                      title="Editar recuerdo local"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon-btn delete"
+                      onClick={() => handleBlackHoleDelete(item)}
+                      title="Eliminar recuerdo local"
                     >
                       <Trash2 size={14} />
                     </button>

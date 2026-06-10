@@ -4,6 +4,7 @@ import { Html, OrbitControls, Stars } from '@react-three/drei'
 import * as THREE from 'three'
 import SectionTitle from './SectionTitle'
 import { Aperture, Heart, Image as ImageIcon, MousePointer2, Orbit, Sparkles, X, ZoomIn } from 'lucide-react'
+import { mergeWithLocalItems } from '../utils/localContentStore'
 
 function AccretionDiskLayer({
   inner = 1.15,
@@ -369,7 +370,10 @@ function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
 }
 
 function BlackHoleGallerySection({ items = [] }) {
-  const visibleItems = useMemo(() => items.filter(Boolean), [items])
+  const [localVersion, setLocalVersion] = useState(0)
+  const visibleItems = useMemo(() => {
+    return mergeWithLocalItems(Array.isArray(items) ? items : [], 'blackHoleGallery').filter(Boolean)
+  }, [items, localVersion])
   const [isOpen, setIsOpen] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
@@ -380,10 +384,28 @@ function BlackHoleGallerySection({ items = [] }) {
   const warpLines = useMemo(() => Array.from({ length: 32 }, (_, index) => index), [])
 
   useEffect(() => {
+    const activeStillExists = activeItem && visibleItems.some((item) => String(item.id) === String(activeItem.id))
+    if (activeItem && !activeStillExists) {
+      setActiveItem(visibleItems[0] || null)
+      return
+    }
+
     if (!activeItem && visibleItems.length > 0) {
       setActiveItem(visibleItems[0])
     }
   }, [activeItem, visibleItems])
+
+  useEffect(() => {
+    const handleContentUpdate = (event) => {
+      const collection = event.detail?.collection
+      if (collection === 'blackHoleGallery' || collection === 'all') {
+        setLocalVersion((version) => version + 1)
+      }
+    }
+
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+    return () => window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+  }, [])
 
   useEffect(() => {
     if (!isEntering) return

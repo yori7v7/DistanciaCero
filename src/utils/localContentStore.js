@@ -3,7 +3,8 @@ const COLLECTION_KEYS = {
   promises: 'distancia-cero-content-promises',
   importantDates: 'distancia-cero-content-importantDates',
   futureDreams: 'distancia-cero-content-futureDreams',
-  timeline: 'distancia-cero-content-timeline'
+  timeline: 'distancia-cero-content-timeline',
+  blackHoleGallery: 'distancia-cero-content-blackHoleGallery'
 }
 
 const OVERRIDE_KEYS = {
@@ -13,7 +14,8 @@ const OVERRIDE_KEYS = {
   openWhenLetters: 'distancia-cero-content-openWhenLetters-overrides',
   importantDates: 'distancia-cero-content-importantDates-overrides',
   futureDreams: 'distancia-cero-content-futureDreams-overrides',
-  timeline: 'distancia-cero-content-timeline-overrides'
+  timeline: 'distancia-cero-content-timeline-overrides',
+  blackHoleGallery: 'distancia-cero-content-blackHoleGallery-overrides'
 }
 
 const HIDDEN_KEYS = {
@@ -23,7 +25,8 @@ const HIDDEN_KEYS = {
   openWhenLetters: 'distancia-cero-content-openWhenLetters-hidden',
   importantDates: 'distancia-cero-content-importantDates-hidden',
   futureDreams: 'distancia-cero-content-futureDreams-hidden',
-  timeline: 'distancia-cero-content-timeline-hidden'
+  timeline: 'distancia-cero-content-timeline-hidden',
+  blackHoleGallery: 'distancia-cero-content-blackHoleGallery-hidden'
 }
 
 function getStorageKey(collectionName) {
