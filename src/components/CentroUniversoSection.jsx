@@ -561,7 +561,7 @@ function CentroUniversoSection() {
           }
 
           const confirmed = window.confirm(
-            'Esto reemplazara solo las cartas locales guardadas en este navegador. No tocara razones. ¿Quieres continuar?'
+          'Esto reemplazará solo las cartas locales guardadas en este navegador. No tocará razones, promesas, fechas, wishlist, diario, galería ni playlist. ¿Quieres continuar?'
           )
 
           if (!confirmed) {
@@ -671,7 +671,7 @@ function CentroUniversoSection() {
         }
 
         const confirmed = window.confirm(
-          'Esto reemplazara cartas locales, razones locales, overrides y razones ocultas de este navegador. ¿Quieres continuar?'
+          'Esto reemplazará el respaldo local de cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist en este navegador. ¿Quieres continuar?'
         )
 
         if (!confirmed) {
@@ -2521,7 +2521,7 @@ function CentroUniversoSection() {
       <div className="backup-card">
         <div className="backup-header">
           <h3>Respaldo local del universo</h3>
-          <p>Exporta o restaura cartas locales, ediciones de cartas mensuales, razones, promesas y elementos ocultos.</p>
+          <p>Exporta o restaura cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist con sus ediciones locales y elementos ocultos.</p>
         </div>
 
         <div className="backup-actions">
