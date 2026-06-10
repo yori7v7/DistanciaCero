@@ -194,13 +194,21 @@ function CentroUniversoSection() {
     </button>
   )
 
+  const safeReadJsonArray = (key, fallback = []) => {
+    try {
+      const rawValue = localStorage.getItem(key)
+      const parsedValue = rawValue ? JSON.parse(rawValue) : fallback
+      return Array.isArray(parsedValue) ? parsedValue : fallback
+    } catch (error) {
+      return fallback
+    }
+  }
+
   useEffect(() => {
     setIsSimUnlocked(localStorage.getItem('distancia-cero-sim-unlocked') === '1')
-    
-    const m = localStorage.getItem('distancia-cero-local-monthly-letters')
-    const ow = localStorage.getItem('distancia-cero-local-open-when')
-    setLocalMonthly(m ? JSON.parse(m) : [])
-    setLocalOpenWhen(ow ? JSON.parse(ow) : [])
+
+    setLocalMonthly(safeReadJsonArray('distancia-cero-local-monthly-letters'))
+    setLocalOpenWhen(safeReadJsonArray('distancia-cero-local-open-when'))
     setLocalReasons(getLocalItems('reasons'))
     setReasonOverrides(getLocalOverrides('reasons'))
     setHiddenReasonIds(getHiddenItemIds('reasons'))
@@ -418,13 +426,7 @@ function CentroUniversoSection() {
   }
 
   const readLocalLetters = (storageKey) => {
-    try {
-      const rawValue = localStorage.getItem(storageKey)
-      const parsedValue = rawValue ? JSON.parse(rawValue) : []
-      return Array.isArray(parsedValue) ? parsedValue : []
-    } catch (error) {
-      return []
-    }
+    return safeReadJsonArray(storageKey)
   }
 
   const isPlainObject = (value) => {
