@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { CalendarDays, Heart } from 'lucide-react'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 const placeholderDate = {
   id: 'soon-date',
@@ -13,17 +13,17 @@ const placeholderDate = {
 }
 
 function ImportantDatesSection({ dates = [] }) {
-  const [editableDates, setEditableDates] = useState(() => mergeWithLocalItems(dates, 'importantDates'))
+  const [editableDates, setEditableDates] = useState(() => mergeCollectionWithLocal(dates, 'importantDates'))
 
   useEffect(() => {
-    setEditableDates(mergeWithLocalItems(dates, 'importantDates'))
+    setEditableDates(mergeCollectionWithLocal(dates, 'importantDates'))
   }, [dates])
 
   useEffect(() => {
     const handleContentUpdate = (event) => {
       const collection = event.detail?.collection
       if (!['importantDates', 'all'].includes(collection)) return
-      setEditableDates(mergeWithLocalItems(dates, 'importantDates'))
+      setEditableDates(mergeCollectionWithLocal(dates, 'importantDates'))
     }
 
     window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
