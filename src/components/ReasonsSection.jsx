@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 const BALL_SIZE = 62
 const RADIUS = BALL_SIZE / 2
@@ -31,7 +31,7 @@ function shuffleArray(array) {
 }
 
 function ReasonsSection({ reasons = [] }) {
-  const [allReasons, setAllReasons] = useState(() => mergeWithLocalItems(reasons, 'reasons'))
+  const [allReasons, setAllReasons] = useState(() => mergeCollectionWithLocal(reasons, 'reasons'))
   const [selectedReason, setSelectedReason] = useState(null)
   const selectedReasonRef = useRef(null)
   const containerRef = useRef(null)
@@ -42,13 +42,13 @@ function ReasonsSection({ reasons = [] }) {
   const hasInitializedRef = useRef(false)
 
   useEffect(() => {
-    setAllReasons(mergeWithLocalItems(reasons, 'reasons'))
+    setAllReasons(mergeCollectionWithLocal(reasons, 'reasons'))
   }, [reasons])
 
   useEffect(() => {
     const handleContentUpdate = (event) => {
       if (event.detail?.collection !== 'reasons') return
-      setAllReasons(mergeWithLocalItems(reasons, 'reasons'))
+      setAllReasons(mergeCollectionWithLocal(reasons, 'reasons'))
       hasInitializedRef.current = false
     }
 
