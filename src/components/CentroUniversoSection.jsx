@@ -205,16 +205,6 @@ function CentroUniversoSection() {
     </button>
   )
 
-  const safeReadJsonArray = (key, fallback = []) => {
-    try {
-      const rawValue = localStorage.getItem(key)
-      const parsedValue = rawValue ? JSON.parse(rawValue) : fallback
-      return Array.isArray(parsedValue) ? parsedValue : fallback
-    } catch (error) {
-      return fallback
-    }
-  }
-
   useEffect(() => {
     setIsSimUnlocked(getSimulationUnlocked())
 
@@ -459,10 +449,6 @@ function CentroUniversoSection() {
     window.location.reload()
   }
 
-  const readLocalLetters = (storageKey) => {
-    return safeReadJsonArray(storageKey)
-  }
-
   const isPlainObject = (value) => {
     return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
   }
@@ -521,57 +507,6 @@ function CentroUniversoSection() {
     setBackupStatus({ type: 'success', text: 'Respaldo local v2 creado correctamente.' })
   }
 
-  const handleImportLocalLetters = (event) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = () => {
-      try {
-        const importedData = JSON.parse(reader.result)
-        const isValidBackup =
-          importedData &&
-          Object.prototype.hasOwnProperty.call(importedData, 'version') &&
-          Array.isArray(importedData.monthlyLetters) &&
-          Array.isArray(importedData.openWhenLetters)
-
-        if (!isValidBackup) {
-          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato válido de respaldo.' })
-          return
-        }
-
-        const confirmed = window.confirm(
-          'Esto reemplazara las cartas locales guardadas en este navegador. ¿Quieres continuar?'
-        )
-
-        if (!confirmed) {
-          setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron las cartas locales.' })
-          return
-        }
-
-        saveLegacyMonthlyLetters(importedData.monthlyLetters)
-        saveLegacyOpenWhenLetters(importedData.openWhenLetters)
-        setLocalMonthly(importedData.monthlyLetters)
-        setLocalOpenWhen(importedData.openWhenLetters)
-        setEditingId(null)
-        setTitle('')
-        setPreview('')
-        setContentRaw('')
-        setTag('')
-        setLetterLocked(false)
-        setBackupStatus({ type: 'success', text: 'Cartas locales importadas correctamente.' })
-      } catch (error) {
-        setBackupStatus({ type: 'error', text: 'No se pudo leer el JSON seleccionado.' })
-      } finally {
-        event.target.value = ''
-      }
-    }
-    reader.onerror = () => {
-      setBackupStatus({ type: 'error', text: 'No se pudo abrir el archivo seleccionado.' })
-      event.target.value = ''
-    }
-    reader.readAsText(file)
-  }
 
   const handleImportLocalBackup = (event) => {
     const file = event.target.files?.[0]
