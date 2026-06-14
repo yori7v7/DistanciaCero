@@ -4,7 +4,7 @@ import { Html, OrbitControls, Stars } from '@react-three/drei'
 import * as THREE from 'three'
 import SectionTitle from './SectionTitle'
 import { Aperture, Heart, Image as ImageIcon, MousePointer2, Orbit, Sparkles, X, ZoomIn } from 'lucide-react'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 function AccretionDiskLayer({
   inner = 1.15,
@@ -372,7 +372,7 @@ function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
 function BlackHoleGallerySection({ items = [] }) {
   const [localVersion, setLocalVersion] = useState(0)
   const visibleItems = useMemo(() => {
-    return mergeWithLocalItems(Array.isArray(items) ? items : [], 'blackHoleGallery').filter(Boolean)
+    return mergeCollectionWithLocal(Array.isArray(items) ? items : [], 'blackHoleGallery').filter(Boolean)
   }, [items, localVersion])
   const [isOpen, setIsOpen] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
