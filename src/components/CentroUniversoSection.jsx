@@ -11,20 +11,20 @@ import timelineData from '../data/timeline.json'
 import blackHoleGalleryData from '../data/blackHoleGallery.json'
 import playlistData from '../data/playlist.json'
 import {
-  addLocalItem,
-  deleteLocalItem,
-  deleteLocalOverride,
-  getHiddenItemIds,
-  getLocalItems,
-  getLocalOverrides,
-  hideDefaultItem,
-  restoreHiddenItem,
-  saveHiddenItemIds,
-  saveLocalItems,
-  saveLocalOverrides,
-  setLocalOverride,
-  updateLocalItem
-} from '../utils/localContentStore'
+  addCollectionItem as addLocalItem,
+  deleteCollectionItem as deleteLocalItem,
+  deleteCollectionOverride as deleteLocalOverride,
+  getCollectionHiddenIds as getHiddenItemIds,
+  getCollectionItems as getLocalItems,
+  getCollectionOverrides as getLocalOverrides,
+  hideCollectionItem as hideDefaultItem,
+  restoreCollectionItem as restoreHiddenItem,
+  saveCollectionHiddenIds as saveHiddenItemIds,
+  saveCollectionItems as saveLocalItems,
+  saveCollectionOverrides as saveLocalOverrides,
+  setCollectionOverride as setLocalOverride,
+  updateCollectionItem as updateLocalItem
+} from '../services/contentService'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
