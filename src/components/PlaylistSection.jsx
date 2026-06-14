@@ -2,7 +2,7 @@ import SectionTitle from './SectionTitle'
 import { ExternalLink, Headphones, Music, Pause, Play, Sparkles, Square } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useAudio } from '../context/AudioContext'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 function PlaylistSection({ playlist = [] }) {
   const {
@@ -16,7 +16,7 @@ function PlaylistSection({ playlist = [] }) {
   const [localVersion, setLocalVersion] = useState(0)
 
   const visiblePlaylist = useMemo(() => {
-    return mergeWithLocalItems(Array.isArray(playlist) ? playlist : [], 'playlist').filter(Boolean)
+    return mergeCollectionWithLocal(Array.isArray(playlist) ? playlist : [], 'playlist').filter(Boolean)
   }, [playlist, localVersion])
 
   useEffect(() => {
