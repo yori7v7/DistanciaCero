@@ -17,11 +17,15 @@ import {
   getCollectionHiddenIds as getHiddenItemIds,
   getCollectionItems as getLocalItems,
   getCollectionOverrides as getLocalOverrides,
+  getLegacyMonthlyLetters,
+  getLegacyOpenWhenLetters,
   hideCollectionItem as hideDefaultItem,
   restoreCollectionItem as restoreHiddenItem,
   saveCollectionHiddenIds as saveHiddenItemIds,
   saveCollectionItems as saveLocalItems,
   saveCollectionOverrides as saveLocalOverrides,
+  saveLegacyMonthlyLetters,
+  saveLegacyOpenWhenLetters,
   setCollectionOverride as setLocalOverride,
   updateCollectionItem as updateLocalItem
 } from '../services/contentService'
@@ -207,8 +211,8 @@ function CentroUniversoSection() {
   useEffect(() => {
     setIsSimUnlocked(localStorage.getItem('distancia-cero-sim-unlocked') === '1')
 
-    setLocalMonthly(safeReadJsonArray('distancia-cero-local-monthly-letters'))
-    setLocalOpenWhen(safeReadJsonArray('distancia-cero-local-open-when'))
+    setLocalMonthly(getLegacyMonthlyLetters())
+    setLocalOpenWhen(getLegacyOpenWhenLetters())
     setLocalReasons(getLocalItems('reasons'))
     setReasonOverrides(getLocalOverrides('reasons'))
     setHiddenReasonIds(getHiddenItemIds('reasons'))
@@ -439,8 +443,8 @@ function CentroUniversoSection() {
       exportedAt: new Date().toISOString(),
       source: 'Distancia Cero - Centro del Universo',
       content: {
-        monthlyLetters: readLocalLetters('distancia-cero-local-monthly-letters'),
-        openWhenLetters: readLocalLetters('distancia-cero-local-open-when'),
+        monthlyLetters: getLegacyMonthlyLetters(),
+        openWhenLetters: getLegacyOpenWhenLetters(),
         reasons: getLocalItems('reasons'),
         promises: getLocalItems('promises'),
         importantDates: getLocalItems('importantDates'),
@@ -515,14 +519,8 @@ function CentroUniversoSection() {
           return
         }
 
-        localStorage.setItem(
-          'distancia-cero-local-monthly-letters',
-          JSON.stringify(importedData.monthlyLetters)
-        )
-        localStorage.setItem(
-          'distancia-cero-local-open-when',
-          JSON.stringify(importedData.openWhenLetters)
-        )
+        saveLegacyMonthlyLetters(importedData.monthlyLetters)
+        saveLegacyOpenWhenLetters(importedData.openWhenLetters)
         setLocalMonthly(importedData.monthlyLetters)
         setLocalOpenWhen(importedData.openWhenLetters)
         setEditingId(null)
@@ -569,14 +567,8 @@ function CentroUniversoSection() {
             return
           }
 
-          localStorage.setItem(
-            'distancia-cero-local-monthly-letters',
-            JSON.stringify(importedData.monthlyLetters)
-          )
-          localStorage.setItem(
-            'distancia-cero-local-open-when',
-            JSON.stringify(importedData.openWhenLetters)
-          )
+          saveLegacyMonthlyLetters(importedData.monthlyLetters)
+          saveLegacyOpenWhenLetters(importedData.openWhenLetters)
           setLocalMonthly(importedData.monthlyLetters)
           setLocalOpenWhen(importedData.openWhenLetters)
           setEditingId(null)
@@ -679,14 +671,8 @@ function CentroUniversoSection() {
           return
         }
 
-        localStorage.setItem(
-          'distancia-cero-local-monthly-letters',
-          JSON.stringify(content.monthlyLetters)
-        )
-        localStorage.setItem(
-          'distancia-cero-local-open-when',
-          JSON.stringify(content.openWhenLetters)
-        )
+        saveLegacyMonthlyLetters(content.monthlyLetters)
+        saveLegacyOpenWhenLetters(content.openWhenLetters)
         const savedReasons = saveLocalItems('reasons', content.reasons)
         const savedOverrides = saveLocalOverrides('reasons', overrides.reasons)
         const savedHiddenIds = saveHiddenItemIds('reasons', hidden.reasons)
@@ -2266,9 +2252,6 @@ function CentroUniversoSection() {
       .filter((p) => p.length > 0)
 
     const isMonthly = letterType === 'monthly'
-    const storageKey = isMonthly
-      ? 'distancia-cero-local-monthly-letters'
-      : 'distancia-cero-local-open-when'
     const currentList = isMonthly ? localMonthly : localOpenWhen
     const wasEditing = Boolean(editingId)
 
@@ -2306,11 +2289,12 @@ function CentroUniversoSection() {
       updatedList = [...currentList, newItem]
     }
 
-    localStorage.setItem(storageKey, JSON.stringify(updatedList))
     if (isMonthly) {
+      saveLegacyMonthlyLetters(updatedList)
       setLocalMonthly(updatedList)
       dispatchLettersUpdate('monthlyLetters')
     } else {
+      saveLegacyOpenWhenLetters(updatedList)
       setLocalOpenWhen(updatedList)
       dispatchLettersUpdate('openWhenLetters')
     }
@@ -2347,17 +2331,15 @@ function CentroUniversoSection() {
   const handleDelete = (id, type) => {
     if (window.confirm('¿Seguro que quieres eliminar esta carta local?')) {
       const isMonthly = type === 'monthly'
-      const storageKey = isMonthly
-        ? 'distancia-cero-local-monthly-letters'
-        : 'distancia-cero-local-open-when'
       const currentList = isMonthly ? localMonthly : localOpenWhen
       const updatedList = currentList.filter((item) => item.id !== id)
 
-      localStorage.setItem(storageKey, JSON.stringify(updatedList))
       if (isMonthly) {
+        saveLegacyMonthlyLetters(updatedList)
         setLocalMonthly(updatedList)
         dispatchLettersUpdate('monthlyLetters')
       } else {
+        saveLegacyOpenWhenLetters(updatedList)
         setLocalOpenWhen(updatedList)
         dispatchLettersUpdate('openWhenLetters')
       }
