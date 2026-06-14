@@ -1,30 +1,27 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
-import { getHiddenItemIds, getLocalOverrides } from '../utils/localContentStore'
-
-function readLocalMonthlyLetters() {
-  try {
-    const rawValue = localStorage.getItem('distancia-cero-local-monthly-letters')
-    const parsedValue = rawValue ? JSON.parse(rawValue) : []
-    return Array.isArray(parsedValue) ? parsedValue : []
-  } catch (error) {
-    return []
-  }
-}
+import {
+  getCollectionHiddenIds,
+  getCollectionOverrides,
+  getLegacyMonthlyLetters,
+  getSimulationUnlocked,
+  isMonthlyLetterOpened,
+  setMonthlyLetterOpened
+} from '../services/contentService'
 
 function MonthlyLetters({ letters }) {
   const [selectedLetterId, setSelectedLetterId] = useState(null)
-  const [localLetters, setLocalLetters] = useState(() => readLocalMonthlyLetters())
-  const [monthlyOverrides, setMonthlyOverrides] = useState(() => getLocalOverrides('monthlyLetters'))
-  const [hiddenMonthlyIds, setHiddenMonthlyIds] = useState(() => getHiddenItemIds('monthlyLetters'))
-  const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
+  const [localLetters, setLocalLetters] = useState(() => getLegacyMonthlyLetters())
+  const [monthlyOverrides, setMonthlyOverrides] = useState(() => getCollectionOverrides('monthlyLetters'))
+  const [hiddenMonthlyIds, setHiddenMonthlyIds] = useState(() => getCollectionHiddenIds('monthlyLetters'))
+  const isSimUnlocked = getSimulationUnlocked()
 
   useEffect(() => {
     const refreshMonthlyLetters = () => {
-      setLocalLetters(readLocalMonthlyLetters())
-      setMonthlyOverrides(getLocalOverrides('monthlyLetters'))
-      setHiddenMonthlyIds(getHiddenItemIds('monthlyLetters'))
+      setLocalLetters(getLegacyMonthlyLetters())
+      setMonthlyOverrides(getCollectionOverrides('monthlyLetters'))
+      setHiddenMonthlyIds(getCollectionHiddenIds('monthlyLetters'))
     }
 
     const handleContentUpdate = (event) => {
@@ -65,8 +62,7 @@ function MonthlyLetters({ letters }) {
     const isLocked = isSimUnlocked ? false : letter.locked
     if (isLocked) return
 
-    const storageKey = `distancia-cero-monthly-letter-${letter.id}`
-    localStorage.setItem(storageKey, 'opened')
+    setMonthlyLetterOpened(letter.id, true)
     setSelectedLetterId(letter.id)
 
     // Scroll suave al inicio de la sección
@@ -89,7 +85,7 @@ function MonthlyLetters({ letters }) {
   }
 
   const totalLetters = allLetters.length
-  const openedLetters = allLetters.filter((letter) => localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened').length
+  const openedLetters = allLetters.filter((letter) => isMonthlyLetterOpened(letter.id)).length
 
   const activeLetter = allLetters.find((letter) => String(letter.id) === String(selectedLetterId))
 
@@ -140,7 +136,7 @@ function MonthlyLetters({ letters }) {
 
       <div className="card-grid">
         {allLetters.map((letter) => {
-          const isOpened = localStorage.getItem(`distancia-cero-monthly-letter-${letter.id}`) === 'opened'
+          const isOpened = isMonthlyLetterOpened(letter.id)
           const cardLockedForClick = isSimUnlocked ? false : letter.locked
 
           return (
