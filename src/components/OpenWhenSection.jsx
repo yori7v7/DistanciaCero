@@ -1,30 +1,27 @@
 import { useEffect, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { Lock, ChevronLeft, Check, BookOpen } from 'lucide-react'
-import { getHiddenItemIds, getLocalOverrides } from '../utils/localContentStore'
-
-function readLocalOpenWhenLetters() {
-  try {
-    const rawValue = localStorage.getItem('distancia-cero-local-open-when')
-    const parsedValue = rawValue ? JSON.parse(rawValue) : []
-    return Array.isArray(parsedValue) ? parsedValue : []
-  } catch (error) {
-    return []
-  }
-}
+import {
+  getCollectionHiddenIds,
+  getCollectionOverrides,
+  getLegacyOpenWhenLetters,
+  getSimulationUnlocked,
+  isOpenWhenLetterOpened,
+  setOpenWhenLetterOpened
+} from '../services/contentService'
 
 function OpenWhenSection({ cards = [] }) {
   const [selectedCardId, setSelectedCardId] = useState(null)
-  const [localOpenWhen, setLocalOpenWhen] = useState(() => readLocalOpenWhenLetters())
-  const [openWhenOverrides, setOpenWhenOverrides] = useState(() => getLocalOverrides('openWhenLetters'))
-  const [hiddenOpenWhenIds, setHiddenOpenWhenIds] = useState(() => getHiddenItemIds('openWhenLetters'))
-  const isSimUnlocked = localStorage.getItem('distancia-cero-sim-unlocked') === '1'
+  const [localOpenWhen, setLocalOpenWhen] = useState(() => getLegacyOpenWhenLetters())
+  const [openWhenOverrides, setOpenWhenOverrides] = useState(() => getCollectionOverrides('openWhenLetters'))
+  const [hiddenOpenWhenIds, setHiddenOpenWhenIds] = useState(() => getCollectionHiddenIds('openWhenLetters'))
+  const isSimUnlocked = getSimulationUnlocked()
 
   useEffect(() => {
     const refreshOpenWhen = () => {
-      setLocalOpenWhen(readLocalOpenWhenLetters())
-      setOpenWhenOverrides(getLocalOverrides('openWhenLetters'))
-      setHiddenOpenWhenIds(getHiddenItemIds('openWhenLetters'))
+      setLocalOpenWhen(getLegacyOpenWhenLetters())
+      setOpenWhenOverrides(getCollectionOverrides('openWhenLetters'))
+      setHiddenOpenWhenIds(getCollectionHiddenIds('openWhenLetters'))
     }
 
     const handleContentUpdate = (event) => {
@@ -75,8 +72,7 @@ function OpenWhenSection({ cards = [] }) {
     const isLocked = isSimUnlocked ? false : card.locked
     if (isLocked) return
 
-    const storageKey = `distancia-cero-open-when-${card.id}`
-    localStorage.setItem(storageKey, 'opened')
+    setOpenWhenLetterOpened(card.id, true)
     setSelectedCardId(card.id)
 
     // Scroll suave al inicio de la sección
@@ -99,7 +95,7 @@ function OpenWhenSection({ cards = [] }) {
   }
 
   const totalCards = finalCards.length
-  const openedCards = finalCards.filter((card) => localStorage.getItem(`distancia-cero-open-when-${card.id}`) === 'opened').length
+  const openedCards = finalCards.filter((card) => isOpenWhenLetterOpened(card.id)).length
 
   const activeCard = finalCards.find((card) => String(card.id) === String(selectedCardId))
 
@@ -150,7 +146,7 @@ function OpenWhenSection({ cards = [] }) {
 
       <div className="card-grid">
         {finalCards.map((card) => {
-          const isOpened = localStorage.getItem(`distancia-cero-open-when-${card.id}`) === 'opened'
+          const isOpened = isOpenWhenLetterOpened(card.id)
           const cardLockedForClick = isSimUnlocked ? false : card.locked
 
           return (
