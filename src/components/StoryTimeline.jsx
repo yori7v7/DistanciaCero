@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { BookOpen, ChevronLeft, ChevronRight, Feather, Heart, MoonStar, Sparkles } from 'lucide-react'
-import { mergeWithLocalItems } from '../utils/localContentStore'
+import { mergeCollectionWithLocal } from '../services/contentService'
 
 const fallbackPages = [
   {
@@ -102,7 +102,7 @@ function StoryTimeline({ timeline = [] }) {
   const [isTurning, setIsTurning] = useState(false)
 
   const pages = useMemo(() => {
-    const mergedPages = mergeWithLocalItems(Array.isArray(timeline) ? timeline : [], 'timeline')
+    const mergedPages = mergeCollectionWithLocal(Array.isArray(timeline) ? timeline : [], 'timeline')
     const source = mergedPages.length > 0 ? sortTimelinePages(mergedPages) : fallbackPages
     return source.map(normalizePage)
   }, [timeline, localVersion])
