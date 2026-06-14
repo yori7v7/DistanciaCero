@@ -19,6 +19,7 @@ import {
   getCollectionOverrides as getLocalOverrides,
   getLegacyMonthlyLetters,
   getLegacyOpenWhenLetters,
+  getSimulationUnlocked,
   hideCollectionItem as hideDefaultItem,
   restoreCollectionItem as restoreHiddenItem,
   saveCollectionHiddenIds as saveHiddenItemIds,
@@ -27,6 +28,7 @@ import {
   saveLegacyMonthlyLetters,
   saveLegacyOpenWhenLetters,
   setCollectionOverride as setLocalOverride,
+  setSimulationUnlocked,
   updateCollectionItem as updateLocalItem
 } from '../services/contentService'
 
@@ -209,7 +211,7 @@ function CentroUniversoSection() {
   }
 
   useEffect(() => {
-    setIsSimUnlocked(localStorage.getItem('distancia-cero-sim-unlocked') === '1')
+    setIsSimUnlocked(getSimulationUnlocked())
 
     setLocalMonthly(getLegacyMonthlyLetters())
     setLocalOpenWhen(getLegacyOpenWhenLetters())
@@ -422,9 +424,9 @@ function CentroUniversoSection() {
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
-      localStorage.removeItem('distancia-cero-sim-unlocked')
+      setSimulationUnlocked(false)
     } else {
-      localStorage.setItem('distancia-cero-sim-unlocked', '1')
+      setSimulationUnlocked(true)
     }
     window.location.reload()
   }
@@ -2234,7 +2236,7 @@ function CentroUniversoSection() {
       localOpenWhen.forEach((c) => {
         localStorage.removeItem(`distancia-cero-open-when-${c.id}`)
       })
-      localStorage.removeItem('distancia-cero-sim-unlocked')
+      setSimulationUnlocked(false)
       window.location.reload()
     }
   }
