@@ -20,6 +20,8 @@ import {
   getLegacyMonthlyLetters,
   getLegacyOpenWhenLetters,
   getSimulationUnlocked,
+  isMonthlyLetterOpened,
+  isOpenWhenLetterOpened,
   hideCollectionItem as hideDefaultItem,
   restoreCollectionItem as restoreHiddenItem,
   saveCollectionHiddenIds as saveHiddenItemIds,
@@ -28,6 +30,8 @@ import {
   saveLegacyMonthlyLetters,
   saveLegacyOpenWhenLetters,
   setCollectionOverride as setLocalOverride,
+  setMonthlyLetterOpened,
+  setOpenWhenLetterOpened,
   setSimulationUnlocked,
   updateCollectionItem as updateLocalItem
 } from '../services/contentService'
@@ -38,6 +42,7 @@ function CentroUniversoSection() {
   const [localOpenWhen, setLocalOpenWhen] = useState([])
   const [backupStatus, setBackupStatus] = useState(null)
   const [crudNotice, setCrudNotice] = useState(null)
+  const [, setLetterProgressVersion] = useState(0)
   const [localReasons, setLocalReasons] = useState([])
   const [reasonTitle, setReasonTitle] = useState('')
   const [reasonText, setReasonText] = useState('')
@@ -252,6 +257,29 @@ function CentroUniversoSection() {
     return () => window.clearTimeout(timer)
   }, [crudNotice])
 
+  useEffect(() => {
+    const refreshLetterProgress = () => {
+      setLetterProgressVersion((value) => value + 1)
+    }
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshLetterProgress()
+      }
+    }
+
+    window.addEventListener('focus', refreshLetterProgress)
+    window.addEventListener('distancia-cero-scene-change', refreshLetterProgress)
+    window.addEventListener('distancia-cero-content-updated', refreshLetterProgress)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('focus', refreshLetterProgress)
+      window.removeEventListener('distancia-cero-scene-change', refreshLetterProgress)
+      window.removeEventListener('distancia-cero-content-updated', refreshLetterProgress)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
   // Map open when cards to lock 'special day' card
   const mappedOpenWhen = openWhenData.map((card) => {
     if (card.mood === 'Abrir cuando sea un día especial') {
@@ -290,9 +318,9 @@ function CentroUniversoSection() {
   // Calculation for Monthly Letters stats (combining JSON + Local)
   const totalMonthly = activeBaseMonthly.length + localMonthly.length
   const openedMonthly = activeBaseMonthly.filter(
-    (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
+    (l) => isMonthlyLetterOpened(l.id)
   ).length + localMonthly.filter(
-    (l) => localStorage.getItem(`distancia-cero-monthly-letter-${l.id}`) === 'opened'
+    (l) => isMonthlyLetterOpened(l.id)
   ).length
   const unlockedMonthly = activeBaseMonthly.filter((l) => !l.locked).length + localMonthly.filter((l) => !l.locked).length
   const lockedMonthly = activeBaseMonthly.length - activeBaseMonthly.filter((l) => !l.locked).length
@@ -300,9 +328,9 @@ function CentroUniversoSection() {
   // Calculation for Open When Letters stats (combining JSON + Local)
   const totalOpenWhen = activeBaseOpenWhen.length + localOpenWhen.length
   const openedOpenWhen = activeBaseOpenWhen.filter(
-    (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
+    (c) => isOpenWhenLetterOpened(c.id)
   ).length + localOpenWhen.filter(
-    (c) => localStorage.getItem(`distancia-cero-open-when-${c.id}`) === 'opened'
+    (c) => isOpenWhenLetterOpened(c.id)
   ).length
   const unlockedOpenWhen = activeBaseOpenWhen.filter((c) => !c.locked).length + localOpenWhen.filter((c) => !c.locked).length
   const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
@@ -2224,17 +2252,17 @@ function CentroUniversoSection() {
     ) {
       // Clear progress keys for JSON letters
       monthlyLettersData.forEach((l) => {
-        localStorage.removeItem(`distancia-cero-monthly-letter-${l.id}`)
+        setMonthlyLetterOpened(l.id, false)
       })
       mappedOpenWhen.forEach((c) => {
-        localStorage.removeItem(`distancia-cero-open-when-${c.id}`)
+        setOpenWhenLetterOpened(c.id, false)
       })
       // Clear progress keys for Local letters
       localMonthly.forEach((l) => {
-        localStorage.removeItem(`distancia-cero-monthly-letter-${l.id}`)
+        setMonthlyLetterOpened(l.id, false)
       })
       localOpenWhen.forEach((c) => {
-        localStorage.removeItem(`distancia-cero-open-when-${c.id}`)
+        setOpenWhenLetterOpened(c.id, false)
       })
       setSimulationUnlocked(false)
       window.location.reload()
