@@ -5,18 +5,63 @@
 El CRUD editable actual de Distancia Cero esta centralizado con esta ruta:
 
 ```txt
-Componentes visibles -> src/services/contentService.js -> src/utils/localContentStore.js -> LocalStorage
+Componentes visibles -> src/services/contentService.js -> src/repositories/contentRepository.js -> src/repositories/localContentRepository.js -> src/utils/localContentStore.js -> LocalStorage
 ```
 
 Los componentes no deben leer ni escribir `src/utils/localContentStore.js` directamente. La fachada publica para contenido editable es `src/services/contentService.js`.
 
-El comportamiento actual es local, sin backend, sin Supabase y sin Auth. Este documento fija el contrato para poder preparar una capa de repository futura sin reescribir componentes.
+El comportamiento actual es local, sin backend, sin Supabase y sin Auth. Este documento fija el contrato para poder preparar una implementacion remota futura sin reescribir componentes.
 
-## 2. API publica de contentService
+## 2. Capas repository actuales
+
+### `src/services/contentService.js`
+
+`contentService.js` es la fachada publica estable para componentes visibles y para el Centro del Universo.
+
+Reglas:
+
+- Conserva la API publica sync.
+- No debe importar `src/utils/localContentStore.js` directamente.
+- Debe mantener nombres, firmas y return types mientras sea posible.
+- Debe mantener el evento `distancia-cero-content-updated`.
+
+### `src/repositories/contentRepository.js`
+
+`contentRepository.js` es el selector/fachada de repository.
+
+Estado actual:
+
+- Por ahora re-exporta la implementacion local.
+- No contiene Supabase.
+- No contiene logica async.
+
+Rol futuro:
+
+- Puede convertirse en el punto de entrada para elegir repository local o remoto.
+- Permite cambiar la implementacion debajo de `contentService` sin tocar componentes.
+
+### `src/repositories/localContentRepository.js`
+
+`localContentRepository.js` contiene la implementacion local actual.
+
+Reglas:
+
+- Es el unico archivo que debe importar `src/utils/localContentStore.js`.
+- Mantiene CRUD, overrides, hidden, legacy letters, opened/read y simulation unlocked.
+- Debe conservar comportamiento local actual mientras exista modo local.
+
+### Regla futura para Supabase
+
+- No meter Supabase directo en componentes.
+- No meter Supabase directo en `contentService.js` si puede evitarse.
+- Supabase futuro deberia entrar mediante un repository remoto o selector de repository.
+- No cambiar la API sync a async sin un plan de compatibilidad.
+
+## 3. API publica de contentService
 
 ### CRUD generico
 
-Estas funciones trabajan con una `collectionName` y delegan hoy en `localContentStore`.
+Estas funciones trabajan con una `collectionName` y delegan hoy en `contentRepository`.
 
 - `getCollectionItems(collectionName)`
 - `saveCollectionItems(collectionName, items)`
@@ -130,7 +175,7 @@ Contrato actual:
 - `setSimulationUnlocked(false)` elimina la key.
 - Nunca se debe guardar `"false"`.
 
-## 3. Colecciones soportadas
+## 4. Colecciones soportadas
 
 El contrato actual reconoce estas colecciones:
 
@@ -149,7 +194,7 @@ Notas:
 - `monthlyLetters` y `openWhenLetters` tienen contenido local legacy en keys antiguas, pero sus overrides y hidden ya usan el sistema generico.
 - `reasons`, `promises`, `importantDates`, `futureDreams`, `timeline`, `blackHoleGallery` y `playlist` usan el sistema generico para contenido local, overrides y hidden.
 
-## 4. Shapes conceptuales
+## 5. Shapes conceptuales
 
 ### Contenido base JSON
 
@@ -209,7 +254,7 @@ Es contenido base JSON con override local. Restaurar significa borrar el overrid
 
 Ocultar agrega el id base a hidden. Restaurar elimina el id de hidden.
 
-## 5. Eventos
+## 6. Eventos
 
 ### `distancia-cero-content-updated`
 
@@ -239,7 +284,7 @@ Reglas:
 - No eliminar `detail.collectionName` mientras existan listeners que puedan usarlo.
 - Si se agrega backend, el evento sigue siendo necesario para sincronizar UI local despues de guardar.
 
-## 6. Legacy keys
+## 7. Legacy keys
 
 Estas keys existen por compatibilidad y no deben borrarse sin migracion explicita.
 
@@ -301,7 +346,7 @@ Valor activo:
 1
 ```
 
-## 7. Export/import v2
+## 8. Export/import v2
 
 El respaldo local v2 mantiene este shape conceptual:
 
@@ -354,13 +399,14 @@ Reglas de compatibilidad:
 - Si la validacion falla, no se debe borrar ni reemplazar nada.
 - Export/import debe seguir sirviendo como backup offline incluso cuando exista backend.
 
-## 8. Reglas para futura migracion
+## 9. Reglas para futura migracion
 
 - `contentService` debe conservar su API publica mientras sea posible.
 - No meter Supabase directo en componentes visibles.
 - No meter Supabase directo en `CentroUniversoSection.jsx`.
-- Un repository futuro debe vivir debajo de `contentService`.
-- La primera implementacion de repository debe ser local y no cambiar comportamiento.
+- No meter Supabase directo en `contentService.js` si puede evitarse.
+- Un repository remoto futuro debe vivir debajo de `contentService`.
+- La implementacion local del repository debe seguir disponible y no cambiar comportamiento.
 - Supabase debe entrar despues de fijar Auth, ownership y RLS.
 - Fotos Data URL son compatibilidad local, no solucion final.
 - La solucion final para fotos debe ser Storage + metadata en base de datos.
@@ -368,7 +414,7 @@ Reglas de compatibilidad:
 - El modo local debe seguir existiendo como fallback y herramienta de desarrollo.
 - Si se introduce async, debe planearse sin romper componentes que hoy esperan funciones sync.
 
-## 9. Riesgos anotados
+## 10. Riesgos anotados
 
 ### Async futuro
 
@@ -398,7 +444,7 @@ Data URL puede inflar LocalStorage y backups. Futuro correcto: Supabase Storage,
 
 El modo local debe seguir funcionando para desarrollo, backup offline y rollback. Supabase no debe ser requisito para abrir la app.
 
-## 10. Validacion para cambios futuros
+## 11. Validacion para cambios futuros
 
 Antes y despues de cambios sobre esta capa:
 
@@ -418,4 +464,3 @@ Pruebas manuales recomendadas:
 - Abrir cartas y confirmar progreso opened/read.
 - Activar/desactivar modo prueba.
 - Validar que los componentes visibles refrescan con `distancia-cero-content-updated`.
-
