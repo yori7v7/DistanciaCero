@@ -116,6 +116,12 @@ Reglas:
 - Si un item no tiene autor, la UI futura debe tolerarlo.
 - `source` puede distinguir `base-json`, `local`, `imported`, `remote` o valores futuros.
 
+Helper aislado actual:
+
+- `src/services/contentMetadataService.js` construye metadata futura de autoria en modo local/dev.
+- El helper no esta conectado todavia al CRUD, export/import, repositories ni componentes.
+- Su uso futuro debe limitarse primero a nuevos items locales, sin migrar contenido existente.
+
 ## 7. Compatibilidad
 
 El contenido viejo sin metadata debe seguir funcionando.
@@ -437,4 +443,3 @@ La identidad fake/dev local no debe borrar ni reescribir keys de contenido actua
 - No exigir metadata para leer contenido existente.
 - No romper export/import v2.
 - Mantener modo local como fallback.
-
