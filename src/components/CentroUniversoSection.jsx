@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import SectionTitle from './SectionTitle'
+import LocalIdentitySelector from './LocalIdentitySelector'
 import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
@@ -2463,6 +2464,8 @@ function CentroUniversoSection() {
           Resetear Progreso
         </button>
       </div>
+
+      <LocalIdentitySelector />
 
       {/* Local letters backup */}
       <div className="backup-card">
