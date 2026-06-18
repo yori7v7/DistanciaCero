@@ -4591,6 +4591,7 @@ function CentroUniversoSection() {
                   <div className="item-info">
                     <strong>{item.title} · {item.artist || 'Sin artista'}</strong>
                     <span>{item.description}</span>
+                    <LocalContentMeta item={item} />
                   </div>
 
                   <div className="item-actions">
