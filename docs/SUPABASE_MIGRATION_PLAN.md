@@ -219,7 +219,8 @@ Relaciones:
 Riesgos:
 
 - `data jsonb` flexible puede esconder schema inconsistente.
-- `kind = hidden` puede no ser ideal si hidden crece en complejidad.
+- `kind = hidden` queda como ruta recomendada actual.
+- Tabla separada para hidden queda como decision secundaria si hidden crece en complejidad.
 - Conflictos si Ale/Yori editan el mismo item.
 
 ### `content_events` / `audit_log`
@@ -319,7 +320,7 @@ Reglas:
 ```txt
 content.<collection> -> content_items kind local
 overrides.<collection> -> content_items kind override
-hidden.<collection> -> content_items kind hidden o tabla separada
+hidden.<collection> -> content_items kind hidden
 ```
 
 Mapping de metadata:
@@ -336,7 +337,7 @@ Reglas:
 - Items sin metadata siguen siendo validos.
 - No inventar autor retroactivo.
 - JSON base no se modifica desde la app.
-- Overrides e hidden requieren una decision de schema antes de migrar.
+- Overrides e hidden requieren validar schema antes de migrar; hidden queda recomendado como `kind = hidden`.
 
 ## 6. Storage
 
@@ -787,7 +788,7 @@ Nivel Codex:
 ## 11. Decisiones pendientes
 
 - Nombres finales de tablas.
-- `hidden` como `kind` en `content_items` o tabla separada.
+- `hidden` queda recomendado como `kind` en `content_items`; tabla separada queda como decision secundaria.
 - `audit_log` obligatorio o diferido.
 - Regla de conflictos Ale/Yori.
 - Migracion de Data URL.

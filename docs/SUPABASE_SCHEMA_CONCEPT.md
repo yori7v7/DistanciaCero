@@ -176,6 +176,7 @@ local_id text null
 base_id text null
 kind text not null check (kind in ('local', 'override', 'hidden'))
 data jsonb not null
+schema_version integer not null default 1
 is_hidden boolean not null default false
 created_by uuid references profiles(id)
 updated_by uuid references profiles(id)
@@ -204,6 +205,12 @@ create index content_items_base_id_idx on content_items(base_id);
 create index content_items_local_id_idx on content_items(local_id);
 create index content_items_space_collection_idx on content_items(space_id, collection);
 create index content_items_space_kind_idx on content_items(space_id, kind);
+create unique index content_items_unique_local_id_idx
+  on content_items(space_id, collection, local_id)
+  where kind = 'local' and local_id is not null;
+create unique index content_items_unique_base_kind_idx
+  on content_items(space_id, collection, base_id, kind)
+  where kind in ('override', 'hidden') and base_id is not null;
 ```
 
 ### Constraints/checks
@@ -211,16 +218,20 @@ create index content_items_space_kind_idx on content_items(space_id, kind);
 - `kind` limitado a `local`, `override`, `hidden`.
 - `collection` no debe ser vacio.
 - `source` no debe ser vacio.
+- `schema_version` debe existir para versionar `data jsonb`.
+- `schema_version` debe ser positivo.
 - Para `kind = 'local'`, `data` debe contener el contenido editable.
 - Para `kind = 'override'`, `base_id` deberia existir.
 - Para `kind = 'hidden'`, `base_id` deberia existir.
+- `is_hidden`, si se conserva, es solo ayuda de query y debe espejar `kind = 'hidden'`.
+- `updated_at` debe tener helper/trigger conceptual para no depender solo del cliente.
 
 ### Mapping local
 
 ```txt
 content.<collection> -> content_items kind local
 overrides.<collection> -> content_items kind override
-hidden.<collection> -> content_items kind hidden o tabla separada
+hidden.<collection> -> content_items kind hidden
 ```
 
 `content.<collection>`:
@@ -240,13 +251,14 @@ hidden.<collection> -> content_items kind hidden o tabla separada
 
 `hidden.<collection>`:
 
-- Opcion A: `kind` = `hidden`, `base_id` = id base.
-- Opcion B: tabla separada para hidden.
+- Ruta recomendada actual: `kind` = `hidden`, `base_id` = id base.
+- Tabla separada queda como decision secundaria solo si hidden crece en complejidad.
+- Si existe `is_hidden`, debe ser derivado/consistente con `kind = 'hidden'`.
 
 ### Riesgos
 
 - `jsonb` flexible puede permitir shapes inconsistentes.
-- `hidden` como `kind` puede ser demasiado generico.
+- `hidden` como `kind` es la ruta recomendada actual, pero podria quedar corta si hidden requiere metadata propia.
 - Sin versionado de schema de `data`, migraciones futuras pueden ser dificiles.
 - Conflictos si Ale/Yori editan el mismo item.
 - RLS mal aplicada puede exponer contenido privado.
@@ -266,6 +278,7 @@ Si se implementa desde el inicio, debe registrar acciones esenciales:
 - `restore`
 - `import`
 - `media_attach`
+- `role_change`
 
 ### Proposito
 
@@ -306,6 +319,8 @@ create index content_events_created_at_idx on content_events(created_at);
 ### Constraints/checks
 
 - `action` no debe ser vacio.
+- `action` debe tener check o enum conceptual.
+- `payload` debe ser minimo/sanitizado.
 - `payload` no debe guardar secretos ni contenido sensible innecesario.
 
 ### Riesgos
@@ -313,6 +328,7 @@ create index content_events_created_at_idx on content_events(created_at);
 - Puede crecer rapidamente.
 - Puede duplicar contenido sensible si `payload` guarda snapshots completos.
 - RLS debe proteger audit log igual que contenido.
+- Si se requiere auditoria confiable, los eventos deberian venir de RPC/trigger/server-side, no de inserts arbitrarios del cliente.
 
 ## 9. `media_assets`
 
@@ -321,6 +337,8 @@ create index content_events_created_at_idx on content_events(created_at);
 Guardar metadata de archivos en Supabase Storage, especialmente fotos de Galeria/Agujero negro.
 
 La galeria/fotos debe usar Storage + metadata. Data URL queda solo como compatibilidad local/export, no como solucion final en Postgres.
+
+`media_assets.path` debe vincularse a `storage.objects.name` en el bucket futuro. La tabla solo guarda metadata; las policies reales de Storage deben proteger los objetos aparte.
 
 ### Columnas y tipos sugeridos
 
@@ -365,6 +383,7 @@ create unique index media_assets_bucket_path_idx on media_assets(bucket, path);
 
 - Bucket publico expondria fotos privadas.
 - Archivos huerfanos si se elimina contenido sin cleanup.
+- Debe existir estrategia de cleanup para media huerfana cuando se borra o reemplaza contenido.
 - URLs firmadas no deben tratarse como permanentes.
 - Data URL en Postgres inflaria DB y backups.
 
@@ -386,6 +405,12 @@ create index content_items_base_id_idx on content_items(base_id);
 create index content_items_local_id_idx on content_items(local_id);
 create index content_items_space_collection_idx on content_items(space_id, collection);
 create index content_items_space_kind_idx on content_items(space_id, kind);
+create unique index content_items_unique_local_id_idx
+  on content_items(space_id, collection, local_id)
+  where kind = 'local' and local_id is not null;
+create unique index content_items_unique_base_kind_idx
+  on content_items(space_id, collection, base_id, kind)
+  where kind in ('override', 'hidden') and base_id is not null;
 
 create index media_assets_space_id_idx on media_assets(space_id);
 create index media_assets_content_item_id_idx on media_assets(content_item_id);
@@ -393,12 +418,12 @@ create index media_assets_content_item_id_idx on media_assets(content_item_id);
 
 ## 11. Decisiones pendientes
 
-- Si `hidden` vive como `kind` en `content_items` o como tabla separada.
+- `hidden` queda recomendado como `kind = 'hidden'`; tabla separada queda como decision secundaria si el modelo crece.
 - Si `audit_log` / `content_events` es obligatorio desde el inicio o posterior.
 - Si `content_items.data` guarda todo el item o solo fields editables.
 - Si `local_id` se mantiene despues de migracion.
 - Como resolver conflictos Ale/Yori.
-- Como versionar schema.
+- Como versionar schema por collection sobre `schema_version`.
 - Cuando crear export/import v3.
 - Si `source` debe limitarse con check (`local-dev`, `imported-local`, `remote`, etc.).
 - Si media se referencia desde `content_items.data` o con tabla puente.
