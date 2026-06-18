@@ -29,7 +29,8 @@ La identidad local fake/dev debe servir para simular quienes son Yori/Diego y Al
 - No implementar RLS.
 - No crear backend.
 - No crear selector UI todavia.
-- No agregar metadata real al CRUD todavia.
+- No agregar Auth, Supabase, RLS ni metadata remota real al CRUD.
+- No aplicar metadata a JSON base, overrides, hidden, legacy monthly/openWhen, opened/read, simulation unlocked ni contenido existente no migrado.
 - No migrar contenido existente.
 - No cambiar export/import v2.
 - No cambiar la API publica de `contentService`.
@@ -121,6 +122,7 @@ Implementacion actual:
 - `src/services/contentMetadataService.js` construye metadata de autoria en modo local/dev.
 - `localContentRepository.addCollectionItem` aplica metadata de creacion a nuevos items locales genericos.
 - `localContentRepository.updateCollectionItem` aplica metadata de actualizacion a items locales genericos editados.
+- `LocalContentMeta` muestra autoria opcional en listas locales genericas del Centro del Universo.
 - La metadata no esta conectada a export/import como formato nuevo; viaja solo como campos extra opcionales dentro de items locales.
 
 Campos actuales:
