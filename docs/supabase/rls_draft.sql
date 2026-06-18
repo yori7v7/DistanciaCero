@@ -20,6 +20,11 @@ alter table if exists public.media_assets enable row level security;
 -- BORRADOR:
 --   Estas funciones asumen que profiles.id = auth.uid().
 --   Deben revisarse para evitar recursion o bypass inesperado con RLS.
+--   security definer requiere owner controlado, grants minimos y auditoria.
+--   Mantener set search_path = public para reducir riesgo de shadowing.
+--   Verificar que las funciones no generen recursion RLS ni expongan membership.
+--   En SQL real, revisar si conviene revoke execute from public/authenticated
+--   y exponer solo helpers seguros usados por policies.
 
 create or replace function public.is_space_member(space_uuid uuid)
 returns boolean
@@ -58,6 +63,8 @@ $$;
 -- Concepto:
 --   El usuario lee su profile y perfiles de miembros de sus spaces.
 --   El usuario solo actualiza campos permitidos de su propio profile.
+--   Update real debe limitar columnas editables, por ejemplo display_name/avatar_url.
+--   No permitir que el cliente cambie local_slug, id u otras columnas sensibles.
 
 create policy "profiles_select_own_or_shared_space"
 on public.profiles
@@ -99,6 +106,14 @@ with check (
   and created_by = auth.uid()
 );
 
+-- Bootstrap:
+--   Crear relationship_space + primer universe_member owner no puede depender
+--   de una policy que ya exige owner. Flujo futuro recomendado:
+--   RPC controlada, Edge Function o migration/admin server-side.
+--   No permitir self-owner arbitrario desde cliente normal.
+--
+-- Update real debe restringir columnas permitidas, por ejemplo name/slug.
+-- No permitir que owner/partner cambie created_by ni campos sensibles.
 create policy "relationship_spaces_update_owner_partner"
 on public.relationship_spaces
 for update
@@ -150,7 +165,9 @@ using (
 -- Pendiente:
 --   - Impedir self-owner sin control.
 --   - Impedir borrar el ultimo owner.
+--   - Auditar cambios de role o pasarlos por RPC.
 --   - Definir flujo seguro de invitaciones.
+--   - Impedir que un usuario se asigne owner a si mismo desde cliente normal.
 
 -- ============================================================
 -- content_items policies
@@ -185,6 +202,9 @@ with check (
   and updated_by = auth.uid()
 );
 
+-- BORRADOR RIESGOSO / NO FINAL:
+--   Hard delete de contenido privado no es recomendado como primera opcion.
+--   Preferir soft delete, kind='hidden' o delete via RPC con audit obligatorio.
 create policy "content_items_delete_owner_partner"
 on public.content_items
 for delete
@@ -200,6 +220,8 @@ using (
 -- ============================================================
 -- Concepto:
 --   Audit log debe ser append-only desde cliente normal.
+--   Si se requiere auditoria confiable, NO permitir insert arbitrario del cliente.
+--   Preferir trigger, RPC o server-side para construir eventos sanitizados.
 
 create policy "content_events_select_member"
 on public.content_events
@@ -208,6 +230,9 @@ using (
   public.is_space_member(space_id)
 );
 
+-- BORRADOR / NO FINAL:
+--   Esta policy permite insert cliente-side y solo sirve como guia conceptual.
+--   Para auditoria confiable, reemplazar por RPC/trigger/server-side.
 create policy "content_events_insert_owner_partner"
 on public.content_events
 for insert
@@ -241,8 +266,11 @@ create policy "media_assets_delete_owner_partner_or_creator"
 on public.media_assets
 for delete
 using (
-  public.has_space_role(space_id, array['owner', 'partner'])
-  or created_by = auth.uid()
+  public.is_space_member(space_id)
+  and (
+    public.has_space_role(space_id, array['owner', 'partner'])
+    or created_by = auth.uid()
+  )
 );
 
 -- ============================================================
@@ -258,5 +286,19 @@ using (
 --       relationship-media/{space_id}/{media_asset_id}/{filename}
 --   - Validar membership por space_id antes de leer/subir/borrar.
 --   - No usar URLs publicas permanentes para fotos privadas.
+--   - No confiar solo en el prefijo del path si no se valida membership.
+--   - Las policies de storage.objects deben resolver el space_id de forma segura,
+--     por path validado o por join contra media_assets.
+--   - Upload/delete deben requerir membership actual; ser creador historico no
+--     basta si el usuario ya no pertenece al space.
+--   - No se crea bucket ni policy real aqui.
+--
+-- Pseudopolicy futura storage.objects:
+--   SELECT si bucket_id = 'relationship-media'
+--   y existe media_assets/path que apunte al objeto
+--   y public.is_space_member(media_assets.space_id).
+--
+--   INSERT/DELETE solo con owner/partner o regla explicita de creador actual,
+--   siempre validando membership del space.
 --
 -- Fin del borrador RLS.

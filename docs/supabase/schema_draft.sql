@@ -89,7 +89,11 @@ create unique index if not exists universe_members_space_user_idx
 -- Mapping conceptual:
 --   content.<collection>   -> kind = 'local'
 --   overrides.<collection> -> kind = 'override'
---   hidden.<collection>    -> kind = 'hidden' o tabla separada futura
+--   hidden.<collection>    -> kind = 'hidden'
+-- Recomendacion actual:
+--   Usar kind = 'hidden' como ruta principal.
+--   is_hidden se conserva solo como ayuda de query y debe espejar kind.
+--   data jsonb es flexible, pero debe versionarse con schema_version.
 
 create table if not exists public.content_items (
   id uuid primary key default gen_random_uuid(),
@@ -99,6 +103,7 @@ create table if not exists public.content_items (
   base_id text null,
   kind text not null,
   data jsonb not null,
+  schema_version integer not null default 1,
   is_hidden boolean not null default false,
   created_by uuid null references public.profiles(id) on delete set null,
   updated_by uuid null references public.profiles(id) on delete set null,
@@ -114,7 +119,11 @@ create table if not exists public.content_items (
   ),
   constraint content_items_hidden_requires_base_id check (
     kind <> 'hidden' or base_id is not null
-  )
+  ),
+  constraint content_items_hidden_flag_matches_kind check (
+    is_hidden = (kind = 'hidden')
+  ),
+  constraint content_items_schema_version_positive check (schema_version > 0)
 );
 
 create index if not exists content_items_space_id_idx
@@ -138,6 +147,15 @@ create index if not exists content_items_space_collection_idx
 create index if not exists content_items_space_kind_idx
   on public.content_items(space_id, kind);
 
+-- Evitar duplicados conceptuales por tipo de contenido.
+create unique index if not exists content_items_unique_local_id_idx
+  on public.content_items(space_id, collection, local_id)
+  where kind = 'local' and local_id is not null;
+
+create unique index if not exists content_items_unique_base_kind_idx
+  on public.content_items(space_id, collection, base_id, kind)
+  where kind in ('override', 'hidden') and base_id is not null;
+
 -- ============================================================
 -- content_events
 -- ============================================================
@@ -145,6 +163,9 @@ create index if not exists content_items_space_kind_idx
 --   Auditoria conceptual. Puede diferirse si complica el primer MVP remoto.
 -- Cuidado:
 --   payload no debe guardar secretos ni snapshots sensibles innecesarios.
+--   Mantener payload minimo/sanitizado. Si se requiere historial completo,
+--   evaluar cifrado, retencion y permisos antes de guardar contenido sensible.
+--   action podria pasar a enum real; aqui queda como check conceptual.
 
 create table if not exists public.content_events (
   id uuid primary key default gen_random_uuid(),
@@ -156,7 +177,19 @@ create table if not exists public.content_events (
   payload jsonb null,
   created_at timestamptz not null default now(),
 
-  constraint content_events_action_not_empty check (btrim(action) <> '')
+  constraint content_events_action_not_empty check (btrim(action) <> ''),
+  constraint content_events_action_check check (
+    action in (
+      'create',
+      'update',
+      'delete',
+      'hide',
+      'restore',
+      'import',
+      'media_attach',
+      'role_change'
+    )
+  )
 );
 
 create index if not exists content_events_space_id_idx
@@ -178,6 +211,9 @@ create index if not exists content_events_created_at_idx
 --   Metadata de archivos privados en Supabase Storage.
 -- Cuidado:
 --   Data URL es compatibilidad local/export, no solucion final en Postgres.
+--   media_assets.path debe mapear a storage.objects.name en el bucket futuro.
+--   Storage real requiere policies separadas; esta tabla no protege objetos sola.
+--   Definir cleanup de media huerfana al borrar/reemplazar content_item_id.
 
 create table if not exists public.media_assets (
   id uuid primary key default gen_random_uuid(),
@@ -207,10 +243,42 @@ create index if not exists media_assets_created_by_idx
 create unique index if not exists media_assets_bucket_path_idx
   on public.media_assets(bucket, path);
 
+-- ============================================================
+-- updated_at helper conceptual
+-- ============================================================
+-- BORRADOR:
+--   Revisar permisos, owner, search_path y triggers finales antes de ejecutar.
+--   Esta funcion existe para documentar que updated_at no debe depender
+--   exclusivamente del cliente.
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists profiles_set_updated_at on public.profiles;
+create trigger profiles_set_updated_at
+before update on public.profiles
+for each row execute function public.set_updated_at();
+
+drop trigger if exists relationship_spaces_set_updated_at on public.relationship_spaces;
+create trigger relationship_spaces_set_updated_at
+before update on public.relationship_spaces
+for each row execute function public.set_updated_at();
+
+drop trigger if exists content_items_set_updated_at on public.content_items;
+create trigger content_items_set_updated_at
+before update on public.content_items
+for each row execute function public.set_updated_at();
+
 -- Fin del borrador de schema.
 -- Pendiente:
---   - Triggers updated_at.
 --   - RLS final.
 --   - Storage policies.
---   - Decision hidden kind vs tabla separada.
---   - Versionado de data jsonb.
+--   - Revisar triggers updated_at antes de SQL real.
+--   - Validar si is_hidden se mantiene como ayuda o se elimina.
+--   - Definir versionado final de data jsonb por collection.
