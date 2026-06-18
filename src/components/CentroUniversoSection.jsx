@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import SectionTitle from './SectionTitle'
 import LocalIdentitySelector from './LocalIdentitySelector'
+import LocalContentMeta from './LocalContentMeta'
 import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
@@ -2936,6 +2937,7 @@ function CentroUniversoSection() {
                   <div className="item-info">
                     <strong>{reason.title}</strong>
                     <span>{reason.text}</span>
+                    <LocalContentMeta item={reason} />
                   </div>
 
                   <div className="item-actions">
