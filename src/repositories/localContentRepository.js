@@ -14,7 +14,7 @@ import {
   setLocalOverride,
   updateLocalItem
 } from '../utils/localContentStore'
-import { withCreateMetadata } from '../services/contentMetadataService'
+import { buildUpdateMetadata, withCreateMetadata } from '../services/contentMetadataService'
 
 const LEGACY_MONTHLY_LETTERS_KEY = 'distancia-cero-local-monthly-letters'
 const LEGACY_OPEN_WHEN_LETTERS_KEY = 'distancia-cero-local-open-when'
@@ -94,7 +94,18 @@ export function addCollectionItem(collectionName, item) {
 }
 
 export function updateCollectionItem(collectionName, id, patch) {
-  return updateLocalItem(collectionName, id, patch)
+  const currentItem = getLocalItems(collectionName).find(
+    (item) => String(item.id) === String(id) && item.isLocal
+  )
+  const updateMetadata = buildUpdateMetadata()
+
+  return updateLocalItem(collectionName, id, {
+    ...patch,
+    updatedBy: updateMetadata.updatedBy,
+    updatedAt: updateMetadata.updatedAt,
+    source: currentItem?.source || updateMetadata.source,
+    spaceId: currentItem?.spaceId || updateMetadata.spaceId
+  })
 }
 
 export function deleteCollectionItem(collectionName, id) {
