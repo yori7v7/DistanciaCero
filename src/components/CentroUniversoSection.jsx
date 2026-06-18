@@ -3326,6 +3326,7 @@ function CentroUniversoSection() {
                   <div className="item-info">
                     <strong>{dateItem.date} · {dateItem.title}</strong>
                     <span>{dateItem.description}</span>
+                    <LocalContentMeta item={dateItem} />
                   </div>
 
                   <div className="item-actions">
