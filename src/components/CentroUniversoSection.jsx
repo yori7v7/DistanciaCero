@@ -4694,6 +4694,7 @@ function CentroUniversoSection() {
                   <div className="item-info">
                     <strong>{promise.title}</strong>
                     <span>{promise.text || promise.description}</span>
+                    <LocalContentMeta item={promise} />
                   </div>
 
                   <div className="item-actions">
