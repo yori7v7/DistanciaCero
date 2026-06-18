@@ -91,9 +91,9 @@ Uso futuro:
 - Permitir ownership compartido.
 - Evitar que una cuenta lea contenido de otro universo.
 
-## 6. Metadata futura opcional
+## 6. Metadata actual opcional
 
-Metadata conceptual para contenido local o remoto:
+Metadata actual para items locales genericos y conceptual para contenido remoto futuro:
 
 ```js
 {
@@ -101,7 +101,7 @@ Metadata conceptual para contenido local o remoto:
   updatedBy: 'local-ale',
   createdAt: '2026-05-17T00:00:00.000Z',
   updatedAt: '2026-05-18T00:00:00.000Z',
-  source: 'local',
+  source: 'local-dev',
   spaceId: 'distancia-cero-local-space'
 }
 ```
@@ -116,11 +116,48 @@ Reglas:
 - Si un item no tiene autor, la UI futura debe tolerarlo.
 - `source` puede distinguir `base-json`, `local`, `imported`, `remote` o valores futuros.
 
-Helper aislado actual:
+Implementacion actual:
 
-- `src/services/contentMetadataService.js` construye metadata futura de autoria en modo local/dev.
-- El helper no esta conectado todavia al CRUD, export/import, repositories ni componentes.
-- Su uso futuro debe limitarse primero a nuevos items locales, sin migrar contenido existente.
+- `src/services/contentMetadataService.js` construye metadata de autoria en modo local/dev.
+- `localContentRepository.addCollectionItem` aplica metadata de creacion a nuevos items locales genericos.
+- `localContentRepository.updateCollectionItem` aplica metadata de actualizacion a items locales genericos editados.
+- La metadata no esta conectada a export/import como formato nuevo; viaja solo como campos extra opcionales dentro de items locales.
+
+Campos actuales:
+
+- `createdBy`
+- `updatedBy`
+- `createdAt`
+- `updatedAt`
+- `source`
+- `spaceId`
+
+Al crear un item local generico:
+
+- `createdBy` = usuario local actual.
+- `updatedBy` = usuario local actual.
+- `createdAt` = timestamp actual.
+- `updatedAt` = timestamp actual.
+- `source` = `local-dev`.
+- `spaceId` = space local actual.
+
+Al editar un item local generico:
+
+- `createdBy` y `createdAt` se preservan si existen.
+- `updatedBy` se actualiza con el usuario local actual.
+- `updatedAt` se actualiza.
+- `source` y `spaceId` se preservan si ya existian.
+- No se agrega `createdBy` ni `createdAt` durante update.
+
+No aplica todavia a:
+
+- JSON base.
+- Overrides.
+- Hidden ids.
+- Cartas legacy monthly/openWhen si no pasan por `addCollectionItem`.
+- Opened/read.
+- Simulation unlocked.
+- Contenido local existente que no se edite.
 
 ## 7. Compatibilidad
 
@@ -135,15 +172,16 @@ Reglas de compatibilidad:
 - La UI futura debe tratar autor ausente como estado valido.
 - No se debe modificar contenido base JSON para agregar autores.
 
-Preguntas de migracion:
+Reglas de migracion:
 
-- Nuevos items pueden recibir metadata cuando exista contrato runtime.
+- Nuevos items locales genericos reciben metadata mediante `addCollectionItem`.
+- Items locales genericos editados actualizan metadata mediante `updateCollectionItem`.
 - Items existentes pueden quedarse sin metadata.
 - Si algun dia se migra contenido local, debe hacerse con backup previo y confirmacion.
 
 ## 8. Export/import
 
-La metadata de autor puede viajar como campos opcionales dentro de items futuros.
+La metadata de autor puede viajar como campos opcionales dentro de items locales.
 
 Reglas:
 
@@ -152,6 +190,7 @@ Reglas:
 - No crear `version: 3` todavia.
 - Considerar `version: 3` solo si el cambio futuro rompe compatibilidad o necesita validacion estricta.
 - Importar metadata no debe crear usuarios automaticamente sin una politica definida.
+- Import v2 debe tolerar items con o sin metadata.
 - Export/import debe seguir funcionando como respaldo offline.
 
 ## 9. Servicios futuros
@@ -326,29 +365,31 @@ Rollback:
 
 Objetivo:
 
-- Agregar metadata a nuevos items locales, no a existentes.
+- Agregar metadata a nuevos items locales genericos y a ediciones de esos items, no a contenido existente sin editar.
 
 Archivos probables:
 
 - `src/repositories/localContentRepository.js`
-- `src/services/contentService.js` solo si hace falta orquestar.
-- `src/components/CentroUniversoSection.jsx` para cartas legacy si aun construye objetos localmente.
 
 No tocar:
 
 - JSON base.
 - Items existentes.
 - Import v1.
+- Overrides.
+- Hidden.
+- Cartas legacy monthly/openWhen.
 
 Validacion:
 
 - Crear item nuevo y confirmar metadata.
+- Editar item local y confirmar `updatedBy` / `updatedAt`.
 - Importar backup viejo sin metadata.
 - Exportar backup v2.
 
 Rollback:
 
-- Dejar de agregar metadata nueva.
+- Dejar de agregar metadata en create/update generico.
 
 ### Fase 2.4: mostrar autor opcional en Centro
 

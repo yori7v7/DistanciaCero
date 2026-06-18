@@ -414,6 +414,53 @@ Reglas de compatibilidad:
 - El modo local debe seguir existiendo como fallback y herramienta de desarrollo.
 - Si se introduce async, debe planearse sin romper componentes que hoy esperan funciones sync.
 
+### Metadata de autoria local actual
+
+`src/services/contentMetadataService.js` existe como helper sync de metadata local/dev.
+
+La metadata actual aplica solo a items locales genericos creados o editados por:
+
+- `localContentRepository.addCollectionItem`
+- `localContentRepository.updateCollectionItem`
+
+Campos actuales:
+
+- `createdBy`
+- `updatedBy`
+- `createdAt`
+- `updatedAt`
+- `source`
+- `spaceId`
+
+Al crear un item local generico:
+
+- `createdBy` usa el usuario local actual.
+- `updatedBy` usa el usuario local actual.
+- `createdAt` usa el timestamp actual.
+- `updatedAt` usa el timestamp actual.
+- `source` usa `local-dev`.
+- `spaceId` usa el space local actual.
+
+Al editar un item local generico:
+
+- `createdBy` y `createdAt` se preservan si existen.
+- `updatedBy` usa el usuario local actual.
+- `updatedAt` usa el timestamp actual.
+- `source` y `spaceId` se preservan si ya existian.
+- No se agrega `createdBy` ni `createdAt` durante update.
+
+La metadata no aplica a:
+
+- Contenido existente que no se edite.
+- JSON base.
+- Overrides.
+- Hidden ids.
+- Cartas legacy monthly/openWhen si no pasan por `addCollectionItem`.
+- Opened/read.
+- Simulation unlocked.
+
+Export/import v2 no cambia de version. La metadata viaja como campos extra opcionales dentro de items locales; backups viejos sin metadata siguen funcionando e import v2 debe tolerar items con o sin metadata.
+
 ## 10. Riesgos anotados
 
 ### Async futuro
@@ -426,7 +473,7 @@ Sin Auth no hay identidad real de autor. Con Auth se debe definir sesion, perfil
 
 ### `createdBy` / `updatedBy`
 
-Todo item remoto futuro debe registrar quien lo creo y quien lo actualizo. En local hoy no existe esa informacion.
+Los nuevos items locales genericos ya registran `createdBy` / `updatedBy` en modo local/dev. El contenido existente, JSON base, overrides, hidden, cartas legacy, opened/read y simulation unlocked no reciben metadata automaticamente.
 
 ### RLS
 
