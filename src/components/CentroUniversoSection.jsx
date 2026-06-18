@@ -3557,6 +3557,7 @@ function CentroUniversoSection() {
                   <div className="item-info">
                     <strong>{dream.category} · {dream.title}</strong>
                     <span>{dream.description}</span>
+                    <LocalContentMeta item={dream} />
                   </div>
 
                   <div className="item-actions">
