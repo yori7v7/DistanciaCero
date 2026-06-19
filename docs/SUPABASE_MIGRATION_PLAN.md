@@ -572,7 +572,7 @@ Objetivo:
 Archivos probables:
 
 - `docs/SUPABASE_MIGRATION_PLAN.md`
-- `docs/supabase/local-to-remote-mapping.md`
+- `docs/SUPABASE_LOCAL_REMOTE_MAPPING.md`
 
 Que NO tocar:
 
