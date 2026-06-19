@@ -1,0 +1,361 @@
+# Supabase Readiness Checklist
+
+> ESTADO: GATE DOCUMENTAL. Este archivo no instala Supabase, no aplica SQL,
+> no crea un cliente remoto y no modifica el runtime de Distancia Cero.
+
+## 1. Resumen
+
+Este documento define los criterios operativos y de seguridad que deben
+cumplirse antes de pasar de documentacion Supabase a implementacion real.
+
+Su funcion es producir un veredicto verificable de `GO`, `NO-GO` o `WARN` para
+cada fase. No sustituye revision tecnica, pruebas de RLS, backup ni aprobacion
+humana.
+
+Este checklist:
+
+- no instala dependencias;
+- no aplica schema, RLS, migrations ni policies;
+- no crea un cliente Supabase;
+- no conecta repositories remotos;
+- no cambia LocalStorage ni export/import v2;
+- no toca componentes, escenas, musica o Router;
+- no cambia la API publica sync de `contentService`.
+
+El estado inicial global es **NO-GO para implementacion remota** mientras exista
+cualquier gate critico pendiente.
+
+## 2. Estado actual esperado
+
+Baseline verificado al crear este documento:
+
+- [x] Supabase esta ausente de `package.json`.
+- [x] No existen imports de `@supabase` en `src`.
+- [x] No existe una llamada `createClient` en `src`.
+- [x] No existen variables `VITE_SUPABASE_*` en el runtime.
+- [x] `react-router-dom` esta instalado, pero Router no esta activo.
+- [x] No existen `BrowserRouter`, `Routes`, `Route`, `useNavigate` o
+      `useParams` en `src`.
+- [x] El CRUD actual sigue siendo local y sync.
+- [x] La API publica de `contentService` sigue siendo sync.
+- [x] `contentRepository` reexporta la implementacion local.
+- [x] `localContentRepository` es la unica capa que importa
+      `localContentStore`.
+- [x] LocalStorage sigue siendo la fuente activa y fallback estable.
+- [x] Export/import v2 permanece intacto como backup offline.
+- [x] Supabase existe solo en documentos y drafts no aplicados.
+- [x] El build base pasa.
+- [x] El arbol Git estaba limpio antes de iniciar esta fase documental.
+
+Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
+aqui no autoriza por si solo cambios futuros.
+
+## 3. Principios de activacion
+
+- No activar el repository remoto por defecto.
+- No hacer de Supabase un requisito para abrir la app.
+- No borrar, reemplazar ni migrar LocalStorage automaticamente.
+- No convertir `contentService` a async de golpe.
+- No cambiar firmas o return types publicos sin plan de compatibilidad.
+- No tocar UI visible hasta que repositories, contratos y fallback esten
+  probados de forma aislada.
+- No usar `service_role` ni secretos administrativos en frontend, Vite o Git.
+- No tratar la anon/publishable key como sustituto de RLS.
+- No usar `local-yori`, `local-ale` o `distancia-cero-local-space` como UUID
+  remotos.
+- No inventar autoria para contenido legacy sin metadata verificable.
+- No atribuir automaticamente al importador contenido de autor desconocido.
+- No usar hard delete como comportamiento remoto por defecto.
+- No activar Router, Auth routing y Supabase en una misma fase.
+- No mezclar cambios de escenas o musica con infraestructura remota.
+- No aplicar SQL documental sin convertirlo antes en migrations revisadas.
+- No habilitar escritura remota antes de probar lectura, RLS y rollback.
+- No habilitar Realtime antes de definir conflictos y versionado.
+- Mantener export/import v2 disponible como backup offline.
+
+## 4. Gates criticos antes de implementacion
+
+Estados permitidos:
+
+- `[ ] Pendiente`: no existe evidencia suficiente.
+- `[x] Cumplido`: existe evidencia revisada para la fase indicada.
+- `[!] Bloqueado`: una condicion impide avanzar.
+
+| Gate | Severidad | Criterio de aceptacion | Evidencia requerida | Estado |
+| --- | --- | --- | --- | --- |
+| Bootstrap owner/partner seguro | Critico | Crear Auth, profiles, space y memberships sin self-owner client-side | Diseno aprobado de RPC/admin flow, casos de error y rollback | [ ] Pendiente |
+| Mapping UUID verificado | Critico | Mapear Yori, Ale y space local a UUID reales sin ambiguedad | Registro firmado/revisado de mapping y validacion de FKs | [ ] Pendiente |
+| RLS final revisada | Critico | Policies finales protegen profiles, memberships, contenido, eventos y media | SQL final revisado y matriz de pruebas multiusuario | [ ] Pendiente |
+| Variables de entorno seguras | Alto | Definir URL y anon/publishable key sin secretos administrativos | `.env.example`, reglas de deploy y escaneo de secretos | [ ] Pendiente |
+| Estrategia sync local vs async remoto | Critico | Preservar contrato sync o definir hidratacion/cache compatible | ADR/diseno con estados loading, error, offline y rollback | [ ] Pendiente |
+| Fallback local | Critico | La app abre y permite modo local sin red o Supabase | Pruebas offline y procedimiento de desactivacion remota | [ ] Pendiente |
+| Repository remoto no activo | Alto | Skeleton aislado no cambia el selector ni el comportamiento local | Diff, busqueda de imports y tests del selector local | [ ] Pendiente |
+| Pruebas minimas | Critico | Existen pruebas de contrato, RLS/Auth, fallback e import antes de UI | Matriz ejecutada con resultados reproducibles | [ ] Pendiente |
+| Media/Data URL | Alto | Existe plan de validacion, upload privado, referencia y cleanup | Flujo probado en entorno aislado con archivos invalidos y fallos | [ ] Pendiente |
+| Export/import v2 | Critico | Sigue funcionando como backup y la migracion remota es manual/idempotente | Backup de prueba, dry run, reimport y rollback verificados | [ ] Pendiente |
+| `user_content_state` para opened/read | Medio | Se aprueba schema remoto o decision explicita de mantenerlo local | ADR y pruebas de compatibilidad con IDs base/locales | [ ] Pendiente |
+| Autoria legacy | Critico | Autor desconocido queda null/controlado, nunca atribuido por conveniencia | Casos de import sin metadata y policy administrativa aprobada | [ ] Pendiente |
+| Hidden restore vs hard delete | Alto | Restaurar hidden no borra contenido ni elude auditoria | Diseno de marker/RPC/soft delete y pruebas de restauracion | [ ] Pendiente |
+| Rollback Storage + DB | Critico | Fallos parciales no dejan perdida ni media huerfana permanente | Journal, compensacion, reintento idempotente y prueba de fallo | [ ] Pendiente |
+| Conflictos offline/online | Alto | Existe regla para ediciones concurrentes Ale/Yori | Estrategia de version, deteccion y resolucion probada | [ ] Pendiente |
+| Audit log confiable | Alto | Eventos confiables no dependen de payload libre del cliente | Trigger/RPC/admin flow y prueba de inmutabilidad | [ ] Pendiente |
+| Router fuera de alcance | Bajo | Ninguna fase Supabase activa Router implicitamente | Busqueda de imports y diff sin cambios de routing | [x] Cumplido |
+
+Un gate solo cambia a `[x] Cumplido` cuando su evidencia existe y ha sido
+revisada. Crear un archivo o instalar una dependencia no completa por si solo
+ningun gate critico.
+
+## 5. Checklist go/no-go global
+
+### GO
+
+`GO` se permite solo cuando:
+
+- [ ] Todos los gates `Critico` aplicables estan en `[x] Cumplido`.
+- [ ] Todos los gates `Alto` necesarios para la fase estan cumplidos.
+- [ ] No hay secretos, SQL no revisado o cambios runtime fuera de alcance.
+- [ ] El build y las pruebas de la fase pasan.
+- [ ] El fallback local fue verificado despues del cambio.
+- [ ] El diff contiene solo archivos autorizados.
+- [ ] Existe rollback documentado y ejecutable para la fase.
+- [ ] El siguiente paso tiene alcance y responsable claros.
+
+### NO-GO
+
+El resultado obligatorio es `NO-GO` si:
+
+- [x] Falta cualquiera de los gates criticos. Estado actual de esta fase.
+- [ ] Se detecta una `service_role` o secreto en frontend/Git.
+- [ ] RLS permite acceso fuera del relationship space.
+- [ ] El modo local deja de funcionar.
+- [ ] Se rompe export/import v2 o no existe backup recuperable.
+- [ ] La fase cambia la API sync sin compatibilidad aprobada.
+- [ ] Se pretende importar autoria legacy sin mapping verificable.
+- [ ] No puede demostrarse rollback de DB/Storage.
+- [ ] El build o pruebas obligatorias fallan.
+
+### WARN
+
+`WARN` puede usarse cuando faltan gates `Medio` o `Bajo` que no afectan la
+fase documental o aislada actual. Un `WARN`:
+
+- no permite ignorar gates criticos;
+- debe listar riesgo, owner y fecha/condicion de resolucion;
+- no autoriza escritura remota ni datos reales;
+- debe convertirse en `GO` o `NO-GO` antes de produccion.
+
+## 6. Fases autorizadas despues de este checklist
+
+Cada fase requiere aprobacion separada. Completar una no activa automaticamente
+la siguiente.
+
+### S4.0: auditoria tecnica del cliente sin instalar
+
+- Objetivo: definir API del cliente, lifecycle, manejo de env y errores.
+- Permitido: documentacion y lectura.
+- Prohibido: dependencia, `createClient`, imports runtime.
+- Salida: diseno aprobado y veredicto de variables necesarias.
+
+### S4.1: docs de variables y `.env.example`
+
+- Objetivo: documentar `VITE_SUPABASE_URL` y anon/publishable key.
+- Permitido: docs y `.env.example` sin valores reales.
+- Prohibido: `service_role`, secretos, conexion runtime.
+- Salida: reglas de despliegue, validacion y escaneo de secretos.
+
+### S4.2: contrato y remote repository skeleton
+
+- Objetivo: fijar la interfaz remota sin dependencia Supabase activa.
+- Permitido: contrato, skeleton y tipos/helpers aislados.
+- Prohibido: cliente real, imports de Supabase o conectar el skeleton al CRUD.
+- Salida: repository local sigue siendo la implementacion activa.
+
+### S4.3: instalar `@supabase/supabase-js` sin usarlo
+
+- Objetivo: agregar solo la dependencia oficial.
+- Permitido: `package.json` y lockfile tras aprobacion explicita.
+- Prohibido: imports, cliente, Auth, CRUD o Router.
+- Salida: build estable y busqueda que confirme cero uso runtime.
+
+### S4.4: cliente/factory Supabase aislado
+
+- Objetivo: crear un cliente encapsulado sin conectarlo al CRUD.
+- Permitido: modulo aislado y validacion segura de env.
+- Prohibido: selector remoto, UI, Auth visible o escritura.
+- Salida: importado solo por tests o no importado por runtime activo.
+
+### S4.5: tests y contratos de repository
+
+- Objetivo: demostrar equivalencia semantica y fallback.
+- Permitido: pruebas de contrato y fixtures sin datos privados.
+- Prohibido: UI productiva o migracion real.
+- Salida: create/update/delete/override/hidden/legacy cubiertos.
+
+### S4.6: entorno Supabase aislado
+
+- Objetivo: probar schema y RLS revisados fuera de produccion.
+- Permitido: proyecto de prueba sin datos reales tras aprobacion.
+- Prohibido: aplicar drafts sin revision o conectar la app productiva.
+- Salida: matriz RLS, rollback SQL y evidencia multiusuario.
+
+### S4.7: bootstrap owner/partner controlado
+
+- Objetivo: probar creacion segura de profiles, space y memberships.
+- Permitido: RPC/admin flow en entorno aislado.
+- Prohibido: self-owner client-side o `service_role` en frontend.
+- Salida: mapping UUID verificable y prueba de ultimo owner.
+
+### S4.8: piloto read-only de una coleccion
+
+- Objetivo: leer una coleccion piloto con fixtures sinteticos y sin datos
+  privados reales, usando cache/fallback.
+- Permitido: feature flag apagada por defecto, entorno aislado y datos
+  sinteticos controlados.
+- Prohibido: escritura, migracion masiva, media o Realtime.
+- Salida: local-first intacto, errores/offline probados y rollback simple.
+
+### S4.9: escritura y migracion controlada
+
+- Objetivo: habilitar escritura o import remoto de forma limitada.
+- Permitido solo si: RLS, autoria, idempotencia, conflictos y rollback estan
+  cumplidos.
+- Prohibido: datos reales sin backup, dry run y confirmacion.
+- Salida: auditoria, reconciliacion y reversibilidad demostradas.
+
+## 7. Archivos prohibidos hasta nuevo aviso
+
+No deben tocarse como parte de preparacion Supabase general:
+
+- `src/App.jsx`;
+- `src/components/SceneModeController.jsx`;
+- `src/components/SceneMusicController.jsx`;
+- export/import runtime dentro de `CentroUniversoSection.jsx`;
+- cualquier JSON base en `src/data`;
+- `package.json`, salvo fase S4.3 aprobada expresamente;
+- lockfile, salvo fase S4.3 aprobada expresamente;
+- `vite.config.js`, salvo fase especifica aprobada;
+- API publica sync de `src/services/contentService.js`;
+- React Router runtime, rutas, hash/scene navigation o guards;
+- musica, volumen, escenas y progreso opened/read;
+- componentes visibles antes de completar contratos y pruebas aisladas.
+
+Si una fase necesita alguno de estos archivos, debe detenerse y solicitar una
+auditoria y autorizacion especificas.
+
+## 8. Evidencia requerida por fase
+
+### Evidencia estandar obligatoria
+
+Cada fase debe entregar:
+
+- [ ] `git status` inicial y final.
+- [ ] `npm.cmd run build` inicial y final.
+- [ ] `git diff --stat`.
+- [ ] Diff completo de cada archivo autorizado modificado.
+- [ ] `git diff --check`.
+- [ ] Lista exacta de archivos creados/modificados.
+- [ ] Confirmacion de archivos prohibidos no tocados.
+- [ ] Resultado de busqueda de Supabase cuando aplique.
+- [ ] Resultado de busqueda de Router cuando aplique.
+- [ ] Riesgos nuevos y rollback de la fase.
+- [ ] Veredicto `GO`, `NO-GO` o `WARN`.
+
+### Evidencia especifica
+
+| Fase | Evidencia adicional minima |
+| --- | --- |
+| S4.0 | Contrato del cliente, env, errores y limites de responsabilidad |
+| S4.1 | `.env.example` sin secretos y lista de variables permitidas |
+| S4.2 | Contrato del repository y evidencia de que el repository local sigue activo |
+| S4.3 | `npm ls`, build y cero imports de Supabase en `src` |
+| S4.4 | Validacion de env, ausencia de `service_role` y cliente no conectado |
+| S4.5 | Resultados reproducibles de tests de contrato y fallback |
+| S4.6 | Matriz RLS con usuarios de mismo/diferente space y rollback SQL |
+| S4.7 | Evidencia de bootstrap, mapping UUID y proteccion del ultimo owner |
+| S4.8 | Pruebas online/offline/error y feature flag apagada por defecto |
+| S4.9 | Backup, dry run, idempotencia, conflictos, audit y rollback ejecutado |
+
+Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
+
+## 9. Matriz de riesgos
+
+| Riesgo | Impacto | Probabilidad | Mitigacion | Fase donde debe resolverse |
+| --- | --- | --- | --- | --- |
+| Self-owner durante bootstrap | Critico | Media | RPC/admin flow, constraints y pruebas de roles | S4.7 |
+| `service_role` expuesto | Critico | Media | Prohibir frontend, escaneo y rotacion inmediata | S4.1-S4.4 |
+| RLS permisiva | Critico | Media | Matriz multi-space, review y deny-by-default | S4.6 |
+| `contentService` async roto | Critico | Alta | Cache/hidratacion y contrato compatible antes de conectar | S4.0-S4.5 |
+| Perdida de datos locales | Critico | Media | LocalStorage intacto, backup v2 y migracion opt-in | S4.8-S4.9 |
+| Autoria falsa | Alto | Media | Mapping verificado y null para legado desconocido | S4.7-S4.9 |
+| Hard delete accidental | Alto | Media | Soft delete/marker, RPC y audit obligatorio | S4.6-S4.9 |
+| Storage huerfano | Alto | Alta | Journal, compensacion, cleanup e idempotencia | S4.9 |
+| Conflicto Ale/Yori | Alto | Alta | Versionado optimista y resolucion explicita | S4.5-S4.9 |
+| Router activado antes de tiempo | Medio | Baja | Mantenerlo fuera de alcance y buscar imports | Todas |
+| Export/import incompatible | Critico | Media | Fixtures v1/v2, dry run y pruebas de restauracion | S4.5-S4.9 |
+| Build roto por dependency/config | Alto | Media | Fases aisladas, build inicial/final y rollback de lockfile | S4.3-S4.4 |
+| Audit log falsificable | Alto | Media | Trigger/RPC/admin; no insert libre del cliente | S4.6-S4.9 |
+| IDs locales usados como UUID | Critico | Baja | Registro de mapping y validacion estricta de UUID | S4.7-S4.9 |
+| Media privada expuesta | Critico | Media | Bucket privado y policies por membership | S4.6-S4.9 |
+
+## 10. Decisiones pendientes
+
+- [ ] Metodo de bootstrap inicial y proteccion del ultimo owner.
+- [ ] Ubicacion y custodia del mapping local -> remoto.
+- [ ] Si `profiles` conservara `local_slug`.
+- [ ] Diseno final de `user_content_state`.
+- [ ] Referencia de progreso para JSON base y contenido remoto.
+- [ ] Estrategia de cache/hidratacion sync/async.
+- [ ] Fuente de verdad durante estados offline.
+- [ ] Estrategia de conflictos Ale/Yori.
+- [ ] Versionado optimista o mecanismo equivalente.
+- [ ] Estrategia de rollback y cleanup de media.
+- [ ] Estrategia y tooling de pruebas.
+- [ ] Si existira RPC administrativa de importacion.
+- [ ] Si el audit log se generara mediante trigger, RPC o admin.
+- [ ] Restauracion de hidden sin hard delete general.
+- [ ] Politica para autoria legacy desconocida.
+- [ ] Forma de activar/desactivar repository remoto.
+- [ ] Condiciones que justificarian export/import v3.
+- [ ] Momento y alcance, si alguno, para activar React Router.
+
+## 11. Plantilla de veredicto por fase
+
+```md
+## Veredicto de fase
+
+- Fase: <identificador y nombre>
+- Veredicto: GO / NO-GO / WARN
+- Fecha: <ISO date>
+- Alcance aprobado: <descripcion breve>
+- Archivos tocados: <lista exacta>
+- Archivos prohibidos verificados: <lista/confirmacion>
+- Riesgos nuevos: <lista o ninguno>
+- Riesgos pendientes: <lista>
+- Evidencia revisada: <comandos, tests y diffs>
+- Rollback verificado: si / no / no aplica
+- Siguiente fase recomendada: <una sola fase>
+- Aprobado por: <persona/proceso>
+```
+
+Reglas de uso:
+
+- `GO` requiere evidencia, no solo intencion.
+- `NO-GO` debe identificar el gate bloqueante.
+- `WARN` no puede ocultar un gate critico pendiente.
+- El veredicto no debe contener secretos ni datos privados.
+
+## 12. Checklist de aceptacion de este documento
+
+- [x] Solo crea `docs/SUPABASE_READINESS_CHECKLIST.md`.
+- [x] No toca runtime ni archivos de `src`.
+- [x] No instala dependencias.
+- [x] No agrega ni configura Supabase.
+- [x] No activa React Router.
+- [x] No aplica SQL ni migrations.
+- [x] No cambia `package.json` ni lockfile.
+- [x] No cambia `vite.config.js`.
+- [x] No cambia export/import v2.
+- [x] No cambia JSON base.
+- [x] No cambia la API sync de `contentService`.
+- [x] Conserva LocalStorage como runtime y fallback estable.
+- [x] El build pasa despues de crear el documento.
