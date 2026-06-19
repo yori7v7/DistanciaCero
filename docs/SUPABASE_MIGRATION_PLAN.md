@@ -13,6 +13,19 @@ Supabase queda como una fase futura para:
 
 Este documento fija un plan tecnico antes de instalar dependencias o cambiar runtime.
 
+Gate operativo obligatorio: `docs/SUPABASE_READINESS_CHECKLIST.md`.
+
+Ese checklist debe revisarse y emitir un veredicto go/no-go antes de:
+
+- instalar dependencias Supabase;
+- crear un cliente/factory Supabase;
+- aplicar SQL, migrations o RLS;
+- conectar cualquier repository remoto al CRUD activo.
+
+El gate protege el runtime local/sync, LocalStorage, export/import v2 y los
+controladores delicados de escenas y musica. Ninguna fase futura debe asumir
+que documentar o instalar una pieza autoriza automaticamente la siguiente.
+
 ## 2. Estado actual
 
 ### CRUD

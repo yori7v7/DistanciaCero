@@ -15,6 +15,8 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 
 - `schema_draft.sql`: borrador conceptual de tablas, constraints e indices.
 - `rls_draft.sql`: borrador conceptual de helpers y policies RLS.
+- `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
+  instalar el cliente, aplicar SQL o conectar repositories remotos.
 
 ## Antes de ejecutar cualquier SQL real
 
