@@ -458,345 +458,230 @@ Opciones futuras:
 - Hidratacion inicial desde LocalStorage y sync remoto posterior.
 - Modo local como fallback cuando Supabase no este disponible.
 
-## 10. Fases futuras
+## 10. Fases documentales y flujo operativo actual
 
-### S0: este documento
+La base documental se completo como trabajo S3.x. La implementacion futura se
+rige por el flujo operativo S4.0-S4.9 y por el gate obligatorio de
+`docs/SUPABASE_READINESS_CHECKLIST.md`. Completar una fase no autoriza la
+siguiente automaticamente.
+
+### S3.x: base documental
+
+Incluye:
+
+- plan de migracion conceptual;
+- schema y RLS conceptuales;
+- drafts SQL/RLS sin aplicar;
+- mapping local -> remoto;
+- contrato de contenido e identidad;
+- checklist operativo y reglas de entorno.
+
+Resultado:
+
+- Supabase sigue sin instalarse;
+- no existe cliente Supabase activo;
+- no se aplico SQL;
+- el runtime local/sync y export/import v2 permanecen intactos.
+
+### S4.0: auditoria tecnica del cliente sin instalar
 
 Objetivo:
 
-- Fijar el plan conceptual sin cambiar runtime.
+- Fijar responsabilidades, errores, env y limites antes de agregar una
+  dependencia.
 
-Archivos probables:
+Validacion y rollback:
 
-- `docs/SUPABASE_MIGRATION_PLAN.md`
-
-Que NO tocar:
-
-- `src`
-- `package.json`
-- Supabase
-
-Validacion:
-
-- `git status`
-- `npm.cmd run build`
-
-Rollback:
-
-- Eliminar este documento.
+- Revision documental, busqueda de imports y build local.
+- Revertir solo documentacion.
 
 Nivel Codex:
 
-- Bajo.
+- Medio.
 
-### S1: schema SQL conceptual
+### S4.1: documentacion de entorno y `.env.example`
 
 Objetivo:
 
-- Documentar SQL conceptual para tablas futuras.
-
-Archivos probables:
-
-- `docs/supabase/schema.sql`
-- `docs/SUPABASE_MIGRATION_PLAN.md`
+- Documentar variables permitidas sin secretos y mantener
+  `VITE_REMOTE_CONTENT_ENABLED=false`.
 
 Que NO tocar:
 
-- Runtime.
-- Supabase real.
-- `package.json`.
+- Runtime, `package.json`, cliente Supabase o CRUD activo.
 
-Validacion:
+Validacion y rollback:
 
-- Revision del SQL.
-- Build para confirmar que no se toco runtime.
-
-Rollback:
-
-- Revertir docs.
+- Escaneo de secretos, build y revision de `.env.example`.
+- Revertir solo documentacion/env de ejemplo.
 
 Nivel Codex:
 
 - Bajo/Medio.
 
-### S2: RLS conceptual
+### S4.2: contrato y skeleton remoto inactivo
 
-Objetivo:
+Esta fase se divide en pasos pequenos y reversibles:
 
-- Documentar policies de lectura/escritura por membership.
-
-Archivos probables:
-
-- `docs/supabase/rls.sql`
-
-Que NO tocar:
-
-- Supabase real.
-- Runtime.
-
-Validacion:
-
-- Revision manual de policies.
-- Confirmar que toda policy valida `space_id`.
-
-Rollback:
-
-- Revertir docs.
-
-Nivel Codex:
-
-- Medio.
-
-### S3: migrations SQL documentales sin aplicar
-
-Objetivo:
-
-- Preparar migraciones versionadas como documentos, sin ejecutarlas.
-
-Archivos probables:
-
-- `docs/supabase/migrations/*.sql`
+- **S4.2.0:** auditoria y diseno del contrato remoto, sin crear runtime.
+- **S4.2.1:** crear `contentRepositoryContract.js` y
+  `remoteContentRepository.js` import-safe/fail-fast, sin conectarlos al CRUD.
+- **S4.2.2:** armonizar la numeracion documental Supabase.
 
 Que NO tocar:
 
-- Supabase real.
-- Runtime.
-- `package.json`.
+- `contentRepository.js`, `contentService.js`, componentes, LocalStorage o
+  export/import v2.
 
-Validacion:
+Validacion y rollback:
 
-- Revision de orden de migraciones.
-- Build local.
-
-Rollback:
-
-- Revertir docs.
-
-Nivel Codex:
-
-- Medio.
-
-### S4: mapping local -> remoto
-
-Objetivo:
-
-- Definir mapping de usuarios, space, contenido y media.
-
-Archivos probables:
-
-- `docs/SUPABASE_MIGRATION_PLAN.md`
-- `docs/SUPABASE_LOCAL_REMOTE_MAPPING.md`
-
-Que NO tocar:
-
-- Runtime.
-- LocalStorage.
-- Export/import.
-
-Validacion:
-
-- Revisar que no se inventen autores retroactivos.
-- Revisar mapping de `local-yori`, `local-ale` y `distancia-cero-local-space`.
-
-Rollback:
-
-- Revertir docs.
-
-Nivel Codex:
-
-- Medio.
-
-### S5: `remoteContentRepository` stub sin usar
-
-Objetivo:
-
-- Crear una interfaz futura sin conectarla.
-
-Archivos probables:
-
-- `src/repositories/remoteContentRepository.js`
-
-Que NO tocar:
-
-- Selector activo `contentRepository.js`, salvo que la tarea lo permita explicitamente.
-- Componentes.
-- `contentService` publico.
-
-Validacion:
-
-- Build.
-- Confirmar que el stub no se importa ni se ejecuta.
-
-Rollback:
-
-- Eliminar stub.
-
-Nivel Codex:
-
-- Medio.
-
-### S6: instalar Supabase client
-
-Objetivo:
-
-- Agregar dependencia oficial solo cuando schema/RLS esten claros.
-
-Archivos probables:
-
-- `package.json`
-- lockfile si existe.
-- `src/services/supabaseClient.js` futuro.
-
-Que NO tocar:
-
-- Componentes.
-- CRUD activo.
-- Auth real todavia, salvo tarea separada.
-
-Validacion:
-
-- Install limpio.
-- Build.
-- Confirmar que no se llama Supabase en runtime activo.
-
-Rollback:
-
-- Quitar dependencia y archivos nuevos.
+- Build, smoke test de import, contrato estructural y cero imports runtime.
+- Eliminar el skeleton o revertir docs sin cambiar el repository local activo.
 
 Nivel Codex:
 
 - Medio/Alto.
 
-### S7: Auth real
+### S4.3: instalar `@supabase/supabase-js` de forma aislada
 
 Objetivo:
 
-- Conectar Supabase Auth y profiles sin migrar contenido todavia.
-
-Archivos probables:
-
-- `src/services/authService.js`
-- `src/services/profileService.js`
-- `src/services/universeService.js`
+- Agregar solo la dependencia oficial tras aprobacion explicita, sin usarla en
+  runtime.
 
 Que NO tocar:
 
-- CRUD remoto.
-- Storage.
-- Export/import.
+- Componentes, CRUD activo, Auth, Router o selector de repository.
 
-Validacion:
+Validacion y rollback:
 
-- Login/logout.
-- Profile actual.
-- Membership del relationship space.
-- Modo local fallback.
+- Install reproducible, build y cero imports de Supabase en `src`.
+- Revertir `package.json` y lockfile.
 
-Rollback:
+Nivel Codex:
 
-- Volver a servicios fake/dev.
+- Medio/Alto.
+
+### S4.4: cliente/factory Supabase aislado
+
+Objetivo:
+
+- Crear un cliente encapsulado con validacion segura de env, sin conectarlo al
+  CRUD.
+
+Que NO tocar:
+
+- `contentRepository.js`, componentes, export/import o Router.
+
+Validacion y rollback:
+
+- Import aislado, ausencia de `service_role`, flag remoto apagado y build.
+- Eliminar el cliente/factory aislado.
 
 Nivel Codex:
 
 - Alto.
 
-### S8: migracion manual export/import -> remoto
+### S4.5: tests y contratos de repository
 
 Objetivo:
 
-- Convertir backup local v2 en datos remotos.
+- Probar equivalencia semantica, errores y fallback antes de cualquier conexion
+  remota.
 
-Archivos probables:
+Validacion y rollback:
 
-- Herramienta o panel de migracion.
-- Repository remoto.
-- Docs de mapping.
-
-Que NO tocar:
-
-- JSON base.
-- Backups locales existentes.
-- Import v1/v2 offline.
-
-Validacion:
-
-- Backup previo.
-- Migracion en entorno de prueba.
-- Comparar conteos por coleccion.
-- Confirmar autores y space.
-
-Rollback:
-
-- Borrar datos remotos de prueba.
-- Restaurar backup local.
+- Fixtures sinteticos sin datos privados, pruebas online/offline y build.
+- Retirar tests/skeleton remoto sin cambiar el repository local.
 
 Nivel Codex:
 
 - Alto.
 
-### S9: Storage fotos
+### S4.6: entorno Supabase aislado con schema/RLS revisados
 
 Objetivo:
 
-- Migrar Data URL/rutas de galeria a Supabase Storage privado.
+- Aplicar y probar schema/RLS solo en un entorno aislado, sin datos privados
+  reales ni conexion al CRUD productivo.
 
-Archivos probables:
+Validacion y rollback:
 
-- `mediaService`.
-- `remoteContentRepository`.
-- Docs de media.
-
-Que NO tocar:
-
-- Audio.
-- SceneMusicController.
-- Backups offline sin plan.
-
-Validacion:
-
-- Upload.
-- Lectura privada.
-- URLs firmadas.
-- Cleanup de assets.
-
-Rollback:
-
-- Mantener Data URL local.
-- Borrar assets remotos de prueba.
+- Matriz multi-space, policies deny-by-default y rollback SQL probado.
+- Destruir el entorno de prueba o revertir migrations de prueba.
 
 Nivel Codex:
 
 - Alto.
 
-### S10: Realtime opcional
+### S4.7: bootstrap owner/partner controlado
 
 Objetivo:
 
-- Sincronizar cambios Ale/Yori en vivo.
+- Resolver Auth, profiles, mapping UUID y primer membership mediante un flujo
+  controlado; nunca self-owner desde el cliente normal.
 
-Archivos probables:
+Validacion y rollback:
 
-- Repository remoto.
-- Hooks de subscriptions.
-- Centro del Universo.
-
-Que NO tocar:
-
-- Hasta tener conflictos definidos.
-
-Validacion:
-
-- Dos sesiones.
-- Conflictos.
-- Offline/online.
-
-Rollback:
-
-- Desactivar subscriptions.
+- Probar owner/partner, usuario externo, ultimo owner y fallback local.
+- Desactivar Auth remoto y volver a identidad fake/dev.
 
 Nivel Codex:
 
 - Alto.
+
+### S4.8: piloto read-only con fixtures sinteticos
+
+Objetivo:
+
+- Leer una coleccion piloto con fixtures sinteticos y sin datos privados
+  reales, manteniendo cache/fallback local.
+
+Que NO tocar:
+
+- Escritura remota, migration, export/import v2, JSON base o Router.
+
+Validacion y rollback:
+
+- Pruebas online/offline/error con feature flag apagado por defecto.
+- Desactivar el piloto y conservar el repository local.
+
+Nivel Codex:
+
+- Alto.
+
+### S4.9: escritura y migracion controlada
+
+Objetivo:
+
+- Habilitar escritura o migracion manual solo cuando RLS, rollback,
+  idempotencia y conflictos Ale/Yori esten resueltos.
+
+Validacion y rollback:
+
+- Backup v2 previo, dry run, conteos por coleccion, autoria/space verificados y
+  audit confiable.
+- Desactivar escritura remota, retirar datos de prueba y restaurar backup local.
+
+Nivel Codex:
+
+- Muy alto.
+
+### Trabajo posterior sin numeracion asignada
+
+Estos trabajos siguen separados y requieren planes y aprobaciones propias; no
+quedan activados por completar S4.9:
+
+- **Auth ampliado:** extender el bootstrap controlado hacia login/logout y
+  perfiles reales, conservando identidad fake/dev como rollback.
+- **Storage privado para fotos:** migrar Data URL/rutas de galeria con
+  `mediaService`, acceso privado, URLs firmadas y cleanup de assets. No incluye
+  audio ni autoriza romper backups offline.
+- **Realtime opcional:** sincronizar cambios Ale/Yori solo despues de definir
+  conflictos; validar dos sesiones y escenarios offline/online, con rollback
+  mediante desactivacion de subscriptions.
+
+React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 ## 11. Decisiones pendientes
 
@@ -813,13 +698,8 @@ Nivel Codex:
 
 ## 12. Veredicto
 
-No instalar Supabase todavia.
-
-Primero:
-
-1. Schema conceptual.
-2. RLS conceptual.
-3. Documentacion de mapping local -> remoto.
-4. Plan de Storage.
+No instalar Supabase todavia. El trabajo actual termina S4.2.2; cualquier avance
+a S4.3 requiere aprobacion independiente y un veredicto go/no-go del readiness
+checklist.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.
