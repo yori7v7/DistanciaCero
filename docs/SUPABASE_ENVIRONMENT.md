@@ -1,17 +1,18 @@
 # Supabase Environment
 
-> ESTADO: CONTRATO DOCUMENTAL FUTURO. No instala Supabase, no crea un cliente,
-> no conecta repositories y no modifica el runtime local de Distancia Cero.
+> ESTADO: CONTRATO DOCUMENTAL FUTURO. La dependencia oficial esta instalada de
+> forma aislada; no existe cliente, no conecta repositories y no modifica el
+> runtime local de Distancia Cero.
 
 ## 1. Resumen
 
 Este documento define las variables de entorno previstas para una integracion
 futura con Supabase. Su objetivo es fijar nombres, defaults y reglas de
-seguridad antes de instalar dependencias o escribir codigo de cliente.
+seguridad antes de crear un cliente o conectarlo al runtime.
 
 Esta fase:
 
-- no instala `@supabase/supabase-js`;
+- no importa ni usa `@supabase/supabase-js` en runtime;
 - no crea ni importa `createClient`;
 - no activa contenido remoto;
 - no aplica SQL, migrations o RLS;
@@ -24,7 +25,8 @@ Nunca deben contener secretos administrativos.
 
 ## 2. Estado actual
 
-- [x] Supabase no esta instalado.
+- [x] `@supabase/supabase-js` esta instalado de forma aislada.
+- [x] Vite esta actualizado a `8.0.16` y `npm audit` esta limpio.
 - [x] No existe un cliente Supabase.
 - [x] No existe conexion remota.
 - [x] No existen imports `@supabase` o llamadas `createClient` en `src`.
@@ -157,18 +159,20 @@ Este documento no sustituye `docs/SUPABASE_READINESS_CHECKLIST.md`.
 
 El readiness checklist sigue siendo el gate go/no-go obligatorio antes de:
 
-- instalar `@supabase/supabase-js`;
 - crear un cliente/factory Supabase;
 - aplicar SQL, migrations o RLS;
 - conectar cualquier repository remoto al CRUD;
 - activar pilotos con fixtures sinteticos.
+
+S4.3 completo la instalacion aislada de `@supabase/supabase-js`; ese hito no
+autoriza por si mismo ninguna de las acciones anteriores.
 
 Completar `.env.example` no marca automaticamente como cumplidos los gates de
 RLS, Auth, bootstrap, fallback, conflictos, media o migration.
 
 ## 9. No objetivos
 
-- No instalar Supabase.
+- No usar ni importar la dependencia Supabase desde runtime.
 - No crear un cliente o factory.
 - No aplicar SQL, migrations, RLS o buckets.
 - No conectar el CRUD a un backend.
@@ -179,7 +183,7 @@ RLS, Auth, bootstrap, fallback, conflictos, media o migration.
 - No modificar componentes, escenas, musica o JSON base.
 - No definir secretos reales o configuracion productiva.
 
-## 10. Checklist de aceptacion
+## 10. Checklist de aceptacion y estado post-S4.3
 
 - [x] `.env.example` fue creado con placeholders seguros.
 - [x] `docs/SUPABASE_ENVIRONMENT.md` fue creado.
@@ -187,8 +191,9 @@ RLS, Auth, bootstrap, fallback, conflictos, media o migration.
 - [x] No se tocaron archivos de runtime o `src`.
 - [x] No se modificaron `package.json` ni `package-lock.json`.
 - [x] No se modifico `vite.config.js`.
-- [x] No se instalaron dependencias.
-- [x] Supabase no fue instalado ni configurado.
+- [x] S4.1 no instalo dependencias; S4.3 agrego despues solo la dependencia
+      oficial en `package.json` y lockfile.
+- [x] La dependencia Supabase sigue sin cliente, configuracion o imports runtime.
 - [x] No se creo un cliente Supabase.
 - [x] No se aplico SQL.
 - [x] No se conectaron repositories remotos.
@@ -196,4 +201,3 @@ RLS, Auth, bootstrap, fallback, conflictos, media o migration.
 - [x] `contentService` conserva su API sync.
 - [x] LocalStorage y export/import v2 siguen intactos.
 - [x] El build pasa despues de esta fase documental.
-

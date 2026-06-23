@@ -11,13 +11,13 @@ Supabase queda como una fase futura para:
 - Storage privado para fotos.
 - Realtime opcional.
 
-Este documento fija un plan tecnico antes de instalar dependencias o cambiar runtime.
+Este documento fija un plan tecnico para aislar cada dependencia antes de cambiar runtime.
 
 Gate operativo obligatorio: `docs/SUPABASE_READINESS_CHECKLIST.md`.
 
 Ese checklist debe revisarse y emitir un veredicto go/no-go antes de:
 
-- instalar dependencias Supabase;
+- instalar o actualizar dependencias Supabase;
 - crear un cliente/factory Supabase;
 - aplicar SQL, migrations o RLS;
 - conectar cualquier repository remoto al CRUD activo.
@@ -476,9 +476,9 @@ Incluye:
 - contrato de contenido e identidad;
 - checklist operativo y reglas de entorno.
 
-Resultado:
+Resultado historico al cerrar S3.x:
 
-- Supabase sigue sin instalarse;
+- Supabase aun no estaba instalado;
 - no existe cliente Supabase activo;
 - no se aplico SQL;
 - el runtime local/sync y export/import v2 permanecen intactos.
@@ -542,7 +542,7 @@ Nivel Codex:
 
 - Medio/Alto.
 
-### S4.3: instalar `@supabase/supabase-js` de forma aislada
+### S4.3: instalar `@supabase/supabase-js` de forma aislada [COMPLETADA]
 
 Objetivo:
 
@@ -557,6 +557,12 @@ Validacion y rollback:
 
 - Install reproducible, build y cero imports de Supabase en `src`.
 - Revertir `package.json` y lockfile.
+
+Resultado actual:
+
+- `@supabase/supabase-js@2.108.2` esta instalado sin imports runtime.
+- S4.3.1 actualizo Vite a `8.0.16`; `npm audit` esta limpio.
+- No existe cliente Supabase ni conexion al CRUD.
 
 Nivel Codex:
 
@@ -698,8 +704,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 ## 12. Veredicto
 
-No instalar Supabase todavia. El trabajo actual termina S4.2.2; cualquier avance
-a S4.3 requiere aprobacion independiente y un veredicto go/no-go del readiness
-checklist.
+La dependencia Supabase ya esta instalada de forma aislada. El siguiente paso,
+S4.4, sigue requiriendo aprobacion independiente y un veredicto go/no-go del
+readiness checklist antes de crear un cliente/factory.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.

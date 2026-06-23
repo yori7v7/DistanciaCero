@@ -27,7 +27,7 @@ cualquier gate critico pendiente.
 
 ## 2. Estado actual esperado
 
-Baseline verificado al crear este documento:
+Baseline historico verificado al crear este documento, antes de S4.3:
 
 - [x] Supabase esta ausente de `package.json`.
 - [x] No existen imports de `@supabase` en `src`.
@@ -46,6 +46,14 @@ Baseline verificado al crear este documento:
 - [x] Supabase existe solo en documentos y drafts no aplicados.
 - [x] El build base pasa.
 - [x] El arbol Git estaba limpio antes de iniciar esta fase documental.
+
+Estado verificado post-S4.3/S4.3.1:
+
+- [x] `@supabase/supabase-js@2.108.2` esta instalado de forma aislada.
+- [x] Vite esta actualizado a `8.0.16` y `npm audit` esta limpio.
+- [x] No existen imports `@supabase` ni llamadas `createClient` en `src`.
+- [x] No existe cliente Supabase ni conexion remota.
+- [x] El repository local, LocalStorage y la API sync siguen activos.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.

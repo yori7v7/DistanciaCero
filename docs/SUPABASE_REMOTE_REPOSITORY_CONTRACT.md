@@ -7,7 +7,7 @@
 
 Este documento fija el contrato estructural de un futuro repository remoto de
 contenido. El objetivo de S4.2.1 es detectar temprano diferencias de API sin
-instalar Supabase ni cambiar el comportamiento local actual.
+depender de Supabase ni cambiar el comportamiento local actual.
 
 El skeleton:
 
@@ -20,7 +20,8 @@ El skeleton:
 
 ## 2. Estado actual
 
-- [x] Supabase no esta instalado.
+- [x] `@supabase/supabase-js` esta instalado de forma aislada.
+- [x] El skeleton no importa ni usa la dependencia Supabase.
 - [x] No existe un cliente Supabase.
 - [x] No existe `createClient` en runtime.
 - [x] No existen imports `@supabase` en `src`.
@@ -169,7 +170,7 @@ No se usan:
 
 Las fases siguen separadas y requieren aprobacion independiente:
 
-1. S4.3 puede instalar `@supabase/supabase-js` sin usarlo en runtime.
+1. S4.3 instalo `@supabase/supabase-js` sin usarlo en runtime.
 2. S4.4 puede crear un cliente/factory aislado sin conectar el CRUD.
 3. S4.5 puede implementar tests de contrato con fixtures sinteticos.
 4. S4.6 puede probar schema y RLS revisados en un entorno aislado.
@@ -180,12 +181,13 @@ Antes de reexportar un repository remoto se necesita una estrategia aprobada de
 cache/hidratacion que preserve la API sync publica. La implementacion local debe
 seguir disponible como fallback.
 
-## 9. Criterios de aceptacion
+## 9. Criterios de aceptacion y estado post-S4.3
 
 - [x] Solo se crearon los tres archivos autorizados.
 - [x] No existen imports runtime del skeleton.
-- [x] No se modificaron `package.json` o lockfile.
-- [x] Supabase no fue instalado.
+- [x] S4.2.1 no modifico `package.json` o lockfile; S4.3 los cambio despues de
+      forma aislada y controlada.
+- [x] La dependencia Supabase esta instalada, pero el skeleton no la importa.
 - [x] No se uso `createClient`.
 - [x] No se leyo env ni feature flag.
 - [x] El skeleton esta inactivo y falla de forma explicita.
@@ -196,4 +198,3 @@ seguir disponible como fallback.
 - [x] React Router no fue activado.
 - [x] No se tocaron App, scene controllers o JSON base.
 - [x] El build pasa.
-
