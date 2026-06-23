@@ -597,12 +597,21 @@ Nivel Codex:
 
 - Alto.
 
-### S4.5: tests y contratos de repository
+### S4.5: tests y contratos de repository [S4.5.1 DISPONIBLE]
 
 Objetivo:
 
 - Probar equivalencia semantica, errores y fallback antes de cualquier conexion
   remota.
+
+Resultado de S4.5.1:
+
+- Existe `scripts/verify-supabase-isolation.mjs` como verificador manual sin
+  framework ni dependencia nueva.
+- Valida contrato remoto fail-fast, factory import-safe/lazy, cero fetch y
+  aislamiento del runtime local.
+- No prueba RLS, backend o Storage reales y no conecta el CRUD.
+- `docs/SUPABASE_CONTRACT_TESTS.md` documenta comando, alcance y limites.
 
 Validacion y rollback:
 
@@ -713,8 +722,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 ## 12. Veredicto
 
-La dependencia y el factory Supabase ya existen de forma aislada. El siguiente
-paso, S4.5, requiere aprobacion independiente y un veredicto go/no-go del
-readiness checklist antes de agregar tests/contratos o conectar nuevas capas.
+La dependencia, el factory Supabase y el verificador manual S4.5.1 existen de
+forma aislada. Esto no completa pruebas de integracion ni autoriza conectar
+nuevas capas. S4.6 y cualquier ampliacion de S4.5 requieren aprobacion
+independiente y un veredicto go/no-go del readiness checklist.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.

@@ -65,6 +65,15 @@ Estado verificado post-S4.4.1:
 - [x] Ningun runtime activo o repository importa el factory.
 - [x] No existe conexion remota y el CRUD sigue local/sync.
 
+Estado verificado post-S4.5.1:
+
+- [x] Existe `scripts/verify-supabase-isolation.mjs` como verificador manual,
+      sin framework ni dependencia nueva.
+- [x] El verificador cubre contrato remoto fail-fast, factory import-safe,
+      cero fetch y aislamiento del runtime.
+- [x] El verificador no prueba RLS/backend real y no conecta el CRUD.
+- [x] Su alcance esta documentado en `docs/SUPABASE_CONTRACT_TESTS.md`.
+
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
 
@@ -202,12 +211,15 @@ la siguiente.
 - Prohibido: selector remoto, UI, Auth visible o escritura.
 - Salida: importado solo por tests o no importado por runtime activo.
 
-### S4.5: tests y contratos de repository
+### S4.5: tests y contratos de repository [S4.5.1 DISPONIBLE]
 
 - Objetivo: demostrar equivalencia semantica y fallback.
 - Permitido: pruebas de contrato y fixtures sin datos privados.
 - Prohibido: UI productiva o migracion real.
-- Salida: create/update/delete/override/hidden/legacy cubiertos.
+- Salida S4.5.1: verificador reproducible de contrato remoto, factory y
+  aislamiento mediante `node scripts/verify-supabase-isolation.mjs`.
+- Pendiente: pruebas de integracion, RLS/backend y cobertura semantica remota
+  de create/update/delete/override/hidden/legacy.
 
 ### S4.6: entorno Supabase aislado
 
