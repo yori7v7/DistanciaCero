@@ -18,7 +18,7 @@ Gate operativo obligatorio: `docs/SUPABASE_READINESS_CHECKLIST.md`.
 Ese checklist debe revisarse y emitir un veredicto go/no-go antes de:
 
 - instalar o actualizar dependencias Supabase;
-- crear un cliente/factory Supabase;
+- crear, modificar o conectar un cliente/factory Supabase;
 - aplicar SQL, migrations o RLS;
 - conectar cualquier repository remoto al CRUD activo.
 
@@ -558,7 +558,7 @@ Validacion y rollback:
 - Install reproducible, build y cero imports de Supabase en `src`.
 - Revertir `package.json` y lockfile.
 
-Resultado actual:
+Resultado de S4.3/S4.3.1, antes de S4.4:
 
 - `@supabase/supabase-js@2.108.2` esta instalado sin imports runtime.
 - S4.3.1 actualizo Vite a `8.0.16`; `npm audit` esta limpio.
@@ -568,7 +568,7 @@ Nivel Codex:
 
 - Medio/Alto.
 
-### S4.4: cliente/factory Supabase aislado
+### S4.4: cliente/factory Supabase aislado [COMPLETADA]
 
 Objetivo:
 
@@ -583,6 +583,15 @@ Validacion y rollback:
 
 - Import aislado, ausencia de `service_role`, flag remoto apagado y build.
 - Eliminar el cliente/factory aislado.
+
+Resultado actual:
+
+- El factory existe en `src/integrations/supabase/client.js`.
+- Importarlo no crea cliente, no hace queries y no toca Auth, Storage o
+  Realtime.
+- Solo una llamada explicita y validada puede crear una instancia.
+- Ningun runtime activo o repository importa el factory.
+- El CRUD sigue local/sync y el skeleton remoto sigue fail-fast.
 
 Nivel Codex:
 
@@ -704,8 +713,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 ## 12. Veredicto
 
-La dependencia Supabase ya esta instalada de forma aislada. El siguiente paso,
-S4.4, sigue requiriendo aprobacion independiente y un veredicto go/no-go del
-readiness checklist antes de crear un cliente/factory.
+La dependencia y el factory Supabase ya existen de forma aislada. El siguiente
+paso, S4.5, requiere aprobacion independiente y un veredicto go/no-go del
+readiness checklist antes de agregar tests/contratos o conectar nuevas capas.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.

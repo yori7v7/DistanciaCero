@@ -6,7 +6,9 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 
 - No deben ejecutarse todavia.
 - `@supabase/supabase-js` esta instalado de forma aislada.
-- No existe cliente/factory Supabase ni uso runtime de la dependencia.
+- Existe un factory aislado en `src/integrations/supabase/client.js`.
+- Ningun runtime activo lo importa; no crea cliente durante import ni hace
+  queries.
 - No hay migraciones reales.
 - No hay backend.
 - No hay Router asociado a Auth.
@@ -17,7 +19,7 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 - `schema_draft.sql`: borrador conceptual de tablas, constraints e indices.
 - `rls_draft.sql`: borrador conceptual de helpers y policies RLS.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
-  crear el cliente/factory, aplicar SQL o conectar repositories remotos.
+  conectar el factory, aplicar SQL o conectar repositories remotos.
 
 ## Antes de ejecutar cualquier SQL real
 

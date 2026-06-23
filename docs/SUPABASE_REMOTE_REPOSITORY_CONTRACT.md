@@ -22,9 +22,9 @@ El skeleton:
 
 - [x] `@supabase/supabase-js` esta instalado de forma aislada.
 - [x] El skeleton no importa ni usa la dependencia Supabase.
-- [x] No existe un cliente Supabase.
-- [x] No existe `createClient` en runtime.
-- [x] No existen imports `@supabase` en `src`.
+- [x] Existe un factory aislado en `src/integrations/supabase/client.js`.
+- [x] El import y uso de `createClient` se limita a ese factory.
+- [x] Ningun runtime activo o repository importa el factory.
 - [x] El skeleton no lee variables de entorno.
 - [x] `contentRepository.js` sigue reexportando solo
       `localContentRepository`.
@@ -154,8 +154,8 @@ No se usan:
 
 ## 7. Reglas de seguridad
 
-- No instalar ni importar Supabase.
-- No usar `createClient`.
+- El skeleton no debe importar Supabase o el factory.
+- El skeleton no debe usar `createClient`.
 - No leer `VITE_SUPABASE_*`.
 - No leer `VITE_REMOTE_CONTENT_ENABLED`.
 - No usar service role en frontend.
@@ -171,7 +171,7 @@ No se usan:
 Las fases siguen separadas y requieren aprobacion independiente:
 
 1. S4.3 instalo `@supabase/supabase-js` sin usarlo en runtime.
-2. S4.4 puede crear un cliente/factory aislado sin conectar el CRUD.
+2. S4.4 creo un cliente/factory aislado sin conectar el CRUD.
 3. S4.5 puede implementar tests de contrato con fixtures sinteticos.
 4. S4.6 puede probar schema y RLS revisados en un entorno aislado.
 5. S4.8 puede ejecutar un piloto read-only con fixtures sinteticos y sin datos
@@ -181,14 +181,14 @@ Antes de reexportar un repository remoto se necesita una estrategia aprobada de
 cache/hidratacion que preserve la API sync publica. La implementacion local debe
 seguir disponible como fallback.
 
-## 9. Criterios de aceptacion y estado post-S4.3
+## 9. Criterios de aceptacion y estado post-S4.4
 
 - [x] Solo se crearon los tres archivos autorizados.
 - [x] No existen imports runtime del skeleton.
 - [x] S4.2.1 no modifico `package.json` o lockfile; S4.3 los cambio despues de
       forma aislada y controlada.
 - [x] La dependencia Supabase esta instalada, pero el skeleton no la importa.
-- [x] No se uso `createClient`.
+- [x] `createClient` se usa solo en el factory aislado; el skeleton no lo usa.
 - [x] No se leyo env ni feature flag.
 - [x] El skeleton esta inactivo y falla de forma explicita.
 - [x] Importar el skeleton no ejecuta operaciones.

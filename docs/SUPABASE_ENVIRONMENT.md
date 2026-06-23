@@ -1,8 +1,8 @@
 # Supabase Environment
 
-> ESTADO: CONTRATO DOCUMENTAL FUTURO. La dependencia oficial esta instalada de
-> forma aislada; no existe cliente, no conecta repositories y no modifica el
-> runtime local de Distancia Cero.
+> ESTADO: FACTORY AISLADO. La dependencia y el factory existen, pero ningun
+> runtime activo lo importa, no conecta repositories y no modifica el modo
+> local de Distancia Cero.
 
 ## 1. Resumen
 
@@ -12,8 +12,9 @@ seguridad antes de crear un cliente o conectarlo al runtime.
 
 Esta fase:
 
-- no importa ni usa `@supabase/supabase-js` en runtime;
-- no crea ni importa `createClient`;
+- no importa ni usa `@supabase/supabase-js` desde runtime activo;
+- limita el import y uso de `createClient` al factory aislado;
+- no ejecuta `createClient` durante import;
 - no activa contenido remoto;
 - no aplica SQL, migrations o RLS;
 - no cambia el CRUD local/sync;
@@ -27,9 +28,11 @@ Nunca deben contener secretos administrativos.
 
 - [x] `@supabase/supabase-js` esta instalado de forma aislada.
 - [x] Vite esta actualizado a `8.0.16` y `npm audit` esta limpio.
-- [x] No existe un cliente Supabase.
+- [x] Existe un factory aislado en `src/integrations/supabase/client.js`.
+- [x] Importar el factory no crea una instancia de cliente Supabase.
 - [x] No existe conexion remota.
-- [x] No existen imports `@supabase` o llamadas `createClient` en `src`.
+- [x] Los imports `@supabase` y llamadas `createClient` existen solo dentro del
+      factory aislado, que no es importado por runtime activo.
 - [x] El runtime sigue siendo local y sync.
 - [x] `contentService` conserva su API publica sync.
 - [x] LocalStorage sigue siendo la fuente activa y fallback.
@@ -159,7 +162,7 @@ Este documento no sustituye `docs/SUPABASE_READINESS_CHECKLIST.md`.
 
 El readiness checklist sigue siendo el gate go/no-go obligatorio antes de:
 
-- crear un cliente/factory Supabase;
+- importar o invocar el factory desde runtime activo;
 - aplicar SQL, migrations o RLS;
 - conectar cualquier repository remoto al CRUD;
 - activar pilotos con fixtures sinteticos.
@@ -167,13 +170,16 @@ El readiness checklist sigue siendo el gate go/no-go obligatorio antes de:
 S4.3 completo la instalacion aislada de `@supabase/supabase-js`; ese hito no
 autoriza por si mismo ninguna de las acciones anteriores.
 
+S4.4.1 creo el factory aislado; ese hito tampoco autoriza conectarlo al CRUD,
+ejecutar queries o activar contenido remoto.
+
 Completar `.env.example` no marca automaticamente como cumplidos los gates de
 RLS, Auth, bootstrap, fallback, conflictos, media o migration.
 
 ## 9. No objetivos
 
-- No usar ni importar la dependencia Supabase desde runtime.
-- No crear un cliente o factory.
+- No importar ni invocar el factory desde runtime activo.
+- No conectar el factory o una instancia de cliente al CRUD.
 - No aplicar SQL, migrations, RLS o buckets.
 - No conectar el CRUD a un backend.
 - No activar el repository remoto.
@@ -193,8 +199,9 @@ RLS, Auth, bootstrap, fallback, conflictos, media o migration.
 - [x] No se modifico `vite.config.js`.
 - [x] S4.1 no instalo dependencias; S4.3 agrego despues solo la dependencia
       oficial en `package.json` y lockfile.
-- [x] La dependencia Supabase sigue sin cliente, configuracion o imports runtime.
-- [x] No se creo un cliente Supabase.
+- [x] El factory aislado es el unico archivo que importa la dependencia y usa
+      `createClient`.
+- [x] No se crea cliente durante import ni desde runtime activo.
 - [x] No se aplico SQL.
 - [x] No se conectaron repositories remotos.
 - [x] React Router no fue activado.

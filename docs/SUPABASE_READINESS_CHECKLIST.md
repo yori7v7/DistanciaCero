@@ -47,13 +47,23 @@ Baseline historico verificado al crear este documento, antes de S4.3:
 - [x] El build base pasa.
 - [x] El arbol Git estaba limpio antes de iniciar esta fase documental.
 
-Estado verificado post-S4.3/S4.3.1:
+Baseline historico post-S4.3/S4.3.1, antes de S4.4:
 
 - [x] `@supabase/supabase-js@2.108.2` esta instalado de forma aislada.
 - [x] Vite esta actualizado a `8.0.16` y `npm audit` esta limpio.
 - [x] No existen imports `@supabase` ni llamadas `createClient` en `src`.
 - [x] No existe cliente Supabase ni conexion remota.
 - [x] El repository local, LocalStorage y la API sync siguen activos.
+
+Estado verificado post-S4.4.1:
+
+- [x] Existe un factory aislado en `src/integrations/supabase/client.js`.
+- [x] Solo ese archivo importa `@supabase/supabase-js`, usa `createClient` y
+      lee las variables Supabase documentadas.
+- [x] Importar el factory no crea cliente, no hace queries y no toca Auth,
+      Storage o Realtime.
+- [x] Ningun runtime activo o repository importa el factory.
+- [x] No existe conexion remota y el CRUD sigue local/sync.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -185,7 +195,7 @@ la siguiente.
 - Prohibido: imports, cliente, Auth, CRUD o Router.
 - Salida: build estable y busqueda que confirme cero uso runtime.
 
-### S4.4: cliente/factory Supabase aislado
+### S4.4: cliente/factory Supabase aislado [COMPLETADA]
 
 - Objetivo: crear un cliente encapsulado sin conectarlo al CRUD.
 - Permitido: modulo aislado y validacion segura de env.
