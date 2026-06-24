@@ -172,7 +172,9 @@ Las fases siguen separadas y requieren aprobacion independiente:
 
 1. S4.3 instalo `@supabase/supabase-js` sin usarlo en runtime.
 2. S4.4 creo un cliente/factory aislado sin conectar el CRUD.
-3. S4.5 puede implementar tests de contrato con fixtures sinteticos.
+3. S4.5.1 agrego el verificador manual de aislamiento
+   `node scripts/verify-supabase-isolation.mjs`; valida contrato, fail-fast y
+   cero fetch sin probar backend o RLS reales.
 4. S4.6 puede probar schema y RLS revisados en un entorno aislado.
 5. S4.8 puede ejecutar un piloto read-only con fixtures sinteticos y sin datos
    privados reales.
@@ -181,9 +183,9 @@ Antes de reexportar un repository remoto se necesita una estrategia aprobada de
 cache/hidratacion que preserve la API sync publica. La implementacion local debe
 seguir disponible como fallback.
 
-## 9. Criterios de aceptacion y estado post-S4.4
+## 9. Criterios del skeleton y estado post-S4.5.1
 
-- [x] Solo se crearon los tres archivos autorizados.
+- [x] S4.2.1 creo solo los tres archivos autorizados para el skeleton.
 - [x] No existen imports runtime del skeleton.
 - [x] S4.2.1 no modifico `package.json` o lockfile; S4.3 los cambio despues de
       forma aislada y controlada.
@@ -192,6 +194,8 @@ seguir disponible como fallback.
 - [x] No se leyo env ni feature flag.
 - [x] El skeleton esta inactivo y falla de forma explicita.
 - [x] Importar el skeleton no ejecuta operaciones.
+- [x] El verificador manual confirma contrato, fail-fast y aislamiento sin
+      conectar el skeleton al CRUD.
 - [x] `contentRepository.js` permanece intacto.
 - [x] `contentService.js` permanece intacto.
 - [x] LocalStorage y export/import v2 permanecen intactos.

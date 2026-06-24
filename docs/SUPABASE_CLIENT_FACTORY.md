@@ -93,11 +93,19 @@ Esta fase no conecta el factory a `remoteContentRepository.js`.
 - `contentRepository.js` sigue apuntando al repository local.
 - `contentService.js` sigue sync.
 - Ningun componente importa el factory.
-- Conectar estas capas requiere una fase futura aprobada y pruebas de contrato.
+- S4.5.1 verifica el aislamiento actual; conectar estas capas requiere una fase
+  futura aprobada y pruebas de integracion adicionales.
 
-## 9. Smoke tests
+## 9. Verificador manual
 
-La validacion de S4.4.1 cubre sin crear archivos permanentes:
+S4.5.1 dejo versionada la validacion de aislamiento en
+`scripts/verify-supabase-isolation.mjs`. Se ejecuta manualmente con:
+
+```powershell
+node scripts/verify-supabase-isolation.mjs
+```
+
+El verificador cubre:
 
 - import seguro del modulo;
 - constante de implementacion en `true`;
@@ -108,15 +116,18 @@ La validacion de S4.4.1 cubre sin crear archivos permanentes:
 - cero fetch durante import y construccion;
 - ausencia de imports desde runtime activo.
 
+Esta verificacion no prueba backend, RLS, Auth, Storage o Realtime reales y no
+conecta el factory al CRUD.
+
 ## 10. Criterios de aceptacion
 
 - [x] Solo se crean/modifican archivos autorizados.
 - [x] El factory no se conecta al CRUD.
 - [x] Importar no crea cliente ni ejecuta queries.
+- [x] El verificador manual pasa con cero fetch y sin env reales.
 - [x] No se modifica package/lock o Vite config.
 - [x] No se usa service-role.
 - [x] No se activa React Router.
 - [x] No se aplica SQL.
 - [x] El build pasa.
 - [x] `npm audit` permanece limpio.
-
