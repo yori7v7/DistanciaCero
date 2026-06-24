@@ -441,9 +441,10 @@ Pruebas futuras obligatorias:
 
 No aplicar RLS todavia.
 
-Siguiente fase recomendada:
+La dependencia y el factory ya existen de forma aislada, pero no conectada.
+Los drafts siguen siendo documentales y S4.6.1 registra sus bloqueantes en
+`docs/SUPABASE_ISOLATED_ENVIRONMENT.md`.
 
-1. Crear docs de SQL/migrations conceptuales sin aplicar.
-2. Revisar helpers RLS con cuidado.
-3. Mantener `hidden` recomendado como `kind = 'hidden'`; tabla separada queda como decision secundaria.
-4. No instalar Supabase hasta tener schema y RLS revisados.
+Siguiente paso recomendado: S4.6.2 debe corregir helpers, policies, bootstrap,
+ultimo owner y hard delete antes de preparar cualquier aplicacion manual.
+`hidden` sigue recomendado como `kind = 'hidden'`.

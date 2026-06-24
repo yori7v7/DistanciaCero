@@ -10,6 +10,8 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 - Ningun runtime activo lo importa; no crea cliente durante import ni hace
   queries.
 - No hay migraciones reales.
+- No existe todavia un proyecto Supabase aislado aprobado para ejecutar estos
+  drafts.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -20,6 +22,8 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 - `rls_draft.sql`: borrador conceptual de helpers y policies RLS.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
+- `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
+  futura del laboratorio desechable; no crea proyecto ni aplica SQL.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
   conectar el factory, aplicar SQL o conectar repositories remotos.
 

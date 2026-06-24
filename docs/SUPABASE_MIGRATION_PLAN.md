@@ -622,12 +622,20 @@ Nivel Codex:
 
 - Alto.
 
-### S4.6: entorno Supabase aislado con schema/RLS revisados
+### S4.6: entorno Supabase aislado [S4.6.1 CHECKLIST DISPONIBLE]
 
 Objetivo:
 
 - Aplicar y probar schema/RLS solo en un entorno aislado, sin datos privados
   reales ni conexion al CRUD productivo.
+
+Estado de S4.6.1:
+
+- `docs/SUPABASE_ISOLATED_ENVIRONMENT.md` documenta bloqueantes, diseno del
+  laboratorio, matriz futura y gates de rollback.
+- El proyecto Supabase aislado todavia no existe y no se ha aplicado SQL.
+- S4.6.2 debe corregir drafts y preparar fixtures/reset antes de cualquier
+  aplicacion manual aprobada.
 
 Validacion y rollback:
 
@@ -722,9 +730,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 ## 12. Veredicto
 
-La dependencia, el factory Supabase y el verificador manual S4.5.1 existen de
-forma aislada. Esto no completa pruebas de integracion ni autoriza conectar
-nuevas capas. S4.6 y cualquier ampliacion de S4.5 requieren aprobacion
+La dependencia, el factory Supabase, el verificador manual S4.5.1 y el checklist
+documental S4.6.1 existen de forma aislada. El entorno remoto aun no existe y
+no se ha aplicado SQL. S4.6.2 o cualquier conexion futura requieren aprobacion
 independiente y un veredicto go/no-go del readiness checklist.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.

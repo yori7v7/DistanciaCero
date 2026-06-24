@@ -221,11 +221,15 @@ la siguiente.
 - Pendiente: pruebas de integracion, RLS/backend y cobertura semantica remota
   de create/update/delete/override/hidden/legacy.
 
-### S4.6: entorno Supabase aislado
+### S4.6: entorno Supabase aislado [S4.6.1 CHECKLIST DISPONIBLE]
 
 - Objetivo: probar schema y RLS revisados fuera de produccion.
 - Permitido: proyecto de prueba sin datos reales tras aprobacion.
 - Prohibido: aplicar drafts sin revision o conectar la app productiva.
+- Estado S4.6.1: `docs/SUPABASE_ISOLATED_ENVIRONMENT.md` documenta el entorno,
+  bloqueantes y matriz; no crea proyecto ni aplica SQL.
+- Pendiente S4.6.2+: corregir drafts, preparar fixtures/reset y obtener un
+  nuevo go/no-go antes de usar un entorno remoto.
 - Salida: matriz RLS, rollback SQL y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

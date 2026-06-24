@@ -458,9 +458,9 @@ Export/import v2 debe seguir como backup offline. No crear v3 sin necesidad clar
 
 No aplicar SQL todavia.
 
-Siguiente fase recomendada:
+La dependencia y el factory ya existen de forma aislada, pero no conectada.
+Schema/RLS conceptuales y drafts documentales tambien existen; S4.6.1 registra
+sus bloqueantes en `docs/SUPABASE_ISOLATED_ENVIRONMENT.md`.
 
-1. Crear docs de RLS conceptual.
-2. Revisar membership y policies por `space_id`.
-3. Solo despues preparar migraciones SQL documentales.
-4. No instalar Supabase hasta tener schema y RLS revisados.
+Siguiente paso recomendado: S4.6.2 debe corregir y re-auditar los drafts y
+preparar fixtures/reset sinteticos sin aplicar SQL.

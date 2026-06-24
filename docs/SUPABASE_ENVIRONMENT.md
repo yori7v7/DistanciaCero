@@ -8,7 +8,7 @@
 
 Este documento define las variables de entorno previstas para una integracion
 futura con Supabase. Su objetivo es fijar nombres, defaults y reglas de
-seguridad antes de crear un cliente o conectarlo al runtime.
+seguridad antes de invocar el factory desde runtime o conectarlo al CRUD.
 
 Esta fase:
 
@@ -41,9 +41,14 @@ Nunca deben contener secretos administrativos.
 - [x] `.env.local` debe permanecer fuera de Git.
 - [x] El patron `*.local` actual de `.gitignore` cubre `.env.local`.
 - [x] React Router sigue instalado pero inactivo.
+- [x] El verificador manual S4.5.1 existe y pasa con cero fetch.
+- [x] S4.6.1 documenta el entorno aislado futuro en
+      `docs/SUPABASE_ISOLATED_ENVIRONMENT.md`.
+- [ ] El proyecto Supabase aislado todavia no existe y SQL/RLS no se han
+      aplicado.
 
-El estado actual no autoriza instalar el cliente ni conectar un repository
-remoto.
+El estado actual no autoriza invocar el factory desde la app, conectar un
+repository remoto o aplicar SQL.
 
 ## 3. Variables
 
