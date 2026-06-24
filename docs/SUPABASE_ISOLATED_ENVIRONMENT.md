@@ -44,23 +44,26 @@ Los archivos `docs/supabase/schema_draft.sql` y
 `docs/supabase/rls_draft.sql` siguen siendo borradores documentales. No deben
 ejecutarse mientras estos bloqueantes no esten resueltos y revisados.
 
-### Schema draft
+### Schema draft refinado en S4.6.2.1
 
-- `kind = 'local'` no exige `local_id`.
-- No se excluyen todas las combinaciones incoherentes de `local_id` y
-  `base_id` para local, override y hidden.
-- `data` acepta cualquier JSONB, no solo la shape acordada por collection.
-- Existen constraints e indices unicos redundantes en slugs y memberships.
-- `content_events.content_item_id` no garantiza que el item pertenezca al
-  mismo `space_id`.
-- `media_assets.content_item_id` tampoco garantiza igualdad de `space_id`.
-- `kind = 'hidden'` esta ligado a `is_hidden`, pero ambos campos siguen siendo
-  representaciones redundantes.
-- Falta resolver soft delete o `deleted_at` para items locales.
-- Las cascadas al borrar un space pueden destruir contenido, media y eventos.
-- El audit log se pierde si se elimina el relationship space.
-- Los drafts con `if not exists` no son migrations idempotentes para un schema
-  existente o parcialmente divergente.
+El refinamiento documental aborda, sin ejecutar SQL:
+
+- invariantes completas de `local_id`/`base_id` segun kind;
+- `data` limitado a JSONB object y `schema_version >= 1`;
+- eliminacion de indices unicos redundantes;
+- FKs compuestas para impedir asociaciones cross-space en events/media;
+- check estricto para impedir divergencia entre `is_hidden` y kind;
+- `deleted_at` para soft delete de content items;
+- `ON DELETE RESTRICT` desde relationship spaces en tablas criticas;
+- `content_events` definido conceptualmente como append-only.
+
+Siguen pendientes:
+
+- probar las invariantes y FKs en un entorno aislado;
+- convertir el draft en migrations versionadas para schemas existentes;
+- definir RLS/RPC para hard delete, restore y audit confiable;
+- definir lifecycle/cleanup de media y policies de Storage;
+- confirmar versionado final de `data` por collection.
 
 ### RLS draft
 
@@ -165,8 +168,9 @@ capturas publicas.
 
 ## 10. Fases siguientes
 
-- **S4.6.2:** corregir/refinar schema y RLS drafts y preparar fixtures/reset
-  sinteticos, sin aplicar SQL.
+- **S4.6.2.1:** schema draft refinado documentalmente, sin aplicar SQL.
+- **S4.6.2.2:** refinar RLS draft, sin aplicar SQL.
+- **S4.6.2.3:** alinear docs y preparar fixtures/reset sinteticos, sin ejecutar.
 - **S4.6.3:** aplicar manualmente schema/RLS revisados en un proyecto Supabase
   desechable, solo si todos los gates pasan.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.

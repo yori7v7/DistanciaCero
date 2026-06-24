@@ -1,6 +1,8 @@
 -- Distancia Cero - Supabase schema draft
--- BORRADOR DOCUMENTAL: no ejecutar todavia.
--- Este archivo no es una migracion real y requiere revision antes de aplicarse.
+-- BORRADOR DOCUMENTAL REFINADO EN S4.6.2.1: no ejecutar todavia.
+-- No ha sido aplicado y NO es una migracion idempotente para schemas existentes.
+-- Los IF NOT EXISTS no reconcilian drift ni reemplazan migrations versionadas.
+-- Requiere RLS refinado y pruebas en un entorno aislado antes de cualquier uso.
 -- No contiene datos reales, emails reales ni nombres privados.
 
 -- Requerido para gen_random_uuid() en Postgres/Supabase.
@@ -16,7 +18,7 @@ create extension if not exists pgcrypto;
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  local_slug text unique null,
+  local_slug text null,
   display_name text not null,
   avatar_url text null,
   created_at timestamptz not null default now(),
@@ -38,7 +40,7 @@ create unique index if not exists profiles_local_slug_idx
 create table if not exists public.relationship_spaces (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  slug text unique null,
+  slug text null,
   created_by uuid null references public.profiles(id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -63,7 +65,7 @@ create index if not exists relationship_spaces_created_by_idx
 
 create table if not exists public.universe_members (
   id uuid primary key default gen_random_uuid(),
-  space_id uuid not null references public.relationship_spaces(id) on delete cascade,
+  space_id uuid not null references public.relationship_spaces(id) on delete restrict,
   user_id uuid not null references public.profiles(id) on delete cascade,
   role text not null,
   created_at timestamptz not null default now(),
@@ -78,9 +80,6 @@ create index if not exists universe_members_space_id_idx
 create index if not exists universe_members_user_id_idx
   on public.universe_members(user_id);
 
-create unique index if not exists universe_members_space_user_idx
-  on public.universe_members(space_id, user_id);
-
 -- ============================================================
 -- content_items
 -- ============================================================
@@ -92,12 +91,14 @@ create unique index if not exists universe_members_space_user_idx
 --   hidden.<collection>    -> kind = 'hidden'
 -- Recomendacion actual:
 --   Usar kind = 'hidden' como ruta principal.
---   is_hidden se conserva solo como ayuda de query y debe espejar kind.
+--   is_hidden se conserva como ayuda compatible de query/import y un check
+--   impide que diverja de kind. Puede eliminarse en una revision futura.
 --   data jsonb es flexible, pero debe versionarse con schema_version.
+--   deleted_at implementa soft delete para local/override/hidden.
 
 create table if not exists public.content_items (
   id uuid primary key default gen_random_uuid(),
-  space_id uuid not null references public.relationship_spaces(id) on delete cascade,
+  space_id uuid not null references public.relationship_spaces(id) on delete restrict,
   collection text not null,
   local_id text null,
   base_id text null,
@@ -109,21 +110,33 @@ create table if not exists public.content_items (
   updated_by uuid null references public.profiles(id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
+  deleted_at timestamptz null,
   source text not null,
 
   constraint content_items_kind_check check (kind in ('local', 'override', 'hidden')),
   constraint content_items_collection_not_empty check (btrim(collection) <> ''),
   constraint content_items_source_not_empty check (btrim(source) <> ''),
-  constraint content_items_override_requires_base_id check (
-    kind <> 'override' or base_id is not null
-  ),
-  constraint content_items_hidden_requires_base_id check (
-    kind <> 'hidden' or base_id is not null
+  constraint content_items_identity_matches_kind check (
+    (
+      kind = 'local'
+      and local_id is not null
+      and btrim(local_id) <> ''
+      and base_id is null
+    )
+    or
+    (
+      kind in ('override', 'hidden')
+      and base_id is not null
+      and btrim(base_id) <> ''
+      and local_id is null
+    )
   ),
   constraint content_items_hidden_flag_matches_kind check (
     is_hidden = (kind = 'hidden')
   ),
-  constraint content_items_schema_version_positive check (schema_version > 0)
+  constraint content_items_data_is_object check (jsonb_typeof(data) = 'object'),
+  constraint content_items_schema_version_positive check (schema_version >= 1),
+  constraint content_items_id_space_unique unique (id, space_id)
 );
 
 create index if not exists content_items_space_id_idx
@@ -166,11 +179,14 @@ create unique index if not exists content_items_unique_base_kind_idx
 --   Mantener payload minimo/sanitizado. Si se requiere historial completo,
 --   evaluar cifrado, retencion y permisos antes de guardar contenido sensible.
 --   action podria pasar a enum real; aqui queda como check conceptual.
+--   Esta tabla se disena como append-only: no usa updated_at ni deleted_at.
+--   RLS/trigger/RPC debe impedir update/delete e insert cliente libre.
+--   El draft todavia no garantiza auditoria confiable por si solo.
 
 create table if not exists public.content_events (
   id uuid primary key default gen_random_uuid(),
-  space_id uuid not null references public.relationship_spaces(id) on delete cascade,
-  content_item_id uuid null references public.content_items(id) on delete set null,
+  space_id uuid not null references public.relationship_spaces(id) on delete restrict,
+  content_item_id uuid null,
   collection text null,
   action text not null,
   actor_id uuid null references public.profiles(id) on delete set null,
@@ -189,7 +205,9 @@ create table if not exists public.content_events (
       'media_attach',
       'role_change'
     )
-  )
+  ),
+  constraint content_events_item_space_fk foreign key (content_item_id, space_id)
+    references public.content_items(id, space_id) on delete restrict
 );
 
 create index if not exists content_events_space_id_idx
@@ -217,8 +235,8 @@ create index if not exists content_events_created_at_idx
 
 create table if not exists public.media_assets (
   id uuid primary key default gen_random_uuid(),
-  space_id uuid not null references public.relationship_spaces(id) on delete cascade,
-  content_item_id uuid null references public.content_items(id) on delete set null,
+  space_id uuid not null references public.relationship_spaces(id) on delete restrict,
+  content_item_id uuid null,
   bucket text not null,
   path text not null,
   mime_type text null,
@@ -228,7 +246,9 @@ create table if not exists public.media_assets (
 
   constraint media_assets_bucket_not_empty check (btrim(bucket) <> ''),
   constraint media_assets_path_not_empty check (btrim(path) <> ''),
-  constraint media_assets_size_positive check (size_bytes is null or size_bytes > 0)
+  constraint media_assets_size_positive check (size_bytes is null or size_bytes > 0),
+  constraint media_assets_item_space_fk foreign key (content_item_id, space_id)
+    references public.content_items(id, space_id) on delete restrict
 );
 
 create index if not exists media_assets_space_id_idx
@@ -253,6 +273,7 @@ create unique index if not exists media_assets_bucket_path_idx
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = pg_catalog
 as $$
 begin
   new.updated_at = now();
@@ -279,6 +300,9 @@ for each row execute function public.set_updated_at();
 -- Pendiente:
 --   - RLS final.
 --   - Storage policies.
---   - Revisar triggers updated_at antes de SQL real.
---   - Validar si is_hidden se mantiene como ayuda o se elimina.
+--   - Probar FKs compuestas, check is_hidden/kind y RESTRICT en entorno aislado.
+--   - Revisar owner/grants del helper updated_at antes de SQL real.
+--   - Definir RPC/trigger confiable para content_events append-only.
+--   - Definir lifecycle y cleanup de media antes de permitir deletes.
 --   - Definir versionado final de data jsonb por collection.
+--   - Convertir este draft en migrations versionadas antes de un schema existente.

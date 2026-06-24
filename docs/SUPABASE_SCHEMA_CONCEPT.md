@@ -2,9 +2,9 @@
 
 ## 1. Resumen
 
-Este documento define el schema conceptual futuro para Supabase/Postgres de Distancia Cero.
+Este documento define el schema conceptual futuro para Supabase/Postgres de Distancia Cero. S4.6.2.1 refino el draft documental, pero no lo aplico.
 
-No aplica migraciones reales, no instala Supabase y no cambia runtime. Su objetivo es servir como contrato previo para disenar SQL, RLS y migracion local -> remoto sin romper la app local actual.
+No aplica migraciones reales, no conecta Supabase y no cambia runtime. Su objetivo es servir como contrato previo para disenar SQL, RLS y migracion local -> remoto sin romper la app local actual.
 
 ## 2. Principios
 
@@ -182,6 +182,7 @@ created_by uuid references profiles(id)
 updated_by uuid references profiles(id)
 created_at timestamptz not null default now()
 updated_at timestamptz not null default now()
+deleted_at timestamptz null
 source text not null
 ```
 
@@ -194,6 +195,8 @@ source text not null
 - `space_id` referencia `relationship_spaces(id)`.
 - `created_by` referencia `profiles(id)`.
 - `updated_by` referencia `profiles(id)`.
+- `(id, space_id)` permite FKs compuestas desde eventos/media para impedir
+  asociaciones cross-space.
 
 ### Indices sugeridos
 
@@ -219,11 +222,13 @@ create unique index content_items_unique_base_kind_idx
 - `collection` no debe ser vacio.
 - `source` no debe ser vacio.
 - `schema_version` debe existir para versionar `data jsonb`.
-- `schema_version` debe ser positivo.
-- Para `kind = 'local'`, `data` debe contener el contenido editable.
-- Para `kind = 'override'`, `base_id` deberia existir.
-- Para `kind = 'hidden'`, `base_id` deberia existir.
-- `is_hidden`, si se conserva, es solo ayuda de query y debe espejar `kind = 'hidden'`.
+- `schema_version` debe ser mayor o igual que `1`.
+- `data` debe ser un JSONB object.
+- `kind = 'local'` exige `local_id` no vacio y `base_id` nulo.
+- `kind in ('override', 'hidden')` exige `base_id` no vacio y `local_id` nulo.
+- `is_hidden` es una ayuda compatible de query/import; un check exige que
+  siempre refleje `kind = 'hidden'` y una revision futura puede eliminarla.
+- `deleted_at` representa soft delete y restauracion de cualquier kind.
 - `updated_at` debe tener helper/trigger conceptual para no depender solo del cliente.
 
 ### Mapping local
@@ -254,6 +259,8 @@ hidden.<collection> -> content_items kind hidden
 - Ruta recomendada actual: `kind` = `hidden`, `base_id` = id base.
 - Tabla separada queda como decision secundaria solo si hidden crece en complejidad.
 - Si existe `is_hidden`, debe ser derivado/consistente con `kind = 'hidden'`.
+- Restaurar el item base debe marcar `deleted_at` en el marker hidden; no
+  requiere hard delete. Reocultarlo puede reactivar el marker de forma controlada.
 
 ### Riesgos
 
@@ -305,6 +312,7 @@ created_at timestamptz not null default now()
 
 - `space_id` referencia `relationship_spaces(id)`.
 - `content_item_id` referencia `content_items(id)`.
+- `(content_item_id, space_id)` debe referenciar el mismo item/space.
 - `actor_id` referencia `profiles(id)`.
 
 ### Indices sugeridos
@@ -329,6 +337,8 @@ create index content_events_created_at_idx on content_events(created_at);
 - Puede duplicar contenido sensible si `payload` guarda snapshots completos.
 - RLS debe proteger audit log igual que contenido.
 - Si se requiere auditoria confiable, los eventos deberian venir de RPC/trigger/server-side, no de inserts arbitrarios del cliente.
+- `content_events` es append-only: no usa `updated_at` o `deleted_at` y no debe
+  aceptar update/delete desde cliente normal.
 
 ## 9. `media_assets`
 
@@ -362,6 +372,7 @@ created_at timestamptz not null default now()
 
 - `space_id` referencia `relationship_spaces(id)`.
 - `content_item_id` referencia `content_items(id)`.
+- `(content_item_id, space_id)` debe impedir asociaciones cross-space.
 - `created_by` referencia `profiles(id)`.
 
 ### Indices sugeridos
@@ -458,9 +469,10 @@ Export/import v2 debe seguir como backup offline. No crear v3 sin necesidad clar
 
 No aplicar SQL todavia.
 
-La dependencia y el factory ya existen de forma aislada, pero no conectada.
-Schema/RLS conceptuales y drafts documentales tambien existen; S4.6.1 registra
-sus bloqueantes en `docs/SUPABASE_ISOLATED_ENVIRONMENT.md`.
+La dependencia y el factory existen de forma aislada, pero no conectada.
+S4.6.2.1 refino el schema draft con invariantes por kind, JSONB object, soft
+delete, FKs cross-space, RESTRICT y audit append-only conceptual. Sigue sin
+aplicarse y no es una migration idempotente para schemas existentes.
 
-Siguiente paso recomendado: S4.6.2 debe corregir y re-auditar los drafts y
+Siguiente paso recomendado: S4.6.2.2 debe refinar RLS; despues se podran
 preparar fixtures/reset sinteticos sin aplicar SQL.

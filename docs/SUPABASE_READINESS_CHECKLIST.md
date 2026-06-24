@@ -228,8 +228,9 @@ la siguiente.
 - Prohibido: aplicar drafts sin revision o conectar la app productiva.
 - Estado S4.6.1: `docs/SUPABASE_ISOLATED_ENVIRONMENT.md` documenta el entorno,
   bloqueantes y matriz; no crea proyecto ni aplica SQL.
-- Pendiente S4.6.2+: corregir drafts, preparar fixtures/reset y obtener un
-  nuevo go/no-go antes de usar un entorno remoto.
+- Estado S4.6.2.1: schema draft refinado documentalmente, sin ejecutar SQL.
+- Pendiente S4.6.2.2+: refinar RLS, preparar fixtures/reset y obtener un nuevo
+  go/no-go antes de usar un entorno remoto.
 - Salida: matriz RLS, rollback SQL y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado
