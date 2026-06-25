@@ -1,7 +1,9 @@
 -- Distancia Cero - Supabase RLS draft
--- BORRADOR DOCUMENTAL: no ejecutar todavia.
--- Este archivo no es SQL final aplicable y requiere revision de seguridad.
--- No crea buckets, no usa service role y no cubre Storage real aun.
+-- BORRADOR DOCUMENTAL REFINADO EN S4.6.2.2: no ejecutar todavia.
+-- No ha sido aplicado ni probado en Supabase y no es una migration final.
+-- Requiere entorno aislado, fixtures sinteticos y pruebas multiusuario.
+-- No ejecutar contra produccion. No contiene secretos ni datos reales.
+-- No crea buckets, no usa service-role y no conecta la app al backend.
 
 -- ============================================================
 -- Enable RLS
@@ -18,74 +20,155 @@ alter table if exists public.media_assets enable row level security;
 -- Helper functions
 -- ============================================================
 -- BORRADOR:
---   Estas funciones asumen que profiles.id = auth.uid().
---   Deben revisarse para evitar recursion o bypass inesperado con RLS.
---   security definer requiere owner controlado, grants minimos y auditoria.
---   Mantener set search_path = public para reducir riesgo de shadowing.
---   Verificar que las funciones no generen recursion RLS ni expongan membership.
---   En SQL real, revisar si conviene revoke execute from public/authenticated
---   y exponer solo helpers seguros usados por policies.
+--   profiles.id debe corresponder a auth.uid() mediante mapping verificado.
+--   Solo los dos helpers que consultan universe_members usan SECURITY DEFINER
+--   para evitar recursion RLS. Los wrappers permanecen SECURITY INVOKER.
+--   El owner futuro debe ser un rol de migration controlado, no un usuario de
+--   la app. Revisar owner, BYPASSRLS, grants y recursion antes de ejecutar.
+--   search_path limitado a pg_catalog y nombres calificados evitan que public
+--   participe en la resolucion de objetos del SECURITY DEFINER.
+--   Ningun helper escribe datos ni sustituye policies de tabla.
 
 create or replace function public.is_space_member(space_uuid uuid)
 returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = pg_catalog
 as $$
-  select exists (
-    select 1
-    from public.universe_members
-    where universe_members.space_id = space_uuid
-      and universe_members.user_id = auth.uid()
-  );
+  select auth.uid() is not null
+    and exists (
+      select 1
+      from public.universe_members as member
+      where member.space_id = space_uuid
+        and member.user_id = auth.uid()
+    );
 $$;
 
-create or replace function public.has_space_role(space_uuid uuid, allowed_roles text[])
+create or replace function public.has_space_role(
+  space_uuid uuid,
+  allowed_roles text[]
+)
 returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = pg_catalog
 as $$
-  select exists (
-    select 1
-    from public.universe_members
-    where universe_members.space_id = space_uuid
-      and universe_members.user_id = auth.uid()
-      and universe_members.role = any(allowed_roles)
-  );
+  select auth.uid() is not null
+    and exists (
+      select 1
+      from public.universe_members as member
+      where member.space_id = space_uuid
+        and member.user_id = auth.uid()
+        and member.role = any(allowed_roles)
+    );
 $$;
+
+create or replace function public.is_space_owner(space_uuid uuid)
+returns boolean
+language sql
+stable
+security invoker
+set search_path = pg_catalog
+as $$
+  select public.has_space_role(space_uuid, array['owner']::text[]);
+$$;
+
+create or replace function public.can_read_space(space_uuid uuid)
+returns boolean
+language sql
+stable
+security invoker
+set search_path = pg_catalog
+as $$
+  select public.is_space_member(space_uuid);
+$$;
+
+create or replace function public.can_modify_space(space_uuid uuid)
+returns boolean
+language sql
+stable
+security invoker
+set search_path = pg_catalog
+as $$
+  select public.has_space_role(space_uuid, array['owner', 'partner']::text[]);
+$$;
+
+-- Las funciones reciben EXECUTE de PUBLIC por defecto en PostgreSQL.
+-- Revocar primero y conceder solo el minimo necesario al rol autenticado.
+revoke all on function public.is_space_member(uuid) from public;
+revoke all on function public.has_space_role(uuid, text[]) from public;
+revoke all on function public.is_space_owner(uuid) from public;
+revoke all on function public.can_read_space(uuid) from public;
+revoke all on function public.can_modify_space(uuid) from public;
+
+revoke all on function public.is_space_member(uuid) from anon;
+revoke all on function public.has_space_role(uuid, text[]) from anon;
+revoke all on function public.is_space_owner(uuid) from anon;
+revoke all on function public.can_read_space(uuid) from anon;
+revoke all on function public.can_modify_space(uuid) from anon;
+
+grant execute on function public.is_space_member(uuid) to authenticated;
+grant execute on function public.has_space_role(uuid, text[]) to authenticated;
+grant execute on function public.is_space_owner(uuid) to authenticated;
+grant execute on function public.can_read_space(uuid) to authenticated;
+grant execute on function public.can_modify_space(uuid) to authenticated;
+
+-- ============================================================
+-- Table grants: deny by default
+-- ============================================================
+-- RLS no reemplaza grants. Se revoca acceso directo y se concede solo lo que
+-- las policies documentales de esta fase permiten. RPCs futuras deben tener
+-- grants propios, owner controlado y validacion transaccional.
+
+revoke all on table public.profiles from public, anon, authenticated;
+revoke all on table public.relationship_spaces from public, anon, authenticated;
+revoke all on table public.universe_members from public, anon, authenticated;
+revoke all on table public.content_items from public, anon, authenticated;
+revoke all on table public.content_events from public, anon, authenticated;
+revoke all on table public.media_assets from public, anon, authenticated;
+
+grant select on table public.profiles to authenticated;
+grant select on table public.relationship_spaces to authenticated;
+grant select on table public.universe_members to authenticated;
+grant select on table public.content_items to authenticated;
+grant select on table public.content_events to authenticated;
+grant select on table public.media_assets to authenticated;
+
+-- NO-GO S4.6.2.2.1:
+-- No se concede escritura directa sobre public.content_items en este draft.
+-- Una policy WITH CHECK no basta si los permisos SQL permiten insertar filas
+-- completas: el cliente podria enviar id, timestamps, schema_version, source
+-- u otras columnas sensibles antes de definir RPC/triggers/permisos por
+-- columnas. La escritura real queda pendiente de una fase futura con:
+--   1. RPC/admin/trigger controlado y transaccional; o
+--   2. permisos por columnas minimos revisados y probados.
 
 -- ============================================================
 -- profiles policies
 -- ============================================================
--- Concepto:
---   El usuario lee su profile y perfiles de miembros de sus spaces.
---   El usuario solo actualiza campos permitidos de su propio profile.
---   Update real debe limitar columnas editables, por ejemplo display_name/avatar_url.
---   No permitir que el cliente cambie local_slug, id u otras columnas sensibles.
+-- Creacion: solo trigger/RPC/admin futuro vinculado a auth.users.
+-- Update: bloqueado directamente hasta definir column-level grants o RPC que
+-- limite display_name/avatar_url. RLS sola no impide cambiar local_slug.
 
 create policy "profiles_select_own_or_shared_space"
 on public.profiles
 for select
+to authenticated
 using (
   id = auth.uid()
   or exists (
     select 1
-    from public.universe_members self_member
-    join public.universe_members other_member
+    from public.universe_members as self_member
+    join public.universe_members as other_member
       on other_member.space_id = self_member.space_id
     where self_member.user_id = auth.uid()
       and other_member.user_id = profiles.id
   )
 );
 
-create policy "profiles_update_own"
-on public.profiles
-for update
-using (id = auth.uid())
-with check (id = auth.uid());
+-- Sin INSERT/UPDATE/DELETE policy o grant directo para authenticated.
 
 -- ============================================================
 -- relationship_spaces policies
@@ -94,38 +177,19 @@ with check (id = auth.uid());
 create policy "relationship_spaces_select_member"
 on public.relationship_spaces
 for select
+to authenticated
 using (
-  public.is_space_member(id)
+  public.can_read_space(id)
 );
 
-create policy "relationship_spaces_insert_authenticated"
-on public.relationship_spaces
-for insert
-with check (
-  auth.uid() is not null
-  and created_by = auth.uid()
-);
-
--- Bootstrap:
---   Crear relationship_space + primer universe_member owner no puede depender
---   de una policy que ya exige owner. Flujo futuro recomendado:
---   RPC controlada, Edge Function o migration/admin server-side.
---   No permitir self-owner arbitrario desde cliente normal.
---
--- Update real debe restringir columnas permitidas, por ejemplo name/slug.
--- No permitir que owner/partner cambie created_by ni campos sensibles.
-create policy "relationship_spaces_update_owner_partner"
-on public.relationship_spaces
-for update
-using (
-  public.has_space_role(id, array['owner', 'partner'])
-)
-with check (
-  public.has_space_role(id, array['owner', 'partner'])
-);
-
--- No delete policy por ahora.
--- Borrado de spaces requiere plan de backup, cascade y cleanup de media.
+-- Sin INSERT directo: evita spaces huerfanos.
+-- Sin UPDATE directo: protege created_by y otras columnas sensibles.
+-- Sin DELETE directo: schema usa RESTRICT y falta backup/cleanup aprobado.
+-- Bootstrap futuro debe ser una transaccion RPC/admin controlada que cree:
+--   1. relationship_space;
+--   2. primer universe_member owner;
+--   3. partner opcional validado.
+-- Nunca permitir self-owner mediante inserts libres del cliente.
 
 -- ============================================================
 -- universe_members policies
@@ -134,114 +198,59 @@ with check (
 create policy "universe_members_select_same_space"
 on public.universe_members
 for select
+to authenticated
 using (
-  public.is_space_member(space_id)
+  public.can_read_space(space_id)
 );
 
-create policy "universe_members_insert_owner_only"
-on public.universe_members
-for insert
-with check (
-  public.has_space_role(space_id, array['owner'])
-);
-
-create policy "universe_members_update_owner_only"
-on public.universe_members
-for update
-using (
-  public.has_space_role(space_id, array['owner'])
-)
-with check (
-  public.has_space_role(space_id, array['owner'])
-);
-
-create policy "universe_members_delete_owner_only"
-on public.universe_members
-for delete
-using (
-  public.has_space_role(space_id, array['owner'])
-);
-
--- Pendiente:
---   - Impedir self-owner sin control.
---   - Impedir borrar el ultimo owner.
---   - Auditar cambios de role o pasarlos por RPC.
---   - Definir flujo seguro de invitaciones.
---   - Impedir que un usuario se asigne owner a si mismo desde cliente normal.
+-- Sin INSERT/UPDATE/DELETE policy o grant directo para authenticated.
+-- Alta, baja y cambio de role/user_id/space_id requieren RPC/admin futuro.
+-- Ese flujo debe bloquear self-owner, operar de forma transaccional, auditar
+-- cambios y rechazar degradar/eliminar al ultimo owner del space.
 
 -- ============================================================
 -- content_items policies
 -- ============================================================
--- Concepto:
---   Nunca abrir acceso por collection sin validar membership.
 
 create policy "content_items_select_member"
 on public.content_items
 for select
+to authenticated
 using (
-  public.is_space_member(space_id)
+  public.can_read_space(space_id)
 );
 
-create policy "content_items_insert_owner_partner"
-on public.content_items
-for insert
-with check (
-  public.has_space_role(space_id, array['owner', 'partner'])
-  and created_by = auth.uid()
-  and updated_by = auth.uid()
-);
+-- NO-GO: no hay policy activa de INSERT para content_items en este draft.
+-- La creacion normal, imports legacy y escrituras administrativas requieren
+-- mapping verificado y un RPC/admin/trigger flow que separe autor original de
+-- actor importador y bloquee columnas sensibles.
+-- Alternativa futura: permisos por columnas minimos, nunca permisos de fila
+-- completa, revisados junto con triggers y matriz multiusuario.
 
-create policy "content_items_update_owner_partner"
-on public.content_items
-for update
-using (
-  public.has_space_role(space_id, array['owner', 'partner'])
-)
-with check (
-  public.has_space_role(space_id, array['owner', 'partner'])
-  and updated_by = auth.uid()
-);
-
--- BORRADOR RIESGOSO / NO FINAL:
---   Hard delete de contenido privado no es recomendado como primera opcion.
---   Preferir soft delete, kind='hidden' o delete via RPC con audit obligatorio.
-create policy "content_items_delete_owner_partner"
-on public.content_items
-for delete
-using (
-  public.has_space_role(space_id, array['owner', 'partner'])
-);
-
--- Recomendacion:
---   Preferir soft delete o kind='hidden' antes de delete real.
+-- Sin UPDATE directo hasta implementar trigger/RPC que preserve o valide:
+--   space_id, kind, local_id, base_id, created_by, created_at, schema_version.
+-- El mismo flujo debe fijar updated_by = auth.uid() y updated_at server-side.
+-- Soft delete/restore se hara por UPDATE controlado de deleted_at.
+-- Sin DELETE policy o grant: hard delete directo queda denegado.
+-- No inventar created_by/updated_by para contenido legacy sin mapping.
 
 -- ============================================================
--- content_events policies
+-- content_events / audit policies
 -- ============================================================
--- Concepto:
---   Audit log debe ser append-only desde cliente normal.
---   Si se requiere auditoria confiable, NO permitir insert arbitrario del cliente.
---   Preferir trigger, RPC o server-side para construir eventos sanitizados.
+-- content_events es el audit log conceptual append-only de este schema.
 
 create policy "content_events_select_member"
 on public.content_events
 for select
+to authenticated
 using (
-  public.is_space_member(space_id)
+  public.can_read_space(space_id)
 );
 
--- BORRADOR / NO FINAL:
---   Esta policy permite insert cliente-side y solo sirve como guia conceptual.
---   Para auditoria confiable, reemplazar por RPC/trigger/server-side.
-create policy "content_events_insert_owner_partner"
-on public.content_events
-for insert
-with check (
-  public.has_space_role(space_id, array['owner', 'partner'])
-  and actor_id = auth.uid()
-);
-
--- Sin update/delete policies normales para auditoria confiable.
+-- Sin INSERT/UPDATE/DELETE policy o grant directo para authenticated.
+-- Eventos confiables deben venir de trigger/RPC/admin, con payload minimo y
+-- space_id derivado del recurso. La FK compuesta impide item cross-space.
+-- Si aparece una tabla audit_log separada, debe heredar este mismo NO-GO.
 
 -- ============================================================
 -- media_assets policies
@@ -250,55 +259,41 @@ with check (
 create policy "media_assets_select_member"
 on public.media_assets
 for select
+to authenticated
 using (
-  public.is_space_member(space_id)
+  public.can_read_space(space_id)
 );
 
-create policy "media_assets_insert_owner_partner"
-on public.media_assets
-for insert
-with check (
-  public.has_space_role(space_id, array['owner', 'partner'])
-  and created_by = auth.uid()
-);
-
-create policy "media_assets_delete_owner_partner_or_creator"
-on public.media_assets
-for delete
-using (
-  public.is_space_member(space_id)
-  and (
-    public.has_space_role(space_id, array['owner', 'partner'])
-    or created_by = auth.uid()
-  )
-);
+-- Sin INSERT/UPDATE/DELETE policy o grant directo hasta disenar el flujo
+-- transaccional DB + Storage. La FK compuesta impide item cross-space.
+-- Delete requiere membership actual, autorizacion, cleanup del objeto privado
+-- y audit; no basta created_by historico.
 
 -- ============================================================
--- Storage conceptual notes
+-- Storage conceptual: NO-GO
 -- ============================================================
--- BORRADOR:
---   No se crea bucket aqui.
---   No se crean policies sobre storage.objects aqui.
---
--- Reglas futuras:
---   - Bucket privado.
---   - Path con space_id o referencia segura:
---       relationship-media/{space_id}/{media_asset_id}/{filename}
---   - Validar membership por space_id antes de leer/subir/borrar.
---   - No usar URLs publicas permanentes para fotos privadas.
---   - No confiar solo en el prefijo del path si no se valida membership.
---   - Las policies de storage.objects deben resolver el space_id de forma segura,
---     por path validado o por join contra media_assets.
---   - Upload/delete deben requerir membership actual; ser creador historico no
---     basta si el usuario ya no pertenece al space.
---   - No se crea bucket ni policy real aqui.
---
--- Pseudopolicy futura storage.objects:
---   SELECT si bucket_id = 'relationship-media'
---   y existe media_assets/path que apunte al objeto
---   y public.is_space_member(media_assets.space_id).
---
---   INSERT/DELETE solo con owner/partner o regla explicita de creador actual,
---   siempre validando membership del space.
---
--- Fin del borrador RLS.
+-- No se crea bucket ni policy sobre storage.objects en este archivo.
+-- media_assets NO protege por si sola los objetos de Storage.
+-- Antes de habilitar media se requiere:
+--   - bucket privado;
+--   - path validado con space_id o relacion segura;
+--   - SELECT/INSERT/UPDATE/DELETE de storage.objects por membership/role;
+--   - URLs firmadas de vida corta;
+--   - cleanup transaccional o compensatorio de objetos huerfanos;
+--   - pruebas multiusuario en entorno aislado.
+-- Hasta entonces, acceso DB a media_assets es solo lectura de metadata.
+
+-- ============================================================
+-- Gates pendientes antes de cualquier aplicacion
+-- ============================================================
+--   - Definir owner/BYPASSRLS y auditar helpers SECURITY DEFINER.
+--   - Implementar y revisar RPC bootstrap owner/partner transaccional.
+--   - Proteger ultimo owner mediante RPC/trigger transaccional.
+--   - Definir profile create/update con columnas permitidas.
+--   - Definir content update, soft delete/restore e import administrativo.
+--   - Generar content_events desde trigger/RPC confiable.
+--   - Disenar policies reales de storage.objects y lifecycle de media.
+--   - Preparar fixtures/reset sinteticos y matriz multiusuario.
+--   - Convertir drafts en migrations versionadas y revisadas.
+
+-- Fin del borrador RLS. No ejecutar todavia.

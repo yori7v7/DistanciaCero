@@ -112,7 +112,7 @@ Estados permitidos:
 | --- | --- | --- | --- | --- |
 | Bootstrap owner/partner seguro | Critico | Crear Auth, profiles, space y memberships sin self-owner client-side | Diseno aprobado de RPC/admin flow, casos de error y rollback | [ ] Pendiente |
 | Mapping UUID verificado | Critico | Mapear Yori, Ale y space local a UUID reales sin ambiguedad | Registro firmado/revisado de mapping y validacion de FKs | [ ] Pendiente |
-| RLS final revisada | Critico | Policies finales protegen profiles, memberships, contenido, eventos y media | SQL final revisado y matriz de pruebas multiusuario | [ ] Pendiente |
+| RLS final revisada | Critico | Policies finales protegen profiles, memberships, contenido, eventos y media sin permisos amplios de escritura | SQL final revisado y matriz de pruebas multiusuario | [ ] Pendiente |
 | Variables de entorno seguras | Alto | Definir URL y anon/publishable key sin secretos administrativos | `.env.example`, reglas de deploy y escaneo de secretos | [ ] Pendiente |
 | Estrategia sync local vs async remoto | Critico | Preservar contrato sync o definir hidratacion/cache compatible | ADR/diseno con estados loading, error, offline y rollback | [ ] Pendiente |
 | Fallback local | Critico | La app abre y permite modo local sin red o Supabase | Pruebas offline y procedimiento de desactivacion remota | [ ] Pendiente |
@@ -229,8 +229,9 @@ la siguiente.
 - Estado S4.6.1: `docs/SUPABASE_ISOLATED_ENVIRONMENT.md` documenta el entorno,
   bloqueantes y matriz; no crea proyecto ni aplica SQL.
 - Estado S4.6.2.1: schema draft refinado documentalmente, sin ejecutar SQL.
-- Pendiente S4.6.2.2+: refinar RLS, preparar fixtures/reset y obtener un nuevo
-  go/no-go antes de usar un entorno remoto.
+- Estado S4.6.2.2: RLS draft refinado documentalmente, sin aplicar ni probar.
+- Pendiente S4.6.2.3+: preparar fixtures/reset, re-auditar drafts y obtener un
+  nuevo go/no-go antes de usar un entorno remoto.
 - Salida: matriz RLS, rollback SQL y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

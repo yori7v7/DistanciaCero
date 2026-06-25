@@ -2,9 +2,9 @@
 
 ## 1. Resumen
 
-Este documento disena la Row Level Security futura para Supabase/Postgres de Distancia Cero.
+Este documento disena la Row Level Security futura para Supabase/Postgres de Distancia Cero. S4.6.2.2 refino el draft documental, pero no lo aplico ni lo probo en Supabase.
 
-No aplica policies reales, no crea migraciones y no cambia runtime. Su objetivo es fijar reglas conceptuales antes de escribir SQL aplicable o instalar Supabase.
+No aplica policies reales, no crea migraciones y no cambia runtime. Su objetivo es fijar reglas conceptuales antes de convertir los drafts en SQL aplicable y probarlo en un entorno aislado.
 
 ## 2. Principios de seguridad
 
@@ -16,6 +16,9 @@ No aplica policies reales, no crea migraciones y no cambia runtime. Su objetivo 
 - La app local sigue siendo fallback.
 - Las policies no deben depender solo de `collection`.
 - Las policies deben validar siempre `space_id`.
+- RLS no sustituye permisos SQL: revocar acceso por defecto, conceder lectura
+  solo donde exista policy de membership y dejar escrituras de contenido en
+  NO-GO hasta RPC/trigger o permisos por columnas revisados.
 
 ## 3. Tablas protegidas
 
@@ -50,13 +53,16 @@ universe_members.role in ('owner', 'partner')
 
 El rol `viewer` solo debe leer si se decide permitirlo.
 
-Los helpers RLS como `is_space_member` y `has_space_role` probablemente usen `security definer`. Eso requiere cuidado especial:
+Solo los helpers que consultan `universe_members`, como `is_space_member` y `has_space_role`, necesitan `security definer` para evitar recursion RLS. Wrappers como `is_space_owner`, `can_read_space` y `can_modify_space` pueden permanecer `security invoker`. Esto requiere cuidado especial:
 
 - owner controlado;
 - grants minimos;
-- `set search_path = public`;
+- `set search_path = pg_catalog` y nombres calificados, sin resolver objetos
+  mediante el schema `public`;
 - revision de recursion RLS;
 - evitar que los helpers expongan membership de forma indirecta.
+- revocar EXECUTE de `PUBLIC`/`anon` y conceder solo a `authenticated`;
+- no usar service-role en frontend.
 
 ## 5. `profiles`
 
@@ -64,7 +70,8 @@ Reglas conceptuales:
 
 - Cada usuario puede leer su propio profile.
 - Miembros de un mismo `relationship_space` pueden leer perfiles de otros miembros del mismo space.
-- Solo el propio usuario puede actualizar campos permitidos de su profile.
+- La creacion debe ocurrir mediante trigger/RPC/admin controlado y vinculado a `auth.users`.
+- El update directo queda bloqueado hasta limitar columnas mediante grants, RPC o trigger.
 - Updates reales deben limitarse a columnas permitidas, por ejemplo `display_name` y `avatar_url`.
 - No permitir que un usuario cambie su role global de forma arbitraria.
 - No permitir que el cliente cambie `id`, `local_slug` ni columnas sensibles.
@@ -77,12 +84,16 @@ profile.id = auth.uid()
 or exists membership compartido entre auth.uid() y profile.id
 ```
 
-Update conceptual:
+Update futuro controlado:
 
 ```txt
 profile.id = auth.uid()
 and campos actualizables limitados a display_name/avatar_url
 ```
+
+RLS no compara por si sola todas las columnas anteriores y nuevas. Hasta tener
+column-level grants o RPC revisada, no debe existir grant/policy directa de
+`insert`, `update` o `delete` para `authenticated`.
 
 Riesgos:
 
@@ -95,8 +106,8 @@ Riesgos:
 Reglas:
 
 - Leer solo spaces donde el usuario es miembro.
-- Crear space solo usuario autenticado.
-- Actualizar space solo `owner` o `partner` autorizado.
+- No crear spaces mediante insert libre del cliente.
+- No actualizar spaces directamente hasta limitar columnas sensibles.
 - Updates reales deben limitar columnas permitidas, por ejemplo `name` y quiza `slug`.
 - No permitir que `owner`/`partner` cambie campos sensibles como `created_by`.
 - No borrar space sin plan.
@@ -116,16 +127,17 @@ where universe_members.space_id = relationship_spaces.id
 and universe_members.user_id = auth.uid()
 ```
 
-Insert conceptual:
+Bootstrap conceptual:
 
 ```txt
-auth.uid() is not null
+RPC/admin transaccional crea space + owner membership + partner opcional
 ```
 
-Update conceptual:
+Update futuro controlado:
 
 ```txt
 has_space_role(relationship_spaces.id, ['owner', 'partner'])
+and solo cambia columnas permitidas como name/slug
 ```
 
 Delete conceptual:
@@ -138,7 +150,8 @@ Delete conceptual:
 Reglas:
 
 - Miembros pueden ver membresias del mismo space.
-- Solo `owner` puede agregar o quitar miembros.
+- No permitir insert/update/delete directo de memberships desde cliente.
+- Solo un RPC/admin transaccional autorizado por `owner` puede agregar, cambiar o quitar miembros.
 - Impedir que alguien se asigne role `owner` a si mismo desde cliente.
 - Impedir borrar el ultimo owner.
 - Cambios de role deben auditarse o pasar por RPC controlada.
@@ -151,23 +164,12 @@ Select conceptual:
 is_space_member(universe_members.space_id)
 ```
 
-Insert conceptual:
+Insert/update/delete futuro:
 
 ```txt
-has_space_role(space_id, ['owner'])
-```
-
-Update conceptual:
-
-```txt
-has_space_role(space_id, ['owner'])
+RPC/admin transaccional
+and actor es owner actual
 and no self-owner escalation
-```
-
-Delete conceptual:
-
-```txt
-has_space_role(space_id, ['owner'])
 and no owner lockout
 ```
 
@@ -182,9 +184,11 @@ Riesgos:
 Reglas:
 
 - `select` solo miembros del space.
-- `insert` solo miembros con rol `owner` o `partner`.
-- `update` solo miembros con rol `owner` o `partner`.
-- `delete` o soft delete solo miembros autorizados.
+- `insert` directo queda NO-GO en el draft actual.
+- Escritura futura solo mediante RPC/trigger controlado o permisos por columnas
+  minimos revisados; nunca permisos de fila completa sobre `content_items`.
+- `update` directo queda bloqueado hasta proteger columnas sensibles.
+- Hard delete directo queda denegado; soft delete/restore requiere RPC/update controlado.
 - Validar `space_id` contra membership.
 - No permitir leer por `collection` sin membership.
 - Validar que `created_by`/`updated_by` correspondan al usuario actual o sean asignados por servidor/trigger.
@@ -195,26 +199,30 @@ Select conceptual:
 is_space_member(content_items.space_id)
 ```
 
-Insert conceptual:
+Insert futuro conceptual:
 
 ```txt
+NO-GO para cliente directo en el draft actual.
 has_space_role(content_items.space_id, ['owner', 'partner'])
 and content_items.created_by = auth.uid()
 and content_items.updated_by = auth.uid()
+and columnas sensibles quedan fuera del input cliente o protegidas server-side
 ```
 
-Update conceptual:
+Update futuro controlado:
 
 ```txt
 has_space_role(content_items.space_id, ['owner', 'partner'])
 and updated_by = auth.uid()
+and no cambia space_id/kind/local_id/base_id/created_by/created_at/schema_version
 ```
 
 Delete conceptual:
 
 - Preferir soft delete o `kind = hidden` segun decision de schema.
 - Hard delete queda no recomendado/no final.
-- Si hay delete real, exigir rol `owner` o policy explicita con audit obligatorio.
+- No crear policy/grant de hard delete para cliente normal.
+- Cualquier delete real futuro exige RPC/admin y audit obligatorio.
 
 Riesgos:
 
@@ -228,8 +236,7 @@ Riesgos:
 Reglas:
 
 - `select` solo miembros del space.
-- `insert` desde acciones de contenido.
-- Si se quiere auditoria confiable, no aceptar inserts arbitrarios desde cliente.
+- No aceptar inserts arbitrarios desde cliente si se quiere auditoria confiable.
 - Preferir trigger, RPC o server-side para construir eventos sanitizados.
 - No permitir `update` normal.
 - No permitir `delete` normal si se quiere auditoria confiable.
@@ -241,12 +248,10 @@ Select conceptual:
 is_space_member(content_events.space_id)
 ```
 
-Insert conceptual:
+Insert futuro confiable:
 
 ```txt
-RPC/trigger/server-side recomendado
-o, solo como borrador, has_space_role(content_events.space_id, ['owner', 'partner'])
-and actor_id = auth.uid()
+RPC/trigger/admin construye evento sanitizado y deriva actor/space
 ```
 
 Update/delete conceptual:
@@ -266,8 +271,8 @@ Riesgos:
 Reglas para `media_assets`:
 
 - `select` solo miembros del space.
-- Insert/upload solo miembros autorizados.
-- Delete solo con membership actual y, ademas, `owner`/`partner` o creador si se define asi.
+- Insert/update/delete quedan bloqueados hasta disenar el flujo DB + Storage.
+- Delete futuro exige membership actual, autorizacion y cleanup del objeto.
 - `space_id` obligatorio.
 - `created_by` debe ser `auth.uid()` o asignarse por servidor.
 
@@ -293,20 +298,17 @@ Select conceptual de `media_assets`:
 is_space_member(media_assets.space_id)
 ```
 
-Upload conceptual:
+Upload futuro controlado:
 
 ```txt
-has_space_role(space_id_del_path_o_metadata, ['owner', 'partner'])
+RPC/flujo Storage valida has_space_role(space_id, ['owner', 'partner'])
+and mantiene metadata/objeto consistentes
 ```
 
 Delete conceptual:
 
 ```txt
-is_space_member(media_assets.space_id)
-and (
-  has_space_role(media_assets.space_id, ['owner', 'partner'])
-  or media_assets.created_by = auth.uid()
-)
+RPC/flujo Storage valida membership actual, role y cleanup
 ```
 
 Riesgos:
@@ -356,26 +358,19 @@ using (
 )
 ```
 
-### INSERT `content_items`
+### Escritura `content_items` futura
 
 ```sql
-with check (
-  has_space_role(content_items.space_id, array['owner', 'partner'])
-  and content_items.created_by = auth.uid()
-  and content_items.updated_by = auth.uid()
-)
+-- NO-GO en el draft actual: no hay policy activa ni permiso SQL para escritura
+-- directa de filas en content_items.
+-- Futuro: RPC/admin/trigger o permisos por columnas minimos revisados.
 ```
 
-### UPDATE `content_items`
+### UPDATE `content_items` futuro
 
 ```sql
-using (
-  has_space_role(content_items.space_id, array['owner', 'partner'])
-)
-with check (
-  has_space_role(content_items.space_id, array['owner', 'partner'])
-  and content_items.updated_by = auth.uid()
-)
+-- Sin policy/grant directo en el draft refinado.
+-- Requiere RPC/trigger para columnas inmutables, updated_by y soft delete.
 ```
 
 ### SELECT `media_assets`
@@ -441,10 +436,10 @@ Pruebas futuras obligatorias:
 
 No aplicar RLS todavia.
 
-La dependencia y el factory ya existen de forma aislada, pero no conectada.
-Los drafts siguen siendo documentales y S4.6.1 registra sus bloqueantes en
-`docs/SUPABASE_ISOLATED_ENVIRONMENT.md`.
+La dependencia y el factory existen de forma aislada, pero no conectada.
+S4.6.2.1 refino el schema draft y S4.6.2.2 refino este RLS draft. Ambos siguen
+sin aplicarse y RLS no fue probada en Supabase.
 
-Siguiente paso recomendado: S4.6.2 debe corregir helpers, policies, bootstrap,
-ultimo owner y hard delete antes de preparar cualquier aplicacion manual.
+Siguiente paso recomendado: preparar fixtures/reset sinteticos y revisar los
+gates pendientes de RPC, ultimo owner, Storage y entorno aislado antes de S4.6.3.
 `hidden` sigue recomendado como `kind = 'hidden'`.

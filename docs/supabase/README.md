@@ -20,7 +20,9 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 
 - `schema_draft.sql`: borrador conceptual refinado en S4.6.2.1; sigue sin
   aplicarse y no es una migration idempotente para schemas existentes.
-- `rls_draft.sql`: borrador conceptual de helpers y policies RLS.
+- `rls_draft.sql`: borrador conceptual refinado en S4.6.2.2; sigue sin
+  aplicarse ni probarse en Supabase y mantiene escritura de contenido,
+  RPC/Storage como gates futuros.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

@@ -65,24 +65,32 @@ Siguen pendientes:
 - definir lifecycle/cleanup de media y policies de Storage;
 - confirmar versionado final de `data` por collection.
 
-### RLS draft
+### RLS draft refinado en S4.6.2.2
 
-- `profiles_update_own` no restringe columnas sensibles.
-- `relationship_spaces_insert_authenticated` puede crear spaces huerfanos sin
-  primer membership.
-- Updates de spaces y content pueden modificar columnas sensibles o
-  invariantes de ownership.
-- Las policies de membership permiten cambios de role y no resuelven
-  self-owner ni proteccion del ultimo owner.
-- El bootstrap owner/partner requiere RPC, Edge Function o proceso admin
-  controlado.
-- El hard delete directo de `content_items` continua permitido por el draft.
-- Inserts client-side de `content_events` no producen auditoria confiable.
-- Faltan validaciones cross-space en eventos y media.
-- Los helpers `security definer` requieren owner seguro, grants explicitos,
-  `search_path` revisado y pruebas de recursion/bypass.
-- No existen policies reales de `storage.objects` ni bucket privado.
-- Falta definir la creacion segura de `profiles` vinculados a Auth.
+El refinamiento documental aborda, sin ejecutar SQL:
+
+- helpers de membership/role con `search_path` fijo, revokes y grants minimos;
+- wrappers explicitos para leer/modificar spaces;
+- grants de tablas deny-by-default;
+- `insert` libre de spaces y escrituras directas de memberships bloqueados;
+- escritura directa de `content_items` bloqueada; el permiso amplio de INSERT
+  fue retirado y queda pendiente RPC/permisos por columnas revisados;
+- update directo de profiles/spaces/content bloqueado hasta RPC/grants seguros;
+- hard delete de content items denegado;
+- content events append-only sin insert/update/delete libre del cliente;
+- media metadata en lectura solamente hasta disenar DB + Storage;
+- Storage marcado como NO-GO sin policies de `storage.objects`.
+
+Siguen pendientes:
+
+- auditar owner/BYPASSRLS y recursion real de helpers en entorno aislado;
+- implementar RPC bootstrap owner/partner transaccional;
+- proteger ultimo owner mediante RPC/trigger y probar concurrencia;
+- definir profile create/update, content create/update, soft delete e import
+  admin mediante RPC/permisos minimos revisados;
+- generar audit confiable mediante trigger/RPC;
+- disenar policies reales de Storage y cleanup de media;
+- ejecutar fixtures/reset y matriz multiusuario sintetica.
 
 ## 5. Diseno del entorno aislado
 
@@ -127,8 +135,8 @@ capturas publicas.
 | Leer Space A | Partner A | SELECT contenido | Permitido | S4.6.4 |
 | Leer Space A | Externo | SELECT contenido | Denegado | S4.6.4 |
 | Leer Space A | Owner B | SELECT contenido | Denegado | S4.6.4 |
-| Crear local valido | Owner A | INSERT local | Permitido | S4.6.4 |
-| Crear local valido | Partner A | INSERT local | Permitido si la policy final lo conserva | S4.6.4 |
+| Crear local valido | Owner A | INSERT local | Pendiente de RPC/permisos minimos finales | S4.6.4 |
+| Crear local valido | Partner A | INSERT local | Pendiente de RPC/permisos minimos finales | S4.6.4 |
 | Crear contenido | Externo | INSERT local | Denegado | S4.6.4 |
 | Crear override | Owner/Partner A | INSERT override de Space A | Permitido | S4.6.4 |
 | Override cross-space | Owner B | INSERT/UPDATE sobre Space A | Denegado | S4.6.4 |
@@ -169,8 +177,8 @@ capturas publicas.
 ## 10. Fases siguientes
 
 - **S4.6.2.1:** schema draft refinado documentalmente, sin aplicar SQL.
-- **S4.6.2.2:** refinar RLS draft, sin aplicar SQL.
-- **S4.6.2.3:** alinear docs y preparar fixtures/reset sinteticos, sin ejecutar.
+- **S4.6.2.2:** RLS draft refinado documentalmente, sin aplicar SQL.
+- **S4.6.2.3:** preparar fixtures/reset sinteticos y re-auditar drafts, sin ejecutar.
 - **S4.6.3:** aplicar manualmente schema/RLS revisados en un proyecto Supabase
   desechable, solo si todos los gates pasan.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.

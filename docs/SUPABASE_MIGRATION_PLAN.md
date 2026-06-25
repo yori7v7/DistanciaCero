@@ -636,8 +636,11 @@ Estado de S4.6.1:
 - El proyecto Supabase aislado todavia no existe y no se ha aplicado SQL.
 - S4.6.2.1 refino el schema draft sin ejecutarlo: invariantes por kind, JSONB
   object, soft delete, FKs cross-space, RESTRICT y audit append-only conceptual.
-- S4.6.2.2 debe refinar RLS; fixtures/reset y aplicacion manual siguen
-  pendientes de aprobacion.
+- S4.6.2.2 refino RLS sin ejecutarla: helpers/grants minimos, bootstrap y
+  memberships bloqueados, escritura directa de `content_items` en NO-GO,
+  hard delete denegado y Storage en NO-GO.
+- S4.6.2.3 debe preparar fixtures/reset sinteticos y re-auditar drafts;
+  aplicacion manual sigue pendiente de aprobacion.
 
 Validacion y rollback:
 
@@ -733,9 +736,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 ## 12. Veredicto
 
 La dependencia, el factory Supabase, el verificador manual S4.5.1 y el checklist
-documental S4.6.1 existen de forma aislada. S4.6.2.1 refino solo el schema
-draft; el entorno remoto aun no existe y no se ha aplicado SQL. El refinamiento
-RLS o cualquier conexion futura requieren aprobacion independiente y un
-veredicto go/no-go del readiness checklist.
+documental S4.6.1 existen de forma aislada. S4.6.2.1 refino el schema draft y
+S4.6.2.2 refino RLS; el entorno remoto aun no existe y no se ha aplicado SQL.
+Fixtures/reset, cualquier aplicacion o conexion futura requieren aprobacion
+independiente y un veredicto go/no-go del readiness checklist.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.
