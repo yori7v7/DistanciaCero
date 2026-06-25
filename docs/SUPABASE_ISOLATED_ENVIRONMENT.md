@@ -166,7 +166,8 @@ capturas publicas.
 ## 9. Rollback y reset
 
 - El rollback principal es destruir el proyecto desechable completo.
-- S4.6.2 debe disenar un reset SQL revisable antes de aplicar schema/RLS.
+- Una fase separada posterior debe disenar un reset SQL revisable antes de
+  aplicar schema/RLS.
 - El reset debe eliminar fixtures en orden seguro y preservar la posibilidad de
   diagnosticar fallos.
 - Si se prueba Storage posteriormente, debe limpiar objetos y metadata.
@@ -178,7 +179,10 @@ capturas publicas.
 
 - **S4.6.2.1:** schema draft refinado documentalmente, sin aplicar SQL.
 - **S4.6.2.2:** RLS draft refinado documentalmente, sin aplicar SQL.
-- **S4.6.2.3:** preparar fixtures/reset sinteticos y re-auditar drafts, sin ejecutar.
+- **S4.6.2.3:** auditar/disenar fixtures/reset sinteticos, sin ejecutar.
+- **S4.6.2.4:** plan conceptual de fixtures/matriz en
+  `docs/supabase/fixtures/README.md`, sin SQL ejecutable.
+- **S4.6.2.5:** evaluar fixture SQL draft no aplicado, si los gates pasan.
 - **S4.6.3:** aplicar manualmente schema/RLS revisados en un proyecto Supabase
   desechable, solo si todos los gates pasan.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
@@ -196,6 +200,7 @@ Completar S4.6.1 no autoriza automaticamente ninguna fase posterior.
 - [ ] Se confirmo que no es produccion.
 - [ ] No se usaran datos privados reales.
 - [ ] Schema y RLS drafts fueron corregidos y re-auditados.
+- [ ] El plan conceptual de fixtures/matriz fue revisado.
 - [ ] El bootstrap inicial fue disenado y revisado.
 - [ ] El ultimo owner queda protegido atomicamente.
 - [ ] Hard delete fue retirado o controlado mediante RPC/audit.

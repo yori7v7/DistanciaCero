@@ -639,8 +639,10 @@ Estado de S4.6.1:
 - S4.6.2.2 refino RLS sin ejecutarla: helpers/grants minimos, bootstrap y
   memberships bloqueados, escritura directa de `content_items` en NO-GO,
   hard delete denegado y Storage en NO-GO.
-- S4.6.2.3 debe preparar fixtures/reset sinteticos y re-auditar drafts;
-  aplicacion manual sigue pendiente de aprobacion.
+- S4.6.2.3 audito/diseno fixtures/reset sinteticos.
+- S4.6.2.4 crea documentacion conceptual de fixtures/matriz en
+  `docs/supabase/fixtures/README.md`; fixtures SQL, reset SQL y aplicacion
+  manual siguen pendientes de aprobacion.
 
 Validacion y rollback:
 
