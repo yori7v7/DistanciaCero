@@ -111,6 +111,10 @@ Siguen pendientes:
 
 S4.6.1 solo define estas fixtures conceptuales; no crea SQL ni usuarios.
 
+S4.6.2.5.1 agrega `docs/supabase/fixtures/synthetic_fixture_plan.sql` como
+draft documental no aplicado. Ese archivo no prueba Supabase, no crea usuarios,
+no contiene operaciones activas por defecto y no reemplaza el reset futuro.
+
 - **Space A:** relationship space sintetico principal.
 - **Space B:** segundo space para comprobar aislamiento cruzado.
 - **Owner A:** miembro owner de Space A.
@@ -183,6 +187,8 @@ capturas publicas.
 - **S4.6.2.4:** plan conceptual de fixtures/matriz en
   `docs/supabase/fixtures/README.md`, sin SQL ejecutable.
 - **S4.6.2.5:** evaluar fixture SQL draft no aplicado, si los gates pasan.
+- **S4.6.2.5.1:** crear `docs/supabase/fixtures/synthetic_fixture_plan.sql`
+  como draft documental no aplicado, con plantillas comentadas y sin reset.
 - **S4.6.3:** aplicar manualmente schema/RLS revisados en un proyecto Supabase
   desechable, solo si todos los gates pasan.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
@@ -201,6 +207,8 @@ Completar S4.6.1 no autoriza automaticamente ninguna fase posterior.
 - [ ] No se usaran datos privados reales.
 - [ ] Schema y RLS drafts fueron corregidos y re-auditados.
 - [ ] El plan conceptual de fixtures/matriz fue revisado.
+- [ ] El fixture SQL draft fue revisado y sigue sin operaciones activas por
+  defecto.
 - [ ] El bootstrap inicial fue disenado y revisado.
 - [ ] El ultimo owner queda protegido atomicamente.
 - [ ] Hard delete fue retirado o controlado mediante RPC/audit.

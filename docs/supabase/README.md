@@ -25,6 +25,9 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
   RPC/Storage como gates futuros.
 - `fixtures/README.md`: plan conceptual S4.6.2.4 de fixtures sinteticos,
   matriz futura y rollback; no contiene SQL ejecutable.
+- `fixtures/synthetic_fixture_plan.sql`: draft documental S4.6.2.5.1 de
+  fixtures sinteticos, no aplicado, con plantillas comentadas por defecto. No
+  es migration, no es reset y no demuestra ejecucion real.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

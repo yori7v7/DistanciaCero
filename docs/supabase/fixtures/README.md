@@ -19,6 +19,10 @@ Este README:
 Todo contenido real de Distancia Cero debe tratarse como privado. Los ejemplos
 de este documento son neutrales y sinteticos.
 
+El archivo `synthetic_fixture_plan.sql` complementa este README como draft SQL
+documental no aplicado. Sus plantillas estan comentadas por defecto y no son
+migrations ni fixtures ejecutados.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1, no ejecutado.
@@ -29,7 +33,8 @@ de este documento son neutrales y sinteticos.
 - [x] Remote repository skeleton sigue fail-fast.
 - [x] LocalStorage sigue activo y funciona como fallback.
 - [x] Router sigue inactivo.
-- [x] No existen fixtures SQL.
+- [x] Existe `synthetic_fixture_plan.sql` como draft documental no aplicado y
+  sin operaciones ejecutables por defecto.
 - [x] No existe reset SQL.
 - [x] No existe entorno Supabase aplicado para estas pruebas.
 
@@ -224,7 +229,9 @@ Reglas:
 
 ## 14. Fases siguientes
 
-- **S4.6.2.5:** evaluar o crear fixture SQL draft no aplicado.
+- **S4.6.2.5:** evaluar fixture SQL draft no aplicado.
+- **S4.6.2.5.1:** crear `synthetic_fixture_plan.sql` como draft documental no
+  aplicado, con plantillas comentadas y sin reset.
 - **Fase separada futura:** reset draft no aplicado.
 - **S4.6.3:** aplicacion manual de schema/RLS en proyecto desechable solo si
   todos los gates pasan.
@@ -233,9 +240,10 @@ Reglas:
 - **S4.8:** piloto read-only con fixtures sinteticos.
 - **S4.9:** escritura/migracion solo despues de RLS, rollback y conflictos.
 
-## 15. Criterios go/no-go antes de crear SQL fixture draft
+## 15. Criterios go/no-go antes de convertir o ejecutar cualquier SQL fixture
 
 - [ ] README conceptual completo.
+- [ ] `synthetic_fixture_plan.sql` revisado como draft documental.
 - [ ] Nombres sinteticos definidos.
 - [ ] Matriz minima definida.
 - [ ] No hay datos reales.
