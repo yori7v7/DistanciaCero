@@ -23,6 +23,10 @@ El archivo `synthetic_fixture_plan.sql` complementa este README como draft SQL
 documental no aplicado. Sus plantillas estan comentadas por defecto y no son
 migrations ni fixtures ejecutados.
 
+El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
+separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
+ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1, no ejecutado.
@@ -35,7 +39,8 @@ migrations ni fixtures ejecutados.
 - [x] Router sigue inactivo.
 - [x] Existe `synthetic_fixture_plan.sql` como draft documental no aplicado y
   sin operaciones ejecutables por defecto.
-- [x] No existe reset SQL.
+- [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
+  sin operaciones activas por defecto.
 - [x] No existe entorno Supabase aplicado para estas pruebas.
 
 ## 3. Objetivo de los fixtures sinteticos
@@ -198,7 +203,9 @@ Rollback principal:
 
 Reset SQL futuro:
 
-- solo cuando exista un plan separado, revisado y no automatico;
+- existe como `synthetic_reset_draft.sql`, pero sigue siendo un draft
+  documental no aplicado;
+- solo puede revisarse para ejecucion futura con aprobacion explicita;
 - debe limpiar en orden conceptual:
   1. `content_events`;
   2. `media_assets`;
@@ -214,6 +221,7 @@ Reglas:
 - confirmar project ref dos veces antes de cualquier SQL futuro;
 - no automatizar reset contra un proyecto desconocido;
 - no conservar tokens, screenshots o credenciales en Git.
+- no tratar el draft como rollback garantizado.
 
 ## 13. Seguridad
 
@@ -232,7 +240,8 @@ Reglas:
 - **S4.6.2.5:** evaluar fixture SQL draft no aplicado.
 - **S4.6.2.5.1:** crear `synthetic_fixture_plan.sql` como draft documental no
   aplicado, con plantillas comentadas y sin reset.
-- **Fase separada futura:** reset draft no aplicado.
+- **S4.6.2.6.1:** crear `synthetic_reset_draft.sql` como draft documental no
+  aplicado, separado del fixture y sin rollback garantizado.
 - **S4.6.3:** aplicacion manual de schema/RLS en proyecto desechable solo si
   todos los gates pasan.
 - **S4.6.4:** pruebas manuales multiusuario.
@@ -244,6 +253,8 @@ Reglas:
 
 - [ ] README conceptual completo.
 - [ ] `synthetic_fixture_plan.sql` revisado como draft documental.
+- [ ] `synthetic_reset_draft.sql` revisado como draft documental antes de
+  cualquier cleanup futuro.
 - [ ] Nombres sinteticos definidos.
 - [ ] Matriz minima definida.
 - [ ] No hay datos reales.

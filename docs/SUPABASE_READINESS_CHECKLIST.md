@@ -119,6 +119,7 @@ Estados permitidos:
 | Repository remoto no activo | Alto | Skeleton aislado no cambia el selector ni el comportamiento local | Diff, busqueda de imports y tests del selector local | [ ] Pendiente |
 | Fixtures conceptuales listos | Alto | Nombres sinteticos, matriz minima y rollback conceptual definidos antes de SQL fixture draft | `docs/supabase/fixtures/README.md` revisado, sin SQL ejecutable ni datos reales | [ ] Pendiente |
 | Fixture SQL draft no aplicado | Critico | El draft de fixtures no puede ejecutarse sin entorno desechable, project ref confirmado, reset/rollback y aprobacion explicita | `synthetic_fixture_plan.sql` revisado, sin operaciones activas por defecto ni datos reales | [ ] Pendiente |
+| Reset SQL draft no aplicado | Critico | El reset draft no puede ejecutarse sin entorno desechable, project ref confirmado, filtros sinteticos, revision y aprobacion explicita | `synthetic_reset_draft.sql` revisado, sin operaciones activas por defecto ni datos reales | [ ] Pendiente |
 | Pruebas minimas | Critico | Existen pruebas de contrato, RLS/Auth, fallback e import antes de UI | Matriz ejecutada con resultados reproducibles | [ ] Pendiente |
 | Media/Data URL | Alto | Existe plan de validacion, upload privado, referencia y cleanup | Flujo probado en entorno aislado con archivos invalidos y fallos | [ ] Pendiente |
 | Export/import v2 | Critico | Sigue funcionando como backup y la migracion remota es manual/idempotente | Backup de prueba, dry run, reimport y rollback verificados | [ ] Pendiente |
@@ -236,8 +237,10 @@ la siguiente.
   ejecutable.
 - Estado S4.6.2.5.1: fixture SQL draft documental creado, no aplicado, con
   plantillas comentadas y sin reset.
-- Pendiente S4.6.2.5+: re-auditar el draft, mantener reset separado y obtener
-  un nuevo go/no-go antes de usar un entorno remoto.
+- Estado S4.6.2.6.1: reset SQL draft documental creado, no aplicado, separado
+  del fixture y sin rollback garantizado.
+- Pendiente S4.6.2.6+: re-auditar los drafts y obtener un nuevo go/no-go antes
+  de usar un entorno remoto.
 - Salida: matriz RLS, rollback SQL y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

@@ -1,0 +1,227 @@
+-- DRAFT DOCUMENTAL - NO EJECUTAR.
+-- NO APLICADO.
+-- NO PROBADO EN SUPABASE.
+-- NO PRODUCCION.
+-- NO ES ROLLBACK GARANTIZADO.
+-- NO CONTIENE DATOS REALES.
+-- NO TOCA USUARIOS AUTH.
+-- NO TOCA STORAGE REAL.
+-- NO USAR CONTRA PRODUCCION.
+--
+-- Este archivo es un plan documental de reset/cleanup para fixtures
+-- sinteticos. No es una migration, no es rollback probado y no debe ejecutarse
+-- contra ningun entorno sin aprobacion posterior.
+--
+-- Requiere un entorno Supabase aislado/desechable, project ref confirmado
+-- fuera de Git y un go/no-go explicito antes de cualquier uso futuro.
+--
+-- Seguridad:
+-- - Todas las plantillas de cleanup estan comentadas a proposito.
+-- - No debe existir ninguna instruccion de limpieza ejecutable por defecto.
+-- - No borrar datos que no tengan marcadores sinteticos.
+-- - No tocar tablas internas de autenticacion.
+-- - No tocar objetos reales de Storage.
+-- - No usar service-role, tokens, keys, emails reales ni project ref real.
+-- - No mezclar este plan con el fixture SQL draft.
+
+-- ============================================================================
+-- 1. Scope
+-- ============================================================================
+--
+-- Este reset draft solo limpiaria fixtures sinteticos creados por:
+--
+-- docs/supabase/fixtures/synthetic_fixture_plan.sql
+--
+-- Referencias obligatorias:
+--
+-- - docs/supabase/fixtures/README.md
+-- - matriz T01-T20 del README conceptual
+-- - docs/supabase/fixtures/synthetic_fixture_plan.sql
+--
+-- Si el fixture plan, este reset draft y la matriz T01-T20 divergen, detener
+-- todo y actualizar documentacion antes de ejecutar cualquier SQL futuro.
+--
+-- Este archivo no valida RLS, no prueba Supabase y no demuestra rollback real.
+
+-- ============================================================================
+-- 2. Prerrequisitos documentales
+-- ============================================================================
+--
+-- Antes de convertir cualquier plantilla en SQL ejecutable, una fase posterior
+-- debe confirmar:
+--
+-- [ ] Entorno Supabase aislado/desechable confirmado.
+-- [ ] Project ref confirmado dos veces fuera de Git.
+-- [ ] Schema/RLS aplicados manualmente en entorno aislado, si fue autorizado.
+-- [ ] Fixture sintetico aplicado manualmente solo en entorno desechable, si fue autorizado.
+-- [ ] No datos reales.
+-- [ ] No emails reales.
+-- [ ] No service-role en Git.
+-- [ ] La app sigue desconectada.
+-- [ ] El CRUD sigue local/sync.
+-- [ ] Existe aprobacion explicita para revisar ejecucion futura.
+
+-- ============================================================================
+-- 3. Markers y filtros sinteticos
+-- ============================================================================
+--
+-- Marcadores conceptuales permitidos:
+--
+-- - source = 'synthetic-fixture'
+-- - source = 'synthetic-fixture-legacy-adapter'
+-- - slug in ('space-a-synthetic', 'space-b-synthetic')
+-- - local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
+-- - local_id like 'synthetic-%'
+-- - base_id like 'base-%-synthetic-%'
+-- - bucket = 'relationship-media-synthetic'
+-- - path like 'space-a/synthetic-%'
+--
+-- Reglas:
+--
+-- - No limpiar si no coincide al menos un marcador sintetico fuerte.
+-- - No borrar por tabla completa.
+-- - No confiar solo en collection.
+-- - No confiar solo en fechas.
+-- - No confiar solo en nombres humanos.
+-- - Confirmar dos veces el project ref antes de cualquier SQL futuro.
+
+-- ============================================================================
+-- 4. Orden conceptual de limpieza
+-- ============================================================================
+--
+-- Orden seguro:
+--
+-- 1. content_events sinteticos.
+-- 2. media_assets sinteticos.
+-- 3. content_items sinteticos.
+-- 4. universe_members de spaces sinteticos.
+-- 5. relationship_spaces sinteticos.
+-- 6. profiles sinteticos.
+-- 7. Storage fuera de alcance.
+--
+-- Este orden respeta dependencias/FKs: eventos y media dependen de contenido;
+-- contenido y memberships dependen de spaces/profiles; profiles se dejan al
+-- final para evitar referencias colgantes durante la limpieza conceptual.
+
+-- ============================================================================
+-- 5. Plantillas comentadas de cleanup
+-- ============================================================================
+--
+-- IMPORTANTE:
+-- Las siguientes plantillas son ejemplos comentados. No activar sin revisar
+-- schema/RLS real, entorno, project ref, conteos previos y rollback.
+
+-- 5.1 content_events sinteticos
+--
+-- delete from public.content_events
+-- where payload ->> 'fixture' = 'synthetic'
+--    or space_id in (
+--      select id from public.relationship_spaces
+--      where slug in ('space-a-synthetic', 'space-b-synthetic')
+--    )
+--    or content_item_id in (
+--      select id from public.content_items
+--      where source in ('synthetic-fixture', 'synthetic-fixture-legacy-adapter')
+--         or local_id like 'synthetic-%'
+--         or base_id like 'base-%-synthetic-%'
+--    );
+--
+-- 5.2 media_assets sinteticos
+--
+-- delete from public.media_assets
+-- where bucket = 'relationship-media-synthetic'
+--    or path like 'space-a/synthetic-%'
+--    or path like 'space-b/synthetic-%'
+--    or content_item_id in (
+--      select id from public.content_items
+--      where source in ('synthetic-fixture', 'synthetic-fixture-legacy-adapter')
+--         or local_id like 'synthetic-%'
+--         or base_id like 'base-%-synthetic-%'
+--    );
+--
+-- 5.3 content_items sinteticos
+--
+-- delete from public.content_items
+-- where source in ('synthetic-fixture', 'synthetic-fixture-legacy-adapter')
+--    or local_id like 'synthetic-%'
+--    or base_id like 'base-%-synthetic-%'
+--    or space_id in (
+--      select id from public.relationship_spaces
+--      where slug in ('space-a-synthetic', 'space-b-synthetic')
+--    );
+--
+-- 5.4 universe_members de spaces sinteticos
+--
+-- delete from public.universe_members
+-- where space_id in (
+--   select id from public.relationship_spaces
+--   where slug in ('space-a-synthetic', 'space-b-synthetic')
+-- )
+-- and user_id in (
+--   select id from public.profiles
+--   where local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
+-- );
+--
+-- 5.5 relationship_spaces sinteticos
+--
+-- delete from public.relationship_spaces
+-- where slug in ('space-a-synthetic', 'space-b-synthetic')
+--   and name in ('Synthetic Space A', 'Synthetic Space B');
+--
+-- 5.6 profiles sinteticos
+--
+-- delete from public.profiles
+-- where local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
+--   and display_name in (
+--     'Synthetic Owner A',
+--     'Synthetic Partner A',
+--     'Synthetic Owner B',
+--     'Synthetic External User'
+--   );
+
+-- ============================================================================
+-- 6. Post-reset checks futuros
+-- ============================================================================
+--
+-- [ ] No quedan content_items con source sintetico.
+-- [ ] No quedan content_items con local_id/base_id sintetico.
+-- [ ] No quedan media_assets con bucket/path sintetico.
+-- [ ] No quedan content_events con payload fixture sintetico.
+-- [ ] No quedan memberships ligados a spaces sinteticos.
+-- [ ] No quedan spaces con slug sintetico.
+-- [ ] No quedan profiles con local_slug sintetico.
+-- [ ] No se toco contenido no sintetico.
+-- [ ] No se tocaron usuarios Auth.
+-- [ ] Storage real no fue probado ni limpiado en esta fase.
+-- [ ] La app y el CRUD permanecen desconectados.
+
+-- ============================================================================
+-- 7. No incluido
+-- ============================================================================
+--
+-- Este reset draft NO incluye:
+--
+-- - reset de produccion;
+-- - limpieza de usuarios Auth;
+-- - limpieza de Storage real;
+-- - operaciones de destruccion de tablas;
+-- - limpieza total de tablas;
+-- - comandos CLI;
+-- - rollback garantizado;
+-- - conexion a la app;
+-- - validacion RLS;
+-- - uso de service-role;
+-- - datos reales;
+-- - project ref real.
+
+-- ============================================================================
+-- 8. Next steps
+-- ============================================================================
+--
+-- - Auditar este reset draft en una fase posterior.
+-- - Mantenerlo separado de synthetic_fixture_plan.sql.
+-- - Aplicacion manual solo en proyecto desechable y solo con gates aprobados.
+-- - Reset real solo despues de revisar filtros, conteos previos y post-checks.
+-- - Rollback principal sigue siendo destruir el proyecto Supabase desechable.
+--
+-- FIN DEL DRAFT DOCUMENTAL. NO EJECUTAR.

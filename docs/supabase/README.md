@@ -28,6 +28,9 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 - `fixtures/synthetic_fixture_plan.sql`: draft documental S4.6.2.5.1 de
   fixtures sinteticos, no aplicado, con plantillas comentadas por defecto. No
   es migration, no es reset y no demuestra ejecucion real.
+- `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
+  reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
+  No es migration ni rollback ejecutado.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

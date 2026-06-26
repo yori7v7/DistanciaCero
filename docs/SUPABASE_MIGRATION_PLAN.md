@@ -644,7 +644,9 @@ Estado de S4.6.1:
   `docs/supabase/fixtures/README.md`.
 - S4.6.2.5.1 crea `docs/supabase/fixtures/synthetic_fixture_plan.sql` como
   draft documental no aplicado, con plantillas comentadas y sin reset.
-- Reset SQL y aplicacion manual siguen pendientes de aprobacion.
+- S4.6.2.6.1 crea `docs/supabase/fixtures/synthetic_reset_draft.sql` como
+  draft documental no aplicado, separado del fixture y sin rollback garantizado.
+- Aplicacion manual sigue pendiente de aprobacion.
 
 Validacion y rollback:
 
@@ -742,8 +744,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 La dependencia, el factory Supabase, el verificador manual S4.5.1 y el checklist
 documental S4.6.1 existen de forma aislada. S4.6.2.1 refino el schema draft y
 S4.6.2.2 refino RLS; el entorno remoto aun no existe y no se ha aplicado SQL.
-El fixture SQL draft documental existe sin operaciones activas por defecto;
-reset, cualquier aplicacion o conexion futura requieren aprobacion independiente
-y un veredicto go/no-go del readiness checklist.
+El fixture SQL draft y el reset SQL draft existen como documentos sin
+operaciones activas por defecto; cualquier aplicacion o conexion futura requiere
+aprobacion independiente y un veredicto go/no-go del readiness checklist.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.
