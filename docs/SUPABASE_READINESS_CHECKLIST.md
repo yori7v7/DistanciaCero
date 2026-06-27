@@ -239,9 +239,14 @@ la siguiente.
   plantillas comentadas y sin reset.
 - Estado S4.6.2.6.1: reset SQL draft documental creado, no aplicado, separado
   del fixture y sin rollback garantizado.
+- Estado S4.6.3.0: `docs/SUPABASE_MANUAL_APPLICATION_RUNBOOK.md` documenta el
+  procedimiento operativo y gate humano antes de S4.6.3.1+. No aplica SQL, no
+  crea proyecto Supabase y no conecta la app.
 - Pendiente S4.6.2.6+: re-auditar los drafts y obtener un nuevo go/no-go antes
   de usar un entorno remoto.
-- Salida: matriz RLS, rollback SQL y evidencia multiusuario.
+- Pendiente S4.6.3.1+: proyecto desechable, aprobacion humana, schema/RLS
+  aplicados manualmente en laboratorio y evidencia sin secretos.
+- Salida: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado
 

@@ -646,12 +646,17 @@ Estado de S4.6.1:
   draft documental no aplicado, con plantillas comentadas y sin reset.
 - S4.6.2.6.1 crea `docs/supabase/fixtures/synthetic_reset_draft.sql` como
   draft documental no aplicado, separado del fixture y sin rollback garantizado.
+- S4.6.3.0 crea `docs/SUPABASE_MANUAL_APPLICATION_RUNBOOK.md` como runbook
+  operativo documental. No aplica SQL, no crea proyecto Supabase y no conecta
+  la app.
 - Aplicacion manual sigue pendiente de aprobacion.
 
 Validacion y rollback:
 
-- Matriz multi-space, policies deny-by-default y rollback SQL probado.
-- Destruir el entorno de prueba o revertir migrations de prueba.
+- S4.6.3.1+ debe seguir el runbook, mantener evidencia sin secretos y obtener
+  aprobacion humana explicita antes de cualquier SQL.
+- El rollback principal del laboratorio sigue siendo destruir el proyecto
+  desechable; cualquier reset SQL requiere subfase separada.
 
 Nivel Codex:
 

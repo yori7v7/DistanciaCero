@@ -196,8 +196,12 @@ capturas publicas.
 - **S4.6.2.6.1:** crear `docs/supabase/fixtures/synthetic_reset_draft.sql`
   como draft documental no aplicado, separado del fixture y sin rollback
   garantizado.
-- **S4.6.3:** aplicar manualmente schema/RLS revisados en un proyecto Supabase
-  desechable, solo si todos los gates pasan.
+- **S4.6.3.0:** crear `docs/SUPABASE_MANUAL_APPLICATION_RUNBOOK.md` como
+  runbook documental de aplicacion manual. No crea proyecto, no aplica SQL y no
+  conecta la app.
+- **S4.6.3.1+:** aplicar manualmente schema/RLS revisados en un proyecto
+  Supabase desechable, solo si todos los gates del runbook pasan y existe
+  aprobacion humana explicita.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
 - **S4.7:** implementar y probar bootstrap owner/partner controlado.
 - **S4.8:** piloto read-only con fixtures sinteticos.
@@ -205,6 +209,8 @@ capturas publicas.
   conflictos.
 
 Completar S4.6.1 no autoriza automaticamente ninguna fase posterior.
+Completar S4.6.3.0 tampoco autoriza aplicar SQL: solo documenta el gate
+operativo para una fase futura.
 
 ## 11. Go/no-go antes de aplicar SQL real
 

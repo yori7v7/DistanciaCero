@@ -35,6 +35,9 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
   futura del laboratorio desechable; no crea proyecto ni aplica SQL.
+- `../SUPABASE_MANUAL_APPLICATION_RUNBOOK.md`: runbook S4.6.3.0 para una
+  futura aplicacion manual en laboratorio desechable; no crea proyecto, no
+  aplica SQL y no conecta la app.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
   conectar el factory, aplicar SQL o conectar repositories remotos.
 
