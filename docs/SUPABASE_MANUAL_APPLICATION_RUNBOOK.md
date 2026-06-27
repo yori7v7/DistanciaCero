@@ -76,6 +76,10 @@ Queda prohibido:
 
 Estas fases no estan completadas. Cada una requiere aprobacion separada.
 
+El gate especifico de S4.6.3.1 vive en
+`docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`. Debe revisarse antes de crear
+o seleccionar cualquier proyecto y antes de cualquier SQL.
+
 ## 5. Gate humano antes de cualquier SQL
 
 Antes de ejecutar cualquier SQL real, una persona debe confirmar:
@@ -179,6 +183,7 @@ Detener todo si ocurre cualquiera de estas condiciones:
 - `docs/supabase/fixtures/synthetic_reset_draft.sql`
 - `docs/SUPABASE_READINESS_CHECKLIST.md`
 - `docs/SUPABASE_ISOLATED_ENVIRONMENT.md`
+- `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`
 - `docs/SUPABASE_MIGRATION_PLAN.md`
 
 Si este runbook y cualquiera de esos documentos divergen, detener la fase y
@@ -205,4 +210,3 @@ Evitar estas frases salvo como advertencias de no uso:
 - fixtures aplicados.
 - reset probado.
 - produccion lista.
-

@@ -199,7 +199,10 @@ capturas publicas.
 - **S4.6.3.0:** crear `docs/SUPABASE_MANUAL_APPLICATION_RUNBOOK.md` como
   runbook documental de aplicacion manual. No crea proyecto, no aplica SQL y no
   conecta la app.
-- **S4.6.3.1+:** aplicar manualmente schema/RLS revisados en un proyecto
+- **S4.6.3.1:** crear `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md` como
+  checklist documental de proyecto desechable. No crea proyecto real y no
+  aplica SQL.
+- **S4.6.3.2+:** aplicar manualmente schema/RLS revisados en un proyecto
   Supabase desechable, solo si todos los gates del runbook pasan y existe
   aprobacion humana explicita.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
@@ -211,6 +214,8 @@ capturas publicas.
 Completar S4.6.1 no autoriza automaticamente ninguna fase posterior.
 Completar S4.6.3.0 tampoco autoriza aplicar SQL: solo documenta el gate
 operativo para una fase futura.
+Completar S4.6.3.1 tampoco crea proyecto Supabase: solo documenta como decidir
+si un proyecto manual futuro es desechable.
 
 ## 11. Go/no-go antes de aplicar SQL real
 

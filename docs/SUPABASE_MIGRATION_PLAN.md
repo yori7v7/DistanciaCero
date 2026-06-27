@@ -649,12 +649,16 @@ Estado de S4.6.1:
 - S4.6.3.0 crea `docs/SUPABASE_MANUAL_APPLICATION_RUNBOOK.md` como runbook
   operativo documental. No aplica SQL, no crea proyecto Supabase y no conecta
   la app.
+- S4.6.3.1 crea `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md` como checklist
+  documental para decidir si un proyecto manual puede considerarse desechable.
+  No crea proyecto Supabase y no aplica SQL.
 - Aplicacion manual sigue pendiente de aprobacion.
 
 Validacion y rollback:
 
-- S4.6.3.1+ debe seguir el runbook, mantener evidencia sin secretos y obtener
-  aprobacion humana explicita antes de cualquier SQL.
+- S4.6.3.1+ debe seguir el runbook y el checklist de proyecto desechable,
+  mantener evidencia sin secretos y obtener aprobacion humana explicita antes
+  de cualquier SQL.
 - El rollback principal del laboratorio sigue siendo destruir el proyecto
   desechable; cualquier reset SQL requiere subfase separada.
 

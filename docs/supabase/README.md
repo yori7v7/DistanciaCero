@@ -38,6 +38,9 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 - `../SUPABASE_MANUAL_APPLICATION_RUNBOOK.md`: runbook S4.6.3.0 para una
   futura aplicacion manual en laboratorio desechable; no crea proyecto, no
   aplica SQL y no conecta la app.
+- `../SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`: checklist S4.6.3.1 para
+  evaluar un proyecto Supabase desechable futuro; no crea proyecto, no aplica
+  SQL y no contiene project ref real.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
   conectar el factory, aplicar SQL o conectar repositories remotos.
 

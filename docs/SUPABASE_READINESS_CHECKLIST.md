@@ -113,6 +113,7 @@ Estados permitidos:
 | Bootstrap owner/partner seguro | Critico | Crear Auth, profiles, space y memberships sin self-owner client-side | Diseno aprobado de RPC/admin flow, casos de error y rollback | [ ] Pendiente |
 | Mapping UUID verificado | Critico | Mapear Yori, Ale y space local a UUID reales sin ambiguedad | Registro firmado/revisado de mapping y validacion de FKs | [ ] Pendiente |
 | RLS final revisada | Critico | Policies finales protegen profiles, memberships, contenido, eventos y media sin permisos amplios de escritura | SQL final revisado y matriz de pruebas multiusuario | [ ] Pendiente |
+| Proyecto Supabase desechable | Critico | Confirmar que el laboratorio puede destruirse, no es produccion, no contiene datos reales y no conecta la app | `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`, aprobacion humana y evidencia sin secretos | [ ] Pendiente |
 | Variables de entorno seguras | Alto | Definir URL y anon/publishable key sin secretos administrativos | `.env.example`, reglas de deploy y escaneo de secretos | [ ] Pendiente |
 | Estrategia sync local vs async remoto | Critico | Preservar contrato sync o definir hidratacion/cache compatible | ADR/diseno con estados loading, error, offline y rollback | [ ] Pendiente |
 | Fallback local | Critico | La app abre y permite modo local sin red o Supabase | Pruebas offline y procedimiento de desactivacion remota | [ ] Pendiente |
@@ -242,6 +243,9 @@ la siguiente.
 - Estado S4.6.3.0: `docs/SUPABASE_MANUAL_APPLICATION_RUNBOOK.md` documenta el
   procedimiento operativo y gate humano antes de S4.6.3.1+. No aplica SQL, no
   crea proyecto Supabase y no conecta la app.
+- Estado S4.6.3.1: `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md` documenta
+  el gate de proyecto desechable, evidencia segura y manejo de secretos. No
+  crea proyecto Supabase, no aplica SQL y no conecta la app.
 - Pendiente S4.6.2.6+: re-auditar los drafts y obtener un nuevo go/no-go antes
   de usar un entorno remoto.
 - Pendiente S4.6.3.1+: proyecto desechable, aprobacion humana, schema/RLS
