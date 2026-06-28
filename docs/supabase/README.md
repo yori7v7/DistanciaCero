@@ -35,11 +35,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   desechable. Fue aplicado manualmente en S4.6.3.3.2 con alcance limitado;
   mantiene escritura de contenido, RPC/Storage y pruebas con usuarios como
   gates futuros.
-- `fixtures/README.md`: plan conceptual S4.6.2.4 de fixtures sinteticos,
-  matriz futura y rollback; no contiene SQL ejecutable.
-- `fixtures/synthetic_fixture_plan.sql`: draft documental S4.6.2.5.1 de
-  fixtures sinteticos, no aplicado, con plantillas comentadas por defecto. No
-  es migration, no es reset y no demuestra ejecucion real.
+- `fixtures/README.md`: plan conceptual S4.6.2.4 y preflight S4.6.4.1 de
+  fixtures sinteticos, matriz futura T01-T20 y rollback; no contiene SQL
+  ejecutable.
+- `fixtures/synthetic_fixture_plan.sql`: candidato futuro documentado de
+  fixtures sinteticos, no aplicado, con plantillas comentadas por defecto y
+  casos EXPECT PASS/EXPECT FAIL. No es migration, no es reset y no demuestra
+  ejecucion real.
 - `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
   reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
   No es migration ni rollback ejecutado.

@@ -2,8 +2,9 @@
 
 ## 1. Resumen
 
-Este documento define un plan conceptual de fixtures sinteticos para una
-validacion futura de schema/RLS en un entorno Supabase aislado y desechable.
+Este documento define un plan conceptual y preflight S4.6.4.1 de fixtures
+sinteticos para una validacion futura de schema/RLS en un entorno Supabase
+aislado y desechable.
 
 Este README:
 
@@ -11,7 +12,8 @@ Este README:
 - no ejecuta ni aplica SQL;
 - no crea usuarios reales;
 - no usa datos privados reales;
-- no prueba Supabase real todavia;
+- no aplica fixtures ni reset;
+- no verifica RLS con usuarios/memberships;
 - no conecta la app ni el CRUD;
 - no crea proyecto Supabase;
 - no define tokens, keys, emails reales ni service-role.
@@ -19,9 +21,9 @@ Este README:
 Todo contenido real de Distancia Cero debe tratarse como privado. Los ejemplos
 de este documento son neutrales y sinteticos.
 
-El archivo `synthetic_fixture_plan.sql` complementa este README como draft SQL
-documental no aplicado. Sus plantillas estan comentadas por defecto y no son
-migrations ni fixtures ejecutados.
+El archivo `synthetic_fixture_plan.sql` complementa este README como candidato
+futuro documentado y no aplicado. Sus plantillas estan comentadas por defecto y
+no son migrations ni fixtures ejecutados.
 
 El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
 separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
@@ -29,8 +31,14 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
 
 ## 2. Estado actual
 
-- [x] Schema draft refinado en S4.6.2.1, no ejecutado.
-- [x] RLS draft refinado en S4.6.2.2, no ejecutado ni probado en backend real.
+- [x] Schema draft refinado en S4.6.2.1.
+- [x] Schema draft aplicado manualmente en laboratorio Supabase desechable y
+  documentado en S4.6.3.2.2, sin datos reales y sin conexion de la app.
+- [x] RLS draft refinado en S4.6.2.2.
+- [x] RLS draft aplicado manualmente en laboratorio Supabase desechable y
+  documentado en S4.6.3.3.2, sin fixtures/reset y sin conexion de la app.
+- [x] El comportamiento RLS con usuarios sinteticos, memberships y cliente
+  autenticado normal sigue pendiente de verificacion.
 - [x] Factory Supabase aislado existe.
 - [x] Verificador manual pasa con cero fetch.
 - [x] CRUD local/sync sigue activo.
@@ -41,7 +49,27 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
   sin operaciones ejecutables por defecto.
 - [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
   sin operaciones activas por defecto.
-- [x] No existe entorno Supabase aplicado para estas pruebas.
+- [x] Existe laboratorio desechable reportado por evidencia humana, pero no hay
+  Auth users sinteticos, Storage, fixtures, reset ni app conectada.
+
+## 2.1 Preflight S4.6.4.1
+
+Esta fase solo prepara documentacion para una futura aplicacion manual de
+fixtures. No cambia el estado de la base ni del runtime.
+
+Reglas del preflight:
+
+- fixtures siguen no aplicados;
+- reset sigue no aplicado y separado;
+- Storage queda fuera de alcance;
+- Auth users queda fuera de alcance;
+- app/CRUD siguen desconectados;
+- SQL Editor corre con privilegios y no representa un cliente autenticado
+  normal;
+- RLS aplicada en laboratorio todavia no equivale a verificacion con usuarios
+  sinteticos y memberships;
+- cualquier aplicacion manual futura requiere otro GO explicito;
+- rollback principal: destruir el laboratorio Supabase desechable.
 
 ## 3. Objetivo de los fixtures sinteticos
 
@@ -195,6 +223,10 @@ Eventos conceptuales:
 | T19 | operador | todos | Rollback/reset | synthetic fixtures | Limpia fixtures sinteticos | Reset futuro | S4.6.4+ |
 | T20 | operador | todos | Storage objects | object metadata | NO-GO hasta policies futuras | Storage futura | S4.9 |
 
+Esta matriz T01-T20 es la referencia de resultados esperados para cualquier
+ejecucion futura. Si la matriz y el SQL draft divergen, detener la fase y
+actualizar documentacion antes de aplicar cualquier SQL.
+
 ## 12. Reset / rollback conceptual
 
 Rollback principal:
@@ -242,9 +274,13 @@ Reglas:
   aplicado, con plantillas comentadas y sin reset.
 - **S4.6.2.6.1:** crear `synthetic_reset_draft.sql` como draft documental no
   aplicado, separado del fixture y sin rollback garantizado.
-- **S4.6.3:** aplicacion manual de schema/RLS en proyecto desechable solo si
-  todos los gates pasan.
-- **S4.6.4:** pruebas manuales multiusuario.
+- **S4.6.3.2.2:** registrar aplicacion manual de schema en laboratorio
+  desechable, sin fixtures/reset y sin app conectada.
+- **S4.6.3.3.2:** registrar aplicacion manual de RLS en laboratorio
+  desechable, sin verificar usuarios/memberships y sin app conectada.
+- **S4.6.4.1:** documentacion/preflight de fixtures sinteticos controlados.
+- **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
+  matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
 - **S4.8:** piloto read-only con fixtures sinteticos.
 - **S4.9:** escritura/migracion solo despues de RLS, rollback y conflictos.
@@ -260,7 +296,11 @@ Reglas:
 - [ ] No hay datos reales.
 - [ ] No hay project ref real.
 - [ ] Rollback conceptual definido.
-- [ ] Schema/RLS drafts siguen no ejecutados.
+- [ ] Schema/RLS aplicados manualmente en laboratorio desechable confirmado.
+- [ ] Comportamiento RLS con usuarios/memberships sigue marcado como pendiente.
+- [ ] Auth users sinteticos siguen fuera de alcance hasta GO separado.
+- [ ] Storage sigue fuera de alcance.
+- [ ] Reset sigue separado y no aplicado.
 - [ ] La app sigue desconectada.
 - [ ] Verificador limpio.
 - [ ] Build limpio.

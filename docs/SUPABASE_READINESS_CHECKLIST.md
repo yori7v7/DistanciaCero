@@ -74,6 +74,8 @@ Estado verificado post-S4.5.1:
       cero fetch y aislamiento del runtime.
 - [x] El verificador no prueba RLS/backend real y no conecta el CRUD.
 - [x] Su alcance esta documentado en `docs/SUPABASE_CONTRACT_TESTS.md`.
+- [x] S4.6.4.1 documenta/prepara fixtures sinteticos controlados sin aplicarlos:
+      reset, Storage, Auth users y app siguen fuera de alcance.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -259,6 +261,10 @@ la siguiente.
   laboratorio desechable, con resultado `Success. No rows returned`. No verifica
   comportamiento con usuarios, no aplica fixtures/reset, no toca Storage y no
   conecta el CRUD.
+- Estado S4.6.4.1: `docs/supabase/fixtures/README.md` y
+  `docs/supabase/fixtures/synthetic_fixture_plan.sql` quedan actualizados como
+  preflight/candidato futuro documentado. No se aplican fixtures, no se aplica
+  reset, no se crean Auth users y no se toca Storage.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

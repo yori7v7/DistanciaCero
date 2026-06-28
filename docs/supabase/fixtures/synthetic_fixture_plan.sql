@@ -1,6 +1,7 @@
--- DRAFT DOCUMENTAL - NO EJECUTAR.
+-- CANDIDATO FUTURO DOCUMENTADO - NO EJECUTAR TODAVIA.
 -- NO APLICADO.
--- NO PROBADO EN SUPABASE.
+-- NO CREA FIXTURES REALES.
+-- NO VERIFICA RLS CON USUARIOS AUTH.
 -- NO PRODUCCION.
 -- NO CONTIENE DATOS REALES.
 -- NO CREA USUARIOS AUTH.
@@ -21,6 +22,17 @@
 -- - No crear filas internas de autenticacion desde este fixture.
 -- - No mezclar este plan con SQL de reset.
 -- - No ejecutar contra un entorno no desechable.
+--
+-- Estado S4.6.4.1:
+-- - Schema y RLS fueron aplicados manualmente en un laboratorio desechable
+--   segun evidencia humana documentada.
+-- - Este fixture no fue aplicado.
+-- - El reset no fue aplicado.
+-- - No hay Auth users sinteticos creados por este archivo.
+-- - Storage y la app siguen fuera de alcance.
+-- - SQL Editor corre con privilegios y no representa un cliente autenticado
+--   normal.
+-- - Cualquier aplicacion futura requiere otro GO explicito.
 
 -- ============================================================================
 -- 1. Prerrequisitos documentales
@@ -29,10 +41,12 @@
 -- Antes de convertir este plan en SQL ejecutable, una fase posterior debe
 -- confirmar explicitamente:
 --
--- - docs/supabase/schema_draft.sql fue revisado, convertido en migracion real
---   y aplicado manualmente en un entorno Supabase aislado.
--- - docs/supabase/rls_draft.sql fue revisado, convertido en policies reales
---   y aplicado manualmente en ese mismo entorno aislado.
+-- - docs/supabase/schema_draft.sql fue revisado y aplicado manualmente en un
+--   laboratorio Supabase aislado/desechable.
+-- - docs/supabase/rls_draft.sql fue revisado y aplicado manualmente en ese
+--   mismo tipo de laboratorio.
+-- - El comportamiento de RLS con usuarios sinteticos y memberships todavia
+--   debe verificarse en una fase futura.
 -- - Las identidades Auth sinteticas fueron creadas o mapeadas por un flujo
 --   aprobado, sin datos reales.
 -- - Los UUIDs de abajo fueron reemplazados por UUIDs reales del entorno
@@ -48,6 +62,7 @@
 -- <external_user_auth_uuid>
 -- <space_a_uuid>
 -- <space_b_uuid>
+-- <space_empty_uuid>
 -- <item_reason_a_uuid>
 -- <item_promise_a_uuid>
 -- <item_important_date_a_uuid>
@@ -93,7 +108,15 @@
 --   ('<space_b_uuid>'::uuid, 'Synthetic Space B', 'space-b-synthetic', '<owner_b_auth_uuid>'::uuid);
 --
 -- Nota:
--- - space_empty queda como caso conceptual, sin fila activa en este draft.
+-- - space_empty queda como caso opcional, sin datos asociados.
+-- - Si se usa en una fase futura, debe permanecer sintetico y no privado.
+--
+-- Plantilla opcional futura, NO EJECUTABLE:
+--
+-- insert into public.relationship_spaces (id, name, slug, created_by)
+-- values ('<space_empty_uuid>'::uuid, 'Synthetic Empty Space', 'space-empty-synthetic', '<owner_a_auth_uuid>'::uuid);
+--
+-- Nota:
 -- - No usar distancia-cero-local-space como UUID remoto.
 
 -- ============================================================================
@@ -400,7 +423,25 @@
 -- - No tratar inserts libres del cliente como audit confiable.
 
 -- ============================================================================
--- 8. Casos invalidos esperados - SOLO COMENTARIOS EXPECT FAIL
+-- 8. Casos validos esperados - SOLO COMENTARIOS EXPECT PASS
+-- ============================================================================
+--
+-- EXPECT PASS: owner_a puede leer content_items de space_a.
+-- EXPECT PASS: partner_a puede leer content_items de space_a.
+-- EXPECT PASS: owner_b puede leer content_items de space_b.
+-- EXPECT PASS: content_items kind local con local_id y sin base_id.
+-- EXPECT PASS: content_items kind override con base_id y sin local_id.
+-- EXPECT PASS: content_items kind hidden con base_id y sin local_id.
+-- EXPECT PASS: monthlyLetters/openWhenLetters legacy quedan sin autoria
+--              inventada hasta que exista adaptador aprobado.
+-- EXPECT PASS: media_assets con content_item_id del mismo space.
+-- EXPECT PASS: content_events con content_item_id del mismo space y payload
+--              minimo/sanitizado.
+-- EXPECT PASS: hidden representa marker/restauracion futura, no hard delete
+--              por defecto.
+
+-- ============================================================================
+-- 9. Casos invalidos esperados - SOLO COMENTARIOS EXPECT FAIL
 -- ============================================================================
 --
 -- EXPECT FAIL: local sin local_id.
@@ -420,7 +461,7 @@
 -- EXPECT FAIL: quitar ultimo owner.
 
 -- ============================================================================
--- 9. Reset / rollback
+-- 10. Reset / rollback
 -- ============================================================================
 --
 -- Este archivo NO incluye reset.
@@ -444,7 +485,7 @@
 -- - Esta referencia no aplica SQL ni valida Supabase.
 
 -- ============================================================================
--- 10. Checklist pre-ejecucion futura
+-- 11. Checklist pre-ejecucion futura
 -- ============================================================================
 --
 -- [ ] Entorno desechable confirmado.

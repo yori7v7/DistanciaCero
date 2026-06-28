@@ -77,6 +77,7 @@ Queda prohibido:
 - **S4.6.3.3.2:** registro post-RLS de laboratorio desechable.
 - **S4.6.3.4:** verificacion post-SQL sin app.
 - **S4.6.3.5:** decision go/no-go para fixtures sinteticos.
+- **S4.6.4.1:** documentacion/preflight de fixtures sinteticos controlados.
 - **S4.6.4:** pruebas multiusuario/RLS con fixtures, todavia sin CRUD real.
 
 S4.6.3.2.2 quedo registrada en `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` con
@@ -86,6 +87,9 @@ fases posteriores requieren aprobacion separada.
 S4.6.3.3.2 queda registrada en `docs/SUPABASE_POST_RLS_LAB_RESULT.md` con
 evidencia humana sanitizada de aplicacion manual solo del RLS draft. No cubre
 fixtures, reset, Storage, Auth users ni conexion de la app.
+
+S4.6.4.1 actualiza la documentacion de fixtures como candidato futuro
+controlado. No aplica fixtures, no aplica reset y no crea usuarios.
 
 El gate especifico de S4.6.3.1 vive en
 `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`. Debe revisarse antes de crear

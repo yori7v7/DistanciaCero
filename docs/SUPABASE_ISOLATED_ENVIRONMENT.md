@@ -18,11 +18,15 @@ de produccion.
 - [x] `contentRepository.js` sigue exportando el repository local.
 - [x] `contentService.js` conserva su API publica sync.
 - [x] LocalStorage sigue siendo la fuente activa y fallback.
-- [x] SQL, migrations y RLS no se han aplicado.
+- [x] S4.6.3.2.2 registro aplicacion manual del schema draft en laboratorio
+      desechable.
+- [x] S4.6.3.3.2 registro aplicacion manual del RLS draft en laboratorio
+      desechable.
+- [x] Fixtures, reset, Storage, Auth users y app siguen fuera de alcance.
 - [x] React Router sigue instalado pero inactivo.
 - [x] La app permanece desconectada de Supabase.
-- [ ] No existe todavia un proyecto Supabase aislado aprobado para estas
-      pruebas.
+- [ ] Sigue pendiente verificar comportamiento con usuarios sinteticos y
+      memberships.
 
 ## 3. Objetivo del entorno aislado
 
@@ -38,15 +42,17 @@ El entorno futuro debe:
 - quedar claramente identificado como laboratorio, nunca produccion;
 - mantener la app y el CRUD local desconectados.
 
-## 4. Bloqueantes antes de aplicar drafts
+## 4. Bloqueantes antes de aplicar SQL adicional
 
 Los archivos `docs/supabase/schema_draft.sql` y
-`docs/supabase/rls_draft.sql` siguen siendo borradores documentales. No deben
-ejecutarse mientras estos bloqueantes no esten resueltos y revisados.
+`docs/supabase/rls_draft.sql` tuvieron aplicaciones manuales documentadas en
+laboratorio desechable, con alcance limitado. No deben ejecutarse de nuevo, ni
+en otro entorno, sin una subfase y aprobacion separadas. Cualquier fixture,
+reset, Auth user, Storage o conexion de app requiere otro GO explicito.
 
 ### Schema draft refinado en S4.6.2.1
 
-El refinamiento documental aborda, sin ejecutar SQL:
+El refinamiento documental abordo:
 
 - invariantes completas de `local_id`/`base_id` segun kind;
 - `data` limitado a JSONB object y `schema_version >= 1`;
@@ -59,7 +65,7 @@ El refinamiento documental aborda, sin ejecutar SQL:
 
 Siguen pendientes:
 
-- probar las invariantes y FKs en un entorno aislado;
+- probar comportamiento con fixtures sinteticos y matriz multiusuario;
 - convertir el draft en migrations versionadas para schemas existentes;
 - definir RLS/RPC para hard delete, restore y audit confiable;
 - definir lifecycle/cleanup de media y policies de Storage;
@@ -67,7 +73,7 @@ Siguen pendientes:
 
 ### RLS draft refinado en S4.6.2.2
 
-El refinamiento documental aborda, sin ejecutar SQL:
+El refinamiento documental abordo:
 
 - helpers de membership/role con `search_path` fijo, revokes y grants minimos;
 - wrappers explicitos para leer/modificar spaces;
@@ -118,6 +124,10 @@ no contiene operaciones activas por defecto y no reemplaza el reset futuro.
 S4.6.2.6.1 agrega `docs/supabase/fixtures/synthetic_reset_draft.sql` como
 draft documental no aplicado. Ese archivo no es rollback garantizado, no prueba
 Supabase y no debe ejecutarse sin entorno desechable y aprobacion futura.
+
+S4.6.4.1 actualiza este plan como preflight de fixtures sinteticos
+controlados. No aplica fixtures, no aplica reset, no crea Auth users, no toca
+Storage y no conecta la app.
 
 - **Space A:** relationship space sintetico principal.
 - **Space B:** segundo space para comprobar aislamiento cruzado.
@@ -211,7 +221,10 @@ capturas publicas.
 - **S4.6.3.3.2:** registrar en `docs/SUPABASE_POST_RLS_LAB_RESULT.md` la
   evidencia humana post-RLS del laboratorio desechable. Solo cubre el RLS
   draft; no cubre fixtures, reset, Storage, Auth users ni conexion de la app.
-- **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
+- **S4.6.4.1:** actualizar documentacion/preflight de fixtures sinteticos
+  controlados, sin aplicar fixtures ni reset.
+- **S4.6.4.x futura:** ejecutar la matriz multiusuario y documentar
+  resultados/rollback solo con GO separado.
 - **S4.7:** implementar y probar bootstrap owner/partner controlado.
 - **S4.8:** piloto read-only con fixtures sinteticos.
 - **S4.9:** escritura/migracion solo despues de resolver RLS, rollback y

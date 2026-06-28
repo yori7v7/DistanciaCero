@@ -667,6 +667,9 @@ Estado de S4.6.1:
   returned` tras aplicar manualmente solo `docs/supabase/rls_draft.sql` en el
   laboratorio desechable. Esto no verifica acceso con usuarios, no aplica
   fixtures/reset, no toca Storage y no conecta la app.
+- S4.6.4.1 actualiza la documentacion/preflight de fixtures sinteticos
+  controlados. El fixture sigue sin aplicarse, el reset sigue separado y
+  cualquier aplicacion manual futura requiere otro GO explicito.
 
 Validacion y rollback:
 
@@ -771,8 +774,10 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 La dependencia, el factory Supabase, el verificador manual S4.5.1 y el checklist
 documental S4.6.1 existen de forma aislada. S4.6.2.1 refino el schema draft y
 S4.6.2.2 refino RLS; S4.6.3.2.2 registro aplicacion manual solo del schema
-draft en laboratorio desechable. El entorno remoto no esta conectado al
-runtime, no tiene fixtures y no cuenta con RLS del draft aplicada.
+draft en laboratorio desechable y S4.6.3.3.2 registro aplicacion manual solo
+del RLS draft en laboratorio desechable. El entorno remoto no esta conectado al
+runtime, no tiene fixtures, no tiene reset aplicado, no toca Storage y todavia
+no verifica comportamiento con usuarios sinteticos/memberships.
 El fixture SQL draft y el reset SQL draft existen como documentos sin
 operaciones activas por defecto; cualquier aplicacion o conexion futura requiere
 aprobacion independiente y un veredicto go/no-go del readiness checklist.
