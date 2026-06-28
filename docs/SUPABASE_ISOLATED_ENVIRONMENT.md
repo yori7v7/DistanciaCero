@@ -133,6 +133,10 @@ S4.6.4.3 agrega `synthetic_fixture_apply_draft.sql` como draft separado de
 fixtures aplicables futuros. El archivo permanece comentado/no aplicado y
 requiere Auth users sinteticos antes de cualquier prueba real de acceso.
 
+S4.6.4.4 agrega `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental para
+usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales y no
+usa emails reales.
+
 - **Space A:** relationship space sintetico principal.
 - **Space B:** segundo space para comprobar aislamiento cruzado.
 - **Owner A:** miembro owner de Space A.
@@ -229,6 +233,8 @@ capturas publicas.
   controlados, sin aplicar fixtures ni reset.
 - **S4.6.4.3:** crear draft separado de aplicacion futura de fixtures, sin
   ejecutar SQL, sin crear Auth users y sin tocar Storage.
+- **S4.6.4.4:** documentar plan/preflight de Auth users sinteticos, sin crear
+  usuarios, sin UUIDs reales en Git y sin conectar la app.
 - **S4.6.4.x futura:** ejecutar la matriz multiusuario y documentar
   resultados/rollback solo con GO separado.
 - **S4.7:** implementar y probar bootstrap owner/partner controlado.

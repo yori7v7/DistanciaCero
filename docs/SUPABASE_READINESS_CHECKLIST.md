@@ -78,6 +78,8 @@ Estado verificado post-S4.5.1:
       reset, Storage, Auth users y app siguen fuera de alcance.
 - [x] S4.6.4.3 crea un draft separado de aplicacion futura de fixtures, tambien
       no aplicado y sin crear Auth users.
+- [x] S4.6.4.4 documenta el preflight de usuarios Auth sinteticos futuros, sin
+      crear usuarios ni guardar UUIDs reales.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -270,6 +272,9 @@ la siguiente.
 - Estado S4.6.4.3: `docs/supabase/fixtures/synthetic_fixture_apply_draft.sql`
   queda creado como draft separado para una futura aplicacion manual. El archivo
   no aplica SQL, no mezcla reset, no crea Auth users y no conecta el CRUD.
+- Estado S4.6.4.4: `docs/supabase/fixtures/SYNTHETIC_AUTH_USERS_PLAN.md`
+  queda creado como preflight documental. No crea usuarios, no guarda UUIDs
+  reales, no usa emails reales y no prueba RLS end-to-end.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

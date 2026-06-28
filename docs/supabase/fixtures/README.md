@@ -30,6 +30,10 @@ una aplicacion manual futura de fixtures sinteticos. Tambien permanece no
 aplicado, comentado por defecto y sujeto a otro GO explicito. Requiere usuarios
 Auth sinteticos creados manualmente antes, sin emails reales ni datos reales.
 
+El archivo `SYNTHETIC_AUTH_USERS_PLAN.md` documenta el preflight S4.6.4.4 para
+usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales y no
+autoriza fixtures; solo define actores, placeholders y criterios GO/NO-GO.
+
 El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
 separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
 ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
@@ -54,6 +58,8 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
   sin operaciones ejecutables por defecto.
 - [x] Existe `synthetic_fixture_apply_draft.sql` como draft separado futuro,
   no aplicado, sin operaciones ejecutables por defecto y sin reset.
+- [x] Existe `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental de Auth
+  users sinteticos, sin usuarios creados ni UUIDs reales versionados.
 - [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
   sin operaciones activas por defecto.
 - [x] Existe laboratorio desechable reportado por evidencia humana, pero no hay
@@ -72,6 +78,7 @@ Reglas del preflight:
 - Auth users queda fuera de alcance;
 - el draft aplicable futuro requiere Auth users sinteticos antes de cualquier
   prueba real de acceso;
+- el plan S4.6.4.4 define usuarios Auth sinteticos solo como preflight futuro;
 - app/CRUD siguen desconectados;
 - SQL Editor corre con privilegios y no representa un cliente autenticado
   normal;
@@ -290,6 +297,8 @@ Reglas:
 - **S4.6.4.1:** documentacion/preflight de fixtures sinteticos controlados.
 - **S4.6.4.3:** crear `synthetic_fixture_apply_draft.sql` como draft separado
   futuro, no aplicado, sin reset y sin usuarios creados por el archivo.
+- **S4.6.4.4:** crear `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental
+  de usuarios Auth sinteticos, sin crear usuarios ni guardar UUIDs reales.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -301,6 +310,8 @@ Reglas:
 - [ ] README conceptual completo.
 - [ ] `synthetic_fixture_plan.sql` revisado como draft documental.
 - [ ] `synthetic_fixture_apply_draft.sql` revisado como draft separado futuro.
+- [ ] `SYNTHETIC_AUTH_USERS_PLAN.md` revisado antes de crear usuarios Auth
+  sinteticos en cualquier fase futura.
 - [ ] `synthetic_reset_draft.sql` revisado como draft documental antes de
   cualquier cleanup futuro.
 - [ ] Nombres sinteticos definidos.

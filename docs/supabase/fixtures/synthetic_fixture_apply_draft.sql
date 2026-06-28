@@ -39,6 +39,7 @@
 -- [ ] App y CRUD siguen desconectados.
 -- [ ] Storage fuera de alcance.
 -- [ ] Reset separado y no aplicado.
+-- [ ] SYNTHETIC_AUTH_USERS_PLAN.md revisado como preflight documental.
 -- [ ] Usuarios Auth sinteticos creados manualmente fuera de este archivo.
 -- [ ] UUIDs de usuarios Auth sinteticos disponibles fuera de Git.
 -- [ ] Aprobacion humana explicita para la fase exacta.
@@ -77,6 +78,7 @@
 --
 -- Este archivo NO crea usuarios.
 -- Los usuarios Auth sinteticos deben existir antes de cualquier setup futuro.
+-- Ver tambien: docs/supabase/fixtures/SYNTHETIC_AUTH_USERS_PLAN.md
 --
 -- Actores requeridos:
 -- - owner_a: miembro owner de space_a.

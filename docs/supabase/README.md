@@ -46,6 +46,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   una futura aplicacion manual de fixtures sinteticos. Permanece no aplicado,
   comentado por defecto, sin reset, sin Storage, sin Auth users creados y sin
   conexion de la app.
+- `fixtures/SYNTHETIC_AUTH_USERS_PLAN.md`: preflight documental S4.6.4.4 para
+  usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales,
+  no aplica fixtures y no prueba RLS end-to-end.
 - `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
   reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
   No es migration ni rollback ejecutado.
