@@ -1,25 +1,30 @@
 # Distancia Cero - Supabase SQL Drafts
 
 Estos archivos son borradores documentales para una migracion futura a Supabase.
+S4.6.3.2.2 registro una aplicacion manual de `schema_draft.sql` en un
+laboratorio Supabase desechable, con alcance limitado y sin conectar la app.
 
 ## Estado
 
-- No deben ejecutarse todavia.
+- No deben ejecutarse de nuevo, ni en otros entornos, sin una subfase y una
+  aprobacion separadas.
 - `@supabase/supabase-js` esta instalado de forma aislada.
 - Existe un factory aislado en `src/integrations/supabase/client.js`.
 - Ningun runtime activo lo importa; no crea cliente durante import ni hace
   queries.
-- No hay migraciones reales.
-- No existe todavia un proyecto Supabase aislado aprobado para ejecutar estos
-  drafts.
+- No hay migraciones reales conectadas al runtime.
+- Existe evidencia humana de laboratorio desechable para S4.6.3.2.2, sin
+  project ref real en Git ni secrets en documentos.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
 
 ## Archivos
 
-- `schema_draft.sql`: borrador conceptual refinado en S4.6.2.1; sigue sin
-  aplicarse y no es una migration idempotente para schemas existentes.
+- `schema_draft.sql`: borrador conceptual refinado en S4.6.2.1; fue aplicado
+  manualmente en S4.6.3.2.2 dentro de un laboratorio desechable, con `0 rows`
+  reportados en las seis tablas esperadas. No es una migration idempotente
+  para schemas existentes.
 - `rls_draft.sql`: borrador conceptual refinado en S4.6.2.2; sigue sin
   aplicarse ni probarse en Supabase y mantiene escritura de contenido,
   RPC/Storage como gates futuros.
@@ -41,10 +46,13 @@ Estos archivos son borradores documentales para una migracion futura a Supabase.
 - `../SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`: checklist S4.6.3.1 para
   evaluar un proyecto Supabase desechable futuro; no crea proyecto, no aplica
   SQL y no contiene project ref real.
+- `../SUPABASE_POST_SCHEMA_LAB_RESULT.md`: registro S4.6.3.2.2 de evidencia
+  post-schema en laboratorio desechable; no prueba RLS, Auth, Storage,
+  fixtures, reset ni conexion del CRUD.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
   conectar el factory, aplicar SQL o conectar repositories remotos.
 
-## Antes de ejecutar cualquier SQL real
+## Antes de ejecutar cualquier SQL adicional
 
 Primero deben revisarse:
 

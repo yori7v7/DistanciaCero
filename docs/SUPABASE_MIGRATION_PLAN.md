@@ -633,7 +633,9 @@ Estado de S4.6.1:
 
 - `docs/SUPABASE_ISOLATED_ENVIRONMENT.md` documenta bloqueantes, diseno del
   laboratorio, matriz futura y gates de rollback.
-- El proyecto Supabase aislado todavia no existe y no se ha aplicado SQL.
+- S4.6.3.2.2 registra evidencia humana de un laboratorio Supabase desechable
+  donde se aplico manualmente solo `docs/supabase/schema_draft.sql`, sin datos
+  reales, sin usuarios reales, sin media real y sin conexion al CRUD.
 - S4.6.2.1 refino el schema draft sin ejecutarlo: invariantes por kind, JSONB
   object, soft delete, FKs cross-space, RESTRICT y audit append-only conceptual.
 - S4.6.2.2 refino RLS sin ejecutarla: helpers/grants minimos, bootstrap y
@@ -652,13 +654,19 @@ Estado de S4.6.1:
 - S4.6.3.1 crea `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md` como checklist
   documental para decidir si un proyecto manual puede considerarse desechable.
   No crea proyecto Supabase y no aplica SQL.
-- Aplicacion manual sigue pendiente de aprobacion.
+- S4.6.3.2.2 crea `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` como registro
+  documental post-schema. Las tablas reportadas fueron `content_events`,
+  `content_items`, `media_assets`, `profiles`, `relationship_spaces` y
+  `universe_members`, todas con `0 rows`.
+- RLS, fixtures, reset, Storage y conexion de la app siguen fuera de alcance.
 
 Validacion y rollback:
 
 - S4.6.3.1+ debe seguir el runbook y el checklist de proyecto desechable,
   mantener evidencia sin secretos y obtener aprobacion humana explicita antes
   de cualquier SQL.
+- S4.6.3.3.0 debe disenar/preparar RLS sin asumir que el schema en laboratorio
+  demuestra backend, Auth, Storage o policies.
 - El rollback principal del laboratorio sigue siendo destruir el proyecto
   desechable; cualquier reset SQL requiere subfase separada.
 
@@ -752,7 +760,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 La dependencia, el factory Supabase, el verificador manual S4.5.1 y el checklist
 documental S4.6.1 existen de forma aislada. S4.6.2.1 refino el schema draft y
-S4.6.2.2 refino RLS; el entorno remoto aun no existe y no se ha aplicado SQL.
+S4.6.2.2 refino RLS; S4.6.3.2.2 registro aplicacion manual solo del schema
+draft en laboratorio desechable. El entorno remoto no esta conectado al
+runtime, no tiene fixtures y no cuenta con RLS del draft aplicada.
 El fixture SQL draft y el reset SQL draft existen como documentos sin
 operaciones activas por defecto; cualquier aplicacion o conexion futura requiere
 aprobacion independiente y un veredicto go/no-go del readiness checklist.

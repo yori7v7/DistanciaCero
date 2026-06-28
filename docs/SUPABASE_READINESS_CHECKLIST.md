@@ -43,7 +43,8 @@ Baseline historico verificado al crear este documento, antes de S4.3:
       `localContentStore`.
 - [x] LocalStorage sigue siendo la fuente activa y fallback estable.
 - [x] Export/import v2 permanece intacto como backup offline.
-- [x] Supabase existe solo en documentos y drafts no aplicados.
+- [x] Supabase sigue aislado del runtime; S4.6.3.2.2 solo registro schema en
+      laboratorio desechable.
 - [x] El build base pasa.
 - [x] El arbol Git estaba limpio antes de iniciar esta fase documental.
 
@@ -246,11 +247,13 @@ la siguiente.
 - Estado S4.6.3.1: `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md` documenta
   el gate de proyecto desechable, evidencia segura y manejo de secretos. No
   crea proyecto Supabase, no aplica SQL y no conecta la app.
-- Pendiente S4.6.2.6+: re-auditar los drafts y obtener un nuevo go/no-go antes
-  de usar un entorno remoto.
-- Pendiente S4.6.3.1+: proyecto desechable, aprobacion humana, schema/RLS
-  aplicados manualmente en laboratorio y evidencia sin secretos.
-- Salida: matriz RLS, rollback de laboratorio y evidencia multiusuario.
+- Estado S4.6.3.2.2: `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` registra
+  evidencia humana sanitizada de aplicacion manual solo del schema draft en
+  laboratorio desechable. Las seis tablas esperadas fueron reportadas con
+  `0 rows`.
+- Pendiente S4.6.3.3.0: diseno/preflight de RLS, sin aplicar todavia RLS y sin
+  conectar el CRUD.
+- Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado
 

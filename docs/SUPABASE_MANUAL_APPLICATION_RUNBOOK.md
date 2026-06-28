@@ -30,7 +30,8 @@ CRUD y no usa contenido real.
 - `contentService.js` conserva su API publica sync.
 - LocalStorage sigue siendo la fuente activa y fallback.
 - Router sigue inactivo.
-- `docs/supabase/schema_draft.sql` esta refinado, pero no aplicado.
+- `docs/supabase/schema_draft.sql` esta refinado y S4.6.3.2.2 registra su
+  aplicacion manual en laboratorio desechable.
 - `docs/supabase/rls_draft.sql` esta refinado, pero no aplicado ni probado.
 - `docs/supabase/fixtures/synthetic_fixture_plan.sql` es documental y no
   aplicado.
@@ -69,12 +70,15 @@ Queda prohibido:
 
 - **S4.6.3.1:** checklist de proyecto Supabase desechable.
 - **S4.6.3.2:** aplicacion manual de schema en laboratorio.
-- **S4.6.3.3:** aplicacion manual de RLS en laboratorio.
+- **S4.6.3.2.2:** registro post-schema de laboratorio desechable.
+- **S4.6.3.3:** diseno/preflight de RLS antes de cualquier aplicacion.
 - **S4.6.3.4:** verificacion post-SQL sin app.
 - **S4.6.3.5:** decision go/no-go para fixtures sinteticos.
 - **S4.6.4:** pruebas multiusuario/RLS con fixtures, todavia sin CRUD real.
 
-Estas fases no estan completadas. Cada una requiere aprobacion separada.
+S4.6.3.2.2 quedo registrada en `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` con
+evidencia humana sanitizada de aplicacion manual solo del schema draft. Las
+fases posteriores requieren aprobacion separada.
 
 El gate especifico de S4.6.3.1 vive en
 `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`. Debe revisarse antes de crear
@@ -133,6 +137,7 @@ Una futura fase de aplicacion manual debe entregar:
 - lista de archivos SQL aplicados;
 - errores SQL completos si existen, sin tokens;
 - confirmacion de que la app sigue desconectada;
+- registro de tablas visibles y conteos de filas sin datos privados;
 - confirmacion de que no se usaron datos reales;
 - confirmacion de que no se expuso service-role.
 
@@ -198,8 +203,8 @@ sincronizar documentacion antes de aplicar SQL.
 - Crear este runbook no crea proyecto Supabase.
 - Crear este runbook no aplica fixtures ni reset.
 
-Si en futuras fases se aplica schema/RLS en laboratorio, los docs deben decir
-`aplicado en laboratorio`, no `produccion lista`.
+Si futuras fases registran mas SQL en laboratorio, los docs deben decir
+`aplicado en laboratorio` y mantener el alcance limitado.
 
 Evitar estas frases salvo como advertencias de no uso:
 
