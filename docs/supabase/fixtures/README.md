@@ -34,6 +34,11 @@ El archivo `SYNTHETIC_AUTH_USERS_PLAN.md` documenta el preflight S4.6.4.4 para
 usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales y no
 autoriza fixtures; solo define actores, placeholders y criterios GO/NO-GO.
 
+El archivo `SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md` documenta la guia manual
+S4.6.4.6 para crear Auth users sinteticos en el Dashboard del laboratorio
+desechable. No declara usuarios creados, no guarda emails/UUIDs/passwords
+reales y no autoriza fixtures.
+
 El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
 separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
 ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
