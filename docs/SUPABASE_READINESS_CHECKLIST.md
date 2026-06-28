@@ -252,8 +252,13 @@ la siguiente.
   laboratorio desechable. Las seis tablas esperadas fueron reportadas con
   `0 rows`.
 - Estado S4.6.3.3.0b: `docs/supabase/rls_draft.sql` queda preparado como
-  candidato de aplicacion manual en laboratorio desechable. Sigue sin aplicarse,
-  sin probarse y sin conectar el CRUD.
+  candidato de aplicacion manual en laboratorio desechable. En esa subfase
+  todavia no se habia aplicado en laboratorio y el CRUD seguia desconectado.
+- Estado S4.6.3.3.2: `docs/SUPABASE_POST_RLS_LAB_RESULT.md` registra
+  evidencia humana sanitizada de aplicacion manual solo del RLS draft en
+  laboratorio desechable, con resultado `Success. No rows returned`. No verifica
+  comportamiento con usuarios, no aplica fixtures/reset, no toca Storage y no
+  conecta el CRUD.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

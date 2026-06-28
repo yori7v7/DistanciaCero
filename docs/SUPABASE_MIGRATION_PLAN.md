@@ -659,9 +659,14 @@ Estado de S4.6.1:
   `content_items`, `media_assets`, `profiles`, `relationship_spaces` y
   `universe_members`, todas con `0 rows`.
 - S4.6.3.3.0b prepara `docs/supabase/rls_draft.sql` como candidato de
-  aplicacion manual en laboratorio desechable. RLS sigue sin aplicarse ni
-  probarse; fixtures, reset, Storage y conexion de la app siguen fuera de
-  alcance.
+  aplicacion manual en laboratorio desechable. En esa subfase todavia no se
+  habia aplicado en laboratorio; fixtures, reset, Storage y conexion de la app
+  seguian fuera de alcance.
+- S4.6.3.3.2 crea `docs/SUPABASE_POST_RLS_LAB_RESULT.md` como registro
+  documental de evidencia humana post-RLS. El usuario reporto `Success. No rows
+  returned` tras aplicar manualmente solo `docs/supabase/rls_draft.sql` en el
+  laboratorio desechable. Esto no verifica acceso con usuarios, no aplica
+  fixtures/reset, no toca Storage y no conecta la app.
 
 Validacion y rollback:
 
@@ -670,6 +675,8 @@ Validacion y rollback:
   de cualquier SQL.
 - S4.6.3.3.1 debe tener aprobacion humana separada antes de cualquier
   aplicacion manual del candidato RLS.
+- S4.6.3.3.2 solo registra el resultado post-RLS del laboratorio; cualquier
+  fixture, reset, Auth user, Storage o conexion de CRUD requiere fase separada.
 - El rollback principal del laboratorio sigue siendo destruir el proyecto
   desechable; cualquier reset SQL requiere subfase separada.
 

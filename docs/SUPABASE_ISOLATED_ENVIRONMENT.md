@@ -208,6 +208,9 @@ capturas publicas.
 - **S4.6.3.3.0b:** preparar `docs/supabase/rls_draft.sql` como candidato de
   aplicacion manual en laboratorio desechable. No aplica RLS y no conecta la
   app.
+- **S4.6.3.3.2:** registrar en `docs/SUPABASE_POST_RLS_LAB_RESULT.md` la
+  evidencia humana post-RLS del laboratorio desechable. Solo cubre el RLS
+  draft; no cubre fixtures, reset, Storage, Auth users ni conexion de la app.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
 - **S4.7:** implementar y probar bootstrap owner/partner controlado.
 - **S4.8:** piloto read-only con fixtures sinteticos.
@@ -221,6 +224,8 @@ Completar S4.6.3.1 tampoco crea proyecto Supabase: solo documenta como decidir
 si un proyecto manual futuro es desechable.
 Completar S4.6.3.2.2 tampoco habilita la app ni el backend remoto: solo
 registra evidencia post-schema en laboratorio desechable.
+Completar S4.6.3.3.2 tampoco habilita la app ni el backend remoto: solo
+registra evidencia post-RLS en laboratorio desechable.
 
 ## 11. Go/no-go antes de aplicar SQL real
 

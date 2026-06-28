@@ -32,7 +32,9 @@ CRUD y no usa contenido real.
 - Router sigue inactivo.
 - `docs/supabase/schema_draft.sql` esta refinado y S4.6.3.2.2 registra su
   aplicacion manual en laboratorio desechable.
-- `docs/supabase/rls_draft.sql` esta refinado, pero no aplicado ni probado.
+- `docs/supabase/rls_draft.sql` cuenta con evidencia humana post-RLS
+  documentada en laboratorio desechable; falta verificar comportamiento con
+  usuarios sinteticos y memberships.
 - `docs/supabase/fixtures/synthetic_fixture_plan.sql` es documental y no
   aplicado.
 - `docs/supabase/fixtures/synthetic_reset_draft.sql` es documental y no
@@ -72,6 +74,7 @@ Queda prohibido:
 - **S4.6.3.2:** aplicacion manual de schema en laboratorio.
 - **S4.6.3.2.2:** registro post-schema de laboratorio desechable.
 - **S4.6.3.3:** diseno/preflight de RLS antes de cualquier aplicacion.
+- **S4.6.3.3.2:** registro post-RLS de laboratorio desechable.
 - **S4.6.3.4:** verificacion post-SQL sin app.
 - **S4.6.3.5:** decision go/no-go para fixtures sinteticos.
 - **S4.6.4:** pruebas multiusuario/RLS con fixtures, todavia sin CRUD real.
@@ -79,6 +82,10 @@ Queda prohibido:
 S4.6.3.2.2 quedo registrada en `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` con
 evidencia humana sanitizada de aplicacion manual solo del schema draft. Las
 fases posteriores requieren aprobacion separada.
+
+S4.6.3.3.2 queda registrada en `docs/SUPABASE_POST_RLS_LAB_RESULT.md` con
+evidencia humana sanitizada de aplicacion manual solo del RLS draft. No cubre
+fixtures, reset, Storage, Auth users ni conexion de la app.
 
 El gate especifico de S4.6.3.1 vive en
 `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`. Debe revisarse antes de crear
@@ -189,6 +196,8 @@ Detener todo si ocurre cualquiera de estas condiciones:
 - `docs/SUPABASE_READINESS_CHECKLIST.md`
 - `docs/SUPABASE_ISOLATED_ENVIRONMENT.md`
 - `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`
+- `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md`
+- `docs/SUPABASE_POST_RLS_LAB_RESULT.md`
 - `docs/SUPABASE_MIGRATION_PLAN.md`
 
 Si este runbook y cualquiera de esos documentos divergen, detener la fase y

@@ -80,6 +80,11 @@ Esa fase debe seguir sin conectar el CRUD, sin aplicar fixtures/reset y sin
 tocar Storage. Cualquier aplicacion de RLS requiere aprobacion separada,
 evidencia sanitizada y un nuevo veredicto go/no-go.
 
+Nota posterior: S4.6.3.3.2 quedo registrada en
+`docs/SUPABASE_POST_RLS_LAB_RESULT.md` como evidencia humana sanitizada de
+aplicacion manual solo del RLS draft en laboratorio desechable. Ese registro
+mantiene alcance limitado y no cambia el alcance historico de este documento.
+
 ## 7. Anti-obsolescencia
 
 Este resultado no debe convertirse en una afirmacion amplia de preparacion

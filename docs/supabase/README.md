@@ -3,6 +3,8 @@
 Estos archivos son borradores documentales para una migracion futura a Supabase.
 S4.6.3.2.2 registro una aplicacion manual de `schema_draft.sql` en un
 laboratorio Supabase desechable, con alcance limitado y sin conectar la app.
+S4.6.3.3.2 registro una aplicacion manual de `rls_draft.sql` en el mismo tipo
+de laboratorio, tambien con alcance limitado y sin conectar la app.
 
 ## Estado
 
@@ -15,6 +17,9 @@ laboratorio Supabase desechable, con alcance limitado y sin conectar la app.
 - No hay migraciones reales conectadas al runtime.
 - Existe evidencia humana de laboratorio desechable para S4.6.3.2.2, sin
   project ref real en Git ni secrets en documentos.
+- Existe evidencia humana de laboratorio desechable para S4.6.3.3.2: el RLS
+  draft fue aceptado con `Success. No rows returned`, sin fixtures/reset,
+  Storage, Auth users ni conexion de la app.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -27,8 +32,9 @@ laboratorio Supabase desechable, con alcance limitado y sin conectar la app.
   para schemas existentes.
 - `rls_draft.sql`: borrador conceptual refinado en S4.6.2.2 y preparado en
   S4.6.3.3.0b como candidato de aplicacion manual solo para laboratorio
-  desechable. Sigue sin aplicarse ni probarse y mantiene escritura de
-  contenido, RPC/Storage como gates futuros.
+  desechable. Fue aplicado manualmente en S4.6.3.3.2 con alcance limitado;
+  mantiene escritura de contenido, RPC/Storage y pruebas con usuarios como
+  gates futuros.
 - `fixtures/README.md`: plan conceptual S4.6.2.4 de fixtures sinteticos,
   matriz futura y rollback; no contiene SQL ejecutable.
 - `fixtures/synthetic_fixture_plan.sql`: draft documental S4.6.2.5.1 de
@@ -50,6 +56,9 @@ laboratorio Supabase desechable, con alcance limitado y sin conectar la app.
 - `../SUPABASE_POST_SCHEMA_LAB_RESULT.md`: registro S4.6.3.2.2 de evidencia
   post-schema en laboratorio desechable; no prueba RLS, Auth, Storage,
   fixtures, reset ni conexion del CRUD.
+- `../SUPABASE_POST_RLS_LAB_RESULT.md`: registro S4.6.3.3.2 de evidencia
+  post-RLS en laboratorio desechable; no verifica acceso con usuarios, Auth,
+  Storage, fixtures, reset ni conexion del CRUD.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
   conectar el factory, aplicar SQL o conectar repositories remotos.
 
