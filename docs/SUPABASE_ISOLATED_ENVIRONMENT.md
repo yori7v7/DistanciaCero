@@ -205,8 +205,9 @@ capturas publicas.
 - **S4.6.3.2.2:** registrar en `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` la
   evidencia humana post-schema del laboratorio desechable. Solo cubre el schema
   draft; no cubre RLS, fixtures, reset, Storage ni conexion de la app.
-- **S4.6.3.3.0:** disenar/preparar RLS con un nuevo gate antes de cualquier
-  aplicacion.
+- **S4.6.3.3.0b:** preparar `docs/supabase/rls_draft.sql` como candidato de
+  aplicacion manual en laboratorio desechable. No aplica RLS y no conecta la
+  app.
 - **S4.6.4:** ejecutar la matriz multiusuario y documentar resultados/rollback.
 - **S4.7:** implementar y probar bootstrap owner/partner controlado.
 - **S4.8:** piloto read-only con fixtures sinteticos.

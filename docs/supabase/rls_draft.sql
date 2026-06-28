@@ -1,9 +1,13 @@
 -- Distancia Cero - Supabase RLS draft
--- BORRADOR DOCUMENTAL REFINADO EN S4.6.2.2: no ejecutar todavia.
--- No ha sido aplicado ni probado en Supabase y no es una migration final.
--- Requiere entorno aislado, fixtures sinteticos y pruebas multiusuario.
+-- BORRADOR CANDIDATO PARA APLICACION MANUAL EN LABORATORIO DESECHABLE.
+-- No ha sido aplicado ni probado como RLS draft y no es una migration final.
+-- Requiere laboratorio desechable, schema aplicado, aprobacion humana y
+-- evidencia sanitizada antes de cualquier ejecucion manual.
 -- No ejecutar contra produccion. No contiene secretos ni datos reales.
 -- No crea buckets, no usa service-role y no conecta la app al backend.
+-- La ejecucion manual desde SQL Editor ocurre con rol privilegiado/owner del
+-- laboratorio. Eso no valida acceso de usuarios autenticados ni reemplaza
+-- pruebas con Auth, memberships y fixtures sinteticos en una fase posterior.
 
 -- ============================================================
 -- Enable RLS
@@ -23,8 +27,11 @@ alter table if exists public.media_assets enable row level security;
 --   profiles.id debe corresponder a auth.uid() mediante mapping verificado.
 --   Solo los dos helpers que consultan universe_members usan SECURITY DEFINER
 --   para evitar recursion RLS. Los wrappers permanecen SECURITY INVOKER.
---   El owner futuro debe ser un rol de migration controlado, no un usuario de
---   la app. Revisar owner, BYPASSRLS, grants y recursion antes de ejecutar.
+--   En aplicacion manual de laboratorio, el SQL Editor puede crear funciones
+--   con owner privilegiado. Eso es aceptable solo para instalar el candidato,
+--   pero no prueba el comportamiento del rol authenticated.
+--   Antes de conectar runtime o datos reales, revisar owner, BYPASSRLS, grants
+--   y recursion de helpers en el entorno aislado.
 --   search_path limitado a pg_catalog y nombres calificados evitan que public
 --   participe en la resolucion de objetos del SECURITY DEFINER.
 --   Ningun helper escribe datos ni sustituye policies de tabla.
@@ -136,12 +143,14 @@ grant select on table public.content_items to authenticated;
 grant select on table public.content_events to authenticated;
 grant select on table public.media_assets to authenticated;
 
--- NO-GO S4.6.2.2.1:
+-- NO-GO para writes directos:
 -- No se concede escritura directa sobre public.content_items en este draft.
 -- Una policy WITH CHECK no basta si los permisos SQL permiten insertar filas
 -- completas: el cliente podria enviar id, timestamps, schema_version, source
 -- u otras columnas sensibles antes de definir RPC/triggers/permisos por
--- columnas. La escritura real queda pendiente de una fase futura con:
+-- columnas. Esto no bloquea aplicar el candidato RLS de lectura en laboratorio,
+-- pero si bloquea cualquier escritura directa. La escritura real queda
+-- pendiente de una fase futura con:
 --   1. RPC/admin/trigger controlado y transaccional; o
 --   2. permisos por columnas minimos revisados y probados.
 
@@ -284,9 +293,19 @@ using (
 -- Hasta entonces, acceso DB a media_assets es solo lectura de metadata.
 
 -- ============================================================
--- Gates pendientes antes de cualquier aplicacion
+-- Condiciones para aplicacion manual del candidato
 -- ============================================================
---   - Definir owner/BYPASSRLS y auditar helpers SECURITY DEFINER.
+--   - Laboratorio Supabase desechable confirmado.
+--   - docs/supabase/schema_draft.sql aplicado previamente en ese laboratorio.
+--   - Cero datos reales, cero usuarios reales y cero media real.
+--   - App/CRUD desconectado.
+--   - No fixtures, reset ni Storage en la misma fase.
+--   - Aprobacion humana explicita y evidencia sin secrets/project ref.
+
+-- ============================================================
+-- Limitaciones que bloquean runtime, writes y pruebas completas
+-- ============================================================
+--   - Auditar owner/BYPASSRLS de helpers SECURITY DEFINER con usuarios Auth.
 --   - Implementar y revisar RPC bootstrap owner/partner transaccional.
 --   - Proteger ultimo owner mediante RPC/trigger transaccional.
 --   - Definir profile create/update con columnas permitidas.
@@ -296,4 +315,4 @@ using (
 --   - Preparar fixtures/reset sinteticos y matriz multiusuario.
 --   - Convertir drafts en migrations versionadas y revisadas.
 
--- Fin del borrador RLS. No ejecutar todavia.
+-- Fin del borrador RLS candidato. No ha sido aplicado ni probado todavia.

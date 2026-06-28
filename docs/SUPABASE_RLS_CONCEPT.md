@@ -434,12 +434,15 @@ Pruebas futuras obligatorias:
 
 ## 14. Veredicto
 
-No aplicar RLS todavia.
+El RLS draft puede evolucionar a candidato de aplicacion manual solo para un
+laboratorio Supabase desechable. No es produccion, no fue probado y no conecta
+la app.
 
-La dependencia y el factory existen de forma aislada, pero no conectada.
-S4.6.2.1 refino el schema draft y S4.6.2.2 refino este RLS draft. Ambos siguen
-sin aplicarse y RLS no fue probada en Supabase.
+S4.6.2.1 refino el schema draft y S4.6.3.2.2 registro que ese schema fue
+aplicado manualmente en laboratorio desechable. S4.6.3.3.0b prepara este RLS
+draft como candidato para una subfase futura, manteniendo fuera de alcance
+fixtures, reset, Storage y runtime.
 
-Siguiente paso recomendado: preparar fixtures/reset sinteticos y revisar los
-gates pendientes de RPC, ultimo owner, Storage y entorno aislado antes de S4.6.3.
+Siguiente paso recomendado: una auditoria go/no-go para S4.6.3.3.1 antes de
+cualquier aplicacion manual de RLS, con aprobacion humana separada.
 `hidden` sigue recomendado como `kind = 'hidden'`.

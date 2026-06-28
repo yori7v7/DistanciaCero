@@ -25,9 +25,10 @@ laboratorio Supabase desechable, con alcance limitado y sin conectar la app.
   manualmente en S4.6.3.2.2 dentro de un laboratorio desechable, con `0 rows`
   reportados en las seis tablas esperadas. No es una migration idempotente
   para schemas existentes.
-- `rls_draft.sql`: borrador conceptual refinado en S4.6.2.2; sigue sin
-  aplicarse ni probarse en Supabase y mantiene escritura de contenido,
-  RPC/Storage como gates futuros.
+- `rls_draft.sql`: borrador conceptual refinado en S4.6.2.2 y preparado en
+  S4.6.3.3.0b como candidato de aplicacion manual solo para laboratorio
+  desechable. Sigue sin aplicarse ni probarse y mantiene escritura de
+  contenido, RPC/Storage como gates futuros.
 - `fixtures/README.md`: plan conceptual S4.6.2.4 de fixtures sinteticos,
   matriz futura y rollback; no contiene SQL ejecutable.
 - `fixtures/synthetic_fixture_plan.sql`: draft documental S4.6.2.5.1 de

@@ -251,8 +251,9 @@ la siguiente.
   evidencia humana sanitizada de aplicacion manual solo del schema draft en
   laboratorio desechable. Las seis tablas esperadas fueron reportadas con
   `0 rows`.
-- Pendiente S4.6.3.3.0: diseno/preflight de RLS, sin aplicar todavia RLS y sin
-  conectar el CRUD.
+- Estado S4.6.3.3.0b: `docs/supabase/rls_draft.sql` queda preparado como
+  candidato de aplicacion manual en laboratorio desechable. Sigue sin aplicarse,
+  sin probarse y sin conectar el CRUD.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

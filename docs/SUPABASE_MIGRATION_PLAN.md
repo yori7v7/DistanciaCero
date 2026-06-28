@@ -658,15 +658,18 @@ Estado de S4.6.1:
   documental post-schema. Las tablas reportadas fueron `content_events`,
   `content_items`, `media_assets`, `profiles`, `relationship_spaces` y
   `universe_members`, todas con `0 rows`.
-- RLS, fixtures, reset, Storage y conexion de la app siguen fuera de alcance.
+- S4.6.3.3.0b prepara `docs/supabase/rls_draft.sql` como candidato de
+  aplicacion manual en laboratorio desechable. RLS sigue sin aplicarse ni
+  probarse; fixtures, reset, Storage y conexion de la app siguen fuera de
+  alcance.
 
 Validacion y rollback:
 
 - S4.6.3.1+ debe seguir el runbook y el checklist de proyecto desechable,
   mantener evidencia sin secretos y obtener aprobacion humana explicita antes
   de cualquier SQL.
-- S4.6.3.3.0 debe disenar/preparar RLS sin asumir que el schema en laboratorio
-  demuestra backend, Auth, Storage o policies.
+- S4.6.3.3.1 debe tener aprobacion humana separada antes de cualquier
+  aplicacion manual del candidato RLS.
 - El rollback principal del laboratorio sigue siendo destruir el proyecto
   desechable; cualquier reset SQL requiere subfase separada.
 
