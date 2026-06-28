@@ -39,6 +39,11 @@ S4.6.4.6 para crear Auth users sinteticos en el Dashboard del laboratorio
 desechable. No declara usuarios creados, no guarda emails/UUIDs/passwords
 reales y no autoriza fixtures.
 
+El archivo `../../SUPABASE_POST_AUTH_USERS_LAB_RESULT.md` registra el resultado
+sanitizado S4.6.4.7: los 4 Auth users sinteticos fueron creados manualmente en
+el laboratorio desechable. No guarda UUIDs reales, project ref real, passwords,
+tokens, keys ni service-role, y no autoriza fixtures.
+
 El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
 separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
 ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
@@ -65,10 +70,16 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
   no aplicado, sin operaciones ejecutables por defecto y sin reset.
 - [x] Existe `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental de Auth
   users sinteticos, sin usuarios creados ni UUIDs reales versionados.
+- [x] Existe `SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md` como guia manual segura
+  para Auth users sinteticos, sin valores sensibles versionados.
+- [x] Existe `../../SUPABASE_POST_AUTH_USERS_LAB_RESULT.md` con evidencia
+  sanitizada de que los 4 Auth users sinteticos fueron creados manualmente en
+  el laboratorio desechable.
 - [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
   sin operaciones activas por defecto.
-- [x] Existe laboratorio desechable reportado por evidencia humana, pero no hay
-  Auth users sinteticos, Storage, fixtures, reset ni app conectada.
+- [x] Existe laboratorio desechable reportado por evidencia humana; Auth users
+  sinteticos fueron creados manualmente, pero Storage, fixtures, reset y app
+  conectada siguen fuera de alcance.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -304,6 +315,11 @@ Reglas:
   futuro, no aplicado, sin reset y sin usuarios creados por el archivo.
 - **S4.6.4.4:** crear `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental
   de usuarios Auth sinteticos, sin crear usuarios ni guardar UUIDs reales.
+- **S4.6.4.6:** crear `SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md` como guia manual
+  segura para crear Auth users sinteticos en el laboratorio desechable.
+- **S4.6.4.7:** registrar resultado post-Auth-users en
+  `../../SUPABASE_POST_AUTH_USERS_LAB_RESULT.md`, sin valores sensibles y sin
+  probar RLS end-to-end.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -326,9 +342,10 @@ Reglas:
 - [ ] Rollback conceptual definido.
 - [ ] Schema/RLS aplicados manualmente en laboratorio desechable confirmado.
 - [ ] Comportamiento RLS con usuarios/memberships sigue marcado como pendiente.
-- [ ] Auth users sinteticos siguen fuera de alcance hasta GO separado.
-- [ ] Si una fase futura prueba RLS, Auth users sinteticos deben existir antes
-  y sus UUIDs no deben versionarse.
+- [ ] Auth users sinteticos fueron creados manualmente en laboratorio
+  desechable, pero sus UUIDs no deben versionarse.
+- [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
+  revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.
 - [ ] Reset sigue separado y no aplicado.
 - [ ] La app sigue desconectada.

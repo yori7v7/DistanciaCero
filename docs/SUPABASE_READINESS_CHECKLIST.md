@@ -80,6 +80,13 @@ Estado verificado post-S4.5.1:
       no aplicado y sin crear Auth users.
 - [x] S4.6.4.4 documenta el preflight de usuarios Auth sinteticos futuros, sin
       crear usuarios ni guardar UUIDs reales.
+- [x] S4.6.4.6 documenta una guia manual segura para crear Auth users
+      sinteticos en el laboratorio desechable, sin conectar la app ni aplicar
+      fixtures.
+- [x] S4.6.4.7 registra evidencia sanitizada de que los 4 Auth users
+      sinteticos fueron creados manualmente en el laboratorio desechable.
+- [x] RLS end-to-end, memberships, fixtures, reset, Storage, conexion de app,
+      backend readiness y production readiness siguen pendientes.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -275,6 +282,16 @@ la siguiente.
 - Estado S4.6.4.4: `docs/supabase/fixtures/SYNTHETIC_AUTH_USERS_PLAN.md`
   queda creado como preflight documental. No crea usuarios, no guarda UUIDs
   reales, no usa emails reales y no prueba RLS end-to-end.
+- Estado S4.6.4.6:
+  `docs/supabase/fixtures/SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md` queda creado
+  como guia manual segura para Auth users sinteticos en laboratorio desechable.
+  No conecta la app, no aplica fixtures, no toca Storage y no guarda valores
+  sensibles.
+- Estado S4.6.4.7: `docs/SUPABASE_POST_AUTH_USERS_LAB_RESULT.md` registra que
+  los 4 Auth users sinteticos fueron creados manualmente en el laboratorio
+  desechable. No guarda UUIDs reales, project ref real, passwords, tokens,
+  keys ni service-role. RLS end-to-end, memberships, fixtures, reset, Storage,
+  app/backend y produccion siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

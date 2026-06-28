@@ -20,6 +20,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - Existe evidencia humana de laboratorio desechable para S4.6.3.3.2: el RLS
   draft fue aceptado con `Success. No rows returned`, sin fixtures/reset,
   Storage, Auth users ni conexion de la app.
+- S4.6.4.7 registra que 4 Auth users sinteticos fueron creados manualmente en
+  el laboratorio desechable, sin valores sensibles en Git y sin conectar la app.
+- RLS end-to-end, memberships, fixtures, reset, Storage, backend readiness y
+  production readiness siguen pendientes.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -44,11 +48,14 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   ejecucion real.
 - `fixtures/synthetic_fixture_apply_draft.sql`: draft separado S4.6.4.3 para
   una futura aplicacion manual de fixtures sinteticos. Permanece no aplicado,
-  comentado por defecto, sin reset, sin Storage, sin Auth users creados y sin
-  conexion de la app.
+  comentado por defecto, sin reset, sin Storage, sin crear Auth users por el
+  archivo y sin conexion de la app.
 - `fixtures/SYNTHETIC_AUTH_USERS_PLAN.md`: preflight documental S4.6.4.4 para
   usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales,
   no aplica fixtures y no prueba RLS end-to-end.
+- `fixtures/SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md`: guia manual S4.6.4.6 para
+  crear Auth users sinteticos en el Dashboard del laboratorio desechable, sin
+  guardar valores sensibles ni autorizar fixtures.
 - `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
   reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
   No es migration ni rollback ejecutado.
@@ -68,6 +75,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../SUPABASE_POST_RLS_LAB_RESULT.md`: registro S4.6.3.3.2 de evidencia
   post-RLS en laboratorio desechable; no verifica acceso con usuarios, Auth,
   Storage, fixtures, reset ni conexion del CRUD.
+- `../SUPABASE_POST_AUTH_USERS_LAB_RESULT.md`: registro S4.6.4.7 de evidencia
+  sanitizada post-Auth-users en laboratorio desechable; no prueba RLS
+  end-to-end, memberships, fixtures, reset, Storage ni conexion del CRUD.
 - `../SUPABASE_READINESS_CHECKLIST.md`: gate go/no-go obligatorio antes de
   conectar el factory, aplicar SQL o conectar repositories remotos.
 
