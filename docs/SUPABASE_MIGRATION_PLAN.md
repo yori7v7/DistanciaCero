@@ -670,6 +670,9 @@ Estado de S4.6.1:
 - S4.6.4.1 actualiza la documentacion/preflight de fixtures sinteticos
   controlados. El fixture sigue sin aplicarse, el reset sigue separado y
   cualquier aplicacion manual futura requiere otro GO explicito.
+- S4.6.4.3 crea `docs/supabase/fixtures/synthetic_fixture_apply_draft.sql`
+  como draft separado para una aplicacion manual futura de fixtures. No aplica
+  SQL, no crea Auth users, no toca Storage, no aplica reset y no conecta la app.
 
 Validacion y rollback:
 
@@ -778,8 +781,9 @@ draft en laboratorio desechable y S4.6.3.3.2 registro aplicacion manual solo
 del RLS draft en laboratorio desechable. El entorno remoto no esta conectado al
 runtime, no tiene fixtures, no tiene reset aplicado, no toca Storage y todavia
 no verifica comportamiento con usuarios sinteticos/memberships.
-El fixture SQL draft y el reset SQL draft existen como documentos sin
-operaciones activas por defecto; cualquier aplicacion o conexion futura requiere
-aprobacion independiente y un veredicto go/no-go del readiness checklist.
+El fixture SQL draft, el draft aplicable futuro y el reset SQL draft existen
+como documentos sin operaciones activas por defecto; cualquier aplicacion o
+conexion futura requiere aprobacion independiente y un veredicto go/no-go del
+readiness checklist.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.

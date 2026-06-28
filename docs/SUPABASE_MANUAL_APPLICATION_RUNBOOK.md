@@ -78,6 +78,7 @@ Queda prohibido:
 - **S4.6.3.4:** verificacion post-SQL sin app.
 - **S4.6.3.5:** decision go/no-go para fixtures sinteticos.
 - **S4.6.4.1:** documentacion/preflight de fixtures sinteticos controlados.
+- **S4.6.4.3:** draft separado de fixtures aplicables futuros.
 - **S4.6.4:** pruebas multiusuario/RLS con fixtures, todavia sin CRUD real.
 
 S4.6.3.2.2 quedo registrada en `docs/SUPABASE_POST_SCHEMA_LAB_RESULT.md` con
@@ -90,6 +91,9 @@ fixtures, reset, Storage, Auth users ni conexion de la app.
 
 S4.6.4.1 actualiza la documentacion de fixtures como candidato futuro
 controlado. No aplica fixtures, no aplica reset y no crea usuarios.
+
+S4.6.4.3 crea un draft separado de aplicacion futura de fixtures. No aplica
+SQL, no crea usuarios, no toca Storage y no conecta la app.
 
 El gate especifico de S4.6.3.1 vive en
 `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`. Debe revisarse antes de crear

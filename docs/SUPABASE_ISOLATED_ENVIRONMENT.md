@@ -129,6 +129,10 @@ S4.6.4.1 actualiza este plan como preflight de fixtures sinteticos
 controlados. No aplica fixtures, no aplica reset, no crea Auth users, no toca
 Storage y no conecta la app.
 
+S4.6.4.3 agrega `synthetic_fixture_apply_draft.sql` como draft separado de
+fixtures aplicables futuros. El archivo permanece comentado/no aplicado y
+requiere Auth users sinteticos antes de cualquier prueba real de acceso.
+
 - **Space A:** relationship space sintetico principal.
 - **Space B:** segundo space para comprobar aislamiento cruzado.
 - **Owner A:** miembro owner de Space A.
@@ -223,6 +227,8 @@ capturas publicas.
   draft; no cubre fixtures, reset, Storage, Auth users ni conexion de la app.
 - **S4.6.4.1:** actualizar documentacion/preflight de fixtures sinteticos
   controlados, sin aplicar fixtures ni reset.
+- **S4.6.4.3:** crear draft separado de aplicacion futura de fixtures, sin
+  ejecutar SQL, sin crear Auth users y sin tocar Storage.
 - **S4.6.4.x futura:** ejecutar la matriz multiusuario y documentar
   resultados/rollback solo con GO separado.
 - **S4.7:** implementar y probar bootstrap owner/partner controlado.

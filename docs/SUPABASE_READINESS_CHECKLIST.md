@@ -76,6 +76,8 @@ Estado verificado post-S4.5.1:
 - [x] Su alcance esta documentado en `docs/SUPABASE_CONTRACT_TESTS.md`.
 - [x] S4.6.4.1 documenta/prepara fixtures sinteticos controlados sin aplicarlos:
       reset, Storage, Auth users y app siguen fuera de alcance.
+- [x] S4.6.4.3 crea un draft separado de aplicacion futura de fixtures, tambien
+      no aplicado y sin crear Auth users.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -265,6 +267,9 @@ la siguiente.
   `docs/supabase/fixtures/synthetic_fixture_plan.sql` quedan actualizados como
   preflight/candidato futuro documentado. No se aplican fixtures, no se aplica
   reset, no se crean Auth users y no se toca Storage.
+- Estado S4.6.4.3: `docs/supabase/fixtures/synthetic_fixture_apply_draft.sql`
+  queda creado como draft separado para una futura aplicacion manual. El archivo
+  no aplica SQL, no mezcla reset, no crea Auth users y no conecta el CRUD.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

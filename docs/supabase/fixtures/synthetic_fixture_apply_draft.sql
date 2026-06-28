@@ -1,0 +1,393 @@
+-- BORRADOR DOCUMENTAL.
+-- NO EJECUTAR TODAVIA.
+-- NO APLICADO.
+-- REQUIERE GO MANUAL FUTURO.
+-- REQUIERE USUARIOS AUTH SINTETICOS CREADOS MANUALMENTE ANTES.
+-- NO USAR DATOS REALES.
+-- NO USAR EMAILS REALES.
+-- NO USAR SERVICE-ROLE.
+-- NO USAR TOKENS, KEYS, PROJECT REF, PASSWORDS NI URLS REALES.
+-- NO TOCAR STORAGE.
+-- RESET SEPARADO.
+-- NO INSERTA EN TABLAS INTERNAS DE AUTH.
+-- NO CREA USUARIOS.
+-- NO CONECTA LA APP.
+--
+-- Proposito:
+-- - Servir como puente entre la matriz conceptual T01-T20 y una futura
+--   aplicacion manual controlada de fixtures sinteticos.
+-- - Mantener todo comentado por defecto.
+-- - Documentar que el setup privilegiado no valida por si solo acceso normal.
+--
+-- Regla central:
+-- - SQL Editor privilegiado solo sirve para setup controlado.
+-- - La validacion de acceso normal requiere usuario autenticado/API futura.
+-- - Fixtures de tablas sin sesion autenticada NO prueban RLS end-to-end.
+
+-- ============================================================================
+-- 1. Precondiciones
+-- ============================================================================
+--
+-- [ ] Git limpio.
+-- [ ] Verificador de aislamiento pasa.
+-- [ ] Build pasa.
+-- [ ] Audit limpio.
+-- [ ] Laboratorio Supabase desechable confirmado.
+-- [ ] Laboratorio no es produccion.
+-- [ ] Schema aplicado manualmente en laboratorio.
+-- [ ] RLS aplicado manualmente en laboratorio.
+-- [ ] App y CRUD siguen desconectados.
+-- [ ] Storage fuera de alcance.
+-- [ ] Reset separado y no aplicado.
+-- [ ] Usuarios Auth sinteticos creados manualmente fuera de este archivo.
+-- [ ] UUIDs de usuarios Auth sinteticos disponibles fuera de Git.
+-- [ ] Aprobacion humana explicita para la fase exacta.
+-- [ ] Rollback entendido: destruir el laboratorio Supabase desechable.
+
+-- ============================================================================
+-- 2. Placeholders requeridos
+-- ============================================================================
+--
+-- Estos placeholders NO son valores reales:
+--
+-- <owner_a_auth_uuid>
+-- <partner_a_auth_uuid>
+-- <owner_b_auth_uuid>
+-- <external_user_auth_uuid>
+-- <space_a_uuid>
+-- <space_b_uuid>
+-- <content_item_reason_a_uuid>
+-- <content_item_promise_a_uuid>
+-- <content_item_reason_b_uuid>
+-- <content_item_override_a_uuid>
+-- <content_item_hidden_a_uuid>
+-- <content_item_monthly_a_uuid>
+-- <content_item_open_when_a_uuid>
+-- <media_asset_a_uuid>
+-- <content_event_a_uuid>
+--
+-- Reglas:
+-- - Reemplazar placeholders solo en una copia local futura aprobada.
+-- - No commitear UUIDs reales del laboratorio.
+-- - No commitear cuentas, credenciales ni capturas con valores completos.
+
+-- ============================================================================
+-- 3. Usuarios Auth sinteticos requeridos
+-- ============================================================================
+--
+-- Este archivo NO crea usuarios.
+-- Los usuarios Auth sinteticos deben existir antes de cualquier setup futuro.
+--
+-- Actores requeridos:
+-- - owner_a: miembro owner de space_a.
+-- - partner_a: miembro partner de space_a.
+-- - owner_b: miembro owner de space_b.
+-- - external_user: usuario autenticado sin membership.
+--
+-- Reglas:
+-- - Sin emails reales.
+-- - Sin nombres reales.
+-- - Sin contrasenas en Git.
+-- - Sin claves administrativas en frontend, docs o logs.
+-- - Los UUIDs deben mapearse manualmente fuera de Git.
+
+-- ============================================================================
+-- 4. Profiles sinteticos - PLANTILLA COMENTADA
+-- ============================================================================
+--
+-- insert into public.profiles (id, local_slug, display_name, avatar_url)
+-- values
+--   ('<owner_a_auth_uuid>'::uuid, 'owner_a', 'Synthetic Owner A', null),
+--   ('<partner_a_auth_uuid>'::uuid, 'partner_a', 'Synthetic Partner A', null),
+--   ('<owner_b_auth_uuid>'::uuid, 'owner_b', 'Synthetic Owner B', null),
+--   ('<external_user_auth_uuid>'::uuid, 'external_user', 'Synthetic External User', null);
+
+-- ============================================================================
+-- 5. Relationship spaces sinteticos - PLANTILLA COMENTADA
+-- ============================================================================
+--
+-- insert into public.relationship_spaces (id, name, slug, created_by)
+-- values
+--   ('<space_a_uuid>'::uuid, 'Synthetic Space A', 'space-a-synthetic', '<owner_a_auth_uuid>'::uuid),
+--   ('<space_b_uuid>'::uuid, 'Synthetic Space B', 'space-b-synthetic', '<owner_b_auth_uuid>'::uuid);
+
+-- ============================================================================
+-- 6. Memberships sinteticos - PLANTILLA COMENTADA
+-- ============================================================================
+--
+-- insert into public.universe_members (space_id, user_id, role)
+-- values
+--   ('<space_a_uuid>'::uuid, '<owner_a_auth_uuid>'::uuid, 'owner'),
+--   ('<space_a_uuid>'::uuid, '<partner_a_auth_uuid>'::uuid, 'partner'),
+--   ('<space_b_uuid>'::uuid, '<owner_b_auth_uuid>'::uuid, 'owner');
+--
+-- Nota:
+-- - external_user queda sin membership.
+-- - Altas/bajas/cambios de role directos siguen fuera de alcance.
+-- - Proteccion del ultimo owner queda pendiente de flujo RPC/admin futuro.
+
+-- ============================================================================
+-- 7. Content items sinteticos - PLANTILLA COMENTADA
+-- ============================================================================
+--
+-- Local valido en space_a.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_reason_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   'reasons',
+--   'synthetic-reason-a1',
+--   null,
+--   'local',
+--   '{"text":"Synthetic reason A1"}'::jsonb,
+--   1,
+--   '<owner_a_auth_uuid>'::uuid,
+--   '<owner_a_auth_uuid>'::uuid,
+--   'synthetic-fixture'
+-- );
+--
+-- Local valido adicional en space_a.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_promise_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   'promises',
+--   'synthetic-promise-a1',
+--   null,
+--   'local',
+--   '{"text":"Synthetic promise A1"}'::jsonb,
+--   1,
+--   '<partner_a_auth_uuid>'::uuid,
+--   '<partner_a_auth_uuid>'::uuid,
+--   'synthetic-fixture'
+-- );
+--
+-- Local valido en space_b para aislamiento.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_reason_b_uuid>'::uuid,
+--   '<space_b_uuid>'::uuid,
+--   'reasons',
+--   'synthetic-reason-b1',
+--   null,
+--   'local',
+--   '{"text":"Synthetic reason B1"}'::jsonb,
+--   1,
+--   '<owner_b_auth_uuid>'::uuid,
+--   '<owner_b_auth_uuid>'::uuid,
+--   'synthetic-fixture'
+-- );
+--
+-- Override valido en space_a.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_override_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   'reasons',
+--   null,
+--   'base-reason-synthetic-a1',
+--   'override',
+--   '{"text":"Synthetic override reason A1"}'::jsonb,
+--   1,
+--   '<owner_a_auth_uuid>'::uuid,
+--   '<owner_a_auth_uuid>'::uuid,
+--   'synthetic-fixture'
+-- );
+--
+-- Hidden valido en space_a.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_hidden_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   'promises',
+--   null,
+--   'base-promise-synthetic-a1',
+--   'hidden',
+--   '{"reason":"Synthetic hidden marker A1"}'::jsonb,
+--   1,
+--   '<partner_a_auth_uuid>'::uuid,
+--   '<partner_a_auth_uuid>'::uuid,
+--   'synthetic-fixture'
+-- );
+--
+-- Legacy/adaptador futuro: monthlyLetters sin autoria inventada.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_monthly_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   'monthlyLetters',
+--   'synthetic-monthly-a1',
+--   null,
+--   'local',
+--   '{"month":"Synthetic month A1","title":"Synthetic monthly A1","content":"Synthetic body A1"}'::jsonb,
+--   1,
+--   null,
+--   null,
+--   'synthetic-fixture-legacy-adapter'
+-- );
+--
+-- Legacy/adaptador futuro: openWhenLetters sin autoria inventada.
+--
+-- insert into public.content_items (
+--   id, space_id, collection, local_id, base_id, kind, data,
+--   schema_version, created_by, updated_by, source
+-- )
+-- values (
+--   '<content_item_open_when_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   'openWhenLetters',
+--   'synthetic-open-when-a1',
+--   null,
+--   'local',
+--   '{"title":"Synthetic open when A1","mood":"synthetic","content":"Synthetic body A1"}'::jsonb,
+--   1,
+--   null,
+--   null,
+--   'synthetic-fixture-legacy-adapter'
+-- );
+
+-- ============================================================================
+-- 8. Content events sinteticos - PLANTILLA COMENTADA
+-- ============================================================================
+--
+-- insert into public.content_events (
+--   id, space_id, content_item_id, collection, action, actor_id, payload
+-- )
+-- values (
+--   '<content_event_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   '<content_item_reason_a_uuid>'::uuid,
+--   'reasons',
+--   'content_created',
+--   '<owner_a_auth_uuid>'::uuid,
+--   '{"fixture":"synthetic","sensitive":false}'::jsonb
+-- );
+--
+-- Nota:
+-- - Audit confiable sigue pendiente de trigger/RPC/admin futuro.
+-- - Este evento es solo metadata sintetica.
+
+-- ============================================================================
+-- 9. Media assets sinteticos - PLANTILLA COMENTADA
+-- ============================================================================
+--
+-- insert into public.media_assets (
+--   id, space_id, content_item_id, bucket, path, mime_type, size_bytes, created_by
+-- )
+-- values (
+--   '<media_asset_a_uuid>'::uuid,
+--   '<space_a_uuid>'::uuid,
+--   '<content_item_reason_a_uuid>'::uuid,
+--   'relationship-media-synthetic',
+--   'space-a/synthetic-media-a1.txt',
+--   'text/plain',
+--   128,
+--   '<owner_a_auth_uuid>'::uuid
+-- );
+--
+-- Nota:
+-- - Solo metadata.
+-- - No crea archivos.
+-- - Storage queda fuera de alcance.
+
+-- ============================================================================
+-- 10. EXPECT PASS futuro
+-- ============================================================================
+--
+-- EXPECT PASS: owner_a lee content_items de space_a con cliente autenticado.
+-- EXPECT PASS: partner_a lee content_items de space_a con cliente autenticado.
+-- EXPECT PASS: owner_b lee content_items de space_b con cliente autenticado.
+-- EXPECT PASS: content local valido existe en space_a.
+-- EXPECT PASS: content override valido existe en space_a.
+-- EXPECT PASS: content hidden valido existe en space_a.
+-- EXPECT PASS: media same-space queda asociada a item del mismo space.
+-- EXPECT PASS: event same-space queda asociado a item del mismo space.
+-- EXPECT PASS: legacy/adaptador queda sin autoria inventada.
+
+-- ============================================================================
+-- 11. EXPECT FAIL futuro
+-- ============================================================================
+--
+-- EXPECT FAIL: external_user no lee content_items de space_a.
+-- EXPECT FAIL: external_user no lee content_items de space_b.
+-- EXPECT FAIL: owner_a no lee content_items de space_b.
+-- EXPECT FAIL: owner_b no lee content_items de space_a.
+-- EXPECT FAIL: media cross-space falla por constraints/FK.
+-- EXPECT FAIL: event cross-space falla por constraints/FK.
+-- EXPECT FAIL: local sin local_id falla por schema/checks.
+-- EXPECT FAIL: override sin base_id falla por schema/checks.
+-- EXPECT FAIL: hidden con local_id falla por schema/checks.
+-- EXPECT FAIL: membership write directo sigue fuera de alcance.
+-- EXPECT FAIL: hard delete directo sigue fuera de alcance.
+-- EXPECT FAIL: update de columnas sensibles sigue fuera de alcance.
+-- EXPECT FAIL: ultimo owner sigue pendiente de flujo RPC/admin futuro.
+
+-- ============================================================================
+-- 12. Evidencia esperada futura
+-- ============================================================================
+--
+-- La persona operadora deberia devolver, sin secretos:
+-- - confirmacion de laboratorio desechable;
+-- - confirmacion de cero datos reales;
+-- - confirmacion de usuarios Auth sinteticos creados fuera de Git;
+-- - conteos por tabla antes y despues del setup;
+-- - lista de placeholders reemplazados, sin valores reales;
+-- - resultado de SELECT por actor usando cliente autenticado/API futura;
+-- - resultado de denegaciones cross-space;
+-- - confirmacion de que Storage no fue tocado;
+-- - confirmacion de que reset no fue aplicado;
+-- - confirmacion de app/CRUD desconectados.
+
+-- ============================================================================
+-- 13. Criterios de parada
+-- ============================================================================
+--
+-- Detener la fase si:
+-- - aparece dato real;
+-- - aparece email real;
+-- - aparece key, token, project ref, password o service-role;
+-- - se intenta crear usuario desde SQL;
+-- - se intenta tocar Storage;
+-- - se intenta conectar la app;
+-- - se mezcla fixture con reset;
+-- - aparece operacion destructiva de schema;
+-- - el laboratorio no es claramente desechable;
+-- - build, audit o verificador fallan.
+
+-- ============================================================================
+-- 14. Rollback
+-- ============================================================================
+--
+-- Rollback principal:
+-- - destruir el laboratorio Supabase desechable.
+--
+-- Reset SQL:
+-- - sigue separado en synthetic_reset_draft.sql;
+-- - no debe mezclarse con este draft;
+-- - no es requisito para cerrar este documento.
+
+-- FIN DEL BORRADOR DOCUMENTAL. NO EJECUTAR TODAVIA.
