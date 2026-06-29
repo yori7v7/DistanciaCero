@@ -1,395 +1,432 @@
--- BORRADOR DOCUMENTAL.
--- NO EJECUTAR TODAVIA.
--- NO APLICADO.
--- REQUIERE GO MANUAL FUTURO.
--- REQUIERE USUARIOS AUTH SINTETICOS CREADOS MANUALMENTE ANTES.
--- NO USAR DATOS REALES.
--- NO USAR EMAILS REALES.
--- NO USAR SERVICE-ROLE.
--- NO USAR TOKENS, KEYS, PROJECT REF, PASSWORDS NI URLS REALES.
--- NO TOCAR STORAGE.
--- RESET SEPARADO.
--- NO INSERTA EN TABLAS INTERNAS DE AUTH.
--- NO CREA USUARIOS.
--- NO CONECTA LA APP.
---
--- Proposito:
--- - Servir como puente entre la matriz conceptual T01-T20 y una futura
---   aplicacion manual controlada de fixtures sinteticos.
--- - Mantener todo comentado por defecto.
--- - Documentar que el setup privilegiado no valida por si solo acceso normal.
---
--- Regla central:
--- - SQL Editor privilegiado solo sirve para setup controlado.
--- - La validacion de acceso normal requiere usuario autenticado/API futura.
--- - Fixtures de tablas sin sesion autenticada NO prueban RLS end-to-end.
+-- Distancia Cero - S4.6.4.13 synthetic fixture apply candidate template.
+-- SQL CANDIDATE TEMPLATE ONLY.
+-- NOT APPLIED.
+-- DO NOT RUN DIRECTLY FROM GIT.
+-- Copy this file to a private scratch location outside the repo before use.
+-- Replace placeholders only in that private scratch copy.
+-- Never commit real UUIDs, project refs, tokens, keys, passwords or secrets.
+-- Do not use real data, real emails or private names as fixture data.
+-- Do not use Supabase CLI from this file.
+-- Do not touch Storage objects from this file.
+-- This setup uses SQL Editor privileges only for synthetic lab setup.
+-- It does not prove RLS end-to-end with authenticated users.
+-- App/CRUD remain disconnected and LocalStorage remains the active runtime.
+
+begin;
 
 -- ============================================================================
--- 1. Precondiciones
+-- 1. Fail-fast placeholder guard
 -- ============================================================================
---
--- [ ] Git limpio.
--- [ ] Verificador de aislamiento pasa.
--- [ ] Build pasa.
--- [ ] Audit limpio.
--- [ ] Laboratorio Supabase desechable confirmado.
--- [ ] Laboratorio no es produccion.
--- [ ] Schema aplicado manualmente en laboratorio.
--- [ ] RLS aplicado manualmente en laboratorio.
--- [ ] App y CRUD siguen desconectados.
--- [ ] Storage fuera de alcance.
--- [ ] Reset separado y no aplicado.
--- [ ] SYNTHETIC_AUTH_USERS_PLAN.md revisado como preflight documental.
--- [ ] Usuarios Auth sinteticos creados manualmente fuera de este archivo.
--- [ ] UUIDs de usuarios Auth sinteticos disponibles fuera de Git.
--- [ ] Aprobacion humana explicita para la fase exacta.
--- [ ] Rollback entendido: destruir el laboratorio Supabase desechable.
+-- This block intentionally aborts if any placeholder remains. The versioned file
+-- is therefore blocked for direct execution from Git. A future private scratch
+-- copy must replace every placeholder outside the repo before manual use.
+
+do $$
+declare
+  placeholder_values text[] := array[
+    '__OWNER_A_AUTH_UUID__',
+    '__PARTNER_A_AUTH_UUID__',
+    '__OWNER_B_AUTH_UUID__',
+    '__EXTERNAL_USER_AUTH_UUID__',
+    '__SPACE_A_UUID__',
+    '__SPACE_B_UUID__',
+    '__CONTENT_REASON_A_UUID__',
+    '__CONTENT_PROMISE_A_UUID__',
+    '__CONTENT_REASON_B_UUID__',
+    '__CONTENT_OVERRIDE_A_UUID__',
+    '__CONTENT_HIDDEN_A_UUID__',
+    '__CONTENT_MONTHLY_A_UUID__',
+    '__CONTENT_OPEN_WHEN_A_UUID__',
+    '__MEDIA_ASSET_A_UUID__',
+    '__CONTENT_EVENT_A_UUID__'
+  ];
+  unresolved_count integer;
+begin
+  select count(*)
+    into unresolved_count
+  from unnest(placeholder_values) as placeholder_value
+  where position('__' in placeholder_value) > 0;
+
+  if unresolved_count > 0 then
+    raise exception
+      'S4.6.4.13 fixture candidate blocked: replace all placeholders in a private scratch copy outside Git before running.';
+  end if;
+end $$;
 
 -- ============================================================================
--- 2. Placeholders requeridos
+-- 2. Marker and conflict guard
 -- ============================================================================
---
--- Estos placeholders NO son valores reales:
---
--- <owner_a_auth_uuid>
--- <partner_a_auth_uuid>
--- <owner_b_auth_uuid>
--- <external_user_auth_uuid>
--- <space_a_uuid>
--- <space_b_uuid>
--- <content_item_reason_a_uuid>
--- <content_item_promise_a_uuid>
--- <content_item_reason_b_uuid>
--- <content_item_override_a_uuid>
--- <content_item_hidden_a_uuid>
--- <content_item_monthly_a_uuid>
--- <content_item_open_when_a_uuid>
--- <media_asset_a_uuid>
--- <content_event_a_uuid>
---
--- Reglas:
--- - Reemplazar placeholders solo en una copia local futura aprobada.
--- - No commitear UUIDs reales del laboratorio.
--- - No commitear cuentas, credenciales ni capturas con valores completos.
+-- Schema has no synthetic_fixture_batch column. Stable markers use available
+-- columns: profiles.local_slug, relationship_spaces.slug, content_items.source,
+-- content_items.data JSON, content_events.payload JSON and media_assets.path.
+
+do $$
+begin
+  if exists (
+    select 1
+    from public.profiles
+    where id in (
+      '__OWNER_A_AUTH_UUID__'::uuid,
+      '__PARTNER_A_AUTH_UUID__'::uuid,
+      '__OWNER_B_AUTH_UUID__'::uuid,
+      '__EXTERNAL_USER_AUTH_UUID__'::uuid
+    )
+    and coalesce(local_slug, '') not in (
+      'owner_a',
+      'partner_a',
+      'owner_b',
+      'external_user'
+    )
+  ) then
+    raise exception 'S4.6.4.13 fixture candidate blocked: profile UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.relationship_spaces
+    where id in (
+      '__SPACE_A_UUID__'::uuid,
+      '__SPACE_B_UUID__'::uuid
+    )
+    and coalesce(slug, '') not in (
+      'space-a-s4-6-4-13-candidate',
+      'space-b-s4-6-4-13-candidate'
+    )
+  ) then
+    raise exception 'S4.6.4.13 fixture candidate blocked: space UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.relationship_spaces
+    where slug in (
+      'space-a-s4-6-4-13-candidate',
+      'space-b-s4-6-4-13-candidate'
+    )
+    and id not in (
+      '__SPACE_A_UUID__'::uuid,
+      '__SPACE_B_UUID__'::uuid
+    )
+  ) then
+    raise exception 'S4.6.4.13 fixture candidate blocked: synthetic space slug conflict uses a different UUID.';
+  end if;
+
+  if exists (
+    select 1
+    from public.content_items
+    where id in (
+      '__CONTENT_REASON_A_UUID__'::uuid,
+      '__CONTENT_PROMISE_A_UUID__'::uuid,
+      '__CONTENT_REASON_B_UUID__'::uuid,
+      '__CONTENT_OVERRIDE_A_UUID__'::uuid,
+      '__CONTENT_HIDDEN_A_UUID__'::uuid,
+      '__CONTENT_MONTHLY_A_UUID__'::uuid,
+      '__CONTENT_OPEN_WHEN_A_UUID__'::uuid
+    )
+    and source not in (
+      'synthetic-fixture-s4-6-4-13-candidate',
+      'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+    )
+  ) then
+    raise exception 'S4.6.4.13 fixture candidate blocked: content item UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.content_events
+    where id = '__CONTENT_EVENT_A_UUID__'::uuid
+    and coalesce(payload ->> 'synthetic_fixture_batch', '') <> 's4_6_4_13_candidate'
+  ) then
+    raise exception 'S4.6.4.13 fixture candidate blocked: content event UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.media_assets
+    where id = '__MEDIA_ASSET_A_UUID__'::uuid
+    and path not like 's4_6_4_13_candidate/%'
+  ) then
+    raise exception 'S4.6.4.13 fixture candidate blocked: media asset UUID conflict is not synthetic.';
+  end if;
+end $$;
 
 -- ============================================================================
--- 3. Usuarios Auth sinteticos requeridos
+-- 3. Profiles
 -- ============================================================================
---
--- Este archivo NO crea usuarios.
--- Los usuarios Auth sinteticos deben existir antes de cualquier setup futuro.
--- Ver tambien: docs/supabase/fixtures/SYNTHETIC_AUTH_USERS_PLAN.md
---
--- Actores requeridos:
--- - owner_a: miembro owner de space_a.
--- - partner_a: miembro partner de space_a.
--- - owner_b: miembro owner de space_b.
--- - external_user: usuario autenticado sin membership.
---
--- Reglas:
--- - Sin emails reales.
--- - Sin nombres reales.
--- - Sin contrasenas en Git.
--- - Sin claves administrativas en frontend, docs o logs.
--- - Los UUIDs deben mapearse manualmente fuera de Git.
+
+insert into public.profiles (id, local_slug, display_name, avatar_url)
+values
+  ('__OWNER_A_AUTH_UUID__'::uuid, 'owner_a', 'Synthetic Owner A S4.6.4.13', null),
+  ('__PARTNER_A_AUTH_UUID__'::uuid, 'partner_a', 'Synthetic Partner A S4.6.4.13', null),
+  ('__OWNER_B_AUTH_UUID__'::uuid, 'owner_b', 'Synthetic Owner B S4.6.4.13', null),
+  ('__EXTERNAL_USER_AUTH_UUID__'::uuid, 'external_user', 'Synthetic External User S4.6.4.13', null)
+on conflict (id) do update
+set local_slug = excluded.local_slug,
+    display_name = excluded.display_name,
+    avatar_url = excluded.avatar_url
+where public.profiles.local_slug in (
+  'owner_a',
+  'partner_a',
+  'owner_b',
+  'external_user'
+);
 
 -- ============================================================================
--- 4. Profiles sinteticos - PLANTILLA COMENTADA
+-- 4. Relationship spaces
 -- ============================================================================
---
--- insert into public.profiles (id, local_slug, display_name, avatar_url)
--- values
---   ('<owner_a_auth_uuid>'::uuid, 'owner_a', 'Synthetic Owner A', null),
---   ('<partner_a_auth_uuid>'::uuid, 'partner_a', 'Synthetic Partner A', null),
---   ('<owner_b_auth_uuid>'::uuid, 'owner_b', 'Synthetic Owner B', null),
---   ('<external_user_auth_uuid>'::uuid, 'external_user', 'Synthetic External User', null);
+
+insert into public.relationship_spaces (id, name, slug, created_by)
+values
+  (
+    '__SPACE_A_UUID__'::uuid,
+    'Synthetic Space A S4.6.4.13',
+    'space-a-s4-6-4-13-candidate',
+    '__OWNER_A_AUTH_UUID__'::uuid
+  ),
+  (
+    '__SPACE_B_UUID__'::uuid,
+    'Synthetic Space B S4.6.4.13',
+    'space-b-s4-6-4-13-candidate',
+    '__OWNER_B_AUTH_UUID__'::uuid
+  )
+on conflict (id) do update
+set name = excluded.name,
+    slug = excluded.slug,
+    created_by = excluded.created_by
+where public.relationship_spaces.slug in (
+  'space-a-s4-6-4-13-candidate',
+  'space-b-s4-6-4-13-candidate'
+);
 
 -- ============================================================================
--- 5. Relationship spaces sinteticos - PLANTILLA COMENTADA
+-- 5. Universe memberships
 -- ============================================================================
---
--- insert into public.relationship_spaces (id, name, slug, created_by)
--- values
---   ('<space_a_uuid>'::uuid, 'Synthetic Space A', 'space-a-synthetic', '<owner_a_auth_uuid>'::uuid),
---   ('<space_b_uuid>'::uuid, 'Synthetic Space B', 'space-b-synthetic', '<owner_b_auth_uuid>'::uuid);
+-- external_user intentionally has no membership.
+
+insert into public.universe_members (space_id, user_id, role)
+values
+  ('__SPACE_A_UUID__'::uuid, '__OWNER_A_AUTH_UUID__'::uuid, 'owner'),
+  ('__SPACE_A_UUID__'::uuid, '__PARTNER_A_AUTH_UUID__'::uuid, 'partner'),
+  ('__SPACE_B_UUID__'::uuid, '__OWNER_B_AUTH_UUID__'::uuid, 'owner')
+on conflict (space_id, user_id) do update
+set role = excluded.role;
 
 -- ============================================================================
--- 6. Memberships sinteticos - PLANTILLA COMENTADA
+-- 6. Content items
 -- ============================================================================
---
--- insert into public.universe_members (space_id, user_id, role)
--- values
---   ('<space_a_uuid>'::uuid, '<owner_a_auth_uuid>'::uuid, 'owner'),
---   ('<space_a_uuid>'::uuid, '<partner_a_auth_uuid>'::uuid, 'partner'),
---   ('<space_b_uuid>'::uuid, '<owner_b_auth_uuid>'::uuid, 'owner');
---
--- Nota:
--- - external_user queda sin membership.
--- - Altas/bajas/cambios de role directos siguen fuera de alcance.
--- - Proteccion del ultimo owner queda pendiente de flujo RPC/admin futuro.
+
+insert into public.content_items (
+  id, space_id, collection, local_id, base_id, kind, data,
+  schema_version, is_hidden, created_by, updated_by, source
+)
+values
+  (
+    '__CONTENT_REASON_A_UUID__'::uuid,
+    '__SPACE_A_UUID__'::uuid,
+    'reasons',
+    'synthetic-reason-a-s4-6-4-13',
+    null,
+    'local',
+    '{"text":"Synthetic reason A1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    false,
+    '__OWNER_A_AUTH_UUID__'::uuid,
+    '__OWNER_A_AUTH_UUID__'::uuid,
+    'synthetic-fixture-s4-6-4-13-candidate'
+  ),
+  (
+    '__CONTENT_PROMISE_A_UUID__'::uuid,
+    '__SPACE_A_UUID__'::uuid,
+    'promises',
+    'synthetic-promise-a-s4-6-4-13',
+    null,
+    'local',
+    '{"text":"Synthetic promise A1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    false,
+    '__PARTNER_A_AUTH_UUID__'::uuid,
+    '__PARTNER_A_AUTH_UUID__'::uuid,
+    'synthetic-fixture-s4-6-4-13-candidate'
+  ),
+  (
+    '__CONTENT_REASON_B_UUID__'::uuid,
+    '__SPACE_B_UUID__'::uuid,
+    'reasons',
+    'synthetic-reason-b-s4-6-4-13',
+    null,
+    'local',
+    '{"text":"Synthetic reason B1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    false,
+    '__OWNER_B_AUTH_UUID__'::uuid,
+    '__OWNER_B_AUTH_UUID__'::uuid,
+    'synthetic-fixture-s4-6-4-13-candidate'
+  ),
+  (
+    '__CONTENT_OVERRIDE_A_UUID__'::uuid,
+    '__SPACE_A_UUID__'::uuid,
+    'reasons',
+    null,
+    'base-reason-synthetic-s4-6-4-13',
+    'override',
+    '{"text":"Synthetic override reason A1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    false,
+    '__OWNER_A_AUTH_UUID__'::uuid,
+    '__OWNER_A_AUTH_UUID__'::uuid,
+    'synthetic-fixture-s4-6-4-13-candidate'
+  ),
+  (
+    '__CONTENT_HIDDEN_A_UUID__'::uuid,
+    '__SPACE_A_UUID__'::uuid,
+    'promises',
+    null,
+    'base-promise-synthetic-s4-6-4-13',
+    'hidden',
+    '{"reason":"Synthetic hidden marker A1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    true,
+    '__PARTNER_A_AUTH_UUID__'::uuid,
+    '__PARTNER_A_AUTH_UUID__'::uuid,
+    'synthetic-fixture-s4-6-4-13-candidate'
+  ),
+  (
+    '__CONTENT_MONTHLY_A_UUID__'::uuid,
+    '__SPACE_A_UUID__'::uuid,
+    'monthlyLetters',
+    'synthetic-monthly-a-s4-6-4-13',
+    null,
+    'local',
+    '{"month":"Synthetic month A1","title":"Synthetic monthly A1","content":"Synthetic body A1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    false,
+    null,
+    null,
+    'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+  ),
+  (
+    '__CONTENT_OPEN_WHEN_A_UUID__'::uuid,
+    '__SPACE_A_UUID__'::uuid,
+    'openWhenLetters',
+    'synthetic-open-when-a-s4-6-4-13',
+    null,
+    'local',
+    '{"title":"Synthetic open when A1","mood":"synthetic","content":"Synthetic body A1","synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb,
+    1,
+    false,
+    null,
+    null,
+    'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+  )
+on conflict (id) do update
+set space_id = excluded.space_id,
+    collection = excluded.collection,
+    local_id = excluded.local_id,
+    base_id = excluded.base_id,
+    kind = excluded.kind,
+    data = excluded.data,
+    schema_version = excluded.schema_version,
+    is_hidden = excluded.is_hidden,
+    created_by = excluded.created_by,
+    updated_by = excluded.updated_by,
+    source = excluded.source
+where public.content_items.source in (
+  'synthetic-fixture-s4-6-4-13-candidate',
+  'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+);
 
 -- ============================================================================
--- 7. Content items sinteticos - PLANTILLA COMENTADA
+-- 7. Content events
 -- ============================================================================
---
--- Local valido en space_a.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_reason_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   'reasons',
---   'synthetic-reason-a1',
---   null,
---   'local',
---   '{"text":"Synthetic reason A1"}'::jsonb,
---   1,
---   '<owner_a_auth_uuid>'::uuid,
---   '<owner_a_auth_uuid>'::uuid,
---   'synthetic-fixture'
--- );
---
--- Local valido adicional en space_a.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_promise_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   'promises',
---   'synthetic-promise-a1',
---   null,
---   'local',
---   '{"text":"Synthetic promise A1"}'::jsonb,
---   1,
---   '<partner_a_auth_uuid>'::uuid,
---   '<partner_a_auth_uuid>'::uuid,
---   'synthetic-fixture'
--- );
---
--- Local valido en space_b para aislamiento.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_reason_b_uuid>'::uuid,
---   '<space_b_uuid>'::uuid,
---   'reasons',
---   'synthetic-reason-b1',
---   null,
---   'local',
---   '{"text":"Synthetic reason B1"}'::jsonb,
---   1,
---   '<owner_b_auth_uuid>'::uuid,
---   '<owner_b_auth_uuid>'::uuid,
---   'synthetic-fixture'
--- );
---
--- Override valido en space_a.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_override_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   'reasons',
---   null,
---   'base-reason-synthetic-a1',
---   'override',
---   '{"text":"Synthetic override reason A1"}'::jsonb,
---   1,
---   '<owner_a_auth_uuid>'::uuid,
---   '<owner_a_auth_uuid>'::uuid,
---   'synthetic-fixture'
--- );
---
--- Hidden valido en space_a.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_hidden_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   'promises',
---   null,
---   'base-promise-synthetic-a1',
---   'hidden',
---   '{"reason":"Synthetic hidden marker A1"}'::jsonb,
---   1,
---   '<partner_a_auth_uuid>'::uuid,
---   '<partner_a_auth_uuid>'::uuid,
---   'synthetic-fixture'
--- );
---
--- Legacy/adaptador futuro: monthlyLetters sin autoria inventada.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_monthly_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   'monthlyLetters',
---   'synthetic-monthly-a1',
---   null,
---   'local',
---   '{"month":"Synthetic month A1","title":"Synthetic monthly A1","content":"Synthetic body A1"}'::jsonb,
---   1,
---   null,
---   null,
---   'synthetic-fixture-legacy-adapter'
--- );
---
--- Legacy/adaptador futuro: openWhenLetters sin autoria inventada.
---
--- insert into public.content_items (
---   id, space_id, collection, local_id, base_id, kind, data,
---   schema_version, created_by, updated_by, source
--- )
--- values (
---   '<content_item_open_when_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   'openWhenLetters',
---   'synthetic-open-when-a1',
---   null,
---   'local',
---   '{"title":"Synthetic open when A1","mood":"synthetic","content":"Synthetic body A1"}'::jsonb,
---   1,
---   null,
---   null,
---   'synthetic-fixture-legacy-adapter'
--- );
+-- action uses the schema_draft.sql allowed value "create".
+
+insert into public.content_events (
+  id, space_id, content_item_id, collection, action, actor_id, payload
+)
+values (
+  '__CONTENT_EVENT_A_UUID__'::uuid,
+  '__SPACE_A_UUID__'::uuid,
+  '__CONTENT_REASON_A_UUID__'::uuid,
+  'reasons',
+  'create',
+  '__OWNER_A_AUTH_UUID__'::uuid,
+  '{"fixture":"synthetic","sensitive":false,"synthetic_fixture_batch":"s4_6_4_13_candidate"}'::jsonb
+)
+on conflict (id) do update
+set space_id = excluded.space_id,
+    content_item_id = excluded.content_item_id,
+    collection = excluded.collection,
+    action = excluded.action,
+    actor_id = excluded.actor_id,
+    payload = excluded.payload
+where public.content_events.payload ->> 'synthetic_fixture_batch' = 's4_6_4_13_candidate';
 
 -- ============================================================================
--- 8. Content events sinteticos - PLANTILLA COMENTADA
+-- 8. Media assets
 -- ============================================================================
---
--- insert into public.content_events (
---   id, space_id, content_item_id, collection, action, actor_id, payload
--- )
--- values (
---   '<content_event_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   '<content_item_reason_a_uuid>'::uuid,
---   'reasons',
---   'content_created',
---   '<owner_a_auth_uuid>'::uuid,
---   '{"fixture":"synthetic","sensitive":false}'::jsonb
--- );
---
--- Nota:
--- - Audit confiable sigue pendiente de trigger/RPC/admin futuro.
--- - Este evento es solo metadata sintetica.
+-- This inserts metadata only. It does not create Storage buckets or objects.
+
+insert into public.media_assets (
+  id, space_id, content_item_id, bucket, path, mime_type, size_bytes, created_by
+)
+values (
+  '__MEDIA_ASSET_A_UUID__'::uuid,
+  '__SPACE_A_UUID__'::uuid,
+  '__CONTENT_REASON_A_UUID__'::uuid,
+  'relationship-media-synthetic',
+  's4_6_4_13_candidate/space-a/synthetic-media-a1.txt',
+  'text/plain',
+  128,
+  '__OWNER_A_AUTH_UUID__'::uuid
+)
+on conflict (id) do update
+set space_id = excluded.space_id,
+    content_item_id = excluded.content_item_id,
+    bucket = excluded.bucket,
+    path = excluded.path,
+    mime_type = excluded.mime_type,
+    size_bytes = excluded.size_bytes,
+    created_by = excluded.created_by
+where public.media_assets.path like 's4_6_4_13_candidate/%';
 
 -- ============================================================================
--- 9. Media assets sinteticos - PLANTILLA COMENTADA
+-- 9. Candidate post-checks
 -- ============================================================================
---
--- insert into public.media_assets (
---   id, space_id, content_item_id, bucket, path, mime_type, size_bytes, created_by
--- )
--- values (
---   '<media_asset_a_uuid>'::uuid,
---   '<space_a_uuid>'::uuid,
---   '<content_item_reason_a_uuid>'::uuid,
---   'relationship-media-synthetic',
---   'space-a/synthetic-media-a1.txt',
---   'text/plain',
---   128,
---   '<owner_a_auth_uuid>'::uuid
--- );
---
--- Nota:
--- - Solo metadata.
--- - No crea archivos.
--- - Storage queda fuera de alcance.
+-- These checks are read-only within the transaction and return synthetic counts.
+-- They are not RLS end-to-end tests because SQL Editor runs with privileged
+-- setup context.
 
--- ============================================================================
--- 10. EXPECT PASS futuro
--- ============================================================================
---
--- EXPECT PASS: owner_a lee content_items de space_a con cliente autenticado.
--- EXPECT PASS: partner_a lee content_items de space_a con cliente autenticado.
--- EXPECT PASS: owner_b lee content_items de space_b con cliente autenticado.
--- EXPECT PASS: content local valido existe en space_a.
--- EXPECT PASS: content override valido existe en space_a.
--- EXPECT PASS: content hidden valido existe en space_a.
--- EXPECT PASS: media same-space queda asociada a item del mismo space.
--- EXPECT PASS: event same-space queda asociado a item del mismo space.
--- EXPECT PASS: legacy/adaptador queda sin autoria inventada.
+select 'profiles' as fixture_table, count(*) as synthetic_count
+from public.profiles
+where local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
+union all
+select 'relationship_spaces', count(*)
+from public.relationship_spaces
+where slug in (
+  'space-a-s4-6-4-13-candidate',
+  'space-b-s4-6-4-13-candidate'
+)
+union all
+select 'universe_members', count(*)
+from public.universe_members
+where space_id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+union all
+select 'content_items', count(*)
+from public.content_items
+where source in (
+  'synthetic-fixture-s4-6-4-13-candidate',
+  'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+)
+union all
+select 'content_events', count(*)
+from public.content_events
+where payload ->> 'synthetic_fixture_batch' = 's4_6_4_13_candidate'
+union all
+select 'media_assets', count(*)
+from public.media_assets
+where path like 's4_6_4_13_candidate/%';
 
--- ============================================================================
--- 11. EXPECT FAIL futuro
--- ============================================================================
---
--- EXPECT FAIL: external_user no lee content_items de space_a.
--- EXPECT FAIL: external_user no lee content_items de space_b.
--- EXPECT FAIL: owner_a no lee content_items de space_b.
--- EXPECT FAIL: owner_b no lee content_items de space_a.
--- EXPECT FAIL: media cross-space falla por constraints/FK.
--- EXPECT FAIL: event cross-space falla por constraints/FK.
--- EXPECT FAIL: local sin local_id falla por schema/checks.
--- EXPECT FAIL: override sin base_id falla por schema/checks.
--- EXPECT FAIL: hidden con local_id falla por schema/checks.
--- EXPECT FAIL: membership write directo sigue fuera de alcance.
--- EXPECT FAIL: hard delete directo sigue fuera de alcance.
--- EXPECT FAIL: update de columnas sensibles sigue fuera de alcance.
--- EXPECT FAIL: ultimo owner sigue pendiente de flujo RPC/admin futuro.
+commit;
 
--- ============================================================================
--- 12. Evidencia esperada futura
--- ============================================================================
---
--- La persona operadora deberia devolver, sin secretos:
--- - confirmacion de laboratorio desechable;
--- - confirmacion de cero datos reales;
--- - confirmacion de usuarios Auth sinteticos creados fuera de Git;
--- - conteos por tabla antes y despues del setup;
--- - lista de placeholders reemplazados, sin valores reales;
--- - resultado de SELECT por actor usando cliente autenticado/API futura;
--- - resultado de denegaciones cross-space;
--- - confirmacion de que Storage no fue tocado;
--- - confirmacion de que reset no fue aplicado;
--- - confirmacion de app/CRUD desconectados.
-
--- ============================================================================
--- 13. Criterios de parada
--- ============================================================================
---
--- Detener la fase si:
--- - aparece dato real;
--- - aparece email real;
--- - aparece key, token, project ref, password o service-role;
--- - se intenta crear usuario desde SQL;
--- - se intenta tocar Storage;
--- - se intenta conectar la app;
--- - se mezcla fixture con reset;
--- - aparece operacion destructiva de schema;
--- - el laboratorio no es claramente desechable;
--- - build, audit o verificador fallan.
-
--- ============================================================================
--- 14. Rollback
--- ============================================================================
---
--- Rollback principal:
--- - destruir el laboratorio Supabase desechable.
---
--- Reset SQL:
--- - sigue separado en synthetic_reset_draft.sql;
--- - no debe mezclarse con este draft;
--- - no es requisito para cerrar este documento.
-
--- FIN DEL BORRADOR DOCUMENTAL. NO EJECUTAR TODAVIA.
+-- End of S4.6.4.13 candidate template.
+-- In Git, this file is intentionally blocked by placeholders and remains not applied.

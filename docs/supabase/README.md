@@ -28,6 +28,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   modificar SQL y sin aplicar fixtures.
 - S4.6.4.10 documenta el preflight manual de fixture apply futuro, sin ejecutar
   SQL, sin usar CLI y sin conectar la app.
+- S4.6.4.13 convierte los drafts apply/reset en plantillas SQL candidatas con
+  placeholders fail-fast. Siguen sin aplicarse y solo pueden usarse en una copia
+  privada fuera de Git tras un GO explicito futuro.
 - RLS end-to-end, memberships, fixtures, reset, Storage, backend readiness y
   production readiness siguen pendientes.
 - No hay backend.
@@ -52,10 +55,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   fixtures sinteticos, no aplicado, con plantillas comentadas por defecto y
   casos EXPECT PASS/EXPECT FAIL. No es migration, no es reset y no demuestra
   ejecucion real.
-- `fixtures/synthetic_fixture_apply_draft.sql`: draft separado S4.6.4.3 para
-  una futura aplicacion manual de fixtures sinteticos. Permanece no aplicado,
-  comentado por defecto, sin reset, sin Storage, sin crear Auth users por el
-  archivo y sin conexion de la app.
+- `fixtures/synthetic_fixture_apply_draft.sql`: plantilla SQL candidata
+  S4.6.4.13 para una futura aplicacion manual privada de fixtures sinteticos.
+  Permanece no aplicada, bloqueada por placeholders fail-fast, sin reset, sin
+  Storage, sin crear Auth users por el archivo y sin conexion de la app.
 - `fixtures/SYNTHETIC_AUTH_USERS_PLAN.md`: preflight documental S4.6.4.4 para
   usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales,
   no aplica fixtures y no prueba RLS end-to-end.
@@ -71,9 +74,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `fixtures/SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md`: preflight manual
   documental S4.6.4.10 para fixture apply futuro, sin ejecutar SQL, usar CLI
   ni conectar la app.
-- `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
-  reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
-  No es migration ni rollback ejecutado.
+- `fixtures/synthetic_reset_draft.sql`: plantilla SQL candidata S4.6.4.13 de
+  reset/cleanup sintetico, no aplicada, bloqueada por placeholders fail-fast y
+  limitada a marcadores sinteticos del candidato. No es migration ni rollback
+  ejecutado.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

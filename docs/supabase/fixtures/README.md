@@ -25,10 +25,11 @@ El archivo `synthetic_fixture_plan.sql` complementa este README como candidato
 futuro documentado y no aplicado. Sus plantillas estan comentadas por defecto y
 no son migrations ni fixtures ejecutados.
 
-El archivo `synthetic_fixture_apply_draft.sql` documenta un draft separado para
-una aplicacion manual futura de fixtures sinteticos. Tambien permanece no
-aplicado, comentado por defecto y sujeto a otro GO explicito. Requiere usuarios
-Auth sinteticos creados manualmente antes, sin emails reales ni datos reales.
+El archivo `synthetic_fixture_apply_draft.sql` es ahora una plantilla SQL
+candidata S4.6.4.13 para una aplicacion manual futura de fixtures sinteticos.
+Permanece no aplicado, bloqueado por placeholders fail-fast y sujeto a otro GO
+explicito. Requiere copia privada fuera de Git, usuarios Auth sinteticos creados
+manualmente antes, sin emails reales ni datos reales.
 
 El archivo `SYNTHETIC_AUTH_USERS_PLAN.md` documenta el preflight S4.6.4.4 para
 usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales y no
@@ -56,9 +57,11 @@ El archivo `SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` documenta el preflight
 manual S4.6.4.10 para una futura aplicacion de fixtures. No ejecuta SQL, no
 usa CLI, no aplica fixtures y no conecta la app.
 
-El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
-separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
-ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
+El archivo `synthetic_reset_draft.sql` es ahora una plantilla SQL candidata
+S4.6.4.13 de reset/cleanup sintetico separado. Permanece no aplicado, bloqueado
+por placeholders fail-fast, no es rollback garantizado y no debe ejecutarse sin
+entorno desechable, copia privada fuera de Git, project ref confirmado y
+aprobacion futura.
 
 ## 2. Estado actual
 
@@ -78,8 +81,8 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
 - [x] Router sigue inactivo.
 - [x] Existe `synthetic_fixture_plan.sql` como draft documental no aplicado y
   sin operaciones ejecutables por defecto.
-- [x] Existe `synthetic_fixture_apply_draft.sql` como draft separado futuro,
-  no aplicado, sin operaciones ejecutables por defecto y sin reset.
+- [x] Existe `synthetic_fixture_apply_draft.sql` como plantilla SQL candidata
+  futura, no aplicada, bloqueada por placeholders fail-fast y sin reset.
 - [x] Existe `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental de Auth
   users sinteticos, sin usuarios creados ni UUIDs reales versionados.
 - [x] Existe `SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md` como guia manual segura
@@ -93,8 +96,8 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
   documental, sin fixture apply, sin reset y sin SQL ejecutado.
 - [x] Existe `SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` como preflight
   manual documental, sin fixture apply, sin reset y sin SQL ejecutado.
-- [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
-  sin operaciones activas por defecto.
+- [x] Existe `synthetic_reset_draft.sql` como plantilla SQL candidata no
+  aplicada, bloqueada por placeholders fail-fast y separada del fixture apply.
 - [x] Existe laboratorio desechable reportado por evidencia humana; Auth users
   sinteticos fueron creados manualmente, pero Storage, fixtures, reset y app
   conectada siguen fuera de alcance.
@@ -344,23 +347,28 @@ Reglas:
   documental de fixture apply SQL antes de cualquier aplicacion.
 - **S4.6.4.10:** crear `SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` como
   preflight manual documental, todavia sin ejecutar SQL.
-- **S4.6.4.11 futura:** auditoria final de docs antes de cualquier fixture
-  apply.
+- **S4.6.4.11:** auditoria final de docs antes de cualquier fixture apply.
+- **S4.6.4.12:** auditoria de candidatos apply/reset; ambos seguian
+  documentales antes de S4.6.4.13.
+- **S4.6.4.13:** convertir `synthetic_fixture_apply_draft.sql` y
+  `synthetic_reset_draft.sql` en plantillas SQL candidatas con placeholders
+  fail-fast. No se ejecuta SQL, no se aplican fixtures y no se ejecuta reset.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
 - **S4.8:** piloto read-only con fixtures sinteticos.
 - **S4.9:** escritura/migracion solo despues de RLS, rollback y conflictos.
 
-## 15. Criterios go/no-go antes de convertir o ejecutar cualquier SQL fixture
+## 15. Criterios go/no-go antes de usar cualquier SQL fixture
 
 - [ ] README conceptual completo.
 - [ ] `synthetic_fixture_plan.sql` revisado como draft documental.
-- [ ] `synthetic_fixture_apply_draft.sql` revisado como draft separado futuro.
+- [ ] `synthetic_fixture_apply_draft.sql` revisado como plantilla candidata
+  bloqueada por placeholders fail-fast.
 - [ ] `SYNTHETIC_AUTH_USERS_PLAN.md` revisado antes de crear usuarios Auth
   sinteticos en cualquier fase futura.
-- [ ] `synthetic_reset_draft.sql` revisado como draft documental antes de
-  cualquier cleanup futuro.
+- [ ] `synthetic_reset_draft.sql` revisado como plantilla candidata bloqueada
+  por placeholders fail-fast antes de cualquier cleanup futuro.
 - [ ] Nombres sinteticos definidos.
 - [ ] Matriz minima definida.
 - [ ] No hay datos reales.
@@ -376,6 +384,8 @@ Reglas:
   hasta fase manual explicita.
 - [ ] Preflight manual de fixture apply documentado; fixture apply sigue
   bloqueado hasta aprobacion futura explicita.
+- [ ] Plantillas candidatas S4.6.4.13 revisadas; cualquier copia con UUIDs reales
+  debe permanecer privada y fuera de Git.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.

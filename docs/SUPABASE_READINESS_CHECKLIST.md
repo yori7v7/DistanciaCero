@@ -91,6 +91,10 @@ Estado verificado post-S4.5.1:
       sin modificar SQL y sin aplicar fixtures.
 - [x] S4.6.4.10 documenta el preflight manual de fixture apply futuro, sin
       ejecutar SQL, sin usar CLI y sin conectar la app.
+- [x] S4.6.4.13 convierte `synthetic_fixture_apply_draft.sql` y
+      `synthetic_reset_draft.sql` en plantillas SQL candidatas con placeholders
+      fail-fast. Siguen sin aplicarse y requieren copia privada fuera de Git
+      antes de cualquier uso manual futuro.
 - [x] RLS end-to-end, memberships, fixtures, reset, Storage, conexion de app,
       backend readiness y production readiness siguen pendientes.
 
@@ -139,8 +143,8 @@ Estados permitidos:
 | Fallback local | Critico | La app abre y permite modo local sin red o Supabase | Pruebas offline y procedimiento de desactivacion remota | [ ] Pendiente |
 | Repository remoto no activo | Alto | Skeleton aislado no cambia el selector ni el comportamiento local | Diff, busqueda de imports y tests del selector local | [ ] Pendiente |
 | Fixtures conceptuales listos | Alto | Nombres sinteticos, matriz minima y rollback conceptual definidos antes de SQL fixture draft | `docs/supabase/fixtures/README.md` revisado, sin SQL ejecutable ni datos reales | [ ] Pendiente |
-| Fixture SQL draft no aplicado | Critico | El draft de fixtures no puede ejecutarse sin entorno desechable, project ref confirmado, reset/rollback y aprobacion explicita | `synthetic_fixture_plan.sql` revisado, sin operaciones activas por defecto ni datos reales | [ ] Pendiente |
-| Reset SQL draft no aplicado | Critico | El reset draft no puede ejecutarse sin entorno desechable, project ref confirmado, filtros sinteticos, revision y aprobacion explicita | `synthetic_reset_draft.sql` revisado, sin operaciones activas por defecto ni datos reales | [ ] Pendiente |
+| Fixture SQL candidate no aplicado | Critico | La plantilla candidata de fixtures queda bloqueada por placeholders y no puede usarse sin copia privada fuera de Git, entorno desechable, mapping privado, reset/rollback y aprobacion explicita | `synthetic_fixture_apply_draft.sql` revisado como candidato fail-fast, sin valores reales y sin aplicacion | [ ] Pendiente |
+| Reset SQL candidate no aplicado | Critico | La plantilla candidata de reset queda bloqueada por placeholders y no puede usarse sin copia privada fuera de Git, entorno desechable, filtros sinteticos, revision y aprobacion explicita | `synthetic_reset_draft.sql` revisado como candidato fail-fast, sin valores reales y sin aplicacion | [ ] Pendiente |
 | Pruebas minimas | Critico | Existen pruebas de contrato, RLS/Auth, fallback e import antes de UI | Matriz ejecutada con resultados reproducibles | [ ] Pendiente |
 | Media/Data URL | Alto | Existe plan de validacion, upload privado, referencia y cleanup | Flujo probado en entorno aislado con archivos invalidos y fallos | [ ] Pendiente |
 | Export/import v2 | Critico | Sigue funcionando como backup y la migracion remota es manual/idempotente | Backup de prueba, dry run, reimport y rollback verificados | [ ] Pendiente |
@@ -316,6 +320,14 @@ la siguiente.
   SQL, no modifica SQL, no usa CLI, no aplica fixtures, no ejecuta reset, no
   toca Storage y no conecta la app. RLS end-to-end, memberships, backend
   readiness y production readiness siguen pendientes.
+- Estado S4.6.4.13:
+  `docs/supabase/fixtures/synthetic_fixture_apply_draft.sql` y
+  `docs/supabase/fixtures/synthetic_reset_draft.sql` quedan convertidos en
+  plantillas SQL candidatas con `begin`/`commit`, placeholders explicitos y
+  bloque fail-fast. No se ejecuto SQL, no se aplican fixtures, no se ejecuta
+  reset, no se usan UUIDs reales, no se toca Supabase/CLI/Dashboard y no se
+  conecta la app. RLS end-to-end, memberships, Storage, backend readiness y
+  production readiness siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

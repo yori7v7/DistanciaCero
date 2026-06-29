@@ -1,227 +1,281 @@
--- DRAFT DOCUMENTAL - NO EJECUTAR.
--- NO APLICADO.
--- NO PROBADO EN SUPABASE.
--- NO PRODUCCION.
--- NO ES ROLLBACK GARANTIZADO.
--- NO CONTIENE DATOS REALES.
--- NO TOCA USUARIOS AUTH.
--- NO TOCA STORAGE REAL.
--- NO USAR CONTRA PRODUCCION.
---
--- Este archivo es un plan documental de reset/cleanup para fixtures
--- sinteticos. No es una migration, no es rollback probado y no debe ejecutarse
--- contra ningun entorno sin aprobacion posterior.
---
--- Requiere un entorno Supabase aislado/desechable, project ref confirmado
--- fuera de Git y un go/no-go explicito antes de cualquier uso futuro.
---
--- Seguridad:
--- - Todas las plantillas de cleanup estan comentadas a proposito.
--- - No debe existir ninguna instruccion de limpieza ejecutable por defecto.
--- - No borrar datos que no tengan marcadores sinteticos.
--- - No tocar tablas internas de autenticacion.
--- - No tocar objetos reales de Storage.
--- - No usar service-role, tokens, keys, emails reales ni project ref real.
--- - No mezclar este plan con el fixture SQL draft.
+-- Distancia Cero - S4.6.4.13 synthetic fixture reset candidate template.
+-- SQL CANDIDATE TEMPLATE ONLY.
+-- NOT APPLIED.
+-- NOT A GUARANTEED ROLLBACK.
+-- DO NOT RUN DIRECTLY FROM GIT.
+-- Copy this file to a private scratch location outside the repo before use.
+-- Replace placeholders only in that private scratch copy.
+-- Never commit real UUIDs, project refs, tokens, keys, passwords or secrets.
+-- Do not use against production or any project containing real data.
+-- Do not touch Auth users or Storage objects from this file.
+-- This reset only targets synthetic rows created by the S4.6.4.13 candidate.
+-- Primary rollback remains destroying the disposable Supabase lab project.
+
+begin;
 
 -- ============================================================================
--- 1. Scope
+-- 1. Fail-fast placeholder guard
 -- ============================================================================
---
--- Este reset draft solo limpiaria fixtures sinteticos creados por:
---
--- docs/supabase/fixtures/synthetic_fixture_plan.sql
---
--- Referencias obligatorias:
---
--- - docs/supabase/fixtures/README.md
--- - matriz T01-T20 del README conceptual
--- - docs/supabase/fixtures/synthetic_fixture_plan.sql
---
--- Si el fixture plan, este reset draft y la matriz T01-T20 divergen, detener
--- todo y actualizar documentacion antes de ejecutar cualquier SQL futuro.
---
--- Este archivo no valida RLS, no prueba Supabase y no demuestra rollback real.
+-- This block intentionally aborts if any placeholder remains. The versioned file
+-- is therefore blocked for direct execution from Git. A future private scratch
+-- copy must replace every placeholder outside the repo before manual use.
+
+do $$
+declare
+  placeholder_values text[] := array[
+    '__OWNER_A_AUTH_UUID__',
+    '__PARTNER_A_AUTH_UUID__',
+    '__OWNER_B_AUTH_UUID__',
+    '__EXTERNAL_USER_AUTH_UUID__',
+    '__SPACE_A_UUID__',
+    '__SPACE_B_UUID__',
+    '__CONTENT_REASON_A_UUID__',
+    '__CONTENT_PROMISE_A_UUID__',
+    '__CONTENT_REASON_B_UUID__',
+    '__CONTENT_OVERRIDE_A_UUID__',
+    '__CONTENT_HIDDEN_A_UUID__',
+    '__CONTENT_MONTHLY_A_UUID__',
+    '__CONTENT_OPEN_WHEN_A_UUID__',
+    '__MEDIA_ASSET_A_UUID__',
+    '__CONTENT_EVENT_A_UUID__'
+  ];
+  unresolved_count integer;
+begin
+  select count(*)
+    into unresolved_count
+  from unnest(placeholder_values) as placeholder_value
+  where position('__' in placeholder_value) > 0;
+
+  if unresolved_count > 0 then
+    raise exception
+      'S4.6.4.13 reset candidate blocked: replace all placeholders in a private scratch copy outside Git before running.';
+  end if;
+end $$;
 
 -- ============================================================================
--- 2. Prerrequisitos documentales
+-- 2. Pre-reset synthetic scope check
 -- ============================================================================
---
--- Antes de convertir cualquier plantilla en SQL ejecutable, una fase posterior
--- debe confirmar:
---
--- [ ] Entorno Supabase aislado/desechable confirmado.
--- [ ] Project ref confirmado dos veces fuera de Git.
--- [ ] Schema/RLS aplicados manualmente en entorno aislado, si fue autorizado.
--- [ ] Fixture sintetico aplicado manualmente solo en entorno desechable, si fue autorizado.
--- [ ] No datos reales.
--- [ ] No emails reales.
--- [ ] No service-role en Git.
--- [ ] La app sigue desconectada.
--- [ ] El CRUD sigue local/sync.
--- [ ] Existe aprobacion explicita para revisar ejecucion futura.
+-- Deletions below require both explicit private UUIDs and stable synthetic
+-- markers. If marker drift is detected, the reset aborts instead of widening.
+
+do $$
+begin
+  if exists (
+    select 1
+    from public.content_items
+    where id in (
+      '__CONTENT_REASON_A_UUID__'::uuid,
+      '__CONTENT_PROMISE_A_UUID__'::uuid,
+      '__CONTENT_REASON_B_UUID__'::uuid,
+      '__CONTENT_OVERRIDE_A_UUID__'::uuid,
+      '__CONTENT_HIDDEN_A_UUID__'::uuid,
+      '__CONTENT_MONTHLY_A_UUID__'::uuid,
+      '__CONTENT_OPEN_WHEN_A_UUID__'::uuid
+    )
+    and source not in (
+      'synthetic-fixture-s4-6-4-13-candidate',
+      'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+    )
+  ) then
+    raise exception 'S4.6.4.13 reset blocked: content item UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.content_events
+    where id = '__CONTENT_EVENT_A_UUID__'::uuid
+    and coalesce(payload ->> 'synthetic_fixture_batch', '') <> 's4_6_4_13_candidate'
+  ) then
+    raise exception 'S4.6.4.13 reset blocked: content event UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.media_assets
+    where id = '__MEDIA_ASSET_A_UUID__'::uuid
+    and path not like 's4_6_4_13_candidate/%'
+  ) then
+    raise exception 'S4.6.4.13 reset blocked: media asset UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.relationship_spaces
+    where id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+    and coalesce(slug, '') not in (
+      'space-a-s4-6-4-13-candidate',
+      'space-b-s4-6-4-13-candidate'
+    )
+  ) then
+    raise exception 'S4.6.4.13 reset blocked: space UUID conflict is not synthetic.';
+  end if;
+
+  if exists (
+    select 1
+    from public.profiles
+    where id in (
+      '__OWNER_A_AUTH_UUID__'::uuid,
+      '__PARTNER_A_AUTH_UUID__'::uuid,
+      '__OWNER_B_AUTH_UUID__'::uuid,
+      '__EXTERNAL_USER_AUTH_UUID__'::uuid
+    )
+    and coalesce(local_slug, '') not in (
+      'owner_a',
+      'partner_a',
+      'owner_b',
+      'external_user'
+    )
+  ) then
+    raise exception 'S4.6.4.13 reset blocked: profile UUID conflict is not synthetic.';
+  end if;
+end $$;
 
 -- ============================================================================
--- 3. Markers y filtros sinteticos
+-- 3. Delete synthetic dependents first
 -- ============================================================================
---
--- Marcadores conceptuales permitidos:
---
--- - source = 'synthetic-fixture'
--- - source = 'synthetic-fixture-legacy-adapter'
--- - slug in ('space-a-synthetic', 'space-b-synthetic')
--- - local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
--- - local_id like 'synthetic-%'
--- - base_id like 'base-%-synthetic-%'
--- - bucket = 'relationship-media-synthetic'
--- - path like 'space-a/synthetic-%'
---
--- Reglas:
---
--- - No limpiar si no coincide al menos un marcador sintetico fuerte.
--- - No borrar por tabla completa.
--- - No confiar solo en collection.
--- - No confiar solo en fechas.
--- - No confiar solo en nombres humanos.
--- - Confirmar dos veces el project ref antes de cualquier SQL futuro.
+
+delete from public.content_events
+where id = '__CONTENT_EVENT_A_UUID__'::uuid
+  and payload ->> 'synthetic_fixture_batch' = 's4_6_4_13_candidate'
+  and space_id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid);
+
+delete from public.media_assets
+where id = '__MEDIA_ASSET_A_UUID__'::uuid
+  and bucket = 'relationship-media-synthetic'
+  and path like 's4_6_4_13_candidate/%'
+  and space_id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid);
+
+delete from public.content_items
+where id in (
+    '__CONTENT_REASON_A_UUID__'::uuid,
+    '__CONTENT_PROMISE_A_UUID__'::uuid,
+    '__CONTENT_REASON_B_UUID__'::uuid,
+    '__CONTENT_OVERRIDE_A_UUID__'::uuid,
+    '__CONTENT_HIDDEN_A_UUID__'::uuid,
+    '__CONTENT_MONTHLY_A_UUID__'::uuid,
+    '__CONTENT_OPEN_WHEN_A_UUID__'::uuid
+  )
+  and space_id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+  and source in (
+    'synthetic-fixture-s4-6-4-13-candidate',
+    'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+  )
+  and (
+    local_id like 'synthetic-%-s4-6-4-13'
+    or base_id like 'base-%-synthetic-s4-6-4-13'
+    or data ->> 'synthetic_fixture_batch' = 's4_6_4_13_candidate'
+  );
 
 -- ============================================================================
--- 4. Orden conceptual de limpieza
+-- 4. Delete synthetic memberships and spaces
 -- ============================================================================
---
--- Orden seguro:
---
--- 1. content_events sinteticos.
--- 2. media_assets sinteticos.
--- 3. content_items sinteticos.
--- 4. universe_members de spaces sinteticos.
--- 5. relationship_spaces sinteticos.
--- 6. profiles sinteticos.
--- 7. Storage fuera de alcance.
---
--- Este orden respeta dependencias/FKs: eventos y media dependen de contenido;
--- contenido y memberships dependen de spaces/profiles; profiles se dejan al
--- final para evitar referencias colgantes durante la limpieza conceptual.
+
+delete from public.universe_members
+where space_id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+  and user_id in (
+    '__OWNER_A_AUTH_UUID__'::uuid,
+    '__PARTNER_A_AUTH_UUID__'::uuid,
+    '__OWNER_B_AUTH_UUID__'::uuid,
+    '__EXTERNAL_USER_AUTH_UUID__'::uuid
+  );
+
+delete from public.relationship_spaces
+where id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+  and slug in (
+    'space-a-s4-6-4-13-candidate',
+    'space-b-s4-6-4-13-candidate'
+  )
+  and name in (
+    'Synthetic Space A S4.6.4.13',
+    'Synthetic Space B S4.6.4.13'
+  );
 
 -- ============================================================================
--- 5. Plantillas comentadas de cleanup
+-- 5. Delete synthetic profiles last
 -- ============================================================================
---
--- IMPORTANTE:
--- Las siguientes plantillas son ejemplos comentados. No activar sin revisar
--- schema/RLS real, entorno, project ref, conteos previos y rollback.
+-- This deletes only public.profiles rows. It does not delete Auth users.
 
--- 5.1 content_events sinteticos
---
--- delete from public.content_events
--- where payload ->> 'fixture' = 'synthetic'
---    or space_id in (
---      select id from public.relationship_spaces
---      where slug in ('space-a-synthetic', 'space-b-synthetic')
---    )
---    or content_item_id in (
---      select id from public.content_items
---      where source in ('synthetic-fixture', 'synthetic-fixture-legacy-adapter')
---         or local_id like 'synthetic-%'
---         or base_id like 'base-%-synthetic-%'
---    );
---
--- 5.2 media_assets sinteticos
---
--- delete from public.media_assets
--- where bucket = 'relationship-media-synthetic'
---    or path like 'space-a/synthetic-%'
---    or path like 'space-b/synthetic-%'
---    or content_item_id in (
---      select id from public.content_items
---      where source in ('synthetic-fixture', 'synthetic-fixture-legacy-adapter')
---         or local_id like 'synthetic-%'
---         or base_id like 'base-%-synthetic-%'
---    );
---
--- 5.3 content_items sinteticos
---
--- delete from public.content_items
--- where source in ('synthetic-fixture', 'synthetic-fixture-legacy-adapter')
---    or local_id like 'synthetic-%'
---    or base_id like 'base-%-synthetic-%'
---    or space_id in (
---      select id from public.relationship_spaces
---      where slug in ('space-a-synthetic', 'space-b-synthetic')
---    );
---
--- 5.4 universe_members de spaces sinteticos
---
--- delete from public.universe_members
--- where space_id in (
---   select id from public.relationship_spaces
---   where slug in ('space-a-synthetic', 'space-b-synthetic')
--- )
--- and user_id in (
---   select id from public.profiles
---   where local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
--- );
---
--- 5.5 relationship_spaces sinteticos
---
--- delete from public.relationship_spaces
--- where slug in ('space-a-synthetic', 'space-b-synthetic')
---   and name in ('Synthetic Space A', 'Synthetic Space B');
---
--- 5.6 profiles sinteticos
---
--- delete from public.profiles
--- where local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
---   and display_name in (
---     'Synthetic Owner A',
---     'Synthetic Partner A',
---     'Synthetic Owner B',
---     'Synthetic External User'
---   );
+delete from public.profiles
+where id in (
+    '__OWNER_A_AUTH_UUID__'::uuid,
+    '__PARTNER_A_AUTH_UUID__'::uuid,
+    '__OWNER_B_AUTH_UUID__'::uuid,
+    '__EXTERNAL_USER_AUTH_UUID__'::uuid
+  )
+  and local_slug in (
+    'owner_a',
+    'partner_a',
+    'owner_b',
+    'external_user'
+  )
+  and display_name in (
+    'Synthetic Owner A S4.6.4.13',
+    'Synthetic Partner A S4.6.4.13',
+    'Synthetic Owner B S4.6.4.13',
+    'Synthetic External User S4.6.4.13'
+  );
 
 -- ============================================================================
--- 6. Post-reset checks futuros
+-- 6. Candidate post-checks
 -- ============================================================================
---
--- [ ] No quedan content_items con source sintetico.
--- [ ] No quedan content_items con local_id/base_id sintetico.
--- [ ] No quedan media_assets con bucket/path sintetico.
--- [ ] No quedan content_events con payload fixture sintetico.
--- [ ] No quedan memberships ligados a spaces sinteticos.
--- [ ] No quedan spaces con slug sintetico.
--- [ ] No quedan profiles con local_slug sintetico.
--- [ ] No se toco contenido no sintetico.
--- [ ] No se tocaron usuarios Auth.
--- [ ] Storage real no fue probado ni limpiado en esta fase.
--- [ ] La app y el CRUD permanecen desconectados.
+-- These checks are read-only within the transaction and return remaining
+-- synthetic rows targeted by this reset candidate.
 
--- ============================================================================
--- 7. No incluido
--- ============================================================================
---
--- Este reset draft NO incluye:
---
--- - reset de produccion;
--- - limpieza de usuarios Auth;
--- - limpieza de Storage real;
--- - operaciones de destruccion de tablas;
--- - limpieza total de tablas;
--- - comandos CLI;
--- - rollback garantizado;
--- - conexion a la app;
--- - validacion RLS;
--- - uso de service-role;
--- - datos reales;
--- - project ref real.
+select 'profiles' as fixture_table, count(*) as remaining_synthetic_count
+from public.profiles
+where id in (
+  '__OWNER_A_AUTH_UUID__'::uuid,
+  '__PARTNER_A_AUTH_UUID__'::uuid,
+  '__OWNER_B_AUTH_UUID__'::uuid,
+  '__EXTERNAL_USER_AUTH_UUID__'::uuid
+)
+and local_slug in ('owner_a', 'partner_a', 'owner_b', 'external_user')
+union all
+select 'relationship_spaces', count(*)
+from public.relationship_spaces
+where id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+and slug in (
+  'space-a-s4-6-4-13-candidate',
+  'space-b-s4-6-4-13-candidate'
+)
+union all
+select 'universe_members', count(*)
+from public.universe_members
+where space_id in ('__SPACE_A_UUID__'::uuid, '__SPACE_B_UUID__'::uuid)
+and user_id in (
+  '__OWNER_A_AUTH_UUID__'::uuid,
+  '__PARTNER_A_AUTH_UUID__'::uuid,
+  '__OWNER_B_AUTH_UUID__'::uuid,
+  '__EXTERNAL_USER_AUTH_UUID__'::uuid
+)
+union all
+select 'content_items', count(*)
+from public.content_items
+where id in (
+  '__CONTENT_REASON_A_UUID__'::uuid,
+  '__CONTENT_PROMISE_A_UUID__'::uuid,
+  '__CONTENT_REASON_B_UUID__'::uuid,
+  '__CONTENT_OVERRIDE_A_UUID__'::uuid,
+  '__CONTENT_HIDDEN_A_UUID__'::uuid,
+  '__CONTENT_MONTHLY_A_UUID__'::uuid,
+  '__CONTENT_OPEN_WHEN_A_UUID__'::uuid
+)
+and source in (
+  'synthetic-fixture-s4-6-4-13-candidate',
+  'synthetic-fixture-legacy-adapter-s4-6-4-13-candidate'
+)
+union all
+select 'content_events', count(*)
+from public.content_events
+where id = '__CONTENT_EVENT_A_UUID__'::uuid
+and payload ->> 'synthetic_fixture_batch' = 's4_6_4_13_candidate'
+union all
+select 'media_assets', count(*)
+from public.media_assets
+where id = '__MEDIA_ASSET_A_UUID__'::uuid
+and path like 's4_6_4_13_candidate/%';
 
--- ============================================================================
--- 8. Next steps
--- ============================================================================
---
--- - Auditar este reset draft en una fase posterior.
--- - Mantenerlo separado de synthetic_fixture_plan.sql.
--- - Aplicacion manual solo en proyecto desechable y solo con gates aprobados.
--- - Reset real solo despues de revisar filtros, conteos previos y post-checks.
--- - Rollback principal sigue siendo destruir el proyecto Supabase desechable.
---
--- FIN DEL DRAFT DOCUMENTAL. NO EJECUTAR.
+commit;
+
+-- End of S4.6.4.13 reset candidate template.
+-- In Git, this file is intentionally blocked by placeholders and remains not applied.
