@@ -98,6 +98,9 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.15 registra en `docs/SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`
       que el fixture sintetico fue aplicado manualmente con exito en el
       laboratorio desechable, usando copia privada fuera de Git.
+- [x] S4.6.4.16 crea
+      `docs/supabase/fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan
+      documental post-fixture, sin ejecutar SQL ni probar RLS.
 - [x] RLS end-to-end, membership tests, reset, Storage, conexion de app,
       backend readiness y production readiness siguen pendientes.
 
@@ -338,6 +341,12 @@ la siguiente.
   UUIDs reales, project ref real, passwords, tokens, keys ni service-role. SQL
   Editor privilegiado no prueba RLS end-to-end. Reset, membership tests,
   Storage, app/backend y produccion siguen pendientes.
+- Estado S4.6.4.16:
+  `docs/supabase/fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` queda creado
+  como plan documental para verificar counts, FK chain y memberships en una
+  fase futura. No ejecuta SQL, no toca Supabase/CLI/Dashboard, no conecta la app
+  y no prueba RLS end-to-end. Reset, membership tests reales, Storage,
+  app/backend y produccion siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

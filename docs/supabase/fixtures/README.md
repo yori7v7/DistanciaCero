@@ -69,6 +69,10 @@ exito en el laboratorio desechable. No guarda UUIDs reales, project ref real,
 passwords, tokens, keys ni service-role; no prueba RLS end-to-end y no autoriza
 conexion de la app.
 
+El archivo `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` documenta el plan
+S4.6.4.16 para verificar el fixture aplicado en una fase futura. No ejecuta
+SQL, no toca Supabase, no conecta la app y no prueba RLS end-to-end.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -110,6 +114,8 @@ conexion de la app.
   sinteticos fueron creados manualmente y el fixture sintetico fue aplicado
   manualmente desde copia privada. Storage, reset, RLS end-to-end, membership
   tests y app conectada siguen fuera de alcance.
+- [x] Existe `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan documental
+  post-fixture. No ejecuta SQL y no prueba RLS end-to-end.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -365,6 +371,8 @@ Reglas:
 - **S4.6.4.15:** registrar resultado sanitizado de fixture apply manual exitoso
   en `../../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`. SQL Editor privilegiado
   no prueba RLS end-to-end.
+- **S4.6.4.16:** crear `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan
+  documental de verificacion post-fixture. No ejecuta SQL ni prueba RLS.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -400,6 +408,8 @@ Reglas:
   debe permanecer privada y fuera de Git.
 - [ ] Resultado S4.6.4.15 revisado; fixture apply manual esta documentado, pero
   RLS end-to-end, membership tests, reset, Storage y app siguen pendientes.
+- [ ] Plan S4.6.4.16 revisado; futuras query drafts deben seguir sin ejecutar
+  SQL hasta aprobacion explicita.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.

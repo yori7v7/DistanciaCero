@@ -34,6 +34,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.15 registra en `../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md` que el
   fixture sintetico fue aplicado manualmente con exito en el laboratorio
   desechable, usando una copia privada fuera de Git.
+- S4.6.4.16 crea `fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan
+  documental de verificacion post-fixture, sin ejecutar SQL ni probar RLS.
 - RLS end-to-end, membership tests, reset, Storage, backend readiness y
   production readiness siguen pendientes.
 - No hay backend.
@@ -84,6 +86,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`: registro S4.6.4.15 de
   resultado sanitizado post-fixture-apply en laboratorio desechable. No guarda
   valores sensibles y no prueba RLS end-to-end.
+- `fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md`: plan documental S4.6.4.16
+  para una futura verificacion de counts, FK chain y memberships. No ejecuta
+  SQL y no prueba RLS end-to-end.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
