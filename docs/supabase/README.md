@@ -31,7 +31,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.13 convierte los drafts apply/reset en plantillas SQL candidatas con
   placeholders fail-fast. Siguen sin aplicarse y solo pueden usarse en una copia
   privada fuera de Git tras un GO explicito futuro.
-- RLS end-to-end, memberships, fixtures, reset, Storage, backend readiness y
+- S4.6.4.15 registra en `../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md` que el
+  fixture sintetico fue aplicado manualmente con exito en el laboratorio
+  desechable, usando una copia privada fuera de Git.
+- RLS end-to-end, membership tests, reset, Storage, backend readiness y
   production readiness siguen pendientes.
 - No hay backend.
 - No hay Router asociado a Auth.
@@ -78,6 +81,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   reset/cleanup sintetico, no aplicada, bloqueada por placeholders fail-fast y
   limitada a marcadores sinteticos del candidato. No es migration ni rollback
   ejecutado.
+- `../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`: registro S4.6.4.15 de
+  resultado sanitizado post-fixture-apply en laboratorio desechable. No guarda
+  valores sensibles y no prueba RLS end-to-end.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

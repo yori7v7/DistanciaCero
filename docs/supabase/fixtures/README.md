@@ -27,9 +27,9 @@ no son migrations ni fixtures ejecutados.
 
 El archivo `synthetic_fixture_apply_draft.sql` es ahora una plantilla SQL
 candidata S4.6.4.13 para una aplicacion manual futura de fixtures sinteticos.
-Permanece no aplicado, bloqueado por placeholders fail-fast y sujeto a otro GO
-explicito. Requiere copia privada fuera de Git, usuarios Auth sinteticos creados
-manualmente antes, sin emails reales ni datos reales.
+S4.6.4.15 registra que fue aplicado manualmente con exito en el laboratorio
+desechable desde una copia privada fuera de Git. El archivo versionado sigue
+bloqueado por placeholders fail-fast; no debe ejecutarse directo desde el repo.
 
 El archivo `SYNTHETIC_AUTH_USERS_PLAN.md` documenta el preflight S4.6.4.4 para
 usuarios Auth sinteticos futuros. No crea usuarios, no guarda UUIDs reales y no
@@ -63,6 +63,12 @@ por placeholders fail-fast, no es rollback garantizado y no debe ejecutarse sin
 entorno desechable, copia privada fuera de Git, project ref confirmado y
 aprobacion futura.
 
+El archivo `../../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md` registra el
+resultado sanitizado S4.6.4.15: fixture sintetico aplicado manualmente con
+exito en el laboratorio desechable. No guarda UUIDs reales, project ref real,
+passwords, tokens, keys ni service-role; no prueba RLS end-to-end y no autoriza
+conexion de la app.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -82,7 +88,9 @@ aprobacion futura.
 - [x] Existe `synthetic_fixture_plan.sql` como draft documental no aplicado y
   sin operaciones ejecutables por defecto.
 - [x] Existe `synthetic_fixture_apply_draft.sql` como plantilla SQL candidata
-  futura, no aplicada, bloqueada por placeholders fail-fast y sin reset.
+  aplicada manualmente en laboratorio desechable desde copia privada fuera de
+  Git, con resultado sanitizado documentado en
+  `../../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`.
 - [x] Existe `SYNTHETIC_AUTH_USERS_PLAN.md` como preflight documental de Auth
   users sinteticos, sin usuarios creados ni UUIDs reales versionados.
 - [x] Existe `SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md` como guia manual segura
@@ -99,8 +107,9 @@ aprobacion futura.
 - [x] Existe `synthetic_reset_draft.sql` como plantilla SQL candidata no
   aplicada, bloqueada por placeholders fail-fast y separada del fixture apply.
 - [x] Existe laboratorio desechable reportado por evidencia humana; Auth users
-  sinteticos fueron creados manualmente, pero Storage, fixtures, reset y app
-  conectada siguen fuera de alcance.
+  sinteticos fueron creados manualmente y el fixture sintetico fue aplicado
+  manualmente desde copia privada. Storage, reset, RLS end-to-end, membership
+  tests y app conectada siguen fuera de alcance.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -353,6 +362,9 @@ Reglas:
 - **S4.6.4.13:** convertir `synthetic_fixture_apply_draft.sql` y
   `synthetic_reset_draft.sql` en plantillas SQL candidatas con placeholders
   fail-fast. No se ejecuta SQL, no se aplican fixtures y no se ejecuta reset.
+- **S4.6.4.15:** registrar resultado sanitizado de fixture apply manual exitoso
+  en `../../SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`. SQL Editor privilegiado
+  no prueba RLS end-to-end.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -386,6 +398,8 @@ Reglas:
   bloqueado hasta aprobacion futura explicita.
 - [ ] Plantillas candidatas S4.6.4.13 revisadas; cualquier copia con UUIDs reales
   debe permanecer privada y fuera de Git.
+- [ ] Resultado S4.6.4.15 revisado; fixture apply manual esta documentado, pero
+  RLS end-to-end, membership tests, reset, Storage y app siguen pendientes.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.

@@ -95,7 +95,10 @@ Estado verificado post-S4.5.1:
       `synthetic_reset_draft.sql` en plantillas SQL candidatas con placeholders
       fail-fast. Siguen sin aplicarse y requieren copia privada fuera de Git
       antes de cualquier uso manual futuro.
-- [x] RLS end-to-end, memberships, fixtures, reset, Storage, conexion de app,
+- [x] S4.6.4.15 registra en `docs/SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md`
+      que el fixture sintetico fue aplicado manualmente con exito en el
+      laboratorio desechable, usando copia privada fuera de Git.
+- [x] RLS end-to-end, membership tests, reset, Storage, conexion de app,
       backend readiness y production readiness siguen pendientes.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
@@ -328,6 +331,13 @@ la siguiente.
   reset, no se usan UUIDs reales, no se toca Supabase/CLI/Dashboard y no se
   conecta la app. RLS end-to-end, memberships, Storage, backend readiness y
   production readiness siguen pendientes.
+- Estado S4.6.4.15:
+  `docs/SUPABASE_POST_FIXTURE_APPLY_LAB_RESULT.md` registra resultado
+  sanitizado de apply manual exitoso de fixtures sinteticos en el laboratorio
+  desechable. Se uso SQL Editor y copia privada fuera del repo; no se guardan
+  UUIDs reales, project ref real, passwords, tokens, keys ni service-role. SQL
+  Editor privilegiado no prueba RLS end-to-end. Reset, membership tests,
+  Storage, app/backend y produccion siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado
