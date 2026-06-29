@@ -75,8 +75,14 @@ SQL, no toca Supabase, no conecta la app y no prueba RLS end-to-end.
 
 El archivo `synthetic_fixture_verification_queries_draft.sql` documenta el draft
 SQL read-only S4.6.4.17 para verificar counts, FK chain, memberships, metadata
-sintetica y guards de datos en una fase futura. No fue ejecutado, no conecta la
-app y no prueba RLS end-to-end.
+sintetica y guards de datos. S4.6.4.18 registra que fue ejecutado manualmente
+como SELECT-only verification en el laboratorio desechable, sin conectar la app
+y sin probar RLS end-to-end.
+
+El archivo `../../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` registra el
+resultado sanitizado S4.6.4.18: verificacion read-only del fixture pasada en el
+laboratorio desechable. No guarda valores sensibles, no ejecuta reset, no toca
+Storage, no conecta la app y no prueba RLS end-to-end.
 
 ## 2. Estado actual
 
@@ -122,7 +128,11 @@ app y no prueba RLS end-to-end.
 - [x] Existe `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan documental
   post-fixture. No ejecuta SQL y no prueba RLS end-to-end.
 - [x] Existe `synthetic_fixture_verification_queries_draft.sql` como draft SQL
-  read-only de verificacion. No fue ejecutado y no prueba RLS end-to-end.
+  read-only de verificacion. Fue ejecutado manualmente en S4.6.4.18 como SELECT
+  only en el laboratorio desechable y no prueba RLS end-to-end.
+- [x] Existe `../../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` con
+  resultado sanitizado PASS de la verificacion read-only del fixture. Reset,
+  Storage, app connection y RLS end-to-end siguen fuera de alcance.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -382,6 +392,9 @@ Reglas:
   documental de verificacion post-fixture. No ejecuta SQL ni prueba RLS.
 - **S4.6.4.17:** crear `synthetic_fixture_verification_queries_draft.sql` como
   draft SQL read-only de verificacion. No ejecuta SQL ni prueba RLS.
+- **S4.6.4.18:** registrar resultado sanitizado de verificacion read-only
+  manual del fixture en `../../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md`.
+  Solo SELECT queries, sin reset, Storage, app connection ni RLS end-to-end.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -419,8 +432,8 @@ Reglas:
   RLS end-to-end, membership tests, reset, Storage y app siguen pendientes.
 - [ ] Plan S4.6.4.16 revisado; futuras query drafts deben seguir sin ejecutar
   SQL hasta aprobacion explicita.
-- [ ] Draft S4.6.4.17 revisado; verificacion manual real sigue pendiente hasta
-  aprobacion explicita.
+- [ ] Draft S4.6.4.17 revisado y resultado S4.6.4.18 documentado; RLS
+  end-to-end, Auth/RLS tests reales, reset, Storage y app siguen pendientes.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.

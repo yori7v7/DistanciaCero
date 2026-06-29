@@ -38,8 +38,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   documental de verificacion post-fixture, sin ejecutar SQL ni probar RLS.
 - S4.6.4.17 crea `fixtures/synthetic_fixture_verification_queries_draft.sql`
   como draft SQL read-only para verificacion futura, sin ejecutar SQL.
-- Ejecutar verificacion manual, RLS end-to-end, membership tests reales, reset,
-  Storage, backend readiness y production readiness siguen pendientes.
+- S4.6.4.18 registra en `../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md`
+  que la verificacion read-only del fixture paso en el laboratorio desechable,
+  usando solo SELECT queries en SQL Editor.
+- RLS end-to-end, Auth/RLS tests reales, reset, Storage, app connection,
+  backend readiness y production readiness siguen pendientes.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -92,9 +95,14 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   para una futura verificacion de counts, FK chain y memberships. No ejecuta
   SQL y no prueba RLS end-to-end.
 - `fixtures/synthetic_fixture_verification_queries_draft.sql`: draft SQL
-  read-only S4.6.4.17 para una futura verificacion de counts, FK chain,
-  memberships, metadata sintetica y guards de datos. No fue ejecutado y no
-  prueba RLS end-to-end.
+  read-only S4.6.4.17 para verificacion de counts, FK chain, memberships,
+  metadata sintetica y guards de datos. Fue ejecutado manualmente como SELECT
+  only en S4.6.4.18 dentro del laboratorio desechable y no prueba RLS
+  end-to-end.
+- `../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md`: registro S4.6.4.18 de
+  resultado sanitizado PASS post-verificacion read-only en laboratorio
+  desechable. No guarda valores sensibles, no ejecuta reset, no toca Storage,
+  no conecta la app y no prueba RLS end-to-end.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

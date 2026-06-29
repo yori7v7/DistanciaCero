@@ -104,9 +104,12 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.17 crea
       `docs/supabase/fixtures/synthetic_fixture_verification_queries_draft.sql`
       como draft read-only de verificacion, sin ejecutar SQL ni probar RLS.
-- [x] Ejecucion de verificacion manual, RLS end-to-end, membership tests reales,
-      reset, Storage, conexion de app, backend readiness y production readiness
-      siguen pendientes.
+- [x] S4.6.4.18 registra en
+      `docs/SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` que las queries
+      read-only de verificacion fueron ejecutadas manualmente en SQL Editor del
+      laboratorio desechable y todos los checks sanitizados salieron PASS.
+- [x] RLS end-to-end, Auth/RLS tests reales, reset, Storage, conexion de app,
+      backend readiness y production readiness siguen pendientes.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -358,6 +361,13 @@ la siguiente.
   toca Supabase/CLI/Dashboard, no se conecta la app y no prueba RLS end-to-end.
   Ejecutar verificacion manual, reset, membership tests reales, Storage,
   app/backend y produccion siguen pendientes.
+- Estado S4.6.4.18:
+  `docs/SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` registra resultado
+  sanitizado PASS de verificacion manual read-only en SQL Editor del
+  laboratorio desechable. Solo se ejecutaron SELECT queries, no hubo reset,
+  Storage, app connection, secretos ni cambios runtime. SQL Editor privilegiado
+  no prueba RLS end-to-end; Auth/RLS test real, reset, Storage, app/backend y
+  produccion siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado
