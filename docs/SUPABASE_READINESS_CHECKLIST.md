@@ -87,6 +87,8 @@ Estado verificado post-S4.5.1:
       sinteticos fueron creados manualmente en el laboratorio desechable.
 - [x] S4.6.4.8 documenta el preflight de mapping privado para fixtures
       sinteticos futuros, sin guardar UUIDs reales ni aplicar SQL.
+- [x] S4.6.4.9 documenta una dry-review de fixture apply, sin ejecutar SQL,
+      sin modificar SQL y sin aplicar fixtures.
 - [x] RLS end-to-end, memberships, fixtures, reset, Storage, conexion de app,
       backend readiness y production readiness siguen pendientes.
 
@@ -300,6 +302,12 @@ la siguiente.
   reales, no aplica fixtures, no ejecuta reset, no toca Storage y no conecta la
   app. RLS end-to-end, memberships, fixture apply, backend readiness y
   production readiness siguen pendientes.
+- Estado S4.6.4.9:
+  `docs/supabase/fixtures/SYNTHETIC_FIXTURE_APPLY_DRY_REVIEW.md` queda creado
+  como revision documental seca del fixture apply. No modifica SQL, no ejecuta
+  SQL, no aplica fixtures, no ejecuta reset y no conecta la app. RLS
+  end-to-end, memberships, Storage, backend readiness y production readiness
+  siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

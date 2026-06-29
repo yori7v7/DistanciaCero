@@ -24,6 +24,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   el laboratorio desechable, sin valores sensibles en Git y sin conectar la app.
 - S4.6.4.8 documenta el preflight de mapping privado para fixtures futuros, sin
   guardar UUIDs reales y sin aplicar SQL.
+- S4.6.4.9 documenta una dry-review de fixture apply, sin ejecutar SQL, sin
+  modificar SQL y sin aplicar fixtures.
 - RLS end-to-end, memberships, fixtures, reset, Storage, backend readiness y
   production readiness siguen pendientes.
 - No hay backend.
@@ -61,6 +63,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `fixtures/SYNTHETIC_FIXTURE_MAPPING_PREFLIGHT.md`: preflight documental
   S4.6.4.8 para mapping privado futuro de Auth UUIDs sinteticos. No guarda
   UUIDs reales, no aplica fixtures y no prueba RLS end-to-end.
+- `fixtures/SYNTHETIC_FIXTURE_APPLY_DRY_REVIEW.md`: revision documental seca
+  S4.6.4.9 del fixture apply, sin modificar SQL, ejecutar SQL ni aplicar
+  fixtures.
 - `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
   reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
   No es migration ni rollback ejecutado.
