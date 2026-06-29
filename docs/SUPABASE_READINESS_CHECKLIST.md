@@ -89,6 +89,8 @@ Estado verificado post-S4.5.1:
       sinteticos futuros, sin guardar UUIDs reales ni aplicar SQL.
 - [x] S4.6.4.9 documenta una dry-review de fixture apply, sin ejecutar SQL,
       sin modificar SQL y sin aplicar fixtures.
+- [x] S4.6.4.10 documenta el preflight manual de fixture apply futuro, sin
+      ejecutar SQL, sin usar CLI y sin conectar la app.
 - [x] RLS end-to-end, memberships, fixtures, reset, Storage, conexion de app,
       backend readiness y production readiness siguen pendientes.
 
@@ -308,6 +310,12 @@ la siguiente.
   SQL, no aplica fixtures, no ejecuta reset y no conecta la app. RLS
   end-to-end, memberships, Storage, backend readiness y production readiness
   siguen pendientes.
+- Estado S4.6.4.10:
+  `docs/supabase/fixtures/SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` queda
+  creado como preflight manual documental para fixture apply futuro. No ejecuta
+  SQL, no modifica SQL, no usa CLI, no aplica fixtures, no ejecuta reset, no
+  toca Storage y no conecta la app. RLS end-to-end, memberships, backend
+  readiness y production readiness siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

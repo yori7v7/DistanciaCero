@@ -52,6 +52,10 @@ El archivo `SYNTHETIC_FIXTURE_APPLY_DRY_REVIEW.md` documenta la dry-review
 S4.6.4.9 de fixture apply. No modifica SQL, no ejecuta SQL, no aplica fixtures
 y no autoriza reset.
 
+El archivo `SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` documenta el preflight
+manual S4.6.4.10 para una futura aplicacion de fixtures. No ejecuta SQL, no
+usa CLI, no aplica fixtures y no conecta la app.
+
 El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
 separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
 ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
@@ -87,6 +91,8 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
   para mapping privado futuro, sin UUIDs reales versionados.
 - [x] Existe `SYNTHETIC_FIXTURE_APPLY_DRY_REVIEW.md` como dry-review
   documental, sin fixture apply, sin reset y sin SQL ejecutado.
+- [x] Existe `SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` como preflight
+  manual documental, sin fixture apply, sin reset y sin SQL ejecutado.
 - [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
   sin operaciones activas por defecto.
 - [x] Existe laboratorio desechable reportado por evidencia humana; Auth users
@@ -336,8 +342,10 @@ Reglas:
   documental de mapping privado, sin UUIDs reales y sin aplicar fixtures.
 - **S4.6.4.9:** crear `SYNTHETIC_FIXTURE_APPLY_DRY_REVIEW.md` como dry-review
   documental de fixture apply SQL antes de cualquier aplicacion.
-- **S4.6.4.10 futura:** preflight manual de fixture apply, todavia sin ejecutar
-  SQL.
+- **S4.6.4.10:** crear `SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md` como
+  preflight manual documental, todavia sin ejecutar SQL.
+- **S4.6.4.11 futura:** auditoria final de docs antes de cualquier fixture
+  apply.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -366,6 +374,8 @@ Reglas:
   fuera del repo y revisarse antes de una fase futura aprobada.
 - [ ] Dry-review de fixture apply documentada; fixture apply sigue bloqueado
   hasta fase manual explicita.
+- [ ] Preflight manual de fixture apply documentado; fixture apply sigue
+  bloqueado hasta aprobacion futura explicita.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.

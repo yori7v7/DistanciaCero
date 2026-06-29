@@ -26,6 +26,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   guardar UUIDs reales y sin aplicar SQL.
 - S4.6.4.9 documenta una dry-review de fixture apply, sin ejecutar SQL, sin
   modificar SQL y sin aplicar fixtures.
+- S4.6.4.10 documenta el preflight manual de fixture apply futuro, sin ejecutar
+  SQL, sin usar CLI y sin conectar la app.
 - RLS end-to-end, memberships, fixtures, reset, Storage, backend readiness y
   production readiness siguen pendientes.
 - No hay backend.
@@ -66,6 +68,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `fixtures/SYNTHETIC_FIXTURE_APPLY_DRY_REVIEW.md`: revision documental seca
   S4.6.4.9 del fixture apply, sin modificar SQL, ejecutar SQL ni aplicar
   fixtures.
+- `fixtures/SYNTHETIC_FIXTURE_APPLY_MANUAL_PREFLIGHT.md`: preflight manual
+  documental S4.6.4.10 para fixture apply futuro, sin ejecutar SQL, usar CLI
+  ni conectar la app.
 - `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
   reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
   No es migration ni rollback ejecutado.
