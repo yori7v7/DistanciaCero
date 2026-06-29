@@ -101,8 +101,12 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.16 crea
       `docs/supabase/fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan
       documental post-fixture, sin ejecutar SQL ni probar RLS.
-- [x] RLS end-to-end, membership tests, reset, Storage, conexion de app,
-      backend readiness y production readiness siguen pendientes.
+- [x] S4.6.4.17 crea
+      `docs/supabase/fixtures/synthetic_fixture_verification_queries_draft.sql`
+      como draft read-only de verificacion, sin ejecutar SQL ni probar RLS.
+- [x] Ejecucion de verificacion manual, RLS end-to-end, membership tests reales,
+      reset, Storage, conexion de app, backend readiness y production readiness
+      siguen pendientes.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -346,6 +350,13 @@ la siguiente.
   como plan documental para verificar counts, FK chain y memberships en una
   fase futura. No ejecuta SQL, no toca Supabase/CLI/Dashboard, no conecta la app
   y no prueba RLS end-to-end. Reset, membership tests reales, Storage,
+  app/backend y produccion siguen pendientes.
+- Estado S4.6.4.17:
+  `docs/supabase/fixtures/synthetic_fixture_verification_queries_draft.sql`
+  queda creado como draft SQL read-only para verificar counts, FK chain,
+  memberships, metadata sintetica y guards de datos. No se ejecuto SQL, no se
+  toca Supabase/CLI/Dashboard, no se conecta la app y no prueba RLS end-to-end.
+  Ejecutar verificacion manual, reset, membership tests reales, Storage,
   app/backend y produccion siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 

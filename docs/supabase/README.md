@@ -36,8 +36,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   desechable, usando una copia privada fuera de Git.
 - S4.6.4.16 crea `fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan
   documental de verificacion post-fixture, sin ejecutar SQL ni probar RLS.
-- RLS end-to-end, membership tests, reset, Storage, backend readiness y
-  production readiness siguen pendientes.
+- S4.6.4.17 crea `fixtures/synthetic_fixture_verification_queries_draft.sql`
+  como draft SQL read-only para verificacion futura, sin ejecutar SQL.
+- Ejecutar verificacion manual, RLS end-to-end, membership tests reales, reset,
+  Storage, backend readiness y production readiness siguen pendientes.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -89,6 +91,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `fixtures/SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md`: plan documental S4.6.4.16
   para una futura verificacion de counts, FK chain y memberships. No ejecuta
   SQL y no prueba RLS end-to-end.
+- `fixtures/synthetic_fixture_verification_queries_draft.sql`: draft SQL
+  read-only S4.6.4.17 para una futura verificacion de counts, FK chain,
+  memberships, metadata sintetica y guards de datos. No fue ejecutado y no
+  prueba RLS end-to-end.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

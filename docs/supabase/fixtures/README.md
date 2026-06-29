@@ -73,6 +73,11 @@ El archivo `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` documenta el plan
 S4.6.4.16 para verificar el fixture aplicado en una fase futura. No ejecuta
 SQL, no toca Supabase, no conecta la app y no prueba RLS end-to-end.
 
+El archivo `synthetic_fixture_verification_queries_draft.sql` documenta el draft
+SQL read-only S4.6.4.17 para verificar counts, FK chain, memberships, metadata
+sintetica y guards de datos en una fase futura. No fue ejecutado, no conecta la
+app y no prueba RLS end-to-end.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -116,6 +121,8 @@ SQL, no toca Supabase, no conecta la app y no prueba RLS end-to-end.
   tests y app conectada siguen fuera de alcance.
 - [x] Existe `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan documental
   post-fixture. No ejecuta SQL y no prueba RLS end-to-end.
+- [x] Existe `synthetic_fixture_verification_queries_draft.sql` como draft SQL
+  read-only de verificacion. No fue ejecutado y no prueba RLS end-to-end.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -373,6 +380,8 @@ Reglas:
   no prueba RLS end-to-end.
 - **S4.6.4.16:** crear `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan
   documental de verificacion post-fixture. No ejecuta SQL ni prueba RLS.
+- **S4.6.4.17:** crear `synthetic_fixture_verification_queries_draft.sql` como
+  draft SQL read-only de verificacion. No ejecuta SQL ni prueba RLS.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -410,6 +419,8 @@ Reglas:
   RLS end-to-end, membership tests, reset, Storage y app siguen pendientes.
 - [ ] Plan S4.6.4.16 revisado; futuras query drafts deben seguir sin ejecutar
   SQL hasta aprobacion explicita.
+- [ ] Draft S4.6.4.17 revisado; verificacion manual real sigue pendiente hasta
+  aprobacion explicita.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.
