@@ -85,6 +85,8 @@ Estado verificado post-S4.5.1:
       fixtures.
 - [x] S4.6.4.7 registra evidencia sanitizada de que los 4 Auth users
       sinteticos fueron creados manualmente en el laboratorio desechable.
+- [x] S4.6.4.8 documenta el preflight de mapping privado para fixtures
+      sinteticos futuros, sin guardar UUIDs reales ni aplicar SQL.
 - [x] RLS end-to-end, memberships, fixtures, reset, Storage, conexion de app,
       backend readiness y production readiness siguen pendientes.
 
@@ -292,6 +294,12 @@ la siguiente.
   desechable. No guarda UUIDs reales, project ref real, passwords, tokens,
   keys ni service-role. RLS end-to-end, memberships, fixtures, reset, Storage,
   app/backend y produccion siguen pendientes.
+- Estado S4.6.4.8:
+  `docs/supabase/fixtures/SYNTHETIC_FIXTURE_MAPPING_PREFLIGHT.md` queda creado
+  como preflight documental para mapping privado futuro. No guarda UUIDs
+  reales, no aplica fixtures, no ejecuta reset, no toca Storage y no conecta la
+  app. RLS end-to-end, memberships, fixture apply, backend readiness y
+  production readiness siguen pendientes.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

@@ -22,6 +22,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   Storage, Auth users ni conexion de la app.
 - S4.6.4.7 registra que 4 Auth users sinteticos fueron creados manualmente en
   el laboratorio desechable, sin valores sensibles en Git y sin conectar la app.
+- S4.6.4.8 documenta el preflight de mapping privado para fixtures futuros, sin
+  guardar UUIDs reales y sin aplicar SQL.
 - RLS end-to-end, memberships, fixtures, reset, Storage, backend readiness y
   production readiness siguen pendientes.
 - No hay backend.
@@ -56,6 +58,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `fixtures/SYNTHETIC_AUTH_USERS_MANUAL_GUIDE.md`: guia manual S4.6.4.6 para
   crear Auth users sinteticos en el Dashboard del laboratorio desechable, sin
   guardar valores sensibles ni autorizar fixtures.
+- `fixtures/SYNTHETIC_FIXTURE_MAPPING_PREFLIGHT.md`: preflight documental
+  S4.6.4.8 para mapping privado futuro de Auth UUIDs sinteticos. No guarda
+  UUIDs reales, no aplica fixtures y no prueba RLS end-to-end.
 - `fixtures/synthetic_reset_draft.sql`: draft documental S4.6.2.6.1 de
   reset/cleanup sintetico, no aplicado, con plantillas comentadas por defecto.
   No es migration ni rollback ejecutado.

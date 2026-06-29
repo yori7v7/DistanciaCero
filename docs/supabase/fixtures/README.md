@@ -44,6 +44,10 @@ sanitizado S4.6.4.7: los 4 Auth users sinteticos fueron creados manualmente en
 el laboratorio desechable. No guarda UUIDs reales, project ref real, passwords,
 tokens, keys ni service-role, y no autoriza fixtures.
 
+El archivo `SYNTHETIC_FIXTURE_MAPPING_PREFLIGHT.md` documenta el preflight
+S4.6.4.8 para un mapping privado futuro de Auth UUIDs sinteticos. No guarda
+UUIDs reales, no aplica fixtures, no ejecuta reset y no prueba RLS end-to-end.
+
 El archivo `synthetic_reset_draft.sql` documenta un reset/cleanup sintetico
 separado. Tambien es un draft no aplicado, no es rollback garantizado y no debe
 ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
@@ -75,6 +79,8 @@ ejecutarse sin entorno desechable, project ref confirmado y aprobacion futura.
 - [x] Existe `../../SUPABASE_POST_AUTH_USERS_LAB_RESULT.md` con evidencia
   sanitizada de que los 4 Auth users sinteticos fueron creados manualmente en
   el laboratorio desechable.
+- [x] Existe `SYNTHETIC_FIXTURE_MAPPING_PREFLIGHT.md` como preflight documental
+  para mapping privado futuro, sin UUIDs reales versionados.
 - [x] Existe `synthetic_reset_draft.sql` como draft documental no aplicado y
   sin operaciones activas por defecto.
 - [x] Existe laboratorio desechable reportado por evidencia humana; Auth users
@@ -320,6 +326,10 @@ Reglas:
 - **S4.6.4.7:** registrar resultado post-Auth-users en
   `../../SUPABASE_POST_AUTH_USERS_LAB_RESULT.md`, sin valores sensibles y sin
   probar RLS end-to-end.
+- **S4.6.4.8:** crear `SYNTHETIC_FIXTURE_MAPPING_PREFLIGHT.md` como preflight
+  documental de mapping privado, sin UUIDs reales y sin aplicar fixtures.
+- **S4.6.4.9 futura:** dry-review documental de fixture apply SQL antes de
+  cualquier aplicacion.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -344,6 +354,8 @@ Reglas:
 - [ ] Comportamiento RLS con usuarios/memberships sigue marcado como pendiente.
 - [ ] Auth users sinteticos fueron creados manualmente en laboratorio
   desechable, pero sus UUIDs no deben versionarse.
+- [ ] Mapping privado preflight documentado; cualquier mapping real debe vivir
+  fuera del repo y revisarse antes de una fase futura aprobada.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.
