@@ -75,6 +75,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.40 crea `MIGRATION_DRY_RUN_REPORT_FORMAT.md` para documentar el
   formato futuro del reporte de dry-run, sin crear scripts, sin ejecutar
   dry-run, sin generar snapshot real, sin leer datos reales y sin tocar runtime.
+- S4.6.4.41 crea `MIGRATION_INSERT_GATE_CHECKLIST.md` para documentar el gate
+  futuro previo a cualquier insert controlado, sin crear scripts, sin insertar
+  datos, sin ejecutar dry-run, sin tocar Supabase y sin conectar runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -187,6 +190,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   skipped items, warnings, conflictos, duplicados, identity mapping, media
   pendiente y NO-GO reasons sin ejecutar dry-run, sin crear scripts y sin tocar
   runtime.
+- `MIGRATION_INSERT_GATE_CHECKLIST.md`: documento S4.6.4.41 del checklist/gate
+  futuro previo a cualquier insert controlado de contenido migrado. No crea
+  scripts, no inserta datos, no ejecuta dry-run real, no toca Supabase y no
+  conecta runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -228,5 +235,5 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar el migration insert gate checklist como docs-only, sin crear scripts,
-sin ejecutar dry-run, sin migrar y sin tocar runtime.
+Disenar el controlled lab insert plan como docs-only, sin crear scripts, sin
+insertar datos, sin ejecutar dry-run y sin tocar runtime.

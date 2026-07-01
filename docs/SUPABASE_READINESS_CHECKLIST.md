@@ -154,6 +154,10 @@ Estado verificado post-S4.5.1:
       formato documental futuro para el reporte de migration dry-run, sin crear
       scripts, sin ejecutar dry-run real, sin generar snapshot real, sin leer
       datos reales, sin ejecutar migracion y sin conectar la app.
+- [x] S4.6.4.41 crea `docs/supabase/MIGRATION_INSERT_GATE_CHECKLIST.md` como
+      checklist/gate documental futuro previo a cualquier insert controlado,
+      sin crear scripts, sin insertar datos, sin ejecutar dry-run real, sin
+      tocar Supabase/CLI/Dashboard y sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -488,8 +492,14 @@ la siguiente.
   insert. No crea scripts, no ejecuta dry-run real, no genera snapshot real, no
   lee datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta
   la app.
-- Salida futura: disenar migration insert gate checklist como docs-only, sin
-  crear scripts ni conectar aun la app.
+- Estado S4.6.4.41:
+  `docs/supabase/MIGRATION_INSERT_GATE_CHECKLIST.md` documenta el checklist/gate
+  futuro previo a cualquier insert controlado de contenido migrado. No crea
+  scripts, no inserta datos, no ejecuta dry-run real, no genera snapshot real,
+  no lee datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no
+  conecta la app.
+- Salida futura: disenar controlled lab insert plan como docs-only, sin crear
+  scripts ni conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -605,7 +615,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Snapshot/export format documental.
 - [x] Snapshot validation rules documental.
 - [x] Migration dry-run report format documental.
-- [ ] Migration insert gate checklist.
+- [x] Migration insert gate checklist documental.
+- [ ] Controlled lab insert plan.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

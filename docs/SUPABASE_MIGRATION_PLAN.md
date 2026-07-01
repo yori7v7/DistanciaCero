@@ -710,6 +710,10 @@ Estado de S4.6.1:
   formato documental futuro para el reporte de migration dry-run. No crea
   scripts, no ejecuta dry-run real, no genera snapshot real, no lee datos
   reales, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.41 crea `docs/supabase/MIGRATION_INSERT_GATE_CHECKLIST.md` como
+  checklist/gate documental futuro previo a cualquier insert controlado de
+  contenido migrado. No crea scripts, no inserta datos, no ejecuta dry-run real,
+  no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -807,8 +811,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Dry-run de migracion documentado.
 - Formato snapshot/export documental definido.
 - Reglas de validacion de snapshot/export documentadas.
-- Formato de reporte del dry-run documentado; falta checklist de gate para
-  insert.
+- Formato de reporte del dry-run documentado.
+- Checklist de gate para insert documentado; falta plan de insert controlado en
+  lab.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -846,7 +851,9 @@ reales ni conectar runtime.
 `docs/supabase/MIGRATION_DRY_RUN_REPORT_FORMAT.md` documenta el formato futuro
 del reporte del dry-run para revisar conteos, warnings, conflictos, duplicados,
 media pendiente y NO-GO reasons antes de cualquier insert.
+`docs/supabase/MIGRATION_INSERT_GATE_CHECKLIST.md` documenta el gate que debe
+cumplirse antes de planear cualquier insert controlado en laboratorio.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar el migration insert gate
-checklist como docs-only.
+desarrollo. La siguiente fase recomendada es disenar el controlled lab insert
+plan como docs-only.

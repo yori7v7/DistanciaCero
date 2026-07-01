@@ -136,14 +136,16 @@ Recommended future path:
 3. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
 4. Review the report shape documented in
    `MIGRATION_DRY_RUN_REPORT_FORMAT.md`.
-5. Validate counts per collection and per kind.
-6. Validate identity mapping privately, outside Git.
-7. Validate duplicate detection using legacy ids and source markers.
-8. Insert into a disposable lab only after explicit approval.
-9. Run read-only verification of counts, FK chain and metadata.
-10. Run RLS verification with synthetic users.
-11. Integrate one UI feature behind an off-by-default feature flag.
-12. Keep rollback to local-only mode available.
+5. Pass the insert gate documented in
+   `MIGRATION_INSERT_GATE_CHECKLIST.md`.
+6. Validate counts per collection and per kind.
+7. Validate identity mapping privately, outside Git.
+8. Validate duplicate detection using legacy ids and source markers.
+9. Insert into a disposable lab only after explicit approval.
+10. Run read-only verification of counts, FK chain and metadata.
+11. Run RLS verification with synthetic users.
+12. Integrate one UI feature behind an off-by-default feature flag.
+13. Keep rollback to local-only mode available.
 
 ## NO-GO Criteria
 
@@ -159,12 +161,12 @@ Recommended future path:
 
 ## Next Recommended Phase
 
-Design the migration insert gate checklist as docs-only work.
+Design the controlled lab insert plan as docs-only work.
 
 That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, execute dry-runs, touch runtime, `src`, SQL,
-Supabase Dashboard, Supabase CLI, `.env.local`, private files, Storage or
-reset.
+LocalStorage, export real data, execute dry-runs, insert data, touch runtime,
+`src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`, private files,
+Storage or reset.
 
 ## Non-Goals
 

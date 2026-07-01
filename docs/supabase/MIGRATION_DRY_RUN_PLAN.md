@@ -90,10 +90,11 @@ Recommended future sequence:
 | C | Run transform dry-run locally without network only after validation allows it. | None. |
 | D | Produce sanitized dry-run report. | None. |
 | E | Human review of counts, omissions, conflicts and risks. | None. |
-| F | Controlled insert into disposable lab only with explicit approval. | Future approved phase only. |
-| G | Read-only verification in lab. | Future approved phase only. |
-| H | RLS verification with synthetic users. | Future approved phase only. |
-| I | Rollback/reset lab if anything fails. | Future approved phase only. |
+| F | Pass the insert gate documented in `MIGRATION_INSERT_GATE_CHECKLIST.md`. | None. |
+| G | Controlled insert into disposable lab only with explicit approval. | Future approved phase only. |
+| H | Read-only verification in lab. | Future approved phase only. |
+| I | RLS verification with synthetic users. | Future approved phase only. |
+| J | Rollback/reset lab if anything fails. | Future approved phase only. |
 
 ## NO-GO Criteria
 
@@ -119,12 +120,12 @@ Recommended future sequence:
 
 ## Suggested Next Phase
 
-Design the migration insert gate checklist as docs-only work.
+Design the controlled lab insert plan as docs-only work.
 
 That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, execute dry-runs, touch runtime, modify `src`,
-execute SQL, use Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit
-private files, touch Storage or run reset.
+LocalStorage, export real data, execute dry-runs, insert data, touch runtime,
+modify `src`, execute SQL, use Supabase Dashboard, use Supabase CLI, touch
+`.env.local`, edit private files, touch Storage or run reset.
 
 ## Non-Goals
 

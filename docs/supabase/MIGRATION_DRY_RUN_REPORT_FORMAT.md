@@ -299,6 +299,8 @@ absolute paths or personal real emails.
 
 - Snapshot validation must pass before the dry-run.
 - The dry-run report must be reviewed before any insert.
+- The reviewed report should feed `MIGRATION_INSERT_GATE_CHECKLIST.md` before
+  any controlled lab insert is planned.
 - Insert into a disposable lab requires explicit approval.
 - App connection remains blocked until feature flag and controlled integration
   phases are approved.
@@ -306,12 +308,12 @@ absolute paths or personal real emails.
 
 ## Suggested Next Phase
 
-Design the migration insert gate checklist as docs-only work.
+Design the controlled lab insert plan as docs-only work.
 
 That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, execute dry-runs, touch runtime, modify `src`,
-execute SQL, use Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit
-private files, touch Storage or run reset.
+LocalStorage, export real data, execute dry-runs, insert data, touch runtime,
+modify `src`, execute SQL, use Supabase Dashboard, use Supabase CLI, touch
+`.env.local`, edit private files, touch Storage or run reset.
 
 ## Non-Goals
 
