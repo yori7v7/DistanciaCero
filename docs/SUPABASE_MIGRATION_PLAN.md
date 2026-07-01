@@ -676,6 +676,16 @@ Estado de S4.6.1:
 - S4.6.4.4 crea `docs/supabase/fixtures/SYNTHETIC_AUTH_USERS_PLAN.md`
   como preflight documental de usuarios Auth sinteticos. No crea usuarios, no
   guarda UUIDs reales, no aplica fixtures y no prueba RLS end-to-end.
+- S4.6.4.33 registra en `docs/supabase/RLS_E2E_SECURITY_GATE_RESULT.md` el
+  PASS sanitizado del private RLS E2E security gate en laboratorio desechable:
+  usuarios con membership leen lo permitido, cross-space/external_user quedan
+  bloqueados y anon/no-session queda bloqueado antes de acceder a datos
+  protegidos.
+- S4.6.4.34 crea `docs/supabase/BACKEND_READINESS_GAP.md` para dejar claro que
+  el PASS del laboratorio no equivale a app/backend listo. Auth real, mapping,
+  migracion, Storage, fallback/offline, sincronizacion, rollback, env segura,
+  performance, CRUD remoto y pruebas multiperfil siguen como gaps antes de
+  conectar la app.
 
 Validacion y rollback:
 
@@ -777,17 +787,18 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 
 ## 12. Veredicto
 
-La dependencia, el factory Supabase, el verificador manual S4.5.1 y el checklist
-documental S4.6.1 existen de forma aislada. S4.6.2.1 refino el schema draft y
-S4.6.2.2 refino RLS; S4.6.3.2.2 registro aplicacion manual solo del schema
-draft en laboratorio desechable y S4.6.3.3.2 registro aplicacion manual solo
-del RLS draft en laboratorio desechable. El entorno remoto no esta conectado al
-runtime, no tiene fixtures, no tiene reset aplicado, no toca Storage y todavia
-no verifica comportamiento con usuarios sinteticos/memberships.
-El fixture SQL draft, el draft aplicable futuro, el plan de Auth users
-sinteticos y el reset SQL draft existen como documentos sin operaciones
-activas por defecto; cualquier aplicacion, creacion de usuarios o conexion
-futura requiere aprobacion independiente y un veredicto go/no-go del readiness
-checklist.
+La dependencia, el factory Supabase, el verificador manual S4.5.1 y el
+checklist documental S4.6.1 existen de forma aislada. En el laboratorio
+desechable se aplicaron schema/RLS, se crearon usuarios Auth sinteticos, se
+aplicaron fixtures sinteticos, paso la verificacion read-only y paso el private
+RLS E2E security gate.
 
-La app local debe seguir funcionando como fallback, backup offline y entorno de desarrollo.
+Ese PASS valida seguridad base en el laboratorio, pero no conecta la app ni
+demuestra readiness de backend productivo. El entorno remoto no esta conectado
+al runtime, no tiene reset aplicado, no toca Storage y no ha probado CRUD remoto
+real desde la app. `docs/supabase/BACKEND_READINESS_GAP.md` documenta los gaps
+que deben resolverse antes de cualquier conexion.
+
+La app local debe seguir funcionando como fallback, backup offline y entorno de
+desarrollo. La siguiente fase recomendada es disenar remote repository contract
+y estrategia de feature flag como docs-only.

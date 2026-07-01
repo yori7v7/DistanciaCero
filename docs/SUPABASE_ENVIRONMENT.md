@@ -44,8 +44,10 @@ Nunca deben contener secretos administrativos.
 - [x] El verificador manual S4.5.1 existe y pasa con cero fetch.
 - [x] S4.6.1 documenta el entorno aislado futuro en
       `docs/SUPABASE_ISOLATED_ENVIRONMENT.md`.
-- [ ] El proyecto Supabase aislado todavia no existe y SQL/RLS no se han
-      aplicado.
+- [x] El laboratorio desechable reportado tiene schema/RLS/fixtures aplicados,
+      verificacion read-only PASS y private RLS E2E security gate PASS,
+      documentados sin secretos.
+- [ ] La app sigue sin conexion remota y `.env.local` sigue fuera de alcance.
 
 El estado actual no autoriza invocar el factory desde la app, conectar un
 repository remoto o aplicar SQL.
@@ -180,6 +182,11 @@ ejecutar queries o activar contenido remoto.
 
 Completar `.env.example` no marca automaticamente como cumplidos los gates de
 RLS, Auth, bootstrap, fallback, conflictos, media o migration.
+
+S4.6.4.34 documenta en `docs/supabase/BACKEND_READINESS_GAP.md` que el backend
+lab security gate paso, pero que la app sigue bloqueada hasta resolver Auth real,
+mapping, migracion, Storage, fallback, sincronizacion, rollback, variables
+seguras, performance y pruebas CRUD remoto.
 
 ## 9. No objetivos
 

@@ -63,7 +63,7 @@
 ## Remaining Gaps
 
 - The app remains local-first and disconnected from Supabase.
-- Backend readiness still needs a separate gap review.
+- Backend readiness gap is documented in `BACKEND_READINESS_GAP.md`.
 - Runtime connection strategy still needs a separate future plan.
 - Storage remains untested.
 - Reset/rollback remains unexecuted.
@@ -71,5 +71,5 @@
 
 ## Next Recommended Phase
 
-Document the backend readiness gap and prepare a future connection strategy
-without connecting the app yet.
+Design the remote repository contract and feature flag strategy as docs-only
+work, without connecting the app yet.

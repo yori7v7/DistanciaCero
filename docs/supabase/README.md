@@ -54,9 +54,12 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.33 registra en `RLS_E2E_SECURITY_GATE_RESULT.md` que el private RLS
   E2E security gate paso en el laboratorio desechable, con resultado
   sanitizado y sin guardar secretos.
+- S4.6.4.34 crea `BACKEND_READINESS_GAP.md` para documentar que falta antes de
+  conectar la app: Auth real, mapping, migracion, Storage, fallback,
+  sincronizacion, rollback, variables seguras, performance y CRUD remoto.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
-- No hay backend.
+- No hay backend conectado a la app ni listo para produccion.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
 
@@ -137,6 +140,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   membership, denial cross-space, denial de external_user y CHECK aceptable para
   anon/no-session bloqueado por privilegios de base de datos antes de RLS. No
   conecta la app, no toca runtime, no toca Storage y no prueba produccion.
+- `BACKEND_READINESS_GAP.md`: documento S4.6.4.34 de gaps antes de conectar la
+  app. El backend lab security gate paso, pero la app sigue bloqueada hasta
+  resolver estrategia de Auth real, mapping, migracion, Storage, fallback,
+  sincronizacion, rollback, env segura, performance y pruebas CRUD remoto.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -175,3 +182,8 @@ Primero deben revisarse:
 ## Regla de oro
 
 No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como base de discusion tecnica, no como migraciones listas para produccion.
+
+## Siguiente fase recomendada
+
+Disenar el remote repository contract y la estrategia de feature flag como
+docs-only, sin tocar runtime ni conectar la app.

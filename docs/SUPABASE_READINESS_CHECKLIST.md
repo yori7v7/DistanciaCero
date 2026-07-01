@@ -130,6 +130,9 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.33 registra en
       `docs/supabase/RLS_E2E_SECURITY_GATE_RESULT.md` el resultado sanitizado
       PASS del private RLS E2E security gate en laboratorio desechable.
+- [x] S4.6.4.34 crea `docs/supabase/BACKEND_READINESS_GAP.md` para documentar
+      gaps antes de conectar la app: Auth real, mapping, migracion, Storage,
+      fallback, sincronizacion, rollback, env segura, performance y CRUD remoto.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -424,8 +427,14 @@ la siguiente.
   de datos antes de RLS, lo cual es aceptable para este proyecto y no justifica
   abrir `GRANT SELECT` a anon solo para una prueba cosmetica. La app sigue
   desconectada; runtime, `.env.local`, Storage y reset siguen sin tocarse.
-- Salida futura: documentar backend readiness gap, estrategia de conexion futura
-  sin conectar aun la app y rollback de laboratorio.
+- Estado S4.6.4.34:
+  `docs/supabase/BACKEND_READINESS_GAP.md` documenta que el backend lab security
+  gate paso, pero todavia faltan Auth real, mapping de perfiles, seed/migracion
+  de contenido, Storage, fallback/offline, sincronizacion local/remota,
+  rollback, separacion lab/produccion, variables seguras, performance, pruebas
+  CRUD remoto y pruebas multiperfil antes de conectar la app.
+- Salida futura: disenar remote repository contract y estrategia de feature
+  flag como docs-only, sin conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -535,6 +544,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [ ] Referencia de progreso para JSON base y contenido remoto.
 - [ ] Estrategia de cache/hidratacion sync/async.
 - [ ] Fuente de verdad durante estados offline.
+- [ ] Contrato remoto concreto y estrategia de feature flag.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
