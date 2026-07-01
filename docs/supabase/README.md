@@ -65,6 +65,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   sin ejecutar migracion ni conectar la app.
 - S4.6.4.37 crea `MIGRATION_DRY_RUN_PLAN.md` para documentar un futuro dry-run
   local sin red, sin crear script, sin ejecutar migracion y sin tocar Supabase.
+- S4.6.4.38 crea `LOCAL_SNAPSHOT_EXPORT_FORMAT.md` para documentar el formato
+  futuro de snapshot/export local, sin crear scripts, sin generar snapshot real,
+  sin exportar datos reales y sin tocar runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -164,6 +167,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   de migracion. Define entradas, salidas, validaciones, NO-GO y rollback futuro
   sin crear scripts, sin ejecutar migracion, sin tocar Supabase y sin conectar
   runtime.
+- `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`: documento S4.6.4.38 del formato futuro de
+  snapshot/export local para alimentar un dry-run de migracion. No crea scripts,
+  no genera snapshot real, no exporta datos reales, no lee LocalStorage real y
+  no conecta runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -205,5 +212,5 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar el snapshot/export format como docs-only, sin crear scripts ni tocar
-runtime.
+Disenar snapshot validation rules como docs-only, sin crear scripts, sin leer
+LocalStorage real ni tocar runtime.

@@ -30,7 +30,8 @@ The dry-run should:
 
 Future dry-run inputs:
 
-- Sanitized local export/snapshot.
+- Sanitized local export/snapshot shaped by
+  `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`.
 - `LOCAL_TO_REMOTE_CONTENT_MAPPING.md` reviewed as the mapping source.
 - Selected local identity context: Yori, Ale or legacy/unknown.
 - Target disposable lab relationship space selected privately.
@@ -81,7 +82,7 @@ Recommended future sequence:
 
 | Phase | Action | Network/Supabase |
 | --- | --- | --- |
-| A | Create or choose a local snapshot/export. | None. |
+| A | Create or choose a local snapshot/export shaped by `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`. | None. |
 | B | Run transform dry-run locally without network. | None. |
 | C | Produce sanitized dry-run report. | None. |
 | D | Human review of counts, omissions, conflicts and risks. | None. |
@@ -114,11 +115,11 @@ Recommended future sequence:
 
 ## Suggested Next Phase
 
-Design the snapshot/export format as docs-only work.
+Design snapshot validation rules as docs-only work.
 
-That phase should not create migration scripts, touch runtime, modify `src`,
-execute SQL, use Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit
-private files, touch Storage or run reset.
+That phase should not create scripts, read real LocalStorage, touch runtime,
+modify `src`, execute SQL, use Supabase Dashboard, use Supabase CLI, touch
+`.env.local`, edit private files, touch Storage or run reset.
 
 ## Non-Goals
 

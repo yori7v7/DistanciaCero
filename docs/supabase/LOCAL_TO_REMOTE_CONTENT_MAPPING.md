@@ -130,7 +130,8 @@ Remote mapping must use only existing or already documented conceptual tables:
 
 Recommended future path:
 
-1. Export a local snapshot using the existing backup/export flow.
+1. Prepare a future local snapshot shaped by
+   `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`.
 2. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
 3. Validate counts per collection and per kind.
 4. Validate identity mapping privately, outside Git.
@@ -155,10 +156,11 @@ Recommended future path:
 
 ## Next Recommended Phase
 
-Design the snapshot/export format as docs-only work.
+Design snapshot validation rules as docs-only work.
 
-That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
-CLI, `.env.local`, private files, Storage or reset.
+That phase should not create scripts, read real LocalStorage, touch runtime,
+`src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`, private files,
+Storage or reset.
 
 ## Non-Goals
 

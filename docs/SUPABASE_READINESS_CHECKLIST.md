@@ -142,6 +142,10 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.37 crea `docs/supabase/MIGRATION_DRY_RUN_PLAN.md` como plan
       documental para un dry-run futuro, sin crear scripts, sin ejecutar
       migracion, sin tocar Supabase y sin conectar la app.
+- [x] S4.6.4.38 crea `docs/supabase/LOCAL_SNAPSHOT_EXPORT_FORMAT.md` como
+      formato documental futuro de snapshot/export local, sin crear scripts, sin
+      generar snapshot real, sin exportar datos reales, sin leer LocalStorage
+      real, sin tocar runtime y sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -457,7 +461,13 @@ la siguiente.
   validaciones, estrategia futura, NO-GO y rollback para un dry-run de migracion
   futuro. No crea scripts, no ejecuta migracion, no toca Supabase/CLI/Dashboard,
   no toca runtime y no conecta la app.
-- Salida futura: disenar snapshot/export format como docs-only, sin crear
+- Estado S4.6.4.38:
+  `docs/supabase/LOCAL_SNAPSHOT_EXPORT_FORMAT.md` documenta el formato futuro
+  de snapshot/export local para alimentar un dry-run de migracion. No crea
+  scripts, no genera snapshot real, no exporta datos reales, no lee
+  LocalStorage real, no toca Supabase/CLI/Dashboard, no toca runtime y no
+  conecta la app.
+- Salida futura: disenar snapshot validation rules como docs-only, sin crear
   scripts ni conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
@@ -571,7 +581,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Contrato remoto documental y estrategia de feature flag conceptual.
 - [x] Mapping documental local JSON/LocalStorage -> tablas remotas.
 - [x] Migration dry-run plan documental.
-- [ ] Snapshot/export format.
+- [x] Snapshot/export format documental.
+- [ ] Snapshot validation rules.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

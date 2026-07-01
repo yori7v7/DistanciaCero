@@ -124,10 +124,11 @@ Recommended path:
 
 ## Next Recommended Phase
 
-Design the snapshot/export format as docs-only work.
+Design snapshot validation rules as docs-only work.
 
-That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
-CLI, `.env.local`, private files, Storage or reset.
+That phase should not create scripts, read real LocalStorage, touch runtime,
+`src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`, private files,
+Storage or reset.
 
 ## Non-Goals
 
