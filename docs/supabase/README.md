@@ -60,6 +60,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.35 crea `REMOTE_REPOSITORY_CONTRACT.md` como contrato documental
   futuro para `remoteContentRepository` y estrategia de feature flag. No
   implementa repository, no toca runtime y no conecta la app.
+- S4.6.4.36 crea `LOCAL_TO_REMOTE_CONTENT_MAPPING.md` para documentar el
+  mapping conceptual desde JSON/LocalStorage local hacia tablas remotas futuras,
+  sin ejecutar migracion ni conectar la app.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -151,6 +154,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   futuro para `remoteContentRepository` y estrategia de feature flag. Mantiene
   `contentService` como fachada, LocalStorage como default/fallback y prohibe
   acceso directo a Supabase desde componentes o escenas.
+- `LOCAL_TO_REMOTE_CONTENT_MAPPING.md`: documento S4.6.4.36 del mapping
+  conceptual desde JSON/LocalStorage local a `profiles`, `relationship_spaces`,
+  `universe_members`, `content_items`, `content_events` y `media_assets`. No
+  migra datos, no toca Storage, no ejecuta SQL y no conecta runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -192,5 +199,5 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar el mapping local JSON/LocalStorage -> tablas remotas como docs-only,
-sin tocar runtime ni conectar la app.
+Disenar un migration dry-run plan como docs-only, sin tocar runtime ni ejecutar
+migracion.

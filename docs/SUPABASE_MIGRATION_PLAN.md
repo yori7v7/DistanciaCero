@@ -690,6 +690,10 @@ Estado de S4.6.1:
   documental futuro para `remoteContentRepository` y estrategia de feature flag.
   Mantiene `contentService` como fachada, LocalStorage como default/fallback y
   prohibe acceso directo a Supabase desde componentes o escenas.
+- S4.6.4.36 crea `docs/supabase/LOCAL_TO_REMOTE_CONTENT_MAPPING.md` como
+  mapping documental desde fuentes locales JSON/LocalStorage hacia tablas
+  remotas futuras. No ejecuta migracion, no toca SQL, no toca Storage y no
+  conecta la app.
 
 Validacion y rollback:
 
@@ -783,7 +787,7 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - `audit_log` obligatorio o diferido.
 - Regla de conflictos Ale/Yori.
 - Migracion de Data URL.
-- Mapping local JSON/LocalStorage -> tablas remotas.
+- Mapping local JSON/LocalStorage -> tablas remotas documentado; falta dry-run.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -806,7 +810,10 @@ que deben resolverse antes de cualquier conexion.
 `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` documenta el contrato logico
 futuro y una estrategia de feature flag, pero no implementa repository ni activa
 Supabase en runtime.
+`docs/supabase/LOCAL_TO_REMOTE_CONTENT_MAPPING.md` documenta como se mapearian
+colecciones, overrides, hidden, legacy letters, opened/read, simulation state,
+identidad local y media hacia tablas remotas futuras, sin migrar nada.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar mapping local
-JSON/LocalStorage -> tablas remotas como docs-only.
+desarrollo. La siguiente fase recomendada es disenar un migration dry-run plan
+como docs-only.

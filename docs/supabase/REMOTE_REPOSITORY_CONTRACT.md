@@ -124,7 +124,7 @@ Recommended path:
 
 ## Next Recommended Phase
 
-Design the local JSON/LocalStorage to remote tables mapping as docs-only work.
+Design a migration dry-run plan as docs-only work.
 
 That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
 CLI, `.env.local`, private files, Storage or reset.

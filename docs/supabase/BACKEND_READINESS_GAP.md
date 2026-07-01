@@ -93,6 +93,8 @@ review:
 - Do not connect the app yet.
 - Keep LocalStorage as the active source of truth.
 - The remote data contract is documented in `REMOTE_REPOSITORY_CONTRACT.md`.
+- The local-to-remote mapping is documented in
+  `LOCAL_TO_REMOTE_CONTENT_MAPPING.md`.
 - A future real `remoteContentRepository` must stay behind an explicit feature
   flag.
 - Keep the feature flag off by default.
@@ -101,7 +103,7 @@ review:
 
 ## Suggested Next Phase
 
-Design the local JSON/LocalStorage to remote tables mapping as docs-only work.
+Design a migration dry-run plan as docs-only work.
 
 That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
 CLI, `.env.local`, private files, Storage or reset.

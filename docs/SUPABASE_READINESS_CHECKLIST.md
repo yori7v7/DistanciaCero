@@ -136,6 +136,9 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.35 crea `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` como
       contrato documental futuro para `remoteContentRepository` y estrategia de
       feature flag, sin tocar runtime ni conectar la app.
+- [x] S4.6.4.36 crea `docs/supabase/LOCAL_TO_REMOTE_CONTENT_MAPPING.md` como
+      mapping documental desde JSON/LocalStorage local hacia tablas remotas
+      futuras, sin ejecutar migracion ni conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -441,8 +444,13 @@ la siguiente.
   futuro de `remoteContentRepository`, la estrategia de feature flag y el plan
   gradual A-H. No implementa repository, no toca `src`, no cambia runtime y no
   conecta la app.
-- Salida futura: disenar mapping local JSON/LocalStorage -> tablas remotas como
-  docs-only, sin conectar aun la app.
+- Estado S4.6.4.36:
+  `docs/supabase/LOCAL_TO_REMOTE_CONTENT_MAPPING.md` documenta las fuentes
+  locales actuales, su destino remoto conceptual, reglas de identidad,
+  orden/visibilidad, contenido sensible y estrategia futura de migracion. No
+  ejecuta migracion, no toca SQL, no toca Storage y no conecta la app.
+- Salida futura: disenar migration dry-run plan como docs-only, sin conectar
+  aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -553,7 +561,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [ ] Estrategia de cache/hidratacion sync/async.
 - [ ] Fuente de verdad durante estados offline.
 - [x] Contrato remoto documental y estrategia de feature flag conceptual.
-- [ ] Mapping local JSON/LocalStorage -> tablas remotas.
+- [x] Mapping documental local JSON/LocalStorage -> tablas remotas.
+- [ ] Migration dry-run plan.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
