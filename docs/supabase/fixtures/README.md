@@ -94,6 +94,17 @@ para una futura prueba RLS end-to-end. Recomienda script temporal local fuera
 del repo, sin ejecutar pruebas, sin usar CLI, sin tocar Supabase y sin conectar
 la app.
 
+El archivo `../RLS_PRIVATE_SCRIPT_PREP.md` documenta la preparacion S4.6.4.21
+para un script temporal local fuera del repo, sin crearlo ni ejecutarlo.
+
+El archivo `../RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` registra el resultado
+S4.6.4.22: carpeta y archivos privados creados fuera del repo, sin ejecutar el
+script y sin tocar Supabase/app/runtime.
+
+El archivo `../RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` registra el resultado
+S4.6.4.23: revision read-only del script privado, sin ejecutarlo y sin probar
+RLS end-to-end.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -150,6 +161,12 @@ la app.
   metodo para RLS. El metodo recomendado es script temporal local fuera del
   repo; la ejecucion real, Auth/RLS test real, reset, Storage y app connection
   siguen pendientes.
+- [x] Existe `../RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` con evidencia
+  documental de que el workspace/script privado fue creado fuera del repo. El
+  script no fue ejecutado.
+- [x] Existe `../RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` con evidencia documental
+  de revision read-only del script privado. RLS end-to-end, Auth/RLS test real,
+  reset, Storage y app connection siguen pendientes.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -158,7 +175,7 @@ fixtures. No cambia el estado de la base ni del runtime.
 
 Reglas del preflight:
 
-- fixtures siguen no aplicados;
+- en S4.6.4.1, los fixtures seguian sin aplicarse;
 - reset sigue no aplicado y separado;
 - Storage queda fuera de alcance;
 - Auth users queda fuera de alcance;
@@ -419,6 +436,12 @@ Reglas:
   todavia sin ejecutar pruebas ni compartir tokens/JWTs en Git/chat.
 - **S4.6.4.21:** preparar instrucciones para script temporal local privado
   fuera del repo; todavia sin ejecutar pruebas RLS.
+- **S4.6.4.22:** registrar creacion de carpeta y archivos privados RLS fuera
+  del repo; script no ejecutado.
+- **S4.6.4.23:** registrar revision read-only del script privado RLS; RLS
+  end-to-end no probada.
+- **S4.6.4.26:** preparar configuracion privada RLS; todavia sin ejecutar RLS
+  ni compartir secretos en Git/chat.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.

@@ -47,6 +47,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   metodo. Recomienda script temporal local fuera del repo para una fase futura.
 - S4.6.4.21 crea `RLS_PRIVATE_SCRIPT_PREP.md` como preparacion documental para
   un script temporal local fuera del repo. No crea el script privado real.
+- S4.6.4.22 registra en `RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` que la carpeta
+  y archivos privados RLS fueron creados fuera del repo, sin ejecutar el script.
+- S4.6.4.23 registra en `RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` que el script
+  privado fue revisado en read-only mode, sin ejecutarlo.
 - RLS end-to-end execution, Auth/RLS tests reales, reset, Storage, app
   connection, backend readiness y production readiness siguen pendientes.
 - No hay backend.
@@ -119,6 +123,12 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `RLS_PRIVATE_SCRIPT_PREP.md`: preparacion documental S4.6.4.21 para un script
   temporal local fuera del repo. No crea script privado real, no ejecuta
   pruebas, no usa tokens/JWTs, no toca Supabase y no conecta la app.
+- `RLS_PRIVATE_SCRIPT_CREATION_RESULT.md`: resultado S4.6.4.22 de creacion de
+  carpeta y archivos privados fuera del repo. No ejecuta el script, no toca
+  Supabase y no modifica runtime.
+- `RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md`: resultado S4.6.4.23 de revision
+  read-only del script privado. No ejecuta el script y no prueba RLS
+  end-to-end.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

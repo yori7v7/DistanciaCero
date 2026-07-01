@@ -119,6 +119,14 @@ Estado verificado post-S4.5.1:
       preparacion documental para un script temporal local fuera del repo. No
       crea script privado, no ejecuta pruebas, no usa tokens/JWTs y no toca
       Supabase.
+- [x] S4.6.4.22 registra en
+      `docs/supabase/RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` que el workspace y
+      script privados fueron creados fuera del repo. No se ejecuto el script,
+      no se modifico el repo y no se tocaron Supabase/app/runtime.
+- [x] S4.6.4.23 registra en
+      `docs/supabase/RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` la revision read-only
+      del script privado. No se ejecuto el script y no se probaron RLS/Auth
+      reales.
 - [x] RLS end-to-end execution, Auth/RLS test real, reset, Storage, conexion de
       app, backend readiness y production readiness siguen pendientes.
 
@@ -396,6 +404,15 @@ la siguiente.
   script temporal local fuera del repo en una fase futura. No crea script
   privado real, no crea carpetas privadas, no ejecuta pruebas, no usa
   tokens/JWTs, no toca Supabase, no conecta la app y no modifica runtime.
+- Estado S4.6.4.22:
+  `docs/supabase/RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` documenta que la
+  carpeta y archivos privados para RLS fueron creados fuera del repo. No se
+  ejecuto el script, no se modifico el repo, no se tocaron Supabase/CLI/
+  Dashboard, SQL Editor, app, runtime ni `.env.local`.
+- Estado S4.6.4.23:
+  `docs/supabase/RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` documenta la revision
+  read-only del script privado. El script no se ejecuto y RLS end-to-end sigue
+  sin probarse.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

@@ -133,14 +133,24 @@ Verdict:
 
 - READY FOR PRIVATE RLS SCRIPT CREATION / NO-GO
 
+S4.6.4.22 documenta el resultado real en
+`RLS_PRIVATE_SCRIPT_CREATION_RESULT.md`: la carpeta y archivos privados fueron
+creados fuera del repo, sin ejecutar el script.
+
+S4.6.4.23 documenta la revision en `RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md`: el
+script privado fue revisado en read-only mode, sin ejecutarlo y sin probar RLS
+end-to-end.
+
 ## Next recommended phase
 
-S4.6.4.22 - Private RLS script creation outside repo
+S4.6.4.26 - RLS private config prep
 
 Clarifications:
 
-- Esa fase podria crear un script temporal fuera del repo.
-- Todavia requeriria aprobacion explicita.
+- S4.6.4.22 ya creo el script temporal fuera del repo.
+- S4.6.4.23 ya reviso el script privado sin ejecutarlo.
+- La siguiente fase puede preparar configuracion privada, sin ejecutar RLS.
+- Todavia requiere aprobacion explicita.
 - Debe mantener secrets fuera de Git/chat.
-- Puede preparar, pero no necesariamente ejecutar, las pruebas.
+- Puede preparar configuracion, pero no debe ejecutar las pruebas.
 - No debe conectar la app real.

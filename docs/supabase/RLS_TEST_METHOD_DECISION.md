@@ -84,6 +84,13 @@ Para una fase futura:
 S4.6.4.21 documenta la preparacion en `RLS_PRIVATE_SCRIPT_PREP.md`, sin crear
 el script privado real y sin ejecutar pruebas.
 
+S4.6.4.22 documenta en `RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` que la carpeta y
+archivos privados fueron creados fuera del repo, sin ejecutar el script.
+
+S4.6.4.23 documenta en `RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` que el script
+privado fue revisado en read-only mode, sin ejecutarlo y sin probar RLS
+end-to-end.
+
 ## Pruebas futuras esperadas
 
 Solo planear, no ejecutar:
@@ -154,14 +161,15 @@ Verdict:
 
 ## Next recommended phase
 
-S4.6.4.22 - Private RLS script creation outside repo
+S4.6.4.26 - RLS private config prep
 
 Clarifications:
 
 - S4.6.4.21 ya prepara instrucciones para un script temporal local fuera del
   repo.
-- La siguiente fase podria crear un script temporal fuera del repo con
-  aprobacion explicita.
+- S4.6.4.22 ya creo la carpeta y archivos privados fuera del repo.
+- S4.6.4.23 ya reviso el script privado sin ejecutarlo.
+- La siguiente fase puede preparar configuracion privada, sin ejecutar RLS.
 - Todavia no debe ejecutar pruebas RLS.
 - Todavia no debe conectar la app.
 - Todavia no debe pedir valores sensibles en chat.
