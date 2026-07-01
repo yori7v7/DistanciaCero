@@ -124,7 +124,7 @@ Recommended path:
 
 ## Next Recommended Phase
 
-Design a migration dry-run plan as docs-only work.
+Design the snapshot/export format as docs-only work.
 
 That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
 CLI, `.env.local`, private files, Storage or reset.

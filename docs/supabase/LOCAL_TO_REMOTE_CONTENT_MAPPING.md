@@ -131,7 +131,7 @@ Remote mapping must use only existing or already documented conceptual tables:
 Recommended future path:
 
 1. Export a local snapshot using the existing backup/export flow.
-2. Run a dry-run transform outside runtime.
+2. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
 3. Validate counts per collection and per kind.
 4. Validate identity mapping privately, outside Git.
 5. Validate duplicate detection using legacy ids and source markers.
@@ -155,7 +155,7 @@ Recommended future path:
 
 ## Next Recommended Phase
 
-Design a migration dry-run plan as docs-only work.
+Design the snapshot/export format as docs-only work.
 
 That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
 CLI, `.env.local`, private files, Storage or reset.

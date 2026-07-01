@@ -95,6 +95,7 @@ review:
 - The remote data contract is documented in `REMOTE_REPOSITORY_CONTRACT.md`.
 - The local-to-remote mapping is documented in
   `LOCAL_TO_REMOTE_CONTENT_MAPPING.md`.
+- The migration dry-run plan is documented in `MIGRATION_DRY_RUN_PLAN.md`.
 - A future real `remoteContentRepository` must stay behind an explicit feature
   flag.
 - Keep the feature flag off by default.
@@ -103,7 +104,7 @@ review:
 
 ## Suggested Next Phase
 
-Design a migration dry-run plan as docs-only work.
+Design the snapshot/export format as docs-only work.
 
 That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
 CLI, `.env.local`, private files, Storage or reset.

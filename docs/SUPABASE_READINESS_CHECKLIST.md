@@ -139,6 +139,9 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.36 crea `docs/supabase/LOCAL_TO_REMOTE_CONTENT_MAPPING.md` como
       mapping documental desde JSON/LocalStorage local hacia tablas remotas
       futuras, sin ejecutar migracion ni conectar la app.
+- [x] S4.6.4.37 crea `docs/supabase/MIGRATION_DRY_RUN_PLAN.md` como plan
+      documental para un dry-run futuro, sin crear scripts, sin ejecutar
+      migracion, sin tocar Supabase y sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -449,8 +452,13 @@ la siguiente.
   locales actuales, su destino remoto conceptual, reglas de identidad,
   orden/visibilidad, contenido sensible y estrategia futura de migracion. No
   ejecuta migracion, no toca SQL, no toca Storage y no conecta la app.
-- Salida futura: disenar migration dry-run plan como docs-only, sin conectar
-  aun la app.
+- Estado S4.6.4.37:
+  `docs/supabase/MIGRATION_DRY_RUN_PLAN.md` documenta entradas, salidas,
+  validaciones, estrategia futura, NO-GO y rollback para un dry-run de migracion
+  futuro. No crea scripts, no ejecuta migracion, no toca Supabase/CLI/Dashboard,
+  no toca runtime y no conecta la app.
+- Salida futura: disenar snapshot/export format como docs-only, sin crear
+  scripts ni conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -562,7 +570,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [ ] Fuente de verdad durante estados offline.
 - [x] Contrato remoto documental y estrategia de feature flag conceptual.
 - [x] Mapping documental local JSON/LocalStorage -> tablas remotas.
-- [ ] Migration dry-run plan.
+- [x] Migration dry-run plan documental.
+- [ ] Snapshot/export format.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

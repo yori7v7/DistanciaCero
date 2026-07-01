@@ -694,6 +694,9 @@ Estado de S4.6.1:
   mapping documental desde fuentes locales JSON/LocalStorage hacia tablas
   remotas futuras. No ejecuta migracion, no toca SQL, no toca Storage y no
   conecta la app.
+- S4.6.4.37 crea `docs/supabase/MIGRATION_DRY_RUN_PLAN.md` como plan documental
+  para un dry-run futuro. No crea scripts, no ejecuta migracion, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -787,7 +790,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - `audit_log` obligatorio o diferido.
 - Regla de conflictos Ale/Yori.
 - Migracion de Data URL.
-- Mapping local JSON/LocalStorage -> tablas remotas documentado; falta dry-run.
+- Mapping local JSON/LocalStorage -> tablas remotas documentado.
+- Dry-run de migracion documentado; falta formato snapshot/export.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -813,7 +817,10 @@ Supabase en runtime.
 `docs/supabase/LOCAL_TO_REMOTE_CONTENT_MAPPING.md` documenta como se mapearian
 colecciones, overrides, hidden, legacy letters, opened/read, simulation state,
 identidad local y media hacia tablas remotas futuras, sin migrar nada.
+`docs/supabase/MIGRATION_DRY_RUN_PLAN.md` documenta como validar un futuro
+dry-run local sin red antes de cualquier insercion, sin crear scripts en esta
+fase.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar un migration dry-run plan
+desarrollo. La siguiente fase recomendada es disenar el formato snapshot/export
 como docs-only.
