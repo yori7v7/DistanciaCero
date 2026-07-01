@@ -127,8 +127,11 @@ Estado verificado post-S4.5.1:
       `docs/supabase/RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` la revision read-only
       del script privado. No se ejecuto el script y no se probaron RLS/Auth
       reales.
-- [x] RLS end-to-end execution, Auth/RLS test real, reset, Storage, conexion de
-      app, backend readiness y production readiness siguen pendientes.
+- [x] S4.6.4.33 registra en
+      `docs/supabase/RLS_E2E_SECURITY_GATE_RESULT.md` el resultado sanitizado
+      PASS del private RLS E2E security gate en laboratorio desechable.
+- [x] Reset, Storage, conexion de app, backend readiness y production readiness
+      siguen pendientes.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -413,7 +416,16 @@ la siguiente.
   `docs/supabase/RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` documenta la revision
   read-only del script privado. El script no se ejecuto y RLS end-to-end sigue
   sin probarse.
-- Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
+- Estado S4.6.4.33:
+  `docs/supabase/RLS_E2E_SECURITY_GATE_RESULT.md` registra resultado
+  sanitizado PASS del private RLS E2E security gate en laboratorio desechable.
+  Membership read paths, cross-space denial y external non-member denial fueron
+  reportados como PASS. Anon/no-session quedo bloqueado por privilegios de base
+  de datos antes de RLS, lo cual es aceptable para este proyecto y no justifica
+  abrir `GRANT SELECT` a anon solo para una prueba cosmetica. La app sigue
+  desconectada; runtime, `.env.local`, Storage y reset siguen sin tocarse.
+- Salida futura: documentar backend readiness gap, estrategia de conexion futura
+  sin conectar aun la app y rollback de laboratorio.
 
 ### S4.7: bootstrap owner/partner controlado
 

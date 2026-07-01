@@ -51,8 +51,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   y archivos privados RLS fueron creados fuera del repo, sin ejecutar el script.
 - S4.6.4.23 registra en `RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` que el script
   privado fue revisado en read-only mode, sin ejecutarlo.
-- RLS end-to-end execution, Auth/RLS tests reales, reset, Storage, app
-  connection, backend readiness y production readiness siguen pendientes.
+- S4.6.4.33 registra en `RLS_E2E_SECURITY_GATE_RESULT.md` que el private RLS
+  E2E security gate paso en el laboratorio desechable, con resultado
+  sanitizado y sin guardar secretos.
+- Reset, Storage, app connection, backend readiness y production readiness
+  siguen pendientes.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -129,6 +132,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md`: resultado S4.6.4.23 de revision
   read-only del script privado. No ejecuta el script y no prueba RLS
   end-to-end.
+- `RLS_E2E_SECURITY_GATE_RESULT.md`: resultado S4.6.4.33 del private RLS E2E
+  security gate en laboratorio desechable. Registra PASS para usuarios con
+  membership, denial cross-space, denial de external_user y CHECK aceptable para
+  anon/no-session bloqueado por privilegios de base de datos antes de RLS. No
+  conecta la app, no toca runtime, no toca Storage y no prueba produccion.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

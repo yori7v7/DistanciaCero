@@ -10,7 +10,7 @@
 - Reset: not applied
 - Fixture apply: manually applied in lab
 - Read-only verification: passed
-- RLS end-to-end: not tested yet
+- RLS end-to-end: private security gate PASS recorded in S4.6.4.33
 - Production readiness: no
 
 ## Proposito
@@ -30,7 +30,25 @@ prueba todavia.
 - Reset no aplicado.
 - Storage no tocado.
 - App no conectada.
-- RLS end-to-end no probado todavia.
+- En esta fase de decision de metodo, RLS end-to-end aun no se habia probado.
+
+## Resultado posterior S4.6.4.33
+
+`RLS_E2E_SECURITY_GATE_RESULT.md` registra que el metodo privado fuera del repo
+se ejecuto en el laboratorio desechable y produjo un security gate PASS
+sanitizado:
+
+- owner_a space A read: PASS
+- partner_a space A read: PASS
+- owner_b space B read: PASS
+- owner_b denied from space A: PASS
+- external_user denied from member-only data: PASS
+- anon/no-session blocked by database privileges before RLS: CHECK
+- script exit code: 0
+
+El resultado anon/no-session no abre permisos anon ni declara una policy anon
+como probada. Solo confirma que el request anon bien formado quedo bloqueado
+por privilegios de base de datos antes de acceder a datos protegidos.
 
 ## Opciones evaluadas
 
@@ -161,7 +179,8 @@ Verdict:
 
 ## Next recommended phase
 
-S4.6.4.26 - RLS private config prep
+Document backend readiness gap / prepare future connection strategy without
+connecting the app yet.
 
 Clarifications:
 
@@ -169,8 +188,8 @@ Clarifications:
   repo.
 - S4.6.4.22 ya creo la carpeta y archivos privados fuera del repo.
 - S4.6.4.23 ya reviso el script privado sin ejecutarlo.
-- La siguiente fase puede preparar configuracion privada, sin ejecutar RLS.
-- Todavia no debe ejecutar pruebas RLS.
+- S4.6.4.33 ya registro el private RLS E2E security gate PASS.
+- La siguiente fase debe mantener la app desconectada mientras documenta gaps.
 - Todavia no debe conectar la app.
 - Todavia no debe pedir valores sensibles en chat.
 - Debe mantener secrets fuera de Git.

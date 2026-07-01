@@ -105,6 +105,13 @@ El archivo `../RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` registra el resultado
 S4.6.4.23: revision read-only del script privado, sin ejecutarlo y sin probar
 RLS end-to-end.
 
+El archivo `../RLS_E2E_SECURITY_GATE_RESULT.md` registra el resultado
+S4.6.4.33: private RLS E2E security gate PASS en el laboratorio desechable.
+Los usuarios con membership leen sus espacios permitidos, los accesos
+cross-space y external_user quedan bloqueados, y anon/no-session queda
+bloqueado por privilegios de base de datos antes de RLS. No conecta la app, no
+toca Storage, no ejecuta reset y no declara produccion lista.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -113,8 +120,9 @@ RLS end-to-end.
 - [x] RLS draft refinado en S4.6.2.2.
 - [x] RLS draft aplicado manualmente en laboratorio Supabase desechable y
   documentado en S4.6.3.3.2, sin fixtures/reset y sin conexion de la app.
-- [x] El comportamiento RLS con usuarios sinteticos, memberships y cliente
-  autenticado normal sigue pendiente de verificacion.
+- [x] El private RLS E2E security gate con usuarios sinteticos, memberships y
+  cliente autenticado normal paso en S4.6.4.33 dentro del laboratorio
+  desechable.
 - [x] Factory Supabase aislado existe.
 - [x] Verificador manual pasa con cero fetch.
 - [x] CRUD local/sync sigue activo.
@@ -144,8 +152,8 @@ RLS end-to-end.
   aplicada, bloqueada por placeholders fail-fast y separada del fixture apply.
 - [x] Existe laboratorio desechable reportado por evidencia humana; Auth users
   sinteticos fueron creados manualmente y el fixture sintetico fue aplicado
-  manualmente desde copia privada. Storage, reset, RLS end-to-end, membership
-  tests y app conectada siguen fuera de alcance.
+  manualmente desde copia privada. Storage, reset y app conectada siguen fuera
+  de alcance.
 - [x] Existe `SYNTHETIC_FIXTURE_VERIFICATION_PLAN.md` como plan documental
   post-fixture. No ejecuta SQL y no prueba RLS end-to-end.
 - [x] Existe `synthetic_fixture_verification_queries_draft.sql` como draft SQL
@@ -153,20 +161,22 @@ RLS end-to-end.
   only en el laboratorio desechable y no prueba RLS end-to-end.
 - [x] Existe `../../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` con
   resultado sanitizado PASS de la verificacion read-only del fixture. Reset,
-  Storage, app connection y RLS end-to-end siguen fuera de alcance.
+  Storage y app connection siguen fuera de alcance.
 - [x] Existe `../RLS_END_TO_END_TEST_PLAN.md` como plan documental para una
-  futura prueba RLS end-to-end. La ejecucion real, Auth/RLS test real, reset,
-  Storage y app connection siguen pendientes.
+  prueba RLS end-to-end que despues quedo registrada como PASS sanitizado en
+  S4.6.4.33. Reset, Storage y app connection siguen pendientes.
 - [x] Existe `../RLS_TEST_METHOD_DECISION.md` como decision documental de
   metodo para RLS. El metodo recomendado es script temporal local fuera del
-  repo; la ejecucion real, Auth/RLS test real, reset, Storage y app connection
-  siguen pendientes.
+  repo; S4.6.4.33 registra el resultado PASS sanitizado de ese security gate.
+  Reset, Storage y app connection siguen pendientes.
 - [x] Existe `../RLS_PRIVATE_SCRIPT_CREATION_RESULT.md` con evidencia
   documental de que el workspace/script privado fue creado fuera del repo. El
   script no fue ejecutado.
 - [x] Existe `../RLS_PRIVATE_SCRIPT_REVIEW_RESULT.md` con evidencia documental
-  de revision read-only del script privado. RLS end-to-end, Auth/RLS test real,
-  reset, Storage y app connection siguen pendientes.
+  de revision read-only del script privado.
+- [x] Existe `../RLS_E2E_SECURITY_GATE_RESULT.md` con resultado sanitizado PASS
+  del private RLS E2E security gate. Reset, Storage, app connection, backend
+  readiness y production readiness siguen pendientes.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -442,6 +452,9 @@ Reglas:
   end-to-end no probada.
 - **S4.6.4.26:** preparar configuracion privada RLS; todavia sin ejecutar RLS
   ni compartir secretos en Git/chat.
+- **S4.6.4.33:** registrar resultado sanitizado PASS del private RLS E2E
+  security gate en `../RLS_E2E_SECURITY_GATE_RESULT.md`, sin conectar la app ni
+  declarar backend/produccion listos.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -476,17 +489,20 @@ Reglas:
 - [ ] Plantillas candidatas S4.6.4.13 revisadas; cualquier copia con UUIDs reales
   debe permanecer privada y fuera de Git.
 - [ ] Resultado S4.6.4.15 revisado; fixture apply manual esta documentado, pero
-  RLS end-to-end, membership tests, reset, Storage y app siguen pendientes.
+  en esa fase RLS end-to-end, membership tests, reset, Storage y app seguian
+  pendientes.
 - [ ] Plan S4.6.4.16 revisado; futuras query drafts deben seguir sin ejecutar
   SQL hasta aprobacion explicita.
-- [ ] Draft S4.6.4.17 revisado y resultado S4.6.4.18 documentado; RLS
-  end-to-end, Auth/RLS tests reales, reset, Storage y app siguen pendientes.
-- [ ] Plan S4.6.4.19 revisado; la decision de metodo seguro y la ejecucion RLS
-  end-to-end siguen pendientes.
-- [ ] Decision S4.6.4.20 revisada; la preparacion privada y ejecucion RLS
-  end-to-end siguen pendientes.
-- [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
-  revisarse antes y sus UUIDs no deben versionarse.
+- [ ] Draft S4.6.4.17 revisado y resultado S4.6.4.18 documentado; en esa fase
+  RLS end-to-end, Auth/RLS tests reales, reset, Storage y app seguian
+  pendientes.
+- [ ] Plan S4.6.4.19 revisado; S4.6.4.33 ya registra private RLS E2E security
+  gate PASS, pero backend readiness y app connection siguen pendientes.
+- [ ] Decision S4.6.4.20 revisada; S4.6.4.33 ya registra private RLS E2E
+  security gate PASS, pero backend readiness y app connection siguen
+  pendientes.
+- [ ] Si una fase futura repite o amplia pruebas RLS, memberships y mapping
+  privado deben revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.
 - [ ] Reset sigue separado y no aplicado.
 - [ ] La app sigue desconectada.

@@ -9,7 +9,7 @@
 - Supabase touched: no
 - SQL executed: none
 - Script executed: no
-- RLS end-to-end: not tested yet
+- RLS end-to-end at S4.6.4.23: not tested yet
 - Production readiness: no
 
 ## Reviewed Files
@@ -41,7 +41,7 @@ repo:
 - The script does not touch Storage.
 - The script does not execute reset.
 - The reviewed private files did not contain real secrets.
-- RLS end-to-end remains pending.
+- At S4.6.4.23, RLS end-to-end remained pending.
 
 ## What This Does Not Prove
 
@@ -57,3 +57,9 @@ repo:
 The private script has been reviewed as a safe candidate artifact before any
 private configuration. Any configuration or execution still requires a separate
 explicit phase and must keep sensitive values out of Git/chat.
+
+## Later Result
+
+S4.6.4.33 records the sanitized private RLS E2E security gate PASS in
+`RLS_E2E_SECURITY_GATE_RESULT.md`. This review document remains the historical
+record for S4.6.4.23 only.

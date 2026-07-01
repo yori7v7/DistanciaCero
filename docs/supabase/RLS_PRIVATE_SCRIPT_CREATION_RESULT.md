@@ -8,7 +8,7 @@
 - App connection: none
 - Supabase touched: no
 - SQL executed: none
-- RLS end-to-end: not tested yet
+- RLS end-to-end at S4.6.4.22: not tested yet
 - Production readiness: no
 
 ## Result
@@ -35,7 +35,7 @@ The private workspace contains three private files:
 - .env.local was not touched.
 - No real secrets were stored.
 - The private script remains outside Git.
-- RLS end-to-end remains pending.
+- At S4.6.4.22, RLS end-to-end remained pending.
 
 ## What This Does Not Prove
 
@@ -51,3 +51,9 @@ The private workspace contains three private files:
 The private script exists as a prepared artifact outside the repo. Any private
 configuration or execution still requires a separate explicit phase and must
 keep sensitive values out of Git/chat.
+
+## Later Result
+
+S4.6.4.33 records the sanitized private RLS E2E security gate PASS in
+`RLS_E2E_SECURITY_GATE_RESULT.md`. This creation document remains the historical
+record for S4.6.4.22 only.

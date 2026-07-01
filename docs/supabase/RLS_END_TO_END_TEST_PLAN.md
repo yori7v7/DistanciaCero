@@ -10,7 +10,7 @@
 - Reset: not applied
 - Fixture apply: manually applied in lab
 - Read-only verification: passed
-- RLS end-to-end: not tested yet
+- RLS end-to-end: private security gate PASS recorded in S4.6.4.33
 - Production readiness: no
 
 ## Proposito
@@ -30,7 +30,25 @@ tokens, no conecta cliente y no modifica runtime.
 - Reset no aplicado.
 - Storage no tocado.
 - App no conectada.
-- RLS end-to-end no probado todavia.
+- En esta fase de planificacion, RLS end-to-end aun no se habia probado.
+
+## Resultado posterior S4.6.4.33
+
+`RLS_E2E_SECURITY_GATE_RESULT.md` registra que el private RLS E2E security gate
+paso en el laboratorio desechable con salida sanitizada:
+
+- owner_a space A read: PASS
+- partner_a space A read: PASS
+- owner_b space B read: PASS
+- owner_b denied from space A: PASS
+- external_user denied from member-only data: PASS
+- anon/no-session blocked by database privileges before RLS: CHECK
+- script exit code: 0
+
+El CHECK anon/no-session no se declara como "RLS anon policy pass". Significa
+que anon quedo bloqueado por privilegios de base de datos antes de acceder a
+datos protegidos, lo cual es aceptable para este proyecto. No se debe abrir
+`GRANT SELECT` a anon solo para hacer pasar una prueba cosmetica.
 
 ## Usuarios conceptuales para pruebas futuras
 
@@ -121,7 +139,8 @@ Plantilla sanitizada de resultado:
 
 ## Next recommended phase
 
-S4.6.4.26 - RLS private config prep
+Document backend readiness gap / prepare future connection strategy without
+connecting the app yet.
 
 Clarifications:
 
@@ -130,7 +149,7 @@ Clarifications:
   repo sin crear el script privado real.
 - S4.6.4.22 ya creo la carpeta y archivos privados fuera del repo.
 - S4.6.4.23 ya reviso el script privado sin ejecutarlo.
-- La siguiente fase puede preparar configuracion privada, sin ejecutar RLS.
-- Todavia no debe ejecutar pruebas.
+- S4.6.4.33 ya registro el private RLS E2E security gate PASS.
+- La siguiente fase debe mantener la app desconectada mientras documenta gaps.
 - Todavia no debe conectar la app.
 - Todavia no debe usar tokens/JWTs en Git/chat.
