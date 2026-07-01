@@ -706,6 +706,10 @@ Estado de S4.6.1:
   dry-run. No crea scripts, no genera snapshot real, no lee LocalStorage real,
   no exporta datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no
   conecta la app.
+- S4.6.4.40 crea `docs/supabase/MIGRATION_DRY_RUN_REPORT_FORMAT.md` como
+  formato documental futuro para el reporte de migration dry-run. No crea
+  scripts, no ejecuta dry-run real, no genera snapshot real, no lee datos
+  reales, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -802,8 +806,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Mapping local JSON/LocalStorage -> tablas remotas documentado.
 - Dry-run de migracion documentado.
 - Formato snapshot/export documental definido.
-- Reglas de validacion de snapshot/export documentadas; falta formato de
-  reporte del dry-run.
+- Reglas de validacion de snapshot/export documentadas.
+- Formato de reporte del dry-run documentado; falta checklist de gate para
+  insert.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -838,7 +843,10 @@ snapshot real.
 `docs/supabase/LOCAL_SNAPSHOT_VALIDATION_RULES.md` documenta reglas futuras
 para validar ese snapshot antes del dry-run, sin crear scripts, leer datos
 reales ni conectar runtime.
+`docs/supabase/MIGRATION_DRY_RUN_REPORT_FORMAT.md` documenta el formato futuro
+del reporte del dry-run para revisar conteos, warnings, conflictos, duplicados,
+media pendiente y NO-GO reasons antes de cualquier insert.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar el migration dry-run
-report format como docs-only.
+desarrollo. La siguiente fase recomendada es disenar el migration insert gate
+checklist como docs-only.

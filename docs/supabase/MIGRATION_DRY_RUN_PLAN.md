@@ -43,7 +43,9 @@ Future dry-run inputs:
 
 ## Expected Future Outputs
 
-The dry-run report should be sanitized and should include:
+The dry-run report format is documented in
+`MIGRATION_DRY_RUN_REPORT_FORMAT.md`. The report should be sanitized and should
+include:
 
 - Count summary by collection/type/kind.
 - Valid item list, without private content bodies.
@@ -117,12 +119,12 @@ Recommended future sequence:
 
 ## Suggested Next Phase
 
-Design the migration dry-run report format as docs-only work.
+Design the migration insert gate checklist as docs-only work.
 
 That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, touch runtime, modify `src`, execute SQL, use
-Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit private files,
-touch Storage or run reset.
+LocalStorage, export real data, execute dry-runs, touch runtime, modify `src`,
+execute SQL, use Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit
+private files, touch Storage or run reset.
 
 ## Non-Goals
 

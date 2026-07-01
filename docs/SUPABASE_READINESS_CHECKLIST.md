@@ -150,6 +150,10 @@ Estado verificado post-S4.5.1:
       reglas documentales futuras de validacion para snapshot/export local, sin
       crear scripts, sin generar snapshot real, sin leer LocalStorage real, sin
       exportar datos reales, sin ejecutar migracion y sin conectar la app.
+- [x] S4.6.4.40 crea `docs/supabase/MIGRATION_DRY_RUN_REPORT_FORMAT.md` como
+      formato documental futuro para el reporte de migration dry-run, sin crear
+      scripts, sin ejecutar dry-run real, sin generar snapshot real, sin leer
+      datos reales, sin ejecutar migracion y sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -477,7 +481,14 @@ la siguiente.
   crea scripts, no genera snapshot real, no lee LocalStorage real, no exporta
   datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la
   app.
-- Salida futura: disenar migration dry-run report format como docs-only, sin
+- Estado S4.6.4.40:
+  `docs/supabase/MIGRATION_DRY_RUN_REPORT_FORMAT.md` documenta el formato
+  futuro del reporte de migration dry-run para revisar conteos, warnings,
+  conflictos, duplicados, media pendiente y resultado final antes de cualquier
+  insert. No crea scripts, no ejecuta dry-run real, no genera snapshot real, no
+  lee datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta
+  la app.
+- Salida futura: disenar migration insert gate checklist como docs-only, sin
   crear scripts ni conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
@@ -593,7 +604,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Migration dry-run plan documental.
 - [x] Snapshot/export format documental.
 - [x] Snapshot validation rules documental.
-- [ ] Migration dry-run report format.
+- [x] Migration dry-run report format documental.
+- [ ] Migration insert gate checklist.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

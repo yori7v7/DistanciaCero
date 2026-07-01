@@ -174,7 +174,8 @@ Allowed in documentation:
 
 ## Expected Future Report
 
-A future sanitized validation report should include:
+A future sanitized validation report should feed the dry-run report format
+documented in `MIGRATION_DRY_RUN_REPORT_FORMAT.md`. It should include:
 
 - Counts by type.
 - Total count.
@@ -199,12 +200,12 @@ passwords, real UUIDs, real project refs, private URLs or personal real emails.
 
 ## Suggested Next Phase
 
-Design the migration dry-run report format as docs-only work.
+Design the migration insert gate checklist as docs-only work.
 
 That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, touch runtime, modify `src`, execute SQL, use
-Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit private files,
-touch Storage or run reset.
+LocalStorage, export real data, execute dry-runs, touch runtime, modify `src`,
+execute SQL, use Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit
+private files, touch Storage or run reset.
 
 ## Non-Goals
 
