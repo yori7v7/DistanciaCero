@@ -146,6 +146,10 @@ Estado verificado post-S4.5.1:
       formato documental futuro de snapshot/export local, sin crear scripts, sin
       generar snapshot real, sin exportar datos reales, sin leer LocalStorage
       real, sin tocar runtime y sin conectar la app.
+- [x] S4.6.4.39 crea `docs/supabase/LOCAL_SNAPSHOT_VALIDATION_RULES.md` como
+      reglas documentales futuras de validacion para snapshot/export local, sin
+      crear scripts, sin generar snapshot real, sin leer LocalStorage real, sin
+      exportar datos reales, sin ejecutar migracion y sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -467,8 +471,14 @@ la siguiente.
   scripts, no genera snapshot real, no exporta datos reales, no lee
   LocalStorage real, no toca Supabase/CLI/Dashboard, no toca runtime y no
   conecta la app.
-- Salida futura: disenar snapshot validation rules como docs-only, sin crear
-  scripts ni conectar aun la app.
+- Estado S4.6.4.39:
+  `docs/supabase/LOCAL_SNAPSHOT_VALIDATION_RULES.md` documenta reglas futuras
+  de validacion para un snapshot/export local antes de cualquier dry-run. No
+  crea scripts, no genera snapshot real, no lee LocalStorage real, no exporta
+  datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la
+  app.
+- Salida futura: disenar migration dry-run report format como docs-only, sin
+  crear scripts ni conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -582,7 +592,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Mapping documental local JSON/LocalStorage -> tablas remotas.
 - [x] Migration dry-run plan documental.
 - [x] Snapshot/export format documental.
-- [ ] Snapshot validation rules.
+- [x] Snapshot validation rules documental.
+- [ ] Migration dry-run report format.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

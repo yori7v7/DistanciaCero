@@ -701,6 +701,11 @@ Estado de S4.6.1:
   documental futuro para snapshot/export local. No crea scripts, no genera
   snapshot real, no exporta datos reales, no lee LocalStorage real, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.39 crea `docs/supabase/LOCAL_SNAPSHOT_VALIDATION_RULES.md` como reglas
+  documentales futuras de validacion para snapshot/export local antes del
+  dry-run. No crea scripts, no genera snapshot real, no lee LocalStorage real,
+  no exporta datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no
+  conecta la app.
 
 Validacion y rollback:
 
@@ -796,7 +801,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Migracion de Data URL.
 - Mapping local JSON/LocalStorage -> tablas remotas documentado.
 - Dry-run de migracion documentado.
-- Formato snapshot/export documental definido; faltan reglas de validacion.
+- Formato snapshot/export documental definido.
+- Reglas de validacion de snapshot/export documentadas; falta formato de
+  reporte del dry-run.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -828,7 +835,10 @@ fase.
 `docs/supabase/LOCAL_SNAPSHOT_EXPORT_FORMAT.md` documenta el formato futuro de
 snapshot/export local que alimentaria ese dry-run, sin crear scripts ni generar
 snapshot real.
+`docs/supabase/LOCAL_SNAPSHOT_VALIDATION_RULES.md` documenta reglas futuras
+para validar ese snapshot antes del dry-run, sin crear scripts, leer datos
+reales ni conectar runtime.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar snapshot validation rules
-como docs-only.
+desarrollo. La siguiente fase recomendada es disenar el migration dry-run
+report format como docs-only.

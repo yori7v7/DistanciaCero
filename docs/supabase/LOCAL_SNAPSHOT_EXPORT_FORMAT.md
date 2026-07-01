@@ -235,7 +235,8 @@ Expected warning categories:
 
 ## Future Validations
 
-Future validation rules should confirm:
+Future validation rules are documented in
+`LOCAL_SNAPSHOT_VALIDATION_RULES.md`. They should confirm:
 
 - `snapshotVersion` is present.
 - `counts` match arrays.
@@ -283,11 +284,12 @@ Future validation rules should confirm:
 
 ## Suggested Next Phase
 
-Design snapshot validation rules as docs-only work.
+Design the migration dry-run report format as docs-only work.
 
-That phase should not create scripts, read real LocalStorage, touch runtime,
-modify `src`, execute SQL, use Supabase Dashboard, use Supabase CLI, touch
-`.env.local`, edit private files, touch Storage or run reset.
+That phase should not create scripts, generate real snapshots, read real
+LocalStorage, export real data, touch runtime, modify `src`, execute SQL, use
+Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit private files,
+touch Storage or run reset.
 
 ## Non-Goals
 

@@ -132,15 +132,16 @@ Recommended future path:
 
 1. Prepare a future local snapshot shaped by
    `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`.
-2. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
-3. Validate counts per collection and per kind.
-4. Validate identity mapping privately, outside Git.
-5. Validate duplicate detection using legacy ids and source markers.
-6. Insert into a disposable lab only after explicit approval.
-7. Run read-only verification of counts, FK chain and metadata.
-8. Run RLS verification with synthetic users.
-9. Integrate one UI feature behind an off-by-default feature flag.
-10. Keep rollback to local-only mode available.
+2. Validate the snapshot with `LOCAL_SNAPSHOT_VALIDATION_RULES.md`.
+3. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
+4. Validate counts per collection and per kind.
+5. Validate identity mapping privately, outside Git.
+6. Validate duplicate detection using legacy ids and source markers.
+7. Insert into a disposable lab only after explicit approval.
+8. Run read-only verification of counts, FK chain and metadata.
+9. Run RLS verification with synthetic users.
+10. Integrate one UI feature behind an off-by-default feature flag.
+11. Keep rollback to local-only mode available.
 
 ## NO-GO Criteria
 
@@ -156,11 +157,11 @@ Recommended future path:
 
 ## Next Recommended Phase
 
-Design snapshot validation rules as docs-only work.
+Design the migration dry-run report format as docs-only work.
 
-That phase should not create scripts, read real LocalStorage, touch runtime,
-`src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`, private files,
-Storage or reset.
+That phase should not create scripts, generate real snapshots, read real
+LocalStorage, export real data, touch runtime, `src`, SQL, Supabase Dashboard,
+Supabase CLI, `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

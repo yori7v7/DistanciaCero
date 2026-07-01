@@ -32,6 +32,7 @@ Future dry-run inputs:
 
 - Sanitized local export/snapshot shaped by
   `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`.
+- Snapshot validation result from `LOCAL_SNAPSHOT_VALIDATION_RULES.md`.
 - `LOCAL_TO_REMOTE_CONTENT_MAPPING.md` reviewed as the mapping source.
 - Selected local identity context: Yori, Ale or legacy/unknown.
 - Target disposable lab relationship space selected privately.
@@ -83,13 +84,14 @@ Recommended future sequence:
 | Phase | Action | Network/Supabase |
 | --- | --- | --- |
 | A | Create or choose a local snapshot/export shaped by `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`. | None. |
-| B | Run transform dry-run locally without network. | None. |
-| C | Produce sanitized dry-run report. | None. |
-| D | Human review of counts, omissions, conflicts and risks. | None. |
-| E | Controlled insert into disposable lab only with explicit approval. | Future approved phase only. |
-| F | Read-only verification in lab. | Future approved phase only. |
-| G | RLS verification with synthetic users. | Future approved phase only. |
-| H | Rollback/reset lab if anything fails. | Future approved phase only. |
+| B | Validate the snapshot against `LOCAL_SNAPSHOT_VALIDATION_RULES.md`. | None. |
+| C | Run transform dry-run locally without network only after validation allows it. | None. |
+| D | Produce sanitized dry-run report. | None. |
+| E | Human review of counts, omissions, conflicts and risks. | None. |
+| F | Controlled insert into disposable lab only with explicit approval. | Future approved phase only. |
+| G | Read-only verification in lab. | Future approved phase only. |
+| H | RLS verification with synthetic users. | Future approved phase only. |
+| I | Rollback/reset lab if anything fails. | Future approved phase only. |
 
 ## NO-GO Criteria
 
@@ -115,11 +117,12 @@ Recommended future sequence:
 
 ## Suggested Next Phase
 
-Design snapshot validation rules as docs-only work.
+Design the migration dry-run report format as docs-only work.
 
-That phase should not create scripts, read real LocalStorage, touch runtime,
-modify `src`, execute SQL, use Supabase Dashboard, use Supabase CLI, touch
-`.env.local`, edit private files, touch Storage or run reset.
+That phase should not create scripts, generate real snapshots, read real
+LocalStorage, export real data, touch runtime, modify `src`, execute SQL, use
+Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit private files,
+touch Storage or run reset.
 
 ## Non-Goals
 
