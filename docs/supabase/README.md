@@ -92,6 +92,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   futuro de scripts de snapshot/export y migration dry-run. No crea scripts,
   no genera snapshot real, no lee LocalStorage real, no ejecuta dry-run, no
   inserta datos y no conecta runtime.
+- S4.6.4.46 crea `MOCK_SNAPSHOT_EXAMPLES.md` con ejemplos documentales
+  sanitizados de snapshot PASS, snapshot CHECK, snapshot NO-GO, dry-run report
+  y resumen humano mock. No crea scripts, no genera JSON real fuera de docs,
+  no lee LocalStorage real, no ejecuta dry-run, no inserta datos y no conecta
+  runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -219,6 +224,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   conceptual de futuros scripts de snapshot/export, validacion, dry-run y
   resumen sanitizado. No crea scripts, no genera snapshots reales, no lee
   LocalStorage real, no ejecuta dry-run, no inserta datos y no conecta runtime.
+- `MOCK_SNAPSHOT_EXAMPLES.md`: documento S4.6.4.46 con ejemplos mock
+  sanitizados de snapshot local y dry-run report para referencia futura de
+  validadores/scripts. No contiene datos reales, no crea JSON real fuera de
+  docs, no ejecuta dry-run y no autoriza inserts.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -260,6 +269,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar fixtures/mock snapshot examples como docs-only work, sin crear scripts
-ejecutables, sin generar snapshot real, sin leer LocalStorage real, sin ejecutar
-dry-run, sin insertar datos y sin tocar runtime.
+Disenar un script implementation plan como docs-only work o decidir si crear un
+primer mock-only validator en una fase futura separada, sin tocar runtime, sin
+datos reales, sin Supabase y sin crear scripts todavia.

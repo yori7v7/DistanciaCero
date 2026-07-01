@@ -730,6 +730,11 @@ Estado de S4.6.1:
   resumen sanitizado. No crea scripts, no genera snapshot real, no lee
   LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.46 crea `docs/supabase/MOCK_SNAPSHOT_EXAMPLES.md` con ejemplos mock
+  sanitizados de snapshot PASS, snapshot CHECK, snapshot NO-GO, dry-run report
+  y resumen humano. No crea scripts, no genera JSON real fuera de docs, no lee
+  LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -831,8 +836,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Checklist de gate para insert documentado.
 - Plan de insert controlado en lab documentado.
 - Auditoria global de docs Supabase y reparacion next-phase documentadas;
-- Diseno docs-only de snapshot/dry-run script documentado; faltan fixtures/mock
-  snapshot examples docs-only.
+- Diseno docs-only de snapshot/dry-run script documentado.
+- Mock snapshot examples docs-only documentado; falta script implementation
+  plan docs-only o decision de mock-only validator.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -880,9 +886,12 @@ read-only S4.6.4.43 y la necesidad de reparacion S4.6.4.44.
 `docs/supabase/SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md` documenta el diseno
 conceptual de futuros scripts de snapshot/export, validacion, dry-run y resumen
 sanitizado, sin implementar scripts ni leer datos reales.
+`docs/supabase/MOCK_SNAPSHOT_EXAMPLES.md` documenta ejemplos mock sanitizados
+de snapshot local y dry-run report para futura referencia de validadores/scripts,
+sin crear JSON real fuera de docs ni ejecutar dry-run.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar fixtures/mock snapshot
-examples como docs-only work, sin crear scripts ejecutables, sin snapshot real,
-sin leer LocalStorage real, sin dry-run real, sin insert real y sin tocar
-runtime.
+desarrollo. La siguiente fase recomendada es disenar un script implementation
+plan como docs-only work o decidir si crear un primer mock-only validator en
+una fase futura separada, sin crear scripts todavia, sin snapshot real, sin
+leer LocalStorage real, sin dry-run real, sin insert real y sin tocar runtime.

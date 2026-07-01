@@ -174,6 +174,11 @@ Estado verificado post-S4.5.1:
       dry-run y resumen sanitizado. No crea scripts, no genera snapshot real,
       no lee LocalStorage real, no ejecuta dry-run real, no inserta datos y no
       conecta la app.
+- [x] S4.6.4.46 crea `docs/supabase/MOCK_SNAPSHOT_EXAMPLES.md` con ejemplos
+      documentales sanitizados de snapshot PASS, snapshot CHECK, snapshot
+      NO-GO, dry-run report y resumen humano mock. No crea scripts, no genera
+      JSON real fuera de docs, no lee LocalStorage real, no ejecuta dry-run
+      real, no inserta datos y no conecta la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -534,9 +539,16 @@ la siguiente.
   resumen sanitizado. No crea scripts, no genera snapshot real, no lee
   LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
-- Salida futura: fixtures/mock snapshot examples como docs-only work, sin crear
-  script ejecutable, sin snapshot real, sin leer LocalStorage real, sin dry-run
-  real, sin insert real, sin tocar runtime y sin conectar aun la app.
+- Estado S4.6.4.46:
+  `docs/supabase/MOCK_SNAPSHOT_EXAMPLES.md` documenta ejemplos mock
+  sanitizados de snapshot local y dry-run report para referencia futura de
+  validadores/scripts. No crea scripts, no genera JSON real fuera de docs, no
+  lee LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- Salida futura: script implementation plan docs-only o mock-only validator
+  decision, sin crear script ejecutable todavia, sin snapshot real, sin leer
+  LocalStorage real, sin dry-run real, sin insert real, sin tocar runtime y sin
+  conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -657,7 +669,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Global Supabase docs consistency audit before scripts.
 - [x] Supabase docs next-phase consistency repair.
 - [x] Snapshot/dry-run script design docs-only.
-- [ ] Fixtures/mock snapshot examples docs-only.
+- [x] Fixtures/mock snapshot examples docs-only.
+- [ ] Script implementation plan docs-only or mock-only validator decision.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

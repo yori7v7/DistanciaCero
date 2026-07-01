@@ -173,9 +173,14 @@ The future design is `NO-GO` if it:
 
 ## Suggested Next Phase
 
+Historical next phase completed/superseded:
+
+- Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
+
 Suggested next phase:
 
-- Design fixtures/mock snapshot examples as docs-only work.
+- Design a script implementation plan as docs-only work, or decide whether to
+  create a first mock-only validator in a separate future phase.
 - Still no real scripts.
 - Still no real data.
 - Still no real snapshot generation.
