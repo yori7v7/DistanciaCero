@@ -78,6 +78,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.41 crea `MIGRATION_INSERT_GATE_CHECKLIST.md` para documentar el gate
   futuro previo a cualquier insert controlado, sin crear scripts, sin insertar
   datos, sin ejecutar dry-run, sin tocar Supabase y sin conectar runtime.
+- S4.6.4.42 crea `CONTROLLED_LAB_INSERT_PLAN.md` para documentar el plan futuro
+  de insert controlado en laboratorio desechable, sin crear scripts, sin
+  insertar datos, sin ejecutar dry-run, sin tocar Supabase y sin conectar
+  runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -194,6 +198,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   futuro previo a cualquier insert controlado de contenido migrado. No crea
   scripts, no inserta datos, no ejecuta dry-run real, no toca Supabase y no
   conecta runtime.
+- `CONTROLLED_LAB_INSERT_PLAN.md`: documento S4.6.4.42 del plan futuro para un
+  insert controlado en laboratorio desechable. No crea scripts, no inserta
+  datos, no ejecuta dry-run real, no toca Supabase y no conecta runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -235,5 +242,5 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar el controlled lab insert plan como docs-only, sin crear scripts, sin
-insertar datos, sin ejecutar dry-run y sin tocar runtime.
+Ejecutar una auditoria global de consistencia de docs Supabase antes de crear
+cualquier script, sin crear scripts, sin insertar datos y sin tocar runtime.

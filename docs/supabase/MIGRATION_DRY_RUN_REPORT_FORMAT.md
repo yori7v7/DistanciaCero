@@ -301,14 +301,15 @@ absolute paths or personal real emails.
 - The dry-run report must be reviewed before any insert.
 - The reviewed report should feed `MIGRATION_INSERT_GATE_CHECKLIST.md` before
   any controlled lab insert is planned.
-- Insert into a disposable lab requires explicit approval.
+- Insert into a disposable lab requires explicit approval and should follow
+  `CONTROLLED_LAB_INSERT_PLAN.md`.
 - App connection remains blocked until feature flag and controlled integration
   phases are approved.
 - A successful dry-run report is not production readiness.
 
 ## Suggested Next Phase
 
-Design the controlled lab insert plan as docs-only work.
+Run a global Supabase docs consistency audit before creating any script.
 
 That phase should not create scripts, generate real snapshots, read real
 LocalStorage, export real data, execute dry-runs, insert data, touch runtime,

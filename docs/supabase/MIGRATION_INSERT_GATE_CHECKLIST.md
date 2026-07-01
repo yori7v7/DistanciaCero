@@ -146,6 +146,8 @@ full intimate content.
 
 - This gate comes after snapshot validation and dry-run report review.
 - Passing this gate only permits planning a controlled lab insert.
+- The controlled lab insert plan is documented in
+  `CONTROLLED_LAB_INSERT_PLAN.md`.
 - It does not execute inserts.
 - It does not connect the app.
 - It does not imply backend readiness or production readiness.
@@ -153,7 +155,7 @@ full intimate content.
 
 ## Suggested Next Phase
 
-Design the controlled lab insert plan as docs-only work.
+Run a global Supabase docs consistency audit before creating any script.
 
 That phase should not create scripts, generate real snapshots, read real
 LocalStorage, export real data, execute dry-runs, insert data, touch runtime,

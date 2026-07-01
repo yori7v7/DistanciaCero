@@ -91,7 +91,7 @@ Recommended future sequence:
 | D | Produce sanitized dry-run report. | None. |
 | E | Human review of counts, omissions, conflicts and risks. | None. |
 | F | Pass the insert gate documented in `MIGRATION_INSERT_GATE_CHECKLIST.md`. | None. |
-| G | Controlled insert into disposable lab only with explicit approval. | Future approved phase only. |
+| G | Follow `CONTROLLED_LAB_INSERT_PLAN.md` for any future controlled lab insert. | Future approved phase only. |
 | H | Read-only verification in lab. | Future approved phase only. |
 | I | RLS verification with synthetic users. | Future approved phase only. |
 | J | Rollback/reset lab if anything fails. | Future approved phase only. |
@@ -120,7 +120,7 @@ Recommended future sequence:
 
 ## Suggested Next Phase
 
-Design the controlled lab insert plan as docs-only work.
+Run a global Supabase docs consistency audit before creating any script.
 
 That phase should not create scripts, generate real snapshots, read real
 LocalStorage, export real data, execute dry-runs, insert data, touch runtime,

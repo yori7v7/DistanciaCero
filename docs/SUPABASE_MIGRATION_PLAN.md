@@ -714,6 +714,10 @@ Estado de S4.6.1:
   checklist/gate documental futuro previo a cualquier insert controlado de
   contenido migrado. No crea scripts, no inserta datos, no ejecuta dry-run real,
   no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.42 crea `docs/supabase/CONTROLLED_LAB_INSERT_PLAN.md` como plan
+  documental futuro para insert controlado en laboratorio desechable. No crea
+  scripts, no inserta datos, no ejecuta dry-run real, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -812,8 +816,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Formato snapshot/export documental definido.
 - Reglas de validacion de snapshot/export documentadas.
 - Formato de reporte del dry-run documentado.
-- Checklist de gate para insert documentado; falta plan de insert controlado en
-  lab.
+- Checklist de gate para insert documentado.
+- Plan de insert controlado en lab documentado; falta auditoria global de docs
+  antes de cualquier script.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -853,7 +858,10 @@ del reporte del dry-run para revisar conteos, warnings, conflictos, duplicados,
 media pendiente y NO-GO reasons antes de cualquier insert.
 `docs/supabase/MIGRATION_INSERT_GATE_CHECKLIST.md` documenta el gate que debe
 cumplirse antes de planear cualquier insert controlado en laboratorio.
+`docs/supabase/CONTROLLED_LAB_INSERT_PLAN.md` documenta como se planearia un
+insert controlado en el laboratorio desechable sin ejecutar inserts ni crear
+scripts en esta fase.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar el controlled lab insert
-plan como docs-only.
+desarrollo. La siguiente fase recomendada es ejecutar una auditoria global de
+consistencia de docs Supabase antes de crear cualquier script.

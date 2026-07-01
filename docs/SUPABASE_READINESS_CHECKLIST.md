@@ -158,6 +158,10 @@ Estado verificado post-S4.5.1:
       checklist/gate documental futuro previo a cualquier insert controlado,
       sin crear scripts, sin insertar datos, sin ejecutar dry-run real, sin
       tocar Supabase/CLI/Dashboard y sin conectar la app.
+- [x] S4.6.4.42 crea `docs/supabase/CONTROLLED_LAB_INSERT_PLAN.md` como plan
+      documental futuro para insert controlado en laboratorio desechable, sin
+      crear scripts, sin insertar datos, sin ejecutar dry-run real, sin tocar
+      Supabase/CLI/Dashboard y sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -498,8 +502,14 @@ la siguiente.
   scripts, no inserta datos, no ejecuta dry-run real, no genera snapshot real,
   no lee datos reales, no toca Supabase/CLI/Dashboard, no toca runtime y no
   conecta la app.
-- Salida futura: disenar controlled lab insert plan como docs-only, sin crear
-  scripts ni conectar aun la app.
+- Estado S4.6.4.42:
+  `docs/supabase/CONTROLLED_LAB_INSERT_PLAN.md` documenta el plan futuro para
+  un insert controlado en el laboratorio desechable solo despues de snapshot
+  validation, dry-run report e insert gate. No crea scripts, no inserta datos,
+  no ejecuta dry-run real, no genera snapshot real, no lee datos reales, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- Salida futura: auditoria global de consistencia de docs Supabase antes de
+  crear cualquier script, sin crear scripts ni conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -616,7 +626,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Snapshot validation rules documental.
 - [x] Migration dry-run report format documental.
 - [x] Migration insert gate checklist documental.
-- [ ] Controlled lab insert plan.
+- [x] Controlled lab insert plan documental.
+- [ ] Global Supabase docs consistency audit before scripts.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
