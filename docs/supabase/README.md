@@ -97,6 +97,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   y resumen humano mock. No crea scripts, no genera JSON real fuera de docs,
   no lee LocalStorage real, no ejecuta dry-run, no inserta datos y no conecta
   runtime.
+- S4.6.4.47 crea `SCRIPT_IMPLEMENTATION_PLAN.md` para documentar que el primer
+  script futuro recomendado es un validador mock-only sin red. No crea scripts,
+  no crea `scripts/migration`, no genera snapshot real, no lee LocalStorage
+  real, no ejecuta dry-run, no inserta datos y no conecta runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -228,6 +232,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   sanitizados de snapshot local y dry-run report para referencia futura de
   validadores/scripts. No contiene datos reales, no crea JSON real fuera de
   docs, no ejecuta dry-run y no autoriza inserts.
+- `SCRIPT_IMPLEMENTATION_PLAN.md`: documento S4.6.4.47 del plan de
+  implementacion para el primer script futuro. Recomienda
+  `validate-mock-snapshot.mjs` como validador mock-only sin red para una fase
+  futura, sin crearlo todavia.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -269,6 +277,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar un script implementation plan como docs-only work o decidir si crear un
-primer mock-only validator en una fase futura separada, sin tocar runtime, sin
-datos reales, sin Supabase y sin crear scripts todavia.
+Crear el primer mock-only validator script con alcance extremadamente limitado,
+sin datos reales, sin LocalStorage real, sin Supabase, sin `.env.local`, sin
+runtime y sin dry-run real.

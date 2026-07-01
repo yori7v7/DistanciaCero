@@ -129,8 +129,11 @@ Current next phase:
 
 - Snapshot/dry-run script design is now documented in
   `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
-- Next suggested phase: design fixtures/mock snapshot examples as docs-only
-  work.
+- Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
+- Script implementation planning is now documented in
+  `SCRIPT_IMPLEMENTATION_PLAN.md`.
+- Next suggested phase: create the first mock-only validator script with
+  limited scope.
 - Still no executable script, real snapshot, real LocalStorage read, real
   dry-run, real insert, runtime change, SQL execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.

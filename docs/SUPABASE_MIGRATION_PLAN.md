@@ -735,6 +735,12 @@ Estado de S4.6.1:
   y resumen humano. No crea scripts, no genera JSON real fuera de docs, no lee
   LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.47 crea `docs/supabase/SCRIPT_IMPLEMENTATION_PLAN.md` como plan
+  documental para el primer script futuro. Recomienda
+  `validate-mock-snapshot.mjs` como validador mock-only sin red para una fase
+  futura. No crea scripts, no crea `scripts/migration`, no genera snapshot
+  real, no lee LocalStorage real, no ejecuta dry-run real, no inserta datos, no
+  toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -837,8 +843,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Plan de insert controlado en lab documentado.
 - Auditoria global de docs Supabase y reparacion next-phase documentadas;
 - Diseno docs-only de snapshot/dry-run script documentado.
-- Mock snapshot examples docs-only documentado; falta script implementation
-  plan docs-only o decision de mock-only validator.
+- Mock snapshot examples docs-only documentado.
+- Script implementation plan docs-only documentado; falta crear primer
+  mock-only validator script con alcance limitado.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -889,9 +896,12 @@ sanitizado, sin implementar scripts ni leer datos reales.
 `docs/supabase/MOCK_SNAPSHOT_EXAMPLES.md` documenta ejemplos mock sanitizados
 de snapshot local y dry-run report para futura referencia de validadores/scripts,
 sin crear JSON real fuera de docs ni ejecutar dry-run.
+`docs/supabase/SCRIPT_IMPLEMENTATION_PLAN.md` documenta que el primer script
+futuro recomendado es un validador mock-only sin red, sin Supabase, sin
+`.env.local`, sin LocalStorage real y sin runtime.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar un script implementation
-plan como docs-only work o decidir si crear un primer mock-only validator en
-una fase futura separada, sin crear scripts todavia, sin snapshot real, sin
-leer LocalStorage real, sin dry-run real, sin insert real y sin tocar runtime.
+desarrollo. La siguiente fase recomendada es crear el primer mock-only
+validator script con alcance extremadamente limitado, sin datos reales, sin
+LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin dry-run
+real.

@@ -179,6 +179,10 @@ Estado verificado post-S4.5.1:
       NO-GO, dry-run report y resumen humano mock. No crea scripts, no genera
       JSON real fuera de docs, no lee LocalStorage real, no ejecuta dry-run
       real, no inserta datos y no conecta la app.
+- [x] S4.6.4.47 crea `docs/supabase/SCRIPT_IMPLEMENTATION_PLAN.md` como plan
+      documental del primer script futuro. Recomienda un validador mock-only
+      sin red, sin Supabase, sin `.env.local`, sin LocalStorage real y sin
+      runtime. No crea scripts ni `scripts/migration`.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -545,10 +549,15 @@ la siguiente.
   validadores/scripts. No crea scripts, no genera JSON real fuera de docs, no
   lee LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
-- Salida futura: script implementation plan docs-only o mock-only validator
-  decision, sin crear script ejecutable todavia, sin snapshot real, sin leer
-  LocalStorage real, sin dry-run real, sin insert real, sin tocar runtime y sin
-  conectar aun la app.
+- Estado S4.6.4.47:
+  `docs/supabase/SCRIPT_IMPLEMENTATION_PLAN.md` documenta que el primer script
+  futuro recomendado es un validador mock-only sin red. No crea scripts, no
+  crea `scripts/migration`, no genera JSON real fuera de docs, no genera
+  snapshot real, no lee LocalStorage real, no ejecuta dry-run real, no inserta
+  datos, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- Salida futura: crear el primer mock-only validator script con alcance
+  extremadamente limitado, sin datos reales, sin LocalStorage real, sin
+  Supabase, sin `.env.local`, sin runtime y sin dry-run real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -670,7 +679,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Supabase docs next-phase consistency repair.
 - [x] Snapshot/dry-run script design docs-only.
 - [x] Fixtures/mock snapshot examples docs-only.
-- [ ] Script implementation plan docs-only or mock-only validator decision.
+- [x] Script implementation plan docs-only and mock-only validator decision.
+- [ ] First mock-only validator script with limited scope.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

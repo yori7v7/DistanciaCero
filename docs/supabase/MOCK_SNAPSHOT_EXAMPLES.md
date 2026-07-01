@@ -501,8 +501,10 @@ This document or any future example is `NO-GO` if:
 
 Suggested next phase:
 
-- Design a script implementation plan as docs-only work, or decide whether to
-  create a first mock-only validator in a separate future phase.
+- Script implementation planning is now documented in
+  `SCRIPT_IMPLEMENTATION_PLAN.md`.
+- Next suggested phase: create the first mock-only validator script in a
+  separate future phase with extremely limited scope.
 - Still no runtime changes.
 - Still no real data.
 - Still no Supabase, CLI, Dashboard, SQL, Storage or `.env.local` changes.
