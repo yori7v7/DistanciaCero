@@ -81,6 +81,9 @@ Para una fase futura:
 - Reportar solo PASS/CHECK sanitizado.
 - Mantener app desconectada.
 
+S4.6.4.21 documenta la preparacion en `RLS_PRIVATE_SCRIPT_PREP.md`, sin crear
+el script privado real y sin ejecutar pruebas.
+
 ## Pruebas futuras esperadas
 
 Solo planear, no ejecutar:
@@ -151,12 +154,14 @@ Verdict:
 
 ## Next recommended phase
 
-S4.6.4.21 - RLS private script prep
+S4.6.4.22 - Private RLS script creation outside repo
 
 Clarifications:
 
-- Esa fase puede preparar instrucciones para un script temporal local fuera del
+- S4.6.4.21 ya prepara instrucciones para un script temporal local fuera del
   repo.
+- La siguiente fase podria crear un script temporal fuera del repo con
+  aprobacion explicita.
 - Todavia no debe ejecutar pruebas RLS.
 - Todavia no debe conectar la app.
 - Todavia no debe pedir valores sensibles en chat.

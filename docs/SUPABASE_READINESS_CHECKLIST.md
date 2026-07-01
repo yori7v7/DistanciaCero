@@ -115,6 +115,10 @@ Estado verificado post-S4.5.1:
       documental de metodo. Recomienda script temporal local fuera del repo
       para una fase futura, sin ejecutar pruebas, sin usar CLI y sin conectar
       la app.
+- [x] S4.6.4.21 crea `docs/supabase/RLS_PRIVATE_SCRIPT_PREP.md` como
+      preparacion documental para un script temporal local fuera del repo. No
+      crea script privado, no ejecuta pruebas, no usa tokens/JWTs y no toca
+      Supabase.
 - [x] RLS end-to-end execution, Auth/RLS test real, reset, Storage, conexion de
       app, backend readiness y production readiness siguen pendientes.
 
@@ -387,6 +391,11 @@ la siguiente.
   temporal local fuera del repo, con secretos manejados privadamente. No
   ejecuta pruebas, no usa CLI, no toca Supabase, no conecta la app y no
   modifica runtime.
+- Estado S4.6.4.21:
+  `docs/supabase/RLS_PRIVATE_SCRIPT_PREP.md` documenta preparacion para un
+  script temporal local fuera del repo en una fase futura. No crea script
+  privado real, no crea carpetas privadas, no ejecuta pruebas, no usa
+  tokens/JWTs, no toca Supabase, no conecta la app y no modifica runtime.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

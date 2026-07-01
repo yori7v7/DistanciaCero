@@ -71,6 +71,9 @@ S4.6.4.20 documenta la decision de metodo en
 un script temporal local fuera del repo, con valores sensibles manejados
 privadamente.
 
+S4.6.4.21 documenta la preparacion en `RLS_PRIVATE_SCRIPT_PREP.md`, sin crear
+el script privado real, sin ejecutar pruebas y sin tocar Supabase.
+
 ## Datos/secretos prohibidos
 
 - No UUIDs reales en Git/chat.
@@ -111,13 +114,15 @@ Plantilla sanitizada de resultado:
 
 ## Next recommended phase
 
-S4.6.4.21 - RLS private script prep
+S4.6.4.22 - Private RLS script creation outside repo
 
 Clarifications:
 
 - S4.6.4.20 ya decide el metodo seguro de prueba sin ejecutarla.
-- La siguiente fase puede preparar instrucciones para un script temporal local
-  fuera del repo.
+- S4.6.4.21 ya prepara instrucciones para un script temporal local fuera del
+  repo sin crear el script privado real.
+- La siguiente fase podria crear un script temporal fuera del repo con
+  aprobacion explicita.
 - Todavia no debe ejecutar pruebas.
 - Todavia no debe conectar la app.
 - Todavia no debe usar tokens/JWTs en Git/chat.

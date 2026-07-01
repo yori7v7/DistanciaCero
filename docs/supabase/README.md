@@ -45,6 +45,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   futura prueba RLS end-to-end, sin ejecutar pruebas ni conectar la app.
 - S4.6.4.20 crea `RLS_TEST_METHOD_DECISION.md` como decision documental de
   metodo. Recomienda script temporal local fuera del repo para una fase futura.
+- S4.6.4.21 crea `RLS_PRIVATE_SCRIPT_PREP.md` como preparacion documental para
+  un script temporal local fuera del repo. No crea el script privado real.
 - RLS end-to-end execution, Auth/RLS tests reales, reset, Storage, app
   connection, backend readiness y production readiness siguen pendientes.
 - No hay backend.
@@ -114,6 +116,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `RLS_TEST_METHOD_DECISION.md`: decision documental S4.6.4.20 para una futura
   prueba RLS end-to-end. Recomienda script temporal local fuera del repo, sin
   ejecutar pruebas, sin usar CLI, sin tocar Supabase y sin conectar la app.
+- `RLS_PRIVATE_SCRIPT_PREP.md`: preparacion documental S4.6.4.21 para un script
+  temporal local fuera del repo. No crea script privado real, no ejecuta
+  pruebas, no usa tokens/JWTs, no toca Supabase y no conecta la app.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
