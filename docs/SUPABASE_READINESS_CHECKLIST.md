@@ -111,6 +111,10 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.19 crea `docs/supabase/RLS_END_TO_END_TEST_PLAN.md` como plan
       documental para una futura prueba RLS end-to-end, sin ejecutar pruebas,
       sin usar tokens/JWTs, sin tocar Supabase y sin conectar la app.
+- [x] S4.6.4.20 crea `docs/supabase/RLS_TEST_METHOD_DECISION.md` como decision
+      documental de metodo. Recomienda script temporal local fuera del repo
+      para una fase futura, sin ejecutar pruebas, sin usar CLI y sin conectar
+      la app.
 - [x] RLS end-to-end execution, Auth/RLS test real, reset, Storage, conexion de
       app, backend readiness y production readiness siguen pendientes.
 
@@ -377,6 +381,12 @@ la siguiente.
   desechable. No ejecuta pruebas, no obtiene tokens/JWTs, no toca Supabase,
   no conecta la app y no modifica runtime. La decision de metodo seguro queda
   pendiente para S4.6.4.20.
+- Estado S4.6.4.20:
+  `docs/supabase/RLS_TEST_METHOD_DECISION.md` documenta la decision de metodo
+  para una futura prueba RLS end-to-end. El metodo recomendado es script
+  temporal local fuera del repo, con secretos manejados privadamente. No
+  ejecuta pruebas, no usa CLI, no toca Supabase, no conecta la app y no
+  modifica runtime.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado

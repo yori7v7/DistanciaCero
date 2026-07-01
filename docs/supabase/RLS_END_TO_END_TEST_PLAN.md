@@ -66,6 +66,11 @@ Estas opciones quedan documentadas sin implementarse todavia:
   con .env.local fuera de Git.
 - No usar service-role en cliente ni en test de RLS de usuario normal.
 
+S4.6.4.20 documenta la decision de metodo en
+`RLS_TEST_METHOD_DECISION.md`: el candidato recomendado para una fase futura es
+un script temporal local fuera del repo, con valores sensibles manejados
+privadamente.
+
 ## Datos/secretos prohibidos
 
 - No UUIDs reales en Git/chat.
@@ -106,11 +111,13 @@ Plantilla sanitizada de resultado:
 
 ## Next recommended phase
 
-S4.6.4.20 - RLS test method decision
+S4.6.4.21 - RLS private script prep
 
 Clarifications:
 
-- Esa fase debe decidir el metodo seguro de prueba.
+- S4.6.4.20 ya decide el metodo seguro de prueba sin ejecutarla.
+- La siguiente fase puede preparar instrucciones para un script temporal local
+  fuera del repo.
 - Todavia no debe ejecutar pruebas.
 - Todavia no debe conectar la app.
 - Todavia no debe usar tokens/JWTs en Git/chat.

@@ -89,6 +89,11 @@ una futura prueba RLS end-to-end con usuarios Auth sinteticos. No ejecuta
 pruebas, no usa tokens/JWTs, no toca Supabase, no conecta la app y no modifica
 runtime.
 
+El archivo `../RLS_TEST_METHOD_DECISION.md` documenta la decision S4.6.4.20
+para una futura prueba RLS end-to-end. Recomienda script temporal local fuera
+del repo, sin ejecutar pruebas, sin usar CLI, sin tocar Supabase y sin conectar
+la app.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -141,6 +146,10 @@ runtime.
 - [x] Existe `../RLS_END_TO_END_TEST_PLAN.md` como plan documental para una
   futura prueba RLS end-to-end. La ejecucion real, Auth/RLS test real, reset,
   Storage y app connection siguen pendientes.
+- [x] Existe `../RLS_TEST_METHOD_DECISION.md` como decision documental de
+  metodo para RLS. El metodo recomendado es script temporal local fuera del
+  repo; la ejecucion real, Auth/RLS test real, reset, Storage y app connection
+  siguen pendientes.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -405,8 +414,11 @@ Reglas:
   Solo SELECT queries, sin reset, Storage, app connection ni RLS end-to-end.
 - **S4.6.4.19:** crear `../RLS_END_TO_END_TEST_PLAN.md` como plan documental de
   una futura prueba RLS end-to-end. No ejecuta pruebas ni conecta la app.
-- **S4.6.4.20:** decision de metodo seguro para prueba RLS; todavia sin ejecutar
-  pruebas ni compartir tokens/JWTs en Git/chat.
+- **S4.6.4.20:** crear `../RLS_TEST_METHOD_DECISION.md` como decision de metodo
+  seguro para prueba RLS. Recomienda script temporal local fuera del repo;
+  todavia sin ejecutar pruebas ni compartir tokens/JWTs en Git/chat.
+- **S4.6.4.21:** preparar instrucciones para script temporal local privado
+  fuera del repo; todavia sin ejecutar pruebas RLS.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -447,6 +459,8 @@ Reglas:
 - [ ] Draft S4.6.4.17 revisado y resultado S4.6.4.18 documentado; RLS
   end-to-end, Auth/RLS tests reales, reset, Storage y app siguen pendientes.
 - [ ] Plan S4.6.4.19 revisado; la decision de metodo seguro y la ejecucion RLS
+  end-to-end siguen pendientes.
+- [ ] Decision S4.6.4.20 revisada; la preparacion privada y ejecucion RLS
   end-to-end siguen pendientes.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
