@@ -169,6 +169,11 @@ Estado verificado post-S4.5.1:
       de auditoria en `docs/supabase/GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`,
       sin crear scripts, sin snapshot real, sin dry-run real, sin insert real y
       sin conectar la app.
+- [x] S4.6.4.45 crea `docs/supabase/SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md` como
+      diseno documental de futuros scripts de snapshot/export, validacion,
+      dry-run y resumen sanitizado. No crea scripts, no genera snapshot real,
+      no lee LocalStorage real, no ejecuta dry-run real, no inserta datos y no
+      conecta la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -521,12 +526,17 @@ la siguiente.
   sin produccion lista, sin Storage tocado, sin snapshot/dry-run/insert real y
   sin `.env.local` llenado.
 - Estado S4.6.4.44:
-  reparacion docs-only de referencias next-phase obsoletas. Si el post-check
-  queda limpio, la siguiente fase puede ser snapshot/dry-run script design como
-  docs-only work.
-- Salida futura: snapshot/dry-run script design como docs-only work, sin crear
-  script ejecutable, sin snapshot real, sin dry-run real, sin insert real, sin
-  tocar runtime y sin conectar aun la app.
+  reparacion docs-only de referencias next-phase obsoletas. Dejo lista la
+  salida hacia la fase documentada en S4.6.4.45.
+- Estado S4.6.4.45:
+  `docs/supabase/SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md` documenta el diseno
+  conceptual de futuros scripts de snapshot/export, validacion, dry-run y
+  resumen sanitizado. No crea scripts, no genera snapshot real, no lee
+  LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- Salida futura: fixtures/mock snapshot examples como docs-only work, sin crear
+  script ejecutable, sin snapshot real, sin leer LocalStorage real, sin dry-run
+  real, sin insert real, sin tocar runtime y sin conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -646,7 +656,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Controlled lab insert plan documental.
 - [x] Global Supabase docs consistency audit before scripts.
 - [x] Supabase docs next-phase consistency repair.
-- [ ] Snapshot/dry-run script design docs-only.
+- [x] Snapshot/dry-run script design docs-only.
+- [ ] Fixtures/mock snapshot examples docs-only.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

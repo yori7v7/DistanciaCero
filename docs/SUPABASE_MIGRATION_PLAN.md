@@ -725,6 +725,11 @@ Estado de S4.6.1:
   `docs/supabase/GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`. No crea scripts, no
   genera snapshot real, no ejecuta dry-run real, no inserta datos, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.45 crea `docs/supabase/SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md` como diseno
+  documental de futuros scripts de snapshot/export, validacion, dry-run y
+  resumen sanitizado. No crea scripts, no genera snapshot real, no lee
+  LocalStorage real, no ejecuta dry-run real, no inserta datos, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -826,7 +831,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Checklist de gate para insert documentado.
 - Plan de insert controlado en lab documentado.
 - Auditoria global de docs Supabase y reparacion next-phase documentadas;
-  falta diseno docs-only de snapshot/dry-run script.
+- Diseno docs-only de snapshot/dry-run script documentado; faltan fixtures/mock
+  snapshot examples docs-only.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -871,9 +877,12 @@ insert controlado en el laboratorio desechable sin ejecutar inserts ni crear
 scripts en esta fase.
 `docs/supabase/GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md` registra la auditoria
 read-only S4.6.4.43 y la necesidad de reparacion S4.6.4.44.
+`docs/supabase/SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md` documenta el diseno
+conceptual de futuros scripts de snapshot/export, validacion, dry-run y resumen
+sanitizado, sin implementar scripts ni leer datos reales.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. Si S4.6.4.44 queda limpio, la siguiente fase recomendada es
-disenar snapshot/dry-run script como docs-only work, sin crear script
-ejecutable, sin snapshot real, sin dry-run real, sin insert real y sin tocar
+desarrollo. La siguiente fase recomendada es disenar fixtures/mock snapshot
+examples como docs-only work, sin crear scripts ejecutables, sin snapshot real,
+sin leer LocalStorage real, sin dry-run real, sin insert real y sin tocar
 runtime.

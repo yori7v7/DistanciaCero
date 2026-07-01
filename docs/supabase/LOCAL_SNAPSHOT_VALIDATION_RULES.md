@@ -207,8 +207,10 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- If S4.6.4.44 docs consistency repair is clean, proceed to
-  snapshot/dry-run script design as docs-only work.
+- Snapshot/dry-run script design is now documented in
+  `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
+- Next suggested phase: design fixtures/mock snapshot examples as docs-only
+  work.
 - Still no executable script, real snapshot, real LocalStorage read, real
   dry-run, real insert, runtime change, `src`, SQL, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.

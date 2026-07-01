@@ -88,6 +88,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.44 repara referencias next-phase obsoletas y registra
   `GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`, sin crear scripts, sin snapshot
   real, sin dry-run real, sin insert real y sin conectar runtime.
+- S4.6.4.45 crea `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md` para documentar el diseno
+  futuro de scripts de snapshot/export y migration dry-run. No crea scripts,
+  no genera snapshot real, no lee LocalStorage real, no ejecuta dry-run, no
+  inserta datos y no conecta runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -211,6 +215,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   auditoria global read-only y reparacion docs-only de referencias next-phase
   obsoletas. No crea scripts, no genera snapshot real, no ejecuta dry-run real,
   no inserta datos y no conecta runtime.
+- `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`: documento S4.6.4.45 del diseno
+  conceptual de futuros scripts de snapshot/export, validacion, dry-run y
+  resumen sanitizado. No crea scripts, no genera snapshots reales, no lee
+  LocalStorage real, no ejecuta dry-run, no inserta datos y no conecta runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -252,6 +260,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Si S4.6.4.44 queda limpio, disenar snapshot/dry-run script como docs-only work,
-sin crear script ejecutable, sin generar snapshot real, sin ejecutar dry-run,
-sin insertar datos y sin tocar runtime.
+Disenar fixtures/mock snapshot examples como docs-only work, sin crear scripts
+ejecutables, sin generar snapshot real, sin leer LocalStorage real, sin ejecutar
+dry-run, sin insertar datos y sin tocar runtime.
