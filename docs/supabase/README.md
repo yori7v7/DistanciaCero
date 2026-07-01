@@ -82,6 +82,12 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   de insert controlado en laboratorio desechable, sin crear scripts, sin
   insertar datos, sin ejecutar dry-run, sin tocar Supabase y sin conectar
   runtime.
+- S4.6.4.43 audita la consistencia global de docs Supabase antes de scripts en
+  modo read-only. El resultado fue NO-GO por referencias next-phase obsoletas,
+  sin secretos ni cambios runtime.
+- S4.6.4.44 repara referencias next-phase obsoletas y registra
+  `GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`, sin crear scripts, sin snapshot
+  real, sin dry-run real, sin insert real y sin conectar runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -201,6 +207,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `CONTROLLED_LAB_INSERT_PLAN.md`: documento S4.6.4.42 del plan futuro para un
   insert controlado en laboratorio desechable. No crea scripts, no inserta
   datos, no ejecuta dry-run real, no toca Supabase y no conecta runtime.
+- `GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`: registro S4.6.4.43/S4.6.4.44 de
+  auditoria global read-only y reparacion docs-only de referencias next-phase
+  obsoletas. No crea scripts, no genera snapshot real, no ejecuta dry-run real,
+  no inserta datos y no conecta runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -242,5 +252,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Ejecutar una auditoria global de consistencia de docs Supabase antes de crear
-cualquier script, sin crear scripts, sin insertar datos y sin tocar runtime.
+Si S4.6.4.44 queda limpio, disenar snapshot/dry-run script como docs-only work,
+sin crear script ejecutable, sin generar snapshot real, sin ejecutar dry-run,
+sin insertar datos y sin tocar runtime.

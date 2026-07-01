@@ -718,6 +718,13 @@ Estado de S4.6.1:
   documental futuro para insert controlado en laboratorio desechable. No crea
   scripts, no inserta datos, no ejecuta dry-run real, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
+- S4.6.4.43 audita en modo read-only la consistencia global de docs Supabase
+  antes de scripts. Resultado: NO-GO por referencias next-phase obsoletas, sin
+  secretos y sin cambios runtime.
+- S4.6.4.44 repara referencias next-phase obsoletas y registra
+  `docs/supabase/GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`. No crea scripts, no
+  genera snapshot real, no ejecuta dry-run real, no inserta datos, no toca
+  Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
 
 Validacion y rollback:
 
@@ -817,8 +824,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Reglas de validacion de snapshot/export documentadas.
 - Formato de reporte del dry-run documentado.
 - Checklist de gate para insert documentado.
-- Plan de insert controlado en lab documentado; falta auditoria global de docs
-  antes de cualquier script.
+- Plan de insert controlado en lab documentado.
+- Auditoria global de docs Supabase y reparacion next-phase documentadas;
+  falta diseno docs-only de snapshot/dry-run script.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -861,7 +869,11 @@ cumplirse antes de planear cualquier insert controlado en laboratorio.
 `docs/supabase/CONTROLLED_LAB_INSERT_PLAN.md` documenta como se planearia un
 insert controlado en el laboratorio desechable sin ejecutar inserts ni crear
 scripts en esta fase.
+`docs/supabase/GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md` registra la auditoria
+read-only S4.6.4.43 y la necesidad de reparacion S4.6.4.44.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es ejecutar una auditoria global de
-consistencia de docs Supabase antes de crear cualquier script.
+desarrollo. Si S4.6.4.44 queda limpio, la siguiente fase recomendada es
+disenar snapshot/dry-run script como docs-only work, sin crear script
+ejecutable, sin snapshot real, sin dry-run real, sin insert real y sin tocar
+runtime.

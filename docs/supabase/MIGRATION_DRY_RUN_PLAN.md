@@ -120,12 +120,18 @@ Recommended future sequence:
 
 ## Suggested Next Phase
 
-Run a global Supabase docs consistency audit before creating any script.
+Historical next phase completed/superseded:
 
-That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, execute dry-runs, insert data, touch runtime,
-modify `src`, execute SQL, use Supabase Dashboard, use Supabase CLI, touch
-`.env.local`, edit private files, touch Storage or run reset.
+- The global Supabase docs consistency audit ran in S4.6.4.43.
+- S4.6.4.44 repairs obsolete next-phase references.
+
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, SQL execution, Supabase Dashboard,
+  Supabase CLI, `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

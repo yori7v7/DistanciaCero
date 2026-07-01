@@ -284,12 +284,20 @@ Future validation rules are documented in
 
 ## Suggested Next Phase
 
-Design the migration insert gate checklist as docs-only work.
+Historical next phase completed/superseded:
 
-That phase should not create scripts, generate real snapshots, read real
-LocalStorage, export real data, execute dry-runs, touch runtime, modify `src`,
-execute SQL, use Supabase Dashboard, use Supabase CLI, touch `.env.local`, edit
-private files, touch Storage or run reset.
+- The migration insert gate checklist is now documented in
+  `MIGRATION_INSERT_GATE_CHECKLIST.md`.
+- Controlled lab insert planning is now documented in
+  `CONTROLLED_LAB_INSERT_PLAN.md`.
+
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, `src`, SQL, Supabase Dashboard,
+  Supabase CLI, `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

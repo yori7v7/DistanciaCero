@@ -104,10 +104,20 @@ review:
 
 ## Suggested Next Phase
 
-Design the snapshot/export format as docs-only work.
+Historical next phase completed/superseded:
 
-That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
-CLI, `.env.local`, private files, Storage or reset.
+- The snapshot/export format is now documented in
+  `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`.
+- Snapshot validation, dry-run report format, insert gate and controlled lab
+  insert planning are also documented.
+
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, Supabase Dashboard/CLI, `.env.local`,
+  private files, Storage or reset.
 
 ## Non-Goals
 

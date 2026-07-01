@@ -162,6 +162,13 @@ Estado verificado post-S4.5.1:
       documental futuro para insert controlado en laboratorio desechable, sin
       crear scripts, sin insertar datos, sin ejecutar dry-run real, sin tocar
       Supabase/CLI/Dashboard y sin conectar la app.
+- [x] S4.6.4.43 audita en modo read-only la consistencia global de docs
+      Supabase antes de scripts y registra NO-GO por referencias next-phase
+      obsoletas, sin secretos ni cambios runtime.
+- [x] S4.6.4.44 repara referencias next-phase obsoletas y registra el resultado
+      de auditoria en `docs/supabase/GLOBAL_DOCS_CONSISTENCY_AUDIT_RESULT.md`,
+      sin crear scripts, sin snapshot real, sin dry-run real, sin insert real y
+      sin conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -508,8 +515,18 @@ la siguiente.
   validation, dry-run report e insert gate. No crea scripts, no inserta datos,
   no ejecuta dry-run real, no genera snapshot real, no lee datos reales, no toca
   Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
-- Salida futura: auditoria global de consistencia de docs Supabase antes de
-  crear cualquier script, sin crear scripts ni conectar aun la app.
+- Estado S4.6.4.43:
+  auditoria global read-only de docs Supabase antes de scripts. Resultado:
+  NO-GO por referencias next-phase obsoletas; sin secretos, sin app conectada,
+  sin produccion lista, sin Storage tocado, sin snapshot/dry-run/insert real y
+  sin `.env.local` llenado.
+- Estado S4.6.4.44:
+  reparacion docs-only de referencias next-phase obsoletas. Si el post-check
+  queda limpio, la siguiente fase puede ser snapshot/dry-run script design como
+  docs-only work.
+- Salida futura: snapshot/dry-run script design como docs-only work, sin crear
+  script ejecutable, sin snapshot real, sin dry-run real, sin insert real, sin
+  tocar runtime y sin conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -627,7 +644,9 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Migration dry-run report format documental.
 - [x] Migration insert gate checklist documental.
 - [x] Controlled lab insert plan documental.
-- [ ] Global Supabase docs consistency audit before scripts.
+- [x] Global Supabase docs consistency audit before scripts.
+- [x] Supabase docs next-phase consistency repair.
+- [ ] Snapshot/dry-run script design docs-only.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

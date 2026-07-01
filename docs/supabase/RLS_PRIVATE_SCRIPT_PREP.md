@@ -143,14 +143,14 @@ end-to-end.
 
 ## Next recommended phase
 
-S4.6.4.26 - RLS private config prep
+Historical next phase completed/superseded:
 
-Clarifications:
+- S4.6.4.26 prepared private RLS config outside the repo.
+- S4.6.4.33 recorded the private RLS E2E security gate PASS.
 
-- S4.6.4.22 ya creo el script temporal fuera del repo.
-- S4.6.4.23 ya reviso el script privado sin ejecutarlo.
-- La siguiente fase puede preparar configuracion privada, sin ejecutar RLS.
-- Todavia requiere aprobacion explicita.
-- Debe mantener secrets fuera de Git/chat.
-- Puede preparar configuracion, pero no debe ejecutar las pruebas.
-- No debe conectar la app real.
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, app connection or secrets in Git/chat.

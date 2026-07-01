@@ -139,17 +139,17 @@ Plantilla sanitizada de resultado:
 
 ## Next recommended phase
 
-Document backend readiness gap / prepare future connection strategy without
-connecting the app yet.
+Historical next phase completed/superseded:
 
-Clarifications:
+- Backend readiness gaps are now documented in `BACKEND_READINESS_GAP.md`.
+- Remote repository contract, local-to-remote mapping, dry-run planning,
+  snapshot docs, insert gate and controlled lab insert planning are now
+  documented.
 
-- S4.6.4.20 ya decide el metodo seguro de prueba sin ejecutarla.
-- S4.6.4.21 ya prepara instrucciones para un script temporal local fuera del
-  repo sin crear el script privado real.
-- S4.6.4.22 ya creo la carpeta y archivos privados fuera del repo.
-- S4.6.4.23 ya reviso el script privado sin ejecutarlo.
-- S4.6.4.33 ya registro el private RLS E2E security gate PASS.
-- La siguiente fase debe mantener la app desconectada mientras documenta gaps.
-- Todavia no debe conectar la app.
-- Todavia no debe usar tokens/JWTs en Git/chat.
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, app connection or tokens/JWTs in
+  Git/chat.

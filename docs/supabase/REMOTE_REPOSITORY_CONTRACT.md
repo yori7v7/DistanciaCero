@@ -124,11 +124,20 @@ Recommended path:
 
 ## Next Recommended Phase
 
-Design snapshot validation rules as docs-only work.
+Historical next phase completed/superseded:
 
-That phase should not create scripts, read real LocalStorage, touch runtime,
-`src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`, private files,
-Storage or reset.
+- Snapshot validation rules are now documented in
+  `LOCAL_SNAPSHOT_VALIDATION_RULES.md`.
+- Dry-run report format, insert gate and controlled lab insert planning are also
+  documented.
+
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, `src`, SQL, Supabase Dashboard,
+  Supabase CLI, `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

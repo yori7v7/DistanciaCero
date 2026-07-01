@@ -71,5 +71,16 @@
 
 ## Next Recommended Phase
 
-Design the remote repository contract and feature flag strategy as docs-only
-work, without connecting the app yet.
+Historical next phase completed/superseded:
+
+- Remote repository contract and feature flag strategy were documented later in
+  `REMOTE_REPOSITORY_CONTRACT.md`.
+- Backend readiness gaps, local-to-remote mapping, dry-run planning, snapshot
+  docs, insert gate and controlled lab insert planning are now documented.
+
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change or app connection.

@@ -83,12 +83,16 @@ Verdict:
 
 ## Next recommended phase
 
-S4.6.4.19 - RLS end-to-end test planning
+Historical next phase completed/superseded:
 
-Clarifications:
+- S4.6.4.19 planned RLS end-to-end testing.
+- Later phases selected and reviewed a private script method.
+- S4.6.4.33 recorded the private RLS E2E security gate PASS.
 
-- No RLS test execution yet.
-- No app connection yet.
-- No runtime changes yet.
-- No tokens/JWTs in Git or chat.
-- Any Auth/RLS testing must be explicitly approved and must avoid service-role/client secret exposure.
+Current next phase:
+
+- If S4.6.4.44 docs consistency repair is clean, proceed to
+  snapshot/dry-run script design as docs-only work.
+- Still no executable script, real snapshot, real LocalStorage read, real
+  dry-run, real insert, runtime change, app connection or tokens/JWTs in
+  Git/chat.
