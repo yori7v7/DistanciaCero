@@ -41,8 +41,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.18 registra en `../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md`
   que la verificacion read-only del fixture paso en el laboratorio desechable,
   usando solo SELECT queries en SQL Editor.
-- RLS end-to-end, Auth/RLS tests reales, reset, Storage, app connection,
-  backend readiness y production readiness siguen pendientes.
+- S4.6.4.19 crea `RLS_END_TO_END_TEST_PLAN.md` como plan documental para una
+  futura prueba RLS end-to-end, sin ejecutar pruebas ni conectar la app.
+- RLS end-to-end execution, Auth/RLS tests reales, reset, Storage, app
+  connection, backend readiness y production readiness siguen pendientes.
 - No hay backend.
 - No hay Router asociado a Auth.
 - La app local sigue siendo el runtime estable y fallback.
@@ -103,6 +105,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   resultado sanitizado PASS post-verificacion read-only en laboratorio
   desechable. No guarda valores sensibles, no ejecuta reset, no toca Storage,
   no conecta la app y no prueba RLS end-to-end.
+- `RLS_END_TO_END_TEST_PLAN.md`: plan documental S4.6.4.19 para una futura
+  prueba RLS end-to-end con usuarios Auth sinteticos. No ejecuta pruebas, no
+  obtiene tokens/JWTs, no toca Supabase, no conecta la app y no modifica
+  runtime.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz

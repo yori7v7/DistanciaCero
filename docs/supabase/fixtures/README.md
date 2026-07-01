@@ -84,6 +84,11 @@ resultado sanitizado S4.6.4.18: verificacion read-only del fixture pasada en el
 laboratorio desechable. No guarda valores sensibles, no ejecuta reset, no toca
 Storage, no conecta la app y no prueba RLS end-to-end.
 
+El archivo `../RLS_END_TO_END_TEST_PLAN.md` documenta el plan S4.6.4.19 para
+una futura prueba RLS end-to-end con usuarios Auth sinteticos. No ejecuta
+pruebas, no usa tokens/JWTs, no toca Supabase, no conecta la app y no modifica
+runtime.
+
 ## 2. Estado actual
 
 - [x] Schema draft refinado en S4.6.2.1.
@@ -133,6 +138,9 @@ Storage, no conecta la app y no prueba RLS end-to-end.
 - [x] Existe `../../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` con
   resultado sanitizado PASS de la verificacion read-only del fixture. Reset,
   Storage, app connection y RLS end-to-end siguen fuera de alcance.
+- [x] Existe `../RLS_END_TO_END_TEST_PLAN.md` como plan documental para una
+  futura prueba RLS end-to-end. La ejecucion real, Auth/RLS test real, reset,
+  Storage y app connection siguen pendientes.
 
 ## 2.1 Preflight S4.6.4.1
 
@@ -395,6 +403,10 @@ Reglas:
 - **S4.6.4.18:** registrar resultado sanitizado de verificacion read-only
   manual del fixture en `../../SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md`.
   Solo SELECT queries, sin reset, Storage, app connection ni RLS end-to-end.
+- **S4.6.4.19:** crear `../RLS_END_TO_END_TEST_PLAN.md` como plan documental de
+  una futura prueba RLS end-to-end. No ejecuta pruebas ni conecta la app.
+- **S4.6.4.20:** decision de metodo seguro para prueba RLS; todavia sin ejecutar
+  pruebas ni compartir tokens/JWTs en Git/chat.
 - **S4.6.4.x futura:** aplicacion manual de fixtures solo con GO explicito y
   matriz T01-T20 revisada.
 - **S4.7:** bootstrap owner/partner controlado.
@@ -434,6 +446,8 @@ Reglas:
   SQL hasta aprobacion explicita.
 - [ ] Draft S4.6.4.17 revisado y resultado S4.6.4.18 documentado; RLS
   end-to-end, Auth/RLS tests reales, reset, Storage y app siguen pendientes.
+- [ ] Plan S4.6.4.19 revisado; la decision de metodo seguro y la ejecucion RLS
+  end-to-end siguen pendientes.
 - [ ] Si una fase futura prueba RLS, memberships y mapping privado deben
   revisarse antes y sus UUIDs no deben versionarse.
 - [ ] Storage sigue fuera de alcance.

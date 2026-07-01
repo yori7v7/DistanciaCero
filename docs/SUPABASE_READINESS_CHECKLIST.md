@@ -108,8 +108,11 @@ Estado verificado post-S4.5.1:
       `docs/SUPABASE_POST_FIXTURE_VERIFICATION_LAB_RESULT.md` que las queries
       read-only de verificacion fueron ejecutadas manualmente en SQL Editor del
       laboratorio desechable y todos los checks sanitizados salieron PASS.
-- [x] RLS end-to-end, Auth/RLS tests reales, reset, Storage, conexion de app,
-      backend readiness y production readiness siguen pendientes.
+- [x] S4.6.4.19 crea `docs/supabase/RLS_END_TO_END_TEST_PLAN.md` como plan
+      documental para una futura prueba RLS end-to-end, sin ejecutar pruebas,
+      sin usar tokens/JWTs, sin tocar Supabase y sin conectar la app.
+- [x] RLS end-to-end execution, Auth/RLS test real, reset, Storage, conexion de
+      app, backend readiness y production readiness siguen pendientes.
 
 Este baseline debe volver a comprobarse antes de cada fase. Un estado verificado
 aqui no autoriza por si solo cambios futuros.
@@ -368,6 +371,12 @@ la siguiente.
   Storage, app connection, secretos ni cambios runtime. SQL Editor privilegiado
   no prueba RLS end-to-end; Auth/RLS test real, reset, Storage, app/backend y
   produccion siguen pendientes.
+- Estado S4.6.4.19:
+  `docs/supabase/RLS_END_TO_END_TEST_PLAN.md` documenta planificacion de una
+  futura prueba RLS end-to-end con usuarios Auth sinteticos del laboratorio
+  desechable. No ejecuta pruebas, no obtiene tokens/JWTs, no toca Supabase,
+  no conecta la app y no modifica runtime. La decision de metodo seguro queda
+  pendiente para S4.6.4.20.
 - Salida futura: matriz RLS, rollback de laboratorio y evidencia multiusuario.
 
 ### S4.7: bootstrap owner/partner controlado
