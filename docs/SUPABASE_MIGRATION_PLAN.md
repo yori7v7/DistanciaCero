@@ -686,6 +686,10 @@ Estado de S4.6.1:
   migracion, Storage, fallback/offline, sincronizacion, rollback, env segura,
   performance, CRUD remoto y pruebas multiperfil siguen como gaps antes de
   conectar la app.
+- S4.6.4.35 crea `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` como contrato
+  documental futuro para `remoteContentRepository` y estrategia de feature flag.
+  Mantiene `contentService` como fachada, LocalStorage como default/fallback y
+  prohibe acceso directo a Supabase desde componentes o escenas.
 
 Validacion y rollback:
 
@@ -779,6 +783,7 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - `audit_log` obligatorio o diferido.
 - Regla de conflictos Ale/Yori.
 - Migracion de Data URL.
+- Mapping local JSON/LocalStorage -> tablas remotas.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -798,7 +803,10 @@ demuestra readiness de backend productivo. El entorno remoto no esta conectado
 al runtime, no tiene reset aplicado, no toca Storage y no ha probado CRUD remoto
 real desde la app. `docs/supabase/BACKEND_READINESS_GAP.md` documenta los gaps
 que deben resolverse antes de cualquier conexion.
+`docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` documenta el contrato logico
+futuro y una estrategia de feature flag, pero no implementa repository ni activa
+Supabase en runtime.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar remote repository contract
-y estrategia de feature flag como docs-only.
+desarrollo. La siguiente fase recomendada es disenar mapping local
+JSON/LocalStorage -> tablas remotas como docs-only.

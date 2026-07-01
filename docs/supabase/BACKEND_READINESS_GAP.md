@@ -92,16 +92,16 @@ review:
 
 - Do not connect the app yet.
 - Keep LocalStorage as the active source of truth.
-- Prepare the remote data contract first.
-- Design a real `remoteContentRepository` behind an explicit feature flag.
+- The remote data contract is documented in `REMOTE_REPOSITORY_CONTRACT.md`.
+- A future real `remoteContentRepository` must stay behind an explicit feature
+  flag.
 - Keep the feature flag off by default.
 - Test with one controlled screen or feature before broader rollout.
 - Migrate gradually only after rollback and conflict handling are documented.
 
 ## Suggested Next Phase
 
-Design the remote repository contract and feature flag strategy as docs-only
-work.
+Design the local JSON/LocalStorage to remote tables mapping as docs-only work.
 
 That phase should not touch runtime, `src`, SQL, Supabase Dashboard, Supabase
 CLI, `.env.local`, private files, Storage or reset.

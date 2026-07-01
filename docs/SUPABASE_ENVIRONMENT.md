@@ -60,6 +60,8 @@ repository remoto o aplicar SQL.
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Preferida si remoto esta activo | `VITE_SUPABASE_PUBLISHABLE_KEY=` | Clave publica para cliente futuro | Visible en navegador; depende de RLS |
 | `VITE_SUPABASE_ANON_KEY` | Opcional, compatibilidad | `VITE_SUPABASE_ANON_KEY=` | Alias temporal si un proyecto usa nomenclatura anterior | No preferir en codigo nuevo; visible en navegador |
 | `VITE_REMOTE_CONTENT_ENABLED` | No | `VITE_REMOTE_CONTENT_ENABLED=false` | Feature flag para una activacion futura explicita | Default obligatorio `false` |
+| `VITE_CONTENT_BACKEND` | Futuro, no activo | `VITE_CONTENT_BACKEND=local` | Selector conceptual futuro `local|remote|hybrid` | Default seguro `local`; requiere fase separada |
+| `VITE_SUPABASE_ENABLED` | Futuro, no activo | `VITE_SUPABASE_ENABLED=false` | Flag conceptual futuro para Supabase | Default seguro `false`; no reemplaza readiness gates |
 
 Reglas de resolucion futuras:
 
@@ -109,6 +111,19 @@ Contrato conceptual futuro:
 
 En esta fase nadie lee el flag desde runtime. Agregarlo a `.env.example` solo
 documenta el contrato futuro y no cambia el comportamiento actual.
+
+S4.6.4.35 documenta en `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` una
+estrategia conceptual adicional:
+
+```txt
+VITE_CONTENT_BACKEND=local|remote|hybrid
+VITE_SUPABASE_ENABLED=false|true
+```
+
+Estos nombres son placeholders documentales. No estan implementados, no deben
+llenarse en `.env.local` todavia y no autorizan conectar la app. Cualquier
+implementacion futura debe mantener `local`/`false` como default seguro y debe
+fallar cerrado si faltan env vars publicas validas.
 
 ## 6. Archivos de entorno esperados
 
@@ -187,6 +202,10 @@ S4.6.4.34 documenta en `docs/supabase/BACKEND_READINESS_GAP.md` que el backend
 lab security gate paso, pero que la app sigue bloqueada hasta resolver Auth real,
 mapping, migracion, Storage, fallback, sincronizacion, rollback, variables
 seguras, performance y pruebas CRUD remoto.
+
+S4.6.4.35 documenta en `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` el contrato
+logico futuro de `remoteContentRepository` y feature flags conceptuales. Ese
+documento no invoca el factory, no cambia runtime y no conecta Supabase.
 
 ## 9. No objetivos
 

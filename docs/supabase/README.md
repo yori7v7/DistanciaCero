@@ -57,6 +57,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - S4.6.4.34 crea `BACKEND_READINESS_GAP.md` para documentar que falta antes de
   conectar la app: Auth real, mapping, migracion, Storage, fallback,
   sincronizacion, rollback, variables seguras, performance y CRUD remoto.
+- S4.6.4.35 crea `REMOTE_REPOSITORY_CONTRACT.md` como contrato documental
+  futuro para `remoteContentRepository` y estrategia de feature flag. No
+  implementa repository, no toca runtime y no conecta la app.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -144,6 +147,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   app. El backend lab security gate paso, pero la app sigue bloqueada hasta
   resolver estrategia de Auth real, mapping, migracion, Storage, fallback,
   sincronizacion, rollback, env segura, performance y pruebas CRUD remoto.
+- `REMOTE_REPOSITORY_CONTRACT.md`: documento S4.6.4.35 del contrato logico
+  futuro para `remoteContentRepository` y estrategia de feature flag. Mantiene
+  `contentService` como fachada, LocalStorage como default/fallback y prohibe
+  acceso directo a Supabase desde componentes o escenas.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -185,5 +192,5 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar el remote repository contract y la estrategia de feature flag como
-docs-only, sin tocar runtime ni conectar la app.
+Disenar el mapping local JSON/LocalStorage -> tablas remotas como docs-only,
+sin tocar runtime ni conectar la app.

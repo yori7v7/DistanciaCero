@@ -133,6 +133,9 @@ Estado verificado post-S4.5.1:
 - [x] S4.6.4.34 crea `docs/supabase/BACKEND_READINESS_GAP.md` para documentar
       gaps antes de conectar la app: Auth real, mapping, migracion, Storage,
       fallback, sincronizacion, rollback, env segura, performance y CRUD remoto.
+- [x] S4.6.4.35 crea `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` como
+      contrato documental futuro para `remoteContentRepository` y estrategia de
+      feature flag, sin tocar runtime ni conectar la app.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -433,8 +436,13 @@ la siguiente.
   de contenido, Storage, fallback/offline, sincronizacion local/remota,
   rollback, separacion lab/produccion, variables seguras, performance, pruebas
   CRUD remoto y pruebas multiperfil antes de conectar la app.
-- Salida futura: disenar remote repository contract y estrategia de feature
-  flag como docs-only, sin conectar aun la app.
+- Estado S4.6.4.35:
+  `docs/supabase/REMOTE_REPOSITORY_CONTRACT.md` documenta el contrato logico
+  futuro de `remoteContentRepository`, la estrategia de feature flag y el plan
+  gradual A-H. No implementa repository, no toca `src`, no cambia runtime y no
+  conecta la app.
+- Salida futura: disenar mapping local JSON/LocalStorage -> tablas remotas como
+  docs-only, sin conectar aun la app.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -544,7 +552,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [ ] Referencia de progreso para JSON base y contenido remoto.
 - [ ] Estrategia de cache/hidratacion sync/async.
 - [ ] Fuente de verdad durante estados offline.
-- [ ] Contrato remoto concreto y estrategia de feature flag.
+- [x] Contrato remoto documental y estrategia de feature flag conceptual.
+- [ ] Mapping local JSON/LocalStorage -> tablas remotas.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
