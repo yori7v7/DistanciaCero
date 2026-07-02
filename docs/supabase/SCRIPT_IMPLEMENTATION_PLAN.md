@@ -3,9 +3,10 @@
 ## Status
 
 - Status: DOCUMENTARY DESIGN ONLY.
-- Implementation: not implemented.
-- Script created: no.
-- `scripts/migration/` folder created: no.
+- Implementation: first mock-only validator created in S4.6.4.48.
+- Script created: yes, mock-only.
+- `scripts/migration/` folder created: yes.
+- Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
 - Real data exported: no.
@@ -50,13 +51,21 @@ Objective:
 - Produce sanitized output.
 - Serve as the first implementation step before any real snapshot work.
 
-This phase does not create that script.
+S4.6.4.48 creates this script as a mock-only validator. It still does not read
+real data, read LocalStorage, touch Supabase, execute a dry-run or insert data.
 
 ## Future Location Recommendation
 
-Options:
+Implemented mock-only location:
 
-- `scripts/migration/validate-mock-snapshot.mjs` inside the repo.
+- `scripts/migration/validate-mock-snapshot.mjs`.
+- `scripts/migration/fixtures/mock-snapshot-pass.json`.
+- `scripts/migration/fixtures/mock-snapshot-check.json`.
+- `scripts/migration/fixtures/mock-snapshot-nogo.json`.
+- `scripts/migration/README.md`.
+
+Other future options still require separate approval:
+
 - Docs-only examples as conceptual input.
 
 Recommendation:
@@ -186,8 +195,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Create the first mock-only validator script in the repo with extremely
-  limited scope.
+- Review the first mock-only validator outputs and decide whether to expand
+  mock-only validation coverage in a separate future phase.
 - Still no real data.
 - Still no real LocalStorage read.
 - Still no real snapshot generation.
@@ -198,8 +207,8 @@ Suggested next phase:
 
 ## Non-Goals
 
-- No script creation in this phase.
-- No `scripts/migration/` creation in this phase.
+- No real snapshot/export script.
+- No real dry-run script.
 - No real JSON file creation.
 - No real snapshot generation.
 - No real LocalStorage read.

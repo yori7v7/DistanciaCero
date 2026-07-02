@@ -183,6 +183,11 @@ Estado verificado post-S4.5.1:
       documental del primer script futuro. Recomienda un validador mock-only
       sin red, sin Supabase, sin `.env.local`, sin LocalStorage real y sin
       runtime. No crea scripts ni `scripts/migration`.
+- [x] S4.6.4.48 crea `scripts/migration/validate-mock-snapshot.mjs`,
+      `scripts/migration/README.md` y tres fixtures mock sanitizados. El script
+      es mock-only, no usa red, no importa Supabase ni `src`, no lee
+      `.env.local`, no lee LocalStorage real, no genera snapshot real, no
+      ejecuta dry-run real y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -555,9 +560,15 @@ la siguiente.
   crea `scripts/migration`, no genera JSON real fuera de docs, no genera
   snapshot real, no lee LocalStorage real, no ejecuta dry-run real, no inserta
   datos, no toca Supabase/CLI/Dashboard, no toca runtime y no conecta la app.
-- Salida futura: crear el primer mock-only validator script con alcance
-  extremadamente limitado, sin datos reales, sin LocalStorage real, sin
-  Supabase, sin `.env.local`, sin runtime y sin dry-run real.
+- Estado S4.6.4.48:
+  `scripts/migration/validate-mock-snapshot.mjs` valida solo snapshots mock
+  sanitizados. Los fixtures `PASS`, `CHECK` y `NO-GO` viven en
+  `scripts/migration/fixtures/`. No toca `src`, runtime, Supabase, CLI,
+  Dashboard, SQL, `.env.local`, LocalStorage real, Storage ni datos reales.
+- Salida futura: revisar outputs del mock-only validator y decidir si ampliar
+  cobertura mock-only en una fase futura separada, sin datos reales, sin
+  LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin dry-run
+  real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -680,7 +691,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Snapshot/dry-run script design docs-only.
 - [x] Fixtures/mock snapshot examples docs-only.
 - [x] Script implementation plan docs-only and mock-only validator decision.
-- [ ] First mock-only validator script with limited scope.
+- [x] First mock-only validator script with limited scope.
+- [ ] Mock-only validator output review or coverage expansion decision.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

@@ -482,8 +482,9 @@ real URLs, real UUIDs, personal real emails and media payloads.
 - These examples may be used as references for future tests, mocks or
   validators.
 - Real snapshots must stay outside the repo if they contain intimate content.
-- A future mock-only validator may use these shapes only after a separate
-  approved phase creates real script files.
+- S4.6.4.48 creates a mock-only validator and sanitized fixture JSON files under
+  `scripts/migration/`. They remain toy examples and must not be treated as
+  real snapshots or migration payloads.
 
 ## NO-GO
 
@@ -503,8 +504,9 @@ Suggested next phase:
 
 - Script implementation planning is now documented in
   `SCRIPT_IMPLEMENTATION_PLAN.md`.
-- Next suggested phase: create the first mock-only validator script in a
-  separate future phase with extremely limited scope.
+- The first mock-only validator script now exists with extremely limited scope.
+- Next suggested phase: review validator outputs and decide whether to expand
+  mock-only validation coverage.
 - Still no runtime changes.
 - Still no real data.
 - Still no Supabase, CLI, Dashboard, SQL, Storage or `.env.local` changes.

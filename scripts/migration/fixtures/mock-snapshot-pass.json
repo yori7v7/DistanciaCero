@@ -1,0 +1,110 @@
+{
+  "snapshotVersion": "local-snapshot-v1",
+  "exportedAt": "<ISO_TIMESTAMP>",
+  "source": {
+    "app": "distancia-cero",
+    "runtime": "local",
+    "storage": "localStorage",
+    "exportMode": "mock-validator-fixture"
+  },
+  "relationshipSpaceHint": {
+    "localSpaceKey": "mock-space-alpha",
+    "remoteSpaceHint": "<PRIVATE_MAPPING_REQUIRED>"
+  },
+  "identities": [
+    {
+      "localIdentityKey": "mock-profile-yori",
+      "displayName": "<DISPLAY_NAME_PLACEHOLDER>",
+      "roleHint": "owner",
+      "remoteProfileHint": "<PRIVATE_MAPPING_REQUIRED>"
+    },
+    {
+      "localIdentityKey": "mock-profile-ale",
+      "displayName": "<DISPLAY_NAME_PLACEHOLDER>",
+      "roleHint": "partner",
+      "remoteProfileHint": "<PRIVATE_MAPPING_REQUIRED>"
+    }
+  ],
+  "content": {
+    "monthlyLetters": [],
+    "openWhenLetters": [],
+    "reasons": [
+      {
+        "localId": "mock-reason-001",
+        "type": "reason",
+        "collection": "reasons",
+        "source": "mock",
+        "createdBy": "mock-profile-yori",
+        "updatedBy": "mock-profile-yori",
+        "order": 1,
+        "data": {
+          "title": "<MOCK_REASON_TITLE>",
+          "body": "<MOCK_REASON_BODY>"
+        }
+      }
+    ],
+    "promises": [
+      {
+        "localId": "mock-promise-001",
+        "type": "promise",
+        "collection": "promises",
+        "source": "mock",
+        "createdBy": "mock-profile-ale",
+        "updatedBy": "mock-profile-ale",
+        "order": 1,
+        "data": {
+          "title": "<MOCK_PROMISE_TITLE>",
+          "status": "planned"
+        }
+      }
+    ],
+    "importantDates": [
+      {
+        "localId": "mock-date-001",
+        "type": "importantDate",
+        "collection": "importantDates",
+        "source": "mock",
+        "createdBy": "mock-profile-yori",
+        "updatedBy": "mock-profile-yori",
+        "order": 1,
+        "data": {
+          "title": "<MOCK_DATE_TITLE>",
+          "date": "<ISO_DATE_PLACEHOLDER>"
+        }
+      }
+    ],
+    "wishlist": [],
+    "diary": [],
+    "blackHoleGallery": [],
+    "playlist": []
+  },
+  "media": [],
+  "localState": {
+    "hidden": [],
+    "locked": [],
+    "unlocked": [],
+    "restored": [],
+    "edited": [],
+    "legacyIds": []
+  },
+  "counts": {
+    "identities": 2,
+    "monthlyLetters": 0,
+    "openWhenLetters": 0,
+    "reasons": 1,
+    "promises": 1,
+    "importantDates": 1,
+    "wishlist": 0,
+    "diary": 0,
+    "blackHoleGallery": 0,
+    "playlist": 0,
+    "media": 0,
+    "hidden": 0,
+    "locked": 0,
+    "unlocked": 0,
+    "restored": 0,
+    "edited": 0,
+    "legacyIds": 0
+  },
+  "warnings": []
+}

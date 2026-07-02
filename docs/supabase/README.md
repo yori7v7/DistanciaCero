@@ -101,6 +101,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   script futuro recomendado es un validador mock-only sin red. No crea scripts,
   no crea `scripts/migration`, no genera snapshot real, no lee LocalStorage
   real, no ejecuta dry-run, no inserta datos y no conecta runtime.
+- S4.6.4.48 crea `../../scripts/migration/validate-mock-snapshot.mjs` y tres
+  fixtures mock sanitizados. El script es mock-only, no usa red, no importa
+  Supabase, no lee `.env.local`, no lee LocalStorage real, no genera snapshots
+  reales, no ejecuta dry-run real y no inserta datos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -236,6 +240,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   implementacion para el primer script futuro. Recomienda
   `validate-mock-snapshot.mjs` como validador mock-only sin red para una fase
   futura, sin crearlo todavia.
+- `../../scripts/migration/validate-mock-snapshot.mjs`: script S4.6.4.48
+  mock-only para validar snapshots sanitizados de juguete. Usa solo modulos
+  built-in de Node, no usa red, no importa Supabase ni `src`, no lee
+  `.env.local`, no lee LocalStorage y no escribe datos.
+- `../../scripts/migration/fixtures/*.json`: fixtures mock sanitizados para
+  `PASS`, `CHECK` y `NO-GO`; no son snapshots reales ni payloads de migracion.
+- `../../scripts/migration/README.md`: reglas de uso del validador mock-only.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -277,6 +288,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Crear el primer mock-only validator script con alcance extremadamente limitado,
-sin datos reales, sin LocalStorage real, sin Supabase, sin `.env.local`, sin
-runtime y sin dry-run real.
+Revisar outputs del mock-only validator y decidir si ampliar cobertura
+mock-only en una fase futura separada, sin datos reales, sin LocalStorage real,
+sin Supabase, sin `.env.local`, sin runtime y sin dry-run real.

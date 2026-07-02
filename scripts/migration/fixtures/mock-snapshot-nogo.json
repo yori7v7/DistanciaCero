@@ -1,0 +1,82 @@
+{
+  "snapshotVersion": "local-snapshot-v1",
+  "exportedAt": "<ISO_TIMESTAMP>",
+  "source": {
+    "app": "distancia-cero",
+    "runtime": "local",
+    "storage": "localStorage",
+    "exportMode": "mock-validator-fixture"
+  },
+  "relationshipSpaceHint": {
+    "localSpaceKey": "mock-space-alpha",
+    "remoteSpaceHint": "<PRIVATE_MAPPING_REQUIRED>"
+  },
+  "identities": [
+    {
+      "localIdentityKey": "mock-profile-yori",
+      "displayName": "<DISPLAY_NAME_PLACEHOLDER>",
+      "roleHint": "owner",
+      "remoteProfileHint": "<PRIVATE_MAPPING_REQUIRED>"
+    }
+  ],
+  "content": {
+    "monthlyLetters": [],
+    "openWhenLetters": [],
+    "reasons": [
+      {
+        "localId": "mock-unknown-001",
+        "type": "unknownTypeWithoutMapping",
+        "collection": "reasons",
+        "source": "mock",
+        "createdBy": "<UNRESOLVED_IDENTITY>",
+        "updatedBy": "mock-profile-yori",
+        "order": 1,
+        "data": {
+          "title": "<MOCK_TITLE>",
+          "body": "<MOCK_BODY>"
+        }
+      }
+    ],
+    "promises": [],
+    "importantDates": [],
+    "wishlist": [],
+    "diary": [],
+    "blackHoleGallery": [],
+    "playlist": []
+  },
+  "media": [],
+  "localState": {
+    "hidden": [],
+    "locked": [],
+    "unlocked": [],
+    "restored": [],
+    "edited": [],
+    "legacyIds": []
+  },
+  "counts": {
+    "identities": 1,
+    "monthlyLetters": 0,
+    "openWhenLetters": 0,
+    "reasons": 3,
+    "promises": 0,
+    "importantDates": 0,
+    "wishlist": 0,
+    "diary": 0,
+    "blackHoleGallery": 0,
+    "playlist": 0,
+    "media": 0,
+    "hidden": 0,
+    "locked": 0,
+    "unlocked": 0,
+    "restored": 0,
+    "edited": 0,
+    "legacyIds": 0
+  },
+  "warnings": [
+    {
+      "type": "secret_placeholder_detected",
+      "localRef": "mock-unknown-001",
+      "message": "<SECRET_PLACEHOLDER_DETECTED_DO_NOT_USE_REAL_SECRET>"
+    }
+  ]
+}

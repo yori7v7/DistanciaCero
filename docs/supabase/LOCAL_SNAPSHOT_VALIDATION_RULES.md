@@ -212,11 +212,12 @@ Current next phase:
 - Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
 - Script implementation planning is now documented in
   `SCRIPT_IMPLEMENTATION_PLAN.md`.
-- Next suggested phase: create the first mock-only validator script with
-  limited scope.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, `src`, SQL, Supabase Dashboard,
-  Supabase CLI, `.env.local`, private files, Storage or reset.
+- The first mock-only validator script now exists under `scripts/migration/`.
+- Next suggested phase: review validator outputs and decide whether to expand
+  mock-only validation coverage.
+- Still no real snapshot, real LocalStorage read, real dry-run, real insert,
+  runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`,
+  private files, Storage or reset.
 
 ## Non-Goals
 
