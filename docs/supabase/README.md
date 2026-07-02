@@ -109,6 +109,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   transformar snapshots mock sanitizados en reportes dry-run mock sanitizados
   por stdout. No escribe reportes por defecto, no usa red, no importa Supabase,
   no lee `.env.local`, no lee LocalStorage real y no inserta datos.
+- S4.6.4.52 crea `../../scripts/migration/run-mock-migration-checks.mjs` como
+  runner mock-only para validar exit codes esperados del validador y del dry-run
+  mock. No usa red, no importa Supabase, no lee `.env.local`, no lee
+  LocalStorage real y no toca runtime.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -253,6 +257,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../../scripts/migration/dry-run-mock-snapshot.mjs`: script S4.6.4.50
   mock-only para producir reportes dry-run sanitizados desde fixtures mock. No
   ejecuta migracion real ni escribe archivos por defecto.
+- `../../scripts/migration/run-mock-migration-checks.mjs`: runner S4.6.4.52
+  mock-only que valida exit codes esperados sin imprimir payloads completos.
 - `../../scripts/migration/README.md`: reglas de uso del validador mock-only.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
@@ -295,7 +301,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Revisar outputs del mock-only validator y del mock-only dry-run report script,
-y decidir si ampliar cobertura mock-only en una fase futura separada, sin datos
-reales, sin LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y
-sin dry-run real.
+Revisar outputs del mock migration smoke-test runner y decidir si ampliar
+cobertura mock-only en una fase futura separada, sin datos reales, sin
+LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin dry-run
+real.

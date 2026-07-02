@@ -193,6 +193,11 @@ Estado verificado post-S4.5.1:
       dry-run mock por stdout. No usa red, no importa Supabase ni `src`, no lee
       `.env.local`, no lee LocalStorage real, no escribe reportes por defecto y
       no inserta datos.
+- [x] S4.6.4.52 crea `scripts/migration/run-mock-migration-checks.mjs` como
+      runner mock-only para validar exit codes esperados del validador y del
+      dry-run mock. No usa red, no importa Supabase ni `src`, no lee
+      `.env.local`, no lee LocalStorage real, no imprime payloads completos y
+      no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -574,10 +579,15 @@ la siguiente.
   `scripts/migration/dry-run-mock-snapshot.mjs` produce reportes dry-run mock
   sanitizados por stdout desde fixtures mock. No toca `src`, runtime, Supabase,
   CLI, Dashboard, SQL, `.env.local`, LocalStorage real, Storage ni datos reales.
-- Salida futura: revisar outputs del mock-only validator y del mock-only dry-run
-  report script, y decidir si ampliar cobertura mock-only en una fase futura
-  separada, sin datos reales, sin LocalStorage real, sin Supabase, sin
-  `.env.local`, sin runtime y sin dry-run real.
+- Estado S4.6.4.52:
+  `scripts/migration/run-mock-migration-checks.mjs` ejecuta checks mock-only de
+  exit codes esperados para el validador y el dry-run mock. No imprime payloads
+  completos, no toca `src`, runtime, Supabase, CLI, Dashboard, SQL,
+  `.env.local`, LocalStorage real, Storage ni datos reales.
+- Salida futura: revisar outputs del mock migration smoke-test runner y decidir
+  si ampliar cobertura mock-only en una fase futura separada, sin datos reales,
+  sin LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin
+  dry-run real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -702,7 +712,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Script implementation plan docs-only and mock-only validator decision.
 - [x] First mock-only validator script with limited scope.
 - [x] First mock-only dry-run report script with limited scope.
-- [ ] Mock-only script output review or coverage expansion decision.
+- [x] Mock migration smoke-test runner with limited scope.
+- [ ] Mock-only smoke output review or coverage expansion decision.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

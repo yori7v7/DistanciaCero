@@ -7,6 +7,7 @@
 - Script created: yes, mock-only.
 - `scripts/migration/` folder created: yes.
 - Mock dry-run report script created: yes, in S4.6.4.50.
+- Mock migration smoke-test runner created: yes, in S4.6.4.52.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -61,6 +62,7 @@ Implemented mock-only location:
 
 - `scripts/migration/validate-mock-snapshot.mjs`.
 - `scripts/migration/dry-run-mock-snapshot.mjs`.
+- `scripts/migration/run-mock-migration-checks.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
@@ -197,8 +199,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Review mock-only validator and dry-run report outputs, then decide whether to
-  expand mock-only coverage in a separate future phase.
+- Review mock migration smoke-check outputs, then decide whether to expand
+  mock-only coverage in a separate future phase.
 - Still no real data.
 - Still no real LocalStorage read.
 - Still no real snapshot generation.

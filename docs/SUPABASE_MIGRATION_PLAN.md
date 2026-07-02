@@ -751,6 +751,11 @@ Estado de S4.6.1:
   snapshots mock. Usa solo modulos built-in de Node, no usa red, no importa
   Supabase ni `src`, no lee `.env.local`, no lee LocalStorage real, no escribe
   reportes por defecto, no inserta datos y no conecta la app.
+- S4.6.4.52 crea `scripts/migration/run-mock-migration-checks.mjs` como runner
+  mock-only para validar exit codes esperados del validador y del dry-run mock.
+  Usa solo modulos built-in de Node, no usa red, no importa Supabase ni `src`,
+  no lee `.env.local`, no lee LocalStorage real, no imprime payloads completos,
+  no inserta datos y no conecta la app.
 
 Validacion y rollback:
 
@@ -856,8 +861,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Mock snapshot examples docs-only documentado.
 - Script implementation plan docs-only documentado.
 - Primer mock-only validator script con alcance limitado creado.
-- Primer mock-only dry-run report script con alcance limitado creado; falta
-  revisar outputs o decidir si ampliar cobertura mock-only.
+- Primer mock-only dry-run report script con alcance limitado creado.
+- Mock migration smoke-test runner con alcance limitado creado; falta revisar
+  outputs o decidir si ampliar cobertura mock-only.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -917,9 +923,11 @@ runtime ni datos reales.
 `scripts/migration/dry-run-mock-snapshot.mjs` produce reportes dry-run mock
 sanitizados por stdout desde esos fixtures, sin escribir reportes por defecto y
 sin tocar runtime ni datos reales.
+`scripts/migration/run-mock-migration-checks.mjs` valida los exit codes
+esperados de ambos scripts mock-only sin imprimir payloads completos.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es revisar outputs del mock-only
-validator y del mock-only dry-run report script, y decidir si ampliar cobertura
-mock-only en una fase futura separada, sin datos reales, sin LocalStorage real,
-sin Supabase, sin `.env.local`, sin runtime y sin dry-run real.
+desarrollo. La siguiente fase recomendada es revisar outputs del mock migration
+smoke-test runner y decidir si ampliar cobertura mock-only en una fase futura
+separada, sin datos reales, sin LocalStorage real, sin Supabase, sin
+`.env.local`, sin runtime y sin dry-run real.
