@@ -202,6 +202,11 @@ Estado verificado post-S4.5.1:
       mock-only de migracion sin rutas largas. No instala dependencias, no toca
       runtime, no usa Supabase, no lee `.env.local`, no lee LocalStorage real,
       no usa datos reales y no inserta datos.
+- [x] S4.6.4.57 documenta `docs/supabase/PRIVATE_SNAPSHOT_WORKFLOW.md` como
+      workflow privado futuro para export manual desde UI hacia carpeta privada
+      fuera del repo. No genera snapshot real, no lee LocalStorage real por
+      scripts, no crea scripts, no toca runtime, no usa Supabase y no pone datos
+      reales en Git/chat.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -219,7 +224,7 @@ aqui no autoriza por si solo cambios futuros.
   probados de forma aislada.
 - No usar `service_role` ni secretos administrativos en frontend, Vite o Git.
 - No tratar la anon/publishable key como sustituto de RLS.
-- No usar `local-yori`, `local-ale` o `distancia-cero-local-space` como UUID
+- No usar `local-owner_b`, `local-owner_a` o `distancia-cero-local-space` como UUID
   remotos.
 - No inventar autoria para contenido legacy sin metadata verificable.
 - No atribuir automaticamente al importador contenido de autor desconocido.
@@ -242,7 +247,7 @@ Estados permitidos:
 | Gate | Severidad | Criterio de aceptacion | Evidencia requerida | Estado |
 | --- | --- | --- | --- | --- |
 | Bootstrap owner/partner seguro | Critico | Crear Auth, profiles, space y memberships sin self-owner client-side | Diseno aprobado de RPC/admin flow, casos de error y rollback | [ ] Pendiente |
-| Mapping UUID verificado | Critico | Mapear Yori, Ale y space local a UUID reales sin ambiguedad | Registro firmado/revisado de mapping y validacion de FKs | [ ] Pendiente |
+| Mapping UUID verificado | Critico | Mapear owner_b, owner_a y space local a UUID reales sin ambiguedad | Registro firmado/revisado de mapping y validacion de FKs | [ ] Pendiente |
 | RLS final revisada | Critico | Policies finales protegen profiles, memberships, contenido, eventos y media sin permisos amplios de escritura | SQL final revisado y matriz de pruebas multiusuario | [ ] Pendiente |
 | Proyecto Supabase desechable | Critico | Confirmar que el laboratorio puede destruirse, no es produccion, no contiene datos reales y no conecta la app | `docs/SUPABASE_DISPOSABLE_PROJECT_CHECKLIST.md`, aprobacion humana y evidencia sin secretos | [ ] Pendiente |
 | Variables de entorno seguras | Alto | Definir URL y anon/publishable key sin secretos administrativos | `.env.example`, reglas de deploy y escaneo de secretos | [ ] Pendiente |
@@ -259,7 +264,7 @@ Estados permitidos:
 | Autoria legacy | Critico | Autor desconocido queda null/controlado, nunca atribuido por conveniencia | Casos de import sin metadata y policy administrativa aprobada | [ ] Pendiente |
 | Hidden restore vs hard delete | Alto | Restaurar hidden no borra contenido ni elude auditoria | Diseno de marker/RPC/soft delete y pruebas de restauracion | [ ] Pendiente |
 | Rollback Storage + DB | Critico | Fallos parciales no dejan perdida ni media huerfana permanente | Journal, compensacion, reintento idempotente y prueba de fallo | [ ] Pendiente |
-| Conflictos offline/online | Alto | Existe regla para ediciones concurrentes Ale/Yori | Estrategia de version, deteccion y resolucion probada | [ ] Pendiente |
+| Conflictos offline/online | Alto | Existe regla para ediciones concurrentes owner_a/owner_b | Estrategia de version, deteccion y resolucion probada | [ ] Pendiente |
 | Audit log confiable | Alto | Eventos confiables no dependen de payload libre del cliente | Trigger/RPC/admin flow y prueba de inmutabilidad | [ ] Pendiente |
 | Router fuera de alcance | Bajo | Ninguna fase Supabase activa Router implicitamente | Busqueda de imports y diff sin cambios de routing | [x] Cumplido |
 
@@ -593,10 +598,15 @@ la siguiente.
   `migration:mock:dry-run` como atajos npm para checks mock-only. No cambia
   dependencias, no toca `src`, runtime, Supabase, CLI, Dashboard, SQL,
   `.env.local`, LocalStorage real, Storage ni datos reales.
-- Salida futura: usar los atajos npm mock-only para checks repetibles y decidir
-  si ampliar cobertura mock-only en una fase futura separada, sin datos reales,
-  sin LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin
-  dry-run real.
+- Estado S4.6.4.57:
+  `docs/supabase/PRIVATE_SNAPSHOT_WORKFLOW.md` documenta como obtener en una
+  fase futura un export real privado desde la UI, guardarlo fuera del repo y
+  reportar solo estado sanitizado. No genera snapshot real, no lee LocalStorage
+  real por scripts, no crea scripts, no toca Supabase/CLI/Dashboard, no toca
+  `.env.local`, no toca Storage y no conecta la app.
+- Salida futura: decidir entre guia manual de export privado o diseno de
+  normalizador privado para un archivo fuera del repo, todavia sin datos reales
+  en Git/chat, sin Supabase, sin `.env.local`, sin runtime y sin dry-run real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -690,7 +700,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 | Autoria falsa | Alto | Media | Mapping verificado y null para legado desconocido | S4.7-S4.9 |
 | Hard delete accidental | Alto | Media | Soft delete/marker, RPC y audit obligatorio | S4.6-S4.9 |
 | Storage huerfano | Alto | Alta | Journal, compensacion, cleanup e idempotencia | S4.9 |
-| Conflicto Ale/Yori | Alto | Alta | Versionado optimista y resolucion explicita | S4.5-S4.9 |
+| Conflicto owner_a/owner_b | Alto | Alta | Versionado optimista y resolucion explicita | S4.5-S4.9 |
 | Router activado antes de tiempo | Medio | Baja | Mantenerlo fuera de alcance y buscar imports | Todas |
 | Export/import incompatible | Critico | Media | Fixtures v1/v2, dry run y pruebas de restauracion | S4.5-S4.9 |
 | Build roto por dependency/config | Alto | Media | Fases aisladas, build inicial/final y rollback de lockfile | S4.3-S4.4 |
@@ -724,8 +734,9 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] First mock-only dry-run report script with limited scope.
 - [x] Mock migration smoke-test runner with limited scope.
 - [x] NPM mock migration shortcuts with limited scope.
-- [ ] Mock-only coverage expansion decision.
-- [ ] Estrategia de conflictos Ale/Yori.
+- [x] Private snapshot workflow docs-only.
+- [ ] Private snapshot manual export guidance or private normalizer design.
+- [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
 - [ ] Estrategia y tooling de pruebas.

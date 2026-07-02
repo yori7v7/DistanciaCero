@@ -54,7 +54,7 @@ LocalIdentitySelector -> auth/profile/universe services -> localIdentityStore/lo
 
 Estado:
 
-- Hay usuarios locales fake/dev: Yori / Diego y Ale / Alecita.
+- Hay usuarios locales fake/dev: owner_b / partner_b y owner_a / partner_a.
 - No hay login real.
 - No hay Supabase Auth.
 - No hay RLS.
@@ -83,16 +83,16 @@ No aplica todavia a:
 
 Los IDs locales actuales no son UUIDs reales de Supabase:
 
-- `local-yori`
-- `local-ale`
+- `local-owner_b`
+- `local-owner_a`
 - `distancia-cero-local-space`
 
 Estos IDs deben mapearse explicitamente a IDs reales cuando exista Supabase Auth/Postgres.
 
 No se debe asumir que:
 
-- `local-yori` equivale a `auth.users.id`.
-- `local-ale` equivale a `auth.users.id`.
+- `local-owner_b` equivale a `auth.users.id`.
+- `local-owner_a` equivale a `auth.users.id`.
 - `distancia-cero-local-space` equivale a `relationship_spaces.id`.
 
 ## 4. Schema conceptual
@@ -234,7 +234,7 @@ Riesgos:
 - `data jsonb` flexible puede esconder schema inconsistente.
 - `kind = hidden` queda como ruta recomendada actual.
 - Tabla separada para hidden queda como decision secundaria si hidden crece en complejidad.
-- Conflictos si Ale/Yori editan el mismo item.
+- Conflictos si owner_a/owner_b editan el mismo item.
 
 ### `content_events` / `audit_log`
 
@@ -305,8 +305,8 @@ Riesgos:
 ### Usuarios
 
 ```txt
-local-yori -> profiles.id real de Yori/Diego
-local-ale -> profiles.id real de Ale/Alecita
+local-owner_b -> profiles.id real de owner_b/partner_b
+local-owner_a -> profiles.id real de owner_a/partner_a
 ```
 
 Reglas:
@@ -761,6 +761,11 @@ Estado de S4.6.1:
   scripts, no agrega dependencias, no toca runtime, no usa Supabase, no lee
   `.env.local`, no lee LocalStorage real, no usa datos reales y no inserta
   datos.
+- S4.6.4.57 crea `docs/supabase/PRIVATE_SNAPSHOT_WORKFLOW.md` como workflow
+  documental para un futuro export privado desde la UI hacia una carpeta fuera
+  del repo. No genera snapshot real, no lee LocalStorage real por scripts, no
+  crea scripts, no toca runtime, no usa Supabase, no toca Storage y no pone
+  datos reales en Git/chat.
 
 Validacion y rollback:
 
@@ -819,7 +824,7 @@ Nivel Codex:
 Objetivo:
 
 - Habilitar escritura o migracion manual solo cuando RLS, rollback,
-  idempotencia y conflictos Ale/Yori esten resueltos.
+  idempotencia y conflictos owner_a/owner_b esten resueltos.
 
 Validacion y rollback:
 
@@ -841,7 +846,7 @@ quedan activados por completar S4.9:
 - **Storage privado para fotos:** migrar Data URL/rutas de galeria con
   `mediaService`, acceso privado, URLs firmadas y cleanup de assets. No incluye
   audio ni autoriza romper backups offline.
-- **Realtime opcional:** sincronizar cambios Ale/Yori solo despues de definir
+- **Realtime opcional:** sincronizar cambios owner_a/owner_b solo despues de definir
   conflictos; validar dos sesiones y escenarios offline/online, con rollback
   mediante desactivacion de subscriptions.
 
@@ -852,7 +857,7 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Nombres finales de tablas.
 - `hidden` queda recomendado como `kind` en `content_items`; tabla separada queda como decision secundaria.
 - `audit_log` obligatorio o diferido.
-- Regla de conflictos Ale/Yori.
+- Regla de conflictos owner_a/owner_b.
 - Migracion de Data URL.
 - Mapping local JSON/LocalStorage -> tablas remotas documentado.
 - Dry-run de migracion documentado.
@@ -870,6 +875,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Mock migration smoke-test runner con alcance limitado creado.
 - Scripts npm mock-only de migracion creados; falta decidir si ampliar
   cobertura mock-only.
+- Private snapshot workflow docs-only creado; falta decidir guia manual de
+  export privado o normalizador privado.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -934,9 +941,12 @@ esperados de ambos scripts mock-only sin imprimir payloads completos.
 `package.json` expone `migration:mock`, `migration:mock:validate` y
 `migration:mock:dry-run` como atajos npm mock-only, sin dependencias nuevas y
 sin reemplazar pruebas reales futuras.
+`docs/supabase/PRIVATE_SNAPSHOT_WORKFLOW.md` documenta como obtener en una fase
+futura un export real privado desde la UI, guardarlo fuera del repo y reportar
+solo estado sanitizado, sin generar snapshot real en esta fase.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es usar los atajos npm mock-only para
-checks repetibles y decidir si ampliar cobertura mock-only en una fase futura
-separada, sin datos reales, sin LocalStorage real, sin Supabase, sin
-`.env.local`, sin runtime y sin dry-run real.
+desarrollo. La siguiente fase recomendada es decidir entre guia manual de export
+privado o diseno de normalizador privado para un archivo fuera del repo, sin
+datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
+sin `.env.local`, sin runtime y sin dry-run real.

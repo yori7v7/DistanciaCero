@@ -12,6 +12,8 @@
 - Supabase touched: no.
 - Storage touched: no.
 - Production-ready: no.
+- Private snapshot workflow documented: yes, in
+  `PRIVATE_SNAPSHOT_WORKFLOW.md`.
 
 ## Objective
 
@@ -85,7 +87,7 @@ Required checks:
 
 - Local `createdBy` exists or is marked `legacy` / `unknown`.
 - Local `updatedBy` exists or is marked `legacy` / `unknown`.
-- Yori/Ale identity is preserved as `localIdentityKey`.
+- owner_b/owner_a identity is preserved as `localIdentityKey`.
 - Real emails are not used in docs.
 - Real UUIDs are not used in docs.
 - No remote profile is assumed without explicit private mapping.
@@ -140,6 +142,9 @@ Future validation must fail if it detects:
 - Personal real emails.
 - Private absolute paths in docs.
 - Real intimate content in documentation.
+
+Future validation of a real export must assume the input lives outside the repo
+under the privacy rules in `PRIVATE_SNAPSHOT_WORKFLOW.md`.
 
 Allowed in documentation:
 
@@ -207,17 +212,13 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- Snapshot/dry-run script design is now documented in
-  `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
-- Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
-- Script implementation planning is now documented in
-  `SCRIPT_IMPLEMENTATION_PLAN.md`.
-- The first mock-only validator script now exists under `scripts/migration/`.
-- Next suggested phase: review validator outputs and decide whether to expand
-  mock-only validation coverage.
-- Still no real snapshot, real LocalStorage read, real dry-run, real insert,
-  runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`,
-  private files, Storage or reset.
+- Private snapshot workflow is now documented in
+  `PRIVATE_SNAPSHOT_WORKFLOW.md`.
+- Next suggested phase: private snapshot manual export guidance or private
+  export normalizer design.
+- Still no real snapshot, real LocalStorage read by scripts, real dry-run, real
+  insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
+  `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

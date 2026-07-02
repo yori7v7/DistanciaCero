@@ -12,6 +12,8 @@
 - Supabase touched: no.
 - Storage touched: no.
 - Production-ready: no.
+- Private snapshot workflow documented: yes, in
+  `PRIVATE_SNAPSHOT_WORKFLOW.md`.
 
 ## Objective
 
@@ -62,13 +64,13 @@ identifiers.
   },
   "identities": [
     {
-      "localIdentityKey": "local-yori",
+      "localIdentityKey": "local-owner_b",
       "displayName": "<DISPLAY_NAME_PLACEHOLDER>",
       "roleHint": "owner",
       "remoteProfileHint": "<PRIVATE_MAPPING_REQUIRED>"
     },
     {
-      "localIdentityKey": "local-ale",
+      "localIdentityKey": "local-owner_a",
       "displayName": "<DISPLAY_NAME_PLACEHOLDER>",
       "roleHint": "partner",
       "remoteProfileHint": "<PRIVATE_MAPPING_REQUIRED>"
@@ -147,7 +149,7 @@ Required conceptual fields:
 
 Rules:
 
-- `local-yori` and `local-ale` remain local identifiers only.
+- `local-owner_b` and `local-owner_a` remain local identifiers only.
 - Remote profile mapping stays private and outside Git/chat.
 - Unknown or legacy authors must remain explicitly unresolved.
 
@@ -254,6 +256,7 @@ Future validation rules are documented in
 
 ## Privacy Rules
 
+- The future real export should first follow `PRIVATE_SNAPSHOT_WORKFLOW.md`.
 - Do not paste a real future snapshot in chat if it contains intimate content.
 - Use counts and sanitized status summaries for reports.
 - Do not store real content samples in docs.
@@ -293,14 +296,13 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- Snapshot/dry-run script design is now documented in
-  `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
-- Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
-- Next suggested phase: script implementation plan docs-only or mock-only
-  validator decision.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, `src`, SQL, Supabase Dashboard,
-  Supabase CLI, `.env.local`, private files, Storage or reset.
+- Private snapshot workflow is now documented in
+  `PRIVATE_SNAPSHOT_WORKFLOW.md`.
+- Next suggested phase: private snapshot manual export guidance or private
+  export normalizer design.
+- Still no real snapshot, real LocalStorage read by scripts, real dry-run, real
+  insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
+  `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

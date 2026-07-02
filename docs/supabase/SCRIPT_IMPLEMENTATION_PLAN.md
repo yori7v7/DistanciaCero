@@ -18,6 +18,8 @@
 - Runtime touched: no.
 - App connection: none.
 - Storage touched: no.
+- Private snapshot workflow documented: yes, in
+  `PRIVATE_SNAPSHOT_WORKFLOW.md`.
 - Production-ready: no.
 
 ## Recommended Decision
@@ -82,6 +84,8 @@ not replace future real snapshot or migration tests.
 Other future options still require separate approval:
 
 - Docs-only examples as conceptual input.
+- Private export normalizer design for a file outside the repo, still without
+  Supabase or real data in Git/chat.
 
 Recommendation:
 
@@ -211,9 +215,10 @@ The future script design is `NO-GO` if it:
 Suggested next phase:
 
 - Use the npm mock shortcuts for repeatable mock-only checks, then decide
-  whether to expand mock-only coverage in a separate future phase.
+  whether to design private manual export guidance or a private export
+  normalizer in a separate future phase.
 - Still no real data.
-- Still no real LocalStorage read.
+- Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.
 - Still no dry-run execution.
 - Still no insert.

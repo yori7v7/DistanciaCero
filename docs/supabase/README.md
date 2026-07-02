@@ -118,6 +118,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   `migration:mock:dry-run`. No instala dependencias, no usa red, no toca
   Supabase, no lee `.env.local`, no lee LocalStorage real, no usa datos reales
   y no inserta nada.
+- S4.6.4.57 crea `PRIVATE_SNAPSHOT_WORKFLOW.md` para documentar el flujo
+  privado futuro de export manual desde UI hacia una carpeta fuera del repo. No
+  genera snapshot real, no lee LocalStorage real por scripts, no crea scripts,
+  no guarda datos reales en Git/chat y no toca Supabase.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -267,6 +271,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../../scripts/migration/README.md`: reglas de uso del validador mock-only.
 - `../../package.json`: scripts npm S4.6.4.54 para ejecutar checks mock-only
   sin rutas largas; no cambia dependencias.
+- `PRIVATE_SNAPSHOT_WORKFLOW.md`: workflow S4.6.4.57 para un futuro export
+  privado desde UI, fuera del repo y sin datos reales en docs/chat.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -297,7 +303,7 @@ Primero deben revisarse:
 - RLS final.
 - Storage y buckets privados.
 - Mapping local -> remoto.
-- Mapping de `local-yori` y `local-ale` a usuarios Auth reales.
+- Mapping de `local-owner_b` y `local-owner_a` a usuarios Auth reales.
 - Mapping de `distancia-cero-local-space` a un `relationship_spaces.id` real.
 - Plan de migracion de Data URL a Storage.
 - Estrategia de rollback.
@@ -308,7 +314,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Usar los scripts npm mock-only para checks repetibles y decidir si ampliar
-cobertura mock-only en una fase futura separada, sin datos reales, sin
-LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin dry-run
-real.
+Decidir entre guia manual de export privado o diseno de normalizador privado
+para un archivo fuera del repo. Todavia sin datos reales en Git/chat, sin
+LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
+runtime y sin dry-run real.
