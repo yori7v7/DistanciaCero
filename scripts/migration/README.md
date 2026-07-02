@@ -34,6 +34,19 @@ node scripts/migration/dry-run-mock-snapshot.mjs scripts/migration/fixtures/mock
 node scripts/migration/run-mock-migration-checks.mjs
 ```
 
+NPM shortcuts:
+
+```powershell
+npm run migration:mock
+npm run migration:mock:validate
+npm run migration:mock:dry-run
+```
+
+These commands are convenience wrappers for mock-only checks. They do not use
+network access, Supabase, `.env.local`, browser LocalStorage or real data, and
+they do not insert anything. They do not replace future real snapshot, dry-run
+or migration tests.
+
 Expected fixture results:
 
 - `mock-snapshot-pass.json`: `PASS`, exit `0`.

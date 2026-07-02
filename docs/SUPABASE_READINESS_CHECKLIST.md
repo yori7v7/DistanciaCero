@@ -198,6 +198,10 @@ Estado verificado post-S4.5.1:
       dry-run mock. No usa red, no importa Supabase ni `src`, no lee
       `.env.local`, no lee LocalStorage real, no imprime payloads completos y
       no inserta datos.
+- [x] S4.6.4.54 agrega scripts npm de conveniencia para ejecutar los checks
+      mock-only de migracion sin rutas largas. No instala dependencias, no toca
+      runtime, no usa Supabase, no lee `.env.local`, no lee LocalStorage real,
+      no usa datos reales y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -584,7 +588,12 @@ la siguiente.
   exit codes esperados para el validador y el dry-run mock. No imprime payloads
   completos, no toca `src`, runtime, Supabase, CLI, Dashboard, SQL,
   `.env.local`, LocalStorage real, Storage ni datos reales.
-- Salida futura: revisar outputs del mock migration smoke-test runner y decidir
+- Estado S4.6.4.54:
+  `package.json` expone `migration:mock`, `migration:mock:validate` y
+  `migration:mock:dry-run` como atajos npm para checks mock-only. No cambia
+  dependencias, no toca `src`, runtime, Supabase, CLI, Dashboard, SQL,
+  `.env.local`, LocalStorage real, Storage ni datos reales.
+- Salida futura: usar los atajos npm mock-only para checks repetibles y decidir
   si ampliar cobertura mock-only en una fase futura separada, sin datos reales,
   sin LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin
   dry-run real.
@@ -622,7 +631,8 @@ No deben tocarse como parte de preparacion Supabase general:
 - `src/components/SceneMusicController.jsx`;
 - export/import runtime dentro de `CentroUniversoSection.jsx`;
 - cualquier JSON base en `src/data`;
-- `package.json`, salvo fase S4.3 aprobada expresamente;
+- `package.json`, salvo fase S4.3 aprobada expresamente o S4.6.4.54 para
+  scripts npm mock-only sin dependencias nuevas;
 - lockfile, salvo fase S4.3 aprobada expresamente;
 - `vite.config.js`, salvo fase especifica aprobada;
 - API publica sync de `src/services/contentService.js`;
@@ -713,7 +723,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] First mock-only validator script with limited scope.
 - [x] First mock-only dry-run report script with limited scope.
 - [x] Mock migration smoke-test runner with limited scope.
-- [ ] Mock-only smoke output review or coverage expansion decision.
+- [x] NPM mock migration shortcuts with limited scope.
+- [ ] Mock-only coverage expansion decision.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

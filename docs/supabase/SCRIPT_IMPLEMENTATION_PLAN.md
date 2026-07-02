@@ -8,6 +8,7 @@
 - `scripts/migration/` folder created: yes.
 - Mock dry-run report script created: yes, in S4.6.4.50.
 - Mock migration smoke-test runner created: yes, in S4.6.4.52.
+- NPM mock migration shortcuts created: yes, in S4.6.4.54.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -67,6 +68,16 @@ Implemented mock-only location:
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
 - `scripts/migration/README.md`.
+
+Implemented npm shortcuts:
+
+- `npm run migration:mock` runs only the mock smoke runner.
+- `npm run migration:mock:validate` runs only the mock PASS validator fixture.
+- `npm run migration:mock:dry-run` runs only the mock PASS dry-run fixture.
+
+These shortcuts do not use network access, Supabase, `.env.local`,
+LocalStorage real data or real migration inputs. They do not insert data and do
+not replace future real snapshot or migration tests.
 
 Other future options still require separate approval:
 
@@ -199,8 +210,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Review mock migration smoke-check outputs, then decide whether to expand
-  mock-only coverage in a separate future phase.
+- Use the npm mock shortcuts for repeatable mock-only checks, then decide
+  whether to expand mock-only coverage in a separate future phase.
 - Still no real data.
 - Still no real LocalStorage read.
 - Still no real snapshot generation.

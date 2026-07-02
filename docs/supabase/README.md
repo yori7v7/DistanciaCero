@@ -113,6 +113,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   runner mock-only para validar exit codes esperados del validador y del dry-run
   mock. No usa red, no importa Supabase, no lee `.env.local`, no lee
   LocalStorage real y no toca runtime.
+- S4.6.4.54 agrega scripts npm de conveniencia para ejecutar esos checks
+  mock-only: `migration:mock`, `migration:mock:validate` y
+  `migration:mock:dry-run`. No instala dependencias, no usa red, no toca
+  Supabase, no lee `.env.local`, no lee LocalStorage real, no usa datos reales
+  y no inserta nada.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -260,6 +265,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../../scripts/migration/run-mock-migration-checks.mjs`: runner S4.6.4.52
   mock-only que valida exit codes esperados sin imprimir payloads completos.
 - `../../scripts/migration/README.md`: reglas de uso del validador mock-only.
+- `../../package.json`: scripts npm S4.6.4.54 para ejecutar checks mock-only
+  sin rutas largas; no cambia dependencias.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -301,7 +308,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Revisar outputs del mock migration smoke-test runner y decidir si ampliar
+Usar los scripts npm mock-only para checks repetibles y decidir si ampliar
 cobertura mock-only en una fase futura separada, sin datos reales, sin
 LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin dry-run
 real.
