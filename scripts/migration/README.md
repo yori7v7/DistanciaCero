@@ -10,11 +10,14 @@
 - Real data: not allowed.
 - Production migration: not supported.
 
-## Current Script
+## Current Scripts
 
 `validate-mock-snapshot.mjs` validates sanitized toy snapshots only.
 It accepts explicit local file paths, rejects remote URLs and redacts
 outside-repository paths in output.
+
+`dry-run-mock-snapshot.mjs` transforms sanitized toy snapshots into sanitized
+mock dry-run reports printed to stdout. It does not write report files.
 
 Run examples:
 
@@ -22,6 +25,9 @@ Run examples:
 node scripts/migration/validate-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-pass.json
 node scripts/migration/validate-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-check.json
 node scripts/migration/validate-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-nogo.json
+node scripts/migration/dry-run-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-pass.json
+node scripts/migration/dry-run-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-check.json
+node scripts/migration/dry-run-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-nogo.json
 ```
 
 Expected fixture results:

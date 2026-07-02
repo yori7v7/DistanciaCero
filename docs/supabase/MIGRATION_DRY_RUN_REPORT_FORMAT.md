@@ -319,11 +319,17 @@ Current next phase:
 - Snapshot/dry-run script design is now documented in
   `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
 - Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
-- Next suggested phase: script implementation plan docs-only or mock-only
-  validator decision.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, SQL execution, Supabase Dashboard,
-  Supabase CLI, `.env.local`, private files, Storage or reset.
+- Script implementation planning is documented in
+  `SCRIPT_IMPLEMENTATION_PLAN.md`.
+- The mock-only validator exists at
+  `../../scripts/migration/validate-mock-snapshot.mjs`.
+- A mock-only dry-run report script now exists at
+  `../../scripts/migration/dry-run-mock-snapshot.mjs`.
+- Next suggested phase: review mock-only script outputs or decide whether to
+  expand mock-only coverage.
+- Still no real snapshot, real LocalStorage read, real dry-run, real insert,
+  runtime change, SQL execution, Supabase Dashboard, Supabase CLI,
+  `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

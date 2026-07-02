@@ -105,6 +105,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   fixtures mock sanitizados. El script es mock-only, no usa red, no importa
   Supabase, no lee `.env.local`, no lee LocalStorage real, no genera snapshots
   reales, no ejecuta dry-run real y no inserta datos.
+- S4.6.4.50 crea `../../scripts/migration/dry-run-mock-snapshot.mjs` para
+  transformar snapshots mock sanitizados en reportes dry-run mock sanitizados
+  por stdout. No escribe reportes por defecto, no usa red, no importa Supabase,
+  no lee `.env.local`, no lee LocalStorage real y no inserta datos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -246,6 +250,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   `.env.local`, no lee LocalStorage y no escribe datos.
 - `../../scripts/migration/fixtures/*.json`: fixtures mock sanitizados para
   `PASS`, `CHECK` y `NO-GO`; no son snapshots reales ni payloads de migracion.
+- `../../scripts/migration/dry-run-mock-snapshot.mjs`: script S4.6.4.50
+  mock-only para producir reportes dry-run sanitizados desde fixtures mock. No
+  ejecuta migracion real ni escribe archivos por defecto.
 - `../../scripts/migration/README.md`: reglas de uso del validador mock-only.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
@@ -288,6 +295,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Revisar outputs del mock-only validator y decidir si ampliar cobertura
-mock-only en una fase futura separada, sin datos reales, sin LocalStorage real,
-sin Supabase, sin `.env.local`, sin runtime y sin dry-run real.
+Revisar outputs del mock-only validator y del mock-only dry-run report script,
+y decidir si ampliar cobertura mock-only en una fase futura separada, sin datos
+reales, sin LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y
+sin dry-run real.

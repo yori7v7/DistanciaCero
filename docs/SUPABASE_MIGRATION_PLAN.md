@@ -746,6 +746,11 @@ Estado de S4.6.1:
   script usa solo modulos built-in de Node, no usa red, no importa Supabase ni
   `src`, no lee `.env.local`, no lee LocalStorage real, no genera snapshot
   real, no ejecuta dry-run real, no inserta datos y no conecta la app.
+- S4.6.4.50 crea `scripts/migration/dry-run-mock-snapshot.mjs` como segundo
+  script mock-only para producir reportes dry-run sanitizados por stdout desde
+  snapshots mock. Usa solo modulos built-in de Node, no usa red, no importa
+  Supabase ni `src`, no lee `.env.local`, no lee LocalStorage real, no escribe
+  reportes por defecto, no inserta datos y no conecta la app.
 
 Validacion y rollback:
 
@@ -850,8 +855,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Diseno docs-only de snapshot/dry-run script documentado.
 - Mock snapshot examples docs-only documentado.
 - Script implementation plan docs-only documentado.
-- Primer mock-only validator script con alcance limitado creado; falta revisar
-  outputs o decidir si ampliar cobertura mock-only.
+- Primer mock-only validator script con alcance limitado creado.
+- Primer mock-only dry-run report script con alcance limitado creado; falta
+  revisar outputs o decidir si ampliar cobertura mock-only.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -908,9 +914,12 @@ futuro recomendado es un validador mock-only sin red, sin Supabase, sin
 `scripts/migration/validate-mock-snapshot.mjs` implementa ese primer validador
 mock-only con fixtures sanitizados `PASS`, `CHECK` y `NO-GO`, sin tocar
 runtime ni datos reales.
+`scripts/migration/dry-run-mock-snapshot.mjs` produce reportes dry-run mock
+sanitizados por stdout desde esos fixtures, sin escribir reportes por defecto y
+sin tocar runtime ni datos reales.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
 desarrollo. La siguiente fase recomendada es revisar outputs del mock-only
-validator y decidir si ampliar cobertura mock-only en una fase futura separada,
-sin datos reales, sin LocalStorage real, sin Supabase, sin `.env.local`, sin
-runtime y sin dry-run real.
+validator y del mock-only dry-run report script, y decidir si ampliar cobertura
+mock-only en una fase futura separada, sin datos reales, sin LocalStorage real,
+sin Supabase, sin `.env.local`, sin runtime y sin dry-run real.

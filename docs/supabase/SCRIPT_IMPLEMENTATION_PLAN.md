@@ -6,6 +6,7 @@
 - Implementation: first mock-only validator created in S4.6.4.48.
 - Script created: yes, mock-only.
 - `scripts/migration/` folder created: yes.
+- Mock dry-run report script created: yes, in S4.6.4.50.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -59,6 +60,7 @@ real data, read LocalStorage, touch Supabase, execute a dry-run or insert data.
 Implemented mock-only location:
 
 - `scripts/migration/validate-mock-snapshot.mjs`.
+- `scripts/migration/dry-run-mock-snapshot.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
@@ -195,8 +197,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Review the first mock-only validator outputs and decide whether to expand
-  mock-only validation coverage in a separate future phase.
+- Review mock-only validator and dry-run report outputs, then decide whether to
+  expand mock-only coverage in a separate future phase.
 - Still no real data.
 - Still no real LocalStorage read.
 - Still no real snapshot generation.

@@ -188,6 +188,11 @@ Estado verificado post-S4.5.1:
       es mock-only, no usa red, no importa Supabase ni `src`, no lee
       `.env.local`, no lee LocalStorage real, no genera snapshot real, no
       ejecuta dry-run real y no inserta datos.
+- [x] S4.6.4.50 crea `scripts/migration/dry-run-mock-snapshot.mjs` como script
+      mock-only para transformar snapshots sanitizados de juguete en reportes
+      dry-run mock por stdout. No usa red, no importa Supabase ni `src`, no lee
+      `.env.local`, no lee LocalStorage real, no escribe reportes por defecto y
+      no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -565,10 +570,14 @@ la siguiente.
   sanitizados. Los fixtures `PASS`, `CHECK` y `NO-GO` viven en
   `scripts/migration/fixtures/`. No toca `src`, runtime, Supabase, CLI,
   Dashboard, SQL, `.env.local`, LocalStorage real, Storage ni datos reales.
-- Salida futura: revisar outputs del mock-only validator y decidir si ampliar
-  cobertura mock-only en una fase futura separada, sin datos reales, sin
-  LocalStorage real, sin Supabase, sin `.env.local`, sin runtime y sin dry-run
-  real.
+- Estado S4.6.4.50:
+  `scripts/migration/dry-run-mock-snapshot.mjs` produce reportes dry-run mock
+  sanitizados por stdout desde fixtures mock. No toca `src`, runtime, Supabase,
+  CLI, Dashboard, SQL, `.env.local`, LocalStorage real, Storage ni datos reales.
+- Salida futura: revisar outputs del mock-only validator y del mock-only dry-run
+  report script, y decidir si ampliar cobertura mock-only en una fase futura
+  separada, sin datos reales, sin LocalStorage real, sin Supabase, sin
+  `.env.local`, sin runtime y sin dry-run real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -692,7 +701,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Fixtures/mock snapshot examples docs-only.
 - [x] Script implementation plan docs-only and mock-only validator decision.
 - [x] First mock-only validator script with limited scope.
-- [ ] Mock-only validator output review or coverage expansion decision.
+- [x] First mock-only dry-run report script with limited scope.
+- [ ] Mock-only script output review or coverage expansion decision.
 - [ ] Estrategia de conflictos Ale/Yori.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
