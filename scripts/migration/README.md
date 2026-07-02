@@ -13,6 +13,8 @@
 ## Current Script
 
 `validate-mock-snapshot.mjs` validates sanitized toy snapshots only.
+It accepts explicit local file paths, rejects remote URLs and redacts
+outside-repository paths in output.
 
 Run examples:
 

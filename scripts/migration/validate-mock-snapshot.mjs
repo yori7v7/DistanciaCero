@@ -94,7 +94,7 @@ const SECRET_PATTERNS = Object.freeze([
 function usage() {
   return [
     `Usage: node scripts/migration/${SCRIPT_NAME} <local-mock-snapshot.json>`,
-    'Input must be a local sanitized mock JSON file inside this repository.',
+    'Input must be a local sanitized mock JSON file. Remote URLs are rejected.',
   ];
 }
 
@@ -104,11 +104,6 @@ function sanitizePathForOutput(resolvedPath) {
     return '<outside-repository>';
   }
   return relativePath.split(path.sep).join('/');
-}
-
-function isInsideRepository(resolvedPath) {
-  const relativePath = path.relative(process.cwd(), resolvedPath);
-  return relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
 }
 
 function isRemoteInput(value) {
@@ -405,20 +400,6 @@ async function main() {
 
   const resolvedPath = path.resolve(process.cwd(), input);
   const safeFile = sanitizePathForOutput(resolvedPath);
-
-  if (!isInsideRepository(resolvedPath)) {
-    const exitCode = EXIT_CODES.ABORTED;
-    printReport({
-      file: safeFile,
-      result: 'ABORTED',
-      counts: { identities: 0, contentItems: 0, media: 0, warnings: 0 },
-      warnings: [],
-      errors: [{ code: 'outside_repository_rejected', message: 'Input must stay inside this repository.' }],
-      exitCode,
-    });
-    process.exitCode = exitCode;
-    return;
-  }
 
   let rawText;
   try {
