@@ -12,6 +12,8 @@
 - Storage touched: no.
 - Private snapshot validator design documented: yes, in
   `PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md`.
+- Private dry-run normalizer design documented: yes, in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
 
 ## Objective
 
@@ -171,9 +173,9 @@ Stop if any of these occur:
 
 Choose one separately approved phase:
 
-- Create `validate-private-local-export.mjs` with local-only scope and
-  sanitized output.
-- First test it with a mock export or temporary sanitized file.
+- Create `dry-run-private-local-export.mjs` with local-only scope and sanitized
+  output.
+- First test it only with fixtures mock/sanitized inside the repo.
 - Do not run it on a private real export until the script is reviewed.
 
 Do not execute this path without explicit approval.

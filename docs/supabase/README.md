@@ -131,6 +131,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   salida sanitizada. No se ejecuta contra export privado real, no lee archivos
   privados fuera del repo, no lee LocalStorage real, no toca Supabase y no
   inserta datos.
+- S4.6.5.11 crea `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` para documentar el
+  diseno del futuro normalizador/dry-run privado local-only. No crea scripts,
+  no lee export privado, no genera snapshot real, no ejecuta dry-run real, no
+  toca Supabase, no inserta datos y no toca Storage.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -286,6 +290,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   privado local-only para un export UI guardado fuera del repo; S4.6.5.4 crea
   la implementacion inicial y la mantiene bloqueada para datos reales hasta una
   revision futura.
+- `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`: diseno S4.6.5.11 del futuro
+  normalizador/dry-run privado local-only. Define como convertir un export UI v2
+  validado en operaciones planeadas sanitizadas, sin crear script, leer export
+  privado, ejecutar dry-run real, insertar datos, tocar Supabase o subir media.
 - `../../scripts/migration/validate-private-local-export.mjs`: script S4.6.5.4
   local-only para validar exports UI v2 desde una ruta local explicita. Rechaza
   URLs remotas, imprime solo resumen sanitizado y todavia no debe ejecutarse
@@ -334,7 +342,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Revisar/auditar `validate-private-local-export.mjs` antes de autorizar
-cualquier ejecucion contra un export privado real. Todavia sin datos reales en
+Crear `dry-run-private-local-export.mjs` usando solo fixtures sanitizadas, sin
+ejecutarlo todavia contra el export privado real. Todavia sin datos reales en
 Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
-`.env.local`, sin runtime y sin dry-run real.
+`.env.local`, sin runtime, sin Storage y sin dry-run real con datos privados.

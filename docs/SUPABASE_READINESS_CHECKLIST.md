@@ -217,6 +217,12 @@ Estado verificado post-S4.5.1:
       salida sanitizada. No se ejecuta contra export privado real, no lee
       archivos privados fuera del repo, no lee LocalStorage real, no toca
       runtime, no usa Supabase y no inserta datos.
+- [x] S4.6.5.11 crea
+      `docs/supabase/PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` como diseno
+      documental del futuro normalizador/dry-run privado local-only para un
+      export UI v2 ya validado. No crea script, no lee export privado, no
+      genera snapshot real, no ejecuta dry-run real, no toca Supabase, no
+      inserta datos y no toca Storage.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -625,8 +631,14 @@ la siguiente.
   local-only y salida sanitizada. Fue probado solo con fixtures sanitizadas
   dentro del repo: PASS exit 0, CHECK exit 2, NO-GO exit 1, no args exit 5 y
   URL remota exit 5. No lee export privado real ni archivos privados.
-- Salida futura: revisar/auditar el validador privado antes de autorizar
-  cualquier ejecucion contra un export privado real.
+- Estado S4.6.5.11:
+  `docs/supabase/PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` documenta como un futuro
+  script `dry-run-private-local-export.mjs` deberia transformar un export UI v2
+  validado en operaciones planeadas sanitizadas. No crea script, no lee export
+  privado, no genera snapshot real, no ejecuta dry-run real, no inserta datos y
+  mantiene Supabase/Storage bloqueados.
+- Salida futura: crear el normalizador/dry-run privado usando solo fixtures
+  sanitizadas y auditarlo antes de cualquier ejecucion con export privado real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -757,7 +769,10 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private snapshot workflow docs-only.
 - [x] Private snapshot validator design docs-only.
 - [x] Private local export validator script with sanitized output.
-- [ ] Private local export validator script review before real private export.
+- [x] Private local export validator script review and private retest
+      sanitized.
+- [x] Private dry-run normalizer design docs-only.
+- [ ] Private dry-run normalizer script with sanitized fixtures only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

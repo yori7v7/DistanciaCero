@@ -74,7 +74,8 @@ No aplica todavia a:
 - JSON base.
 - Overrides.
 - Hidden.
-- Cartas legacy monthly/openWhen.
+- Cartas legacy monthly/openWhen existentes que no hayan sido re-guardadas tras
+  el fix local de metadata.
 - Opened/read.
 - Simulation unlocked.
 - Contenido local existente no migrado.
@@ -776,6 +777,12 @@ Estado de S4.6.1:
   prueba solo con fixtures dentro del repo y no se ejecuta contra el export
   privado real, no lee archivos privados, no lee LocalStorage real, no toca
   runtime, no usa Supabase y no inserta datos.
+- S4.6.5.11 crea `docs/supabase/PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` para
+  documentar el diseno del futuro normalizador/dry-run privado local-only. El
+  documento parte del export UI v2 ya validado, define normalizacion por
+  coleccion, media/playlist pendientes, reporte sanitizado y exit codes futuros.
+  No crea script, no lee export privado, no genera snapshot real, no ejecuta
+  dry-run real, no toca Supabase, no inserta datos y no toca Storage.
 
 Validacion y rollback:
 
@@ -888,7 +895,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private snapshot workflow docs-only creado.
 - Private snapshot validator design docs-only creado.
 - Private local export validator script creado con salida sanitizada; falta
-  revisarlo antes de cualquier ejecucion contra un export privado real.
+  mantener su ejecucion privada fuera de Git/chat.
+- Private dry-run normalizer design docs-only creado; falta implementar el
+  script futuro solo con fixtures sanitizadas.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -960,12 +969,17 @@ solo estado sanitizado, sin generar snapshot real en esta fase.
 validarse en una fase futura ese export privado local, sin crear script, leer
 export privado, generar snapshot real, tocar Supabase o insertar datos.
 `scripts/migration/validate-private-local-export.mjs` implementa el validador
-local-only para export UI v2 y se prueba solo con fixtures sanitizadas dentro
-del repo. No se ha ejecutado contra el export privado real.
+local-only para export UI v2 y se prueba con fixtures sanitizadas dentro del
+repo. El retest privado sanitizado reporto que los warnings de identidad y
+fechas legacy desaparecieron; quedan warnings esperados de playlist/media.
+`docs/supabase/PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` documenta el futuro
+normalizador/dry-run privado que tomara ese export validado y producira un
+reporte de operaciones planeadas sanitizado, sin crear scripts en esa fase, sin
+leer export privado en Codex, sin tocar Supabase, sin Storage y sin insertar.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es revisar/auditar
-`validate-private-local-export.mjs` antes de autorizar cualquier ejecucion
-contra un export privado real, sin datos reales en Git/chat, sin LocalStorage
-real leido por scripts, sin Supabase, sin `.env.local`, sin runtime y sin
-dry-run real.
+desarrollo. La siguiente fase recomendada es crear
+`dry-run-private-local-export.mjs` con fixtures sanitizadas solamente, sin
+ejecutarlo contra el export privado real hasta auditar el script, sin datos
+reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+`.env.local`, sin runtime, sin Storage y sin dry-run real con datos privados.

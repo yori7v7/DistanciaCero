@@ -133,19 +133,22 @@ Recommended future path:
 1. Prepare a future local snapshot shaped by
    `LOCAL_SNAPSHOT_EXPORT_FORMAT.md`.
 2. Validate the snapshot with `LOCAL_SNAPSHOT_VALIDATION_RULES.md`.
-3. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
-4. Review the report shape documented in
+3. Validate the private UI export with `validate-private-local-export.mjs`.
+4. Follow the private dry-run normalizer design documented in
+   `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
+5. Follow the dry-run plan documented in `MIGRATION_DRY_RUN_PLAN.md`.
+6. Review the report shape documented in
    `MIGRATION_DRY_RUN_REPORT_FORMAT.md`.
-5. Pass the insert gate documented in
+7. Pass the insert gate documented in
    `MIGRATION_INSERT_GATE_CHECKLIST.md`.
-6. Validate counts per collection and per kind.
-7. Validate identity mapping privately, outside Git.
-8. Validate duplicate detection using legacy ids and source markers.
-9. Insert into a disposable lab only after explicit approval.
-10. Run read-only verification of counts, FK chain and metadata.
-11. Run RLS verification with synthetic users.
-12. Integrate one UI feature behind an off-by-default feature flag.
-13. Keep rollback to local-only mode available.
+8. Validate counts per collection and per kind.
+9. Validate identity mapping privately, outside Git.
+10. Validate duplicate detection using legacy ids and source markers.
+11. Insert into a disposable lab only after explicit approval.
+12. Run read-only verification of counts, FK chain and metadata.
+13. Run RLS verification with synthetic users.
+14. Integrate one UI feature behind an off-by-default feature flag.
+15. Keep rollback to local-only mode available.
 
 ## NO-GO Criteria
 
@@ -168,11 +171,14 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- If S4.6.4.44 docs consistency repair is clean, proceed to
-  snapshot/dry-run script design as docs-only work.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, `src`, SQL, Supabase Dashboard,
-  Supabase CLI, `.env.local`, private files, Storage or reset.
+- Private dry-run normalizer design is documented in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
+- Next suggested phase: create `dry-run-private-local-export.mjs` with
+  sanitized fixtures only.
+- Still no private export read by Codex, executable private dry-run script, real
+  snapshot, real LocalStorage read, real dry-run with private data, real insert,
+  runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`,
+  private files, Storage or reset.
 
 ## Non-Goals
 

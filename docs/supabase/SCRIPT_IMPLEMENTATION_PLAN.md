@@ -10,6 +10,8 @@
 - Mock migration smoke-test runner created: yes, in S4.6.4.52.
 - NPM mock migration shortcuts created: yes, in S4.6.4.54.
 - Private local export validator script created: yes, in S4.6.5.4.
+- Private dry-run normalizer design documented: yes, in S4.6.5.11.
+- Private dry-run normalizer script created: no.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -95,6 +97,15 @@ Private local export validator:
 - In S4.6.5.4 it is tested only with sanitized fixtures inside the repo.
 - It must not be run against a private real export until a separate review
   phase approves that.
+
+Private dry-run normalizer:
+
+- `dry-run-private-local-export.mjs` is a future conceptual script only.
+- It should be created in a separate phase using sanitized fixtures only.
+- It must not be run against a private real export until a separate script audit
+  approves that.
+- It must not touch Supabase, Storage, `.env.local`, LocalStorage real data or
+  runtime.
 
 Recommendation:
 
@@ -223,12 +234,11 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Review/audit `validate-private-local-export.mjs` in read-only mode before any
-  private real export run.
-- Still no real data.
+- Create `dry-run-private-local-export.mjs` using sanitized fixtures only.
+- Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.
-- Still no dry-run execution.
+- Still no dry-run execution with private data.
 - Still no insert.
 - Still no Supabase, CLI, Dashboard, SQL, Storage, `.env.local`, runtime or
   app connection.

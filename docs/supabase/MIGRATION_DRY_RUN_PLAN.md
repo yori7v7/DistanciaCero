@@ -5,6 +5,8 @@
 - Status: DOCUMENTARY DESIGN ONLY.
 - Implementation: not implemented.
 - Script created: no.
+- Private normalizer design: documented in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
 - Migration executed: no.
 - Runtime connection: none.
 - LocalStorage: still active source and fallback.
@@ -127,16 +129,14 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- Snapshot/dry-run script design is now documented in
-  `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
-- Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
-- Script implementation planning is now documented in
-  `SCRIPT_IMPLEMENTATION_PLAN.md`.
-- Next suggested phase: create the first mock-only validator script with
-  limited scope.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, SQL execution, Supabase Dashboard,
-  Supabase CLI, `.env.local`, private files, Storage or reset.
+- Private dry-run normalizer design is now documented in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
+- Next suggested phase: create `dry-run-private-local-export.mjs` with
+  sanitized fixtures only.
+- Still no private export read by Codex, private dry-run script, real snapshot,
+  real LocalStorage read, real dry-run with private data, real insert, runtime
+  change, SQL execution, Supabase Dashboard, Supabase CLI, `.env.local`,
+  private files, Storage or reset.
 
 ## Non-Goals
 

@@ -11,6 +11,8 @@
 - Supabase touched: no.
 - App connection: none.
 - Storage touched: no.
+- Private dry-run normalizer design documented: yes, in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
 
 ## Purpose
 
@@ -103,8 +105,10 @@ The future validator should confirm:
 Rules:
 
 - `timeline.date` should accept `YYYY-MM-DD`.
-- `importantDates.date` may remain legacy or human-readable and should be
-  classified under documented validation rules.
+- `importantDates.date` should be `YYYY-MM-DD` for new or updated local items
+  after the local export warning fix.
+- Remaining legacy or human-readable important dates should be classified under
+  documented validation rules.
 - `timeline.date` without a year should be `CHECK` or `NO-GO` depending on
   severity.
 - `timeline.date` that looks forced or invalid should be reported.
@@ -238,16 +242,15 @@ Future implementation is `NO-GO` if it:
 
 Suggested next phase:
 
-- Review/audit `validate-private-local-export.mjs` in read-only mode.
+- Create `dry-run-private-local-export.mjs` using sanitized fixtures only.
 - Confirm it remains local-only and prints only sanitized output.
-- Do not run it on a private real export until that review passes.
+- Do not run it on a private real export until a separate script audit passes.
 
 Still blocked:
 
-- No private export read yet.
 - No real snapshot generated.
 - No real LocalStorage read by scripts.
-- No dry-run with real data.
+- No dry-run with private data.
 - No insert.
 - No Supabase, SQL, Dashboard, CLI, Storage, `.env.local`, runtime or app
   connection.

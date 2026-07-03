@@ -6,6 +6,8 @@
 - Implementation: not implemented.
 - Script created: no.
 - Dry-run executed: no.
+- Private dry-run normalizer design documented: yes, in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
 - Real data read: no.
 - Runtime connection: none.
 - Supabase connection: none.
@@ -316,20 +318,16 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- Snapshot/dry-run script design is now documented in
-  `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
-- Mock snapshot examples are now documented in `MOCK_SNAPSHOT_EXAMPLES.md`.
-- Script implementation planning is documented in
-  `SCRIPT_IMPLEMENTATION_PLAN.md`.
-- The mock-only validator exists at
-  `../../scripts/migration/validate-mock-snapshot.mjs`.
-- A mock-only dry-run report script now exists at
-  `../../scripts/migration/dry-run-mock-snapshot.mjs`.
-- Next suggested phase: review mock-only script outputs or decide whether to
-  expand mock-only coverage.
-- Still no real snapshot, real LocalStorage read, real dry-run, real insert,
-  runtime change, SQL execution, Supabase Dashboard, Supabase CLI,
-  `.env.local`, private files, Storage or reset.
+- Private dry-run normalizer design is now documented in
+  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
+- The future private report should extend this shape with `mediaPending` and
+  `playlistPending` summaries while staying sanitized.
+- Next suggested phase: create `dry-run-private-local-export.mjs` with
+  sanitized fixtures only.
+- Still no private export read by Codex, real snapshot, real LocalStorage read,
+  real dry-run with private data, real insert, runtime change, SQL execution,
+  Supabase Dashboard, Supabase CLI, `.env.local`, private files, Storage or
+  reset.
 
 ## Non-Goals
 
