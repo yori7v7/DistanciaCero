@@ -33,6 +33,31 @@ const spanishMonths = {
   diciembre: 11
 }
 
+const spanishMonthNames = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre'
+]
+
+function formatTimelineDateForDisplay(dateValue) {
+  const rawDate = String(dateValue || '').trim()
+  const isoMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (!isoMatch) return rawDate
+
+  const day = Number(isoMatch[3])
+  const monthName = spanishMonthNames[Number(isoMatch[2]) - 1]
+  return monthName ? `${day} de ${monthName} de ${isoMatch[1]}` : rawDate
+}
+
 function isFuturePage(page) {
   const combinedText = `${page.id || ''} ${page.date || ''} ${page.title || ''}`.toLowerCase()
   return page.id === 'futuro' || combinedText.includes('próximamente') || combinedText.includes('proximamente')
@@ -52,7 +77,9 @@ function getTimelineSortDate(page) {
   const month = spanishMonths[spanishMatch[2].normalize('NFD').replace(/[\u0300-\u036f]/g, '')]
   if (month === undefined) return null
 
-  return new Date(Number(spanishMatch[3]) || 2026, month, Number(spanishMatch[1])).getTime()
+  if (!spanishMatch[3]) return null
+
+  return new Date(Number(spanishMatch[3]), month, Number(spanishMatch[1])).getTime()
 }
 
 function sortTimelinePages(pages) {
@@ -68,8 +95,6 @@ function sortTimelinePages(pages) {
     const rightDate = getTimelineSortDate(rightPage)
 
     if (leftDate !== null && rightDate !== null) return leftDate - rightDate
-    if (leftDate !== null) return -1
-    if (rightDate !== null) return 1
 
     return 0
   })
@@ -85,7 +110,7 @@ function normalizePage(page, index) {
   return {
     id: page.id || `page-${index + 1}`,
     chapter: page.chapter || `Capítulo ${index + 1}`,
-    date: page.date || page.year || 'Fecha importante',
+    date: formatTimelineDateForDisplay(page.date || page.year || 'Fecha importante'),
     title: page.title || 'Un recuerdo nuestro',
     subtitle: page.subtitle || page.description || 'Una página de nuestra historia.',
     description: page.description || page.text || page.caption || 'Ale, esta página existe para guardar algo bonito de nosotros.',

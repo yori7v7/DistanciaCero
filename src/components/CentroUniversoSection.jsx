@@ -169,7 +169,6 @@ function CentroUniversoSection() {
   const [editingBasePlaylistId, setEditingBasePlaylistId] = useState(null)
 
   // Form states
-  const [letterType, setLetterType] = useState('monthly') // 'monthly' | 'openwhen'
   const [title, setTitle] = useState('')
   const [preview, setPreview] = useState('')
   const [contentRaw, setContentRaw] = useState('')
@@ -179,6 +178,7 @@ function CentroUniversoSection() {
   const [activeCrudModule, setActiveCrudModule] = useState('monthlyLetters')
   const [activeCrudAction, setActiveCrudAction] = useState('originals')
   const [activeCrudFilter, setActiveCrudFilter] = useState('all')
+  const activeLetterType = activeCrudModule === 'openWhenLetters' ? 'openwhen' : 'monthly'
 
   const crudModules = [
     { id: 'monthlyLetters', label: 'Cartas mensuales' },
@@ -938,7 +938,7 @@ function CentroUniversoSection() {
 
     const day = Number(match[3])
     const monthName = timelineMonthNames[Number(match[2]) - 1]
-    return monthName ? `${day} de ${monthName}` : String(dateValue || '').trim()
+    return monthName ? `${day} de ${monthName} de ${match[1]}` : String(dateValue || '').trim()
   }
 
   const parseTimelineDateForInput = (dateValue) => {
@@ -952,10 +952,18 @@ function CentroUniversoSection() {
     const monthIndex = timelineMonthIndexes[normalizedMonth]
     if (monthIndex === undefined) return ''
 
-    const year = Number(match[3]) || 2026
+    if (!match[3]) return ''
+
+    const year = Number(match[3])
     const month = String(monthIndex + 1).padStart(2, '0')
     const day = String(Number(match[1])).padStart(2, '0')
     return `${year}-${month}-${day}`
+  }
+
+  const normalizeTimelineDateForStorage = (dateValue) => {
+    const rawValue = String(dateValue || '').trim()
+    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
+    return parseTimelineDateForInput(rawValue) || rawValue
   }
 
   const resetTimelineForm = () => {
@@ -1721,7 +1729,7 @@ function CentroUniversoSection() {
     mood
   }) => ({
     chapter: chapter.trim(),
-    date: formatTimelineDateForDisplay(date),
+    date: normalizeTimelineDateForStorage(date),
     title: title.trim(),
     subtitle: subtitle.trim(),
     description: description.trim(),
@@ -2218,7 +2226,7 @@ function CentroUniversoSection() {
       .map((p) => p.trim())
       .filter((p) => p.length > 0)
 
-    const isMonthly = letterType === 'monthly'
+    const isMonthly = activeCrudModule === 'monthlyLetters'
     const currentList = isMonthly ? localMonthly : localOpenWhen
     const wasEditing = Boolean(editingId)
 
@@ -2281,7 +2289,6 @@ function CentroUniversoSection() {
 
   const handleEdit = (item, type) => {
     setActiveCrudAction('create')
-    setLetterType(type)
     setEditingId(item.id)
     setTitle(item.title)
     setPreview(item.preview)
@@ -2331,7 +2338,6 @@ function CentroUniversoSection() {
     setContentRaw('')
     setTag('')
     setLetterLocked(false)
-    setLetterType(nextModule === 'openWhenLetters' ? 'openwhen' : 'monthly')
     resetReasonForm()
     resetBaseReasonForm()
     resetPromiseForm()
@@ -3609,7 +3615,7 @@ function CentroUniversoSection() {
                 key={page.id}
               >
                 <div className="base-reason-copy">
-                  <strong>{page.chapter} · {page.date} · {page.title}</strong>
+                  <strong>{page.chapter} · {formatTimelineDateForDisplay(page.date)} · {page.title}</strong>
                   <span>{page.description}</span>
                   <small>{page.isHidden ? 'Oculta localmente' : page.isOverridden ? 'Editada localmente' : 'Original'}</small>
                 </div>
@@ -3897,7 +3903,7 @@ function CentroUniversoSection() {
               {localTimelinePages.map((page) => (
                 <div className="reason-item-row" key={page.id}>
                   <div className="item-info">
-                    <strong>{page.chapter} · {page.date} · {page.title}</strong>
+                    <strong>{page.chapter} · {formatTimelineDateForDisplay(page.date)} · {page.title}</strong>
                     <span>{page.description}</span>
                     <LocalContentMeta item={page} />
                   </div>
@@ -4858,27 +4864,14 @@ function CentroUniversoSection() {
           <form onSubmit={handleSubmit} className="editor-form">
             <div className="editor-row">
               <div className="editor-field">
-                <label htmlFor="letterType">Tipo de Carta *</label>
-                <select
-                  id="letterType"
-                  value={letterType}
-                  onChange={(e) => setLetterType(e.target.value)}
-                  disabled={!!editingId || ['monthlyLetters', 'openWhenLetters'].includes(activeCrudModule)}
-                >
-                  <option value="monthly">Carta Mensual</option>
-                  <option value="openwhen">Carta Abrir cuando...</option>
-                </select>
-              </div>
-
-              <div className="editor-field">
                 <label htmlFor="tag">
-                  {letterType === 'monthly' ? 'Mes / Etiqueta *' : 'Motivo / Emoción *'}
+                  {activeLetterType === 'monthly' ? 'Mes / Etiqueta *' : 'Motivo / Emoción *'}
                 </label>
                 <input
                   type="text"
                   id="tag"
                   placeholder={
-                    letterType === 'monthly'
+                    activeLetterType === 'monthly'
                       ? 'Ej. Mes 4 o Carta especial'
                       : 'Ej. Abrir cuando me extrañes'
                   }
