@@ -171,16 +171,16 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- Private dry-run normalizer design is documented in
-  `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
-- `dry-run-private-local-export.mjs` now exists and has been tested only with
-  sanitized fixtures.
-- Next suggested phase: audit the private dry-run normalizer before any private
-  export run.
-- Still no private export read by Codex, real
-  snapshot, real LocalStorage read, real dry-run with private data, real insert,
-  runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`,
-  private files, Storage or reset.
+- Private dry-run result is recorded in `PRIVATE_DRY_RUN_RESULT.md`.
+- Controlled private lab insert policy is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- Recommended first insert scope is 14 clean `content_items`; media and playlist
+  are deferred.
+- Next suggested phase: design sanitized insert manifest format before any
+  script or insert exists.
+- Still no private export read by Codex, real snapshot, real LocalStorage read,
+  real insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
+  `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

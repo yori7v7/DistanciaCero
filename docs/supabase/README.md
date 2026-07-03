@@ -144,6 +144,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   repo. Resultado `CHECK` esperado, 18 operaciones planeadas, 0 skipped, 0
   conflicts, 0 duplicate candidates y 0 noGoReasons. No incluye export privado,
   rutas privadas, Data URLs, URLs completas, payload completo ni secretos.
+- S4.6.5.15 crea `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md` para documentar la
+  politica de un futuro primer insert privado controlado en lab. Recomienda 14
+  `content_items` limpios y difiere 4 items de media/playlist. No crea SQL, no
+  crea scripts, no toca Supabase y no inserta datos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -307,15 +311,18 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `PRIVATE_DRY_RUN_RESULT.md`: resultado S4.6.5.14 del dry-run privado
   reportado de forma sanitizada. Registra `CHECK`, 18 operaciones planeadas,
   pendientes media/playlist y 0 noGoReasons, sin payload privado ni secretos.
+- `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`: politica S4.6.5.15 para un futuro
+  primer insert privado en lab desechable. Recomienda incluir 14 items limpios
+  y diferir media/playlist hasta politicas futuras.
 - `../../scripts/migration/dry-run-private-local-export.mjs`: script S4.6.5.12
   local-only para normalizar exports UI v2 desde una ruta local explicita hacia
   un reporte dry-run JSON sanitizado. Rechaza URLs remotas, no escribe archivos
-  y todavia no debe ejecutarse contra el export privado real sin una revision
-  futura.
+  y ya fue usado manualmente por el usuario fuera del repo con resultado
+  sanitizado documentado en `PRIVATE_DRY_RUN_RESULT.md`.
 - `../../scripts/migration/validate-private-local-export.mjs`: script S4.6.5.4
   local-only para validar exports UI v2 desde una ruta local explicita. Rechaza
-  URLs remotas, imprime solo resumen sanitizado y todavia no debe ejecutarse
-  contra el export privado real sin una revision futura.
+  URLs remotas e imprime solo resumen sanitizado; el resultado privado
+  reportado se mantiene fuera del repo salvo por conteos/codigos sanitizados.
 - `../../scripts/migration/fixtures/mock-local-export-*.json`: fixtures
   sanitizadas para PASS, CHECK empty y NO-GO del validador privado. No son
   exports reales.
@@ -360,6 +367,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar una politica de controlled private insert sin ejecutar insert ni tocar
-Supabase. Todavia sin datos reales en Git/chat, sin LocalStorage real leido por
-scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+Disenar un formato de insert manifest sanitizado antes de crear cualquier
+script o ejecutar insert. Todavia sin datos reales en Git/chat, sin LocalStorage
+real leido por scripts, sin Supabase, sin `.env.local`, sin runtime y sin
+Storage.

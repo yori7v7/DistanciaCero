@@ -108,6 +108,8 @@ Private dry-run normalizer:
 - It was later run manually by the user against a private export outside the
   repo; only sanitized result counts are recorded in
   `PRIVATE_DRY_RUN_RESULT.md`.
+- The controlled private lab insert policy is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
 - It must not touch Supabase, Storage, `.env.local`, LocalStorage real data or
   runtime.
 
@@ -238,10 +240,11 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Design controlled private insert policy without executing insert.
+- Design sanitized insert manifest format before creating any insert script.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.
+- Still no insert script.
 - Still no insert.
 - Still no Supabase, CLI, Dashboard, SQL, Storage, `.env.local`, runtime or
   app connection.

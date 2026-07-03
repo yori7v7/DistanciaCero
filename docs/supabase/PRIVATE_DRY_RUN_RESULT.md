@@ -119,13 +119,15 @@ Current interpretation:
 
 ## Suggested Next Phase
 
-Design a controlled private insert policy without executing it.
+The controlled private insert policy is documented in
+`CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`. The next step is to design a
+sanitized insert manifest format without executing inserts.
 
 Open decision:
 
-- Insert only items without `pending_review`.
-- Insert all `content_items` while leaving media/playlist as `pending_review`.
-- Block media/playlist until Storage and playlist policy are designed.
+- First insert should select 14 clean items.
+- `blackHoleGallery` and `playlist` should be deferred from the first insert.
+- Future manifest must record selected and deferred counts without payloads.
 
 Still blocked:
 

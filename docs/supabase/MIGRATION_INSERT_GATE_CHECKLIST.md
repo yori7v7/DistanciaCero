@@ -41,6 +41,8 @@ Before any future insert is allowed, these preconditions must be true:
 - Identity and mapping are resolved.
 - Critical duplicates are resolved.
 - Media/Storage is excluded or explicitly decided.
+- First private insert policy is documented, if the input is the private
+  dry-run result.
 - Disposable lab is confirmed.
 - Rollback/reset plan is confirmed.
 - Target is not production.
@@ -162,12 +164,13 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- Snapshot/dry-run script design is now documented in
-  `SNAPSHOT_DRY_RUN_SCRIPT_DESIGN.md`.
-- Next suggested phase: design fixtures/mock snapshot examples as docs-only
-  work.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, SQL execution, Supabase Dashboard,
+- Controlled private lab insert policy is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- Recommended first insert scope is 14 clean `content_items`; media and playlist
+  are deferred.
+- Next suggested phase: design sanitized insert manifest format before any
+  script or insert exists.
+- Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 
 ## Non-Goals

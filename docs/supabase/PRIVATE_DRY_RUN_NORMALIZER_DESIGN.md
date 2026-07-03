@@ -10,6 +10,8 @@
 - Real dry-run executed: no.
 - Sanitized fixture dry-run executed: yes.
 - Private dry-run result recorded: yes, in `PRIVATE_DRY_RUN_RESULT.md`.
+- Controlled private lab insert policy documented: yes, in
+  `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
 - Supabase touched: no.
 - Insert executed: no.
 - Storage touched: no.
@@ -262,8 +264,9 @@ Creating the future script is `NO-GO` if it:
 
 Recommended next phase:
 
-- Design a controlled private insert policy.
-- Use `PRIVATE_DRY_RUN_RESULT.md` as sanitized input evidence.
+- Design a sanitized insert manifest format.
+- Use `PRIVATE_DRY_RUN_RESULT.md` and
+  `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md` as sanitized input evidence.
 - Do not execute inserts in the policy-design phase.
 
 Still blocked:

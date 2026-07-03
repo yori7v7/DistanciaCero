@@ -40,6 +40,7 @@ Before any future controlled lab insert:
 - Identity and mapping are resolved.
 - Critical duplicates are resolved.
 - Media/Storage is excluded or explicitly decided.
+- Private insert policy is documented when using the private dry-run result.
 - Disposable lab is confirmed.
 - Production is ruled out.
 - Rollback/reset is confirmed.
@@ -153,10 +154,14 @@ Historical next phase completed/superseded:
 
 Current next phase:
 
-- If S4.6.4.44 docs consistency repair is clean, proceed to
-  snapshot/dry-run script design as docs-only work.
-- Still no executable script, real snapshot, real LocalStorage read, real
-  dry-run, real insert, runtime change, SQL execution, Supabase Dashboard,
+- Controlled private lab insert policy is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- Recommended first private lab insert scope is 14 clean `content_items`.
+- `blackHoleGallery` and `playlist` are deferred until Storage/media and
+  playlist source policies exist.
+- Next suggested phase: design sanitized insert manifest format before any
+  insert script, SQL or insert execution.
+- Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
