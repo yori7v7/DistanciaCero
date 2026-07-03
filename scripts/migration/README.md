@@ -2,8 +2,9 @@
 
 ## Status
 
-- Scope: mock-only plus private local export validator and private dry-run
-  normalizer tested only with sanitized fixtures.
+- Scope: mock-only plus private local export validator, private dry-run
+  normalizer and private insert manifest generator tested only with sanitized
+  fixtures.
 - Network: none.
 - Supabase: none.
 - `.env.local`: not read.
@@ -37,6 +38,13 @@ write files and does not print full content, Data URLs or playlist URLs. In-repo
 tests use sanitized fixtures only; do not run it against a private real export
 until a separate review phase approves that.
 
+`generate-private-insert-manifest.mjs` reads a sanitized dry-run report and
+prints a sanitized insert manifest to stdout. It is local-only, rejects remote
+URLs, redacts outside-repository paths, does not write files, does not insert
+data and does not print payloads, Data URLs, full URLs or private paths. In-repo
+tests use sanitized fixtures only; do not run it against the private real
+dry-run result until a separate review phase approves that.
+
 Run examples:
 
 ```powershell
@@ -54,6 +62,8 @@ node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtur
 node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-check-empty.json
 node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-nogo.json
 node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-check-media-playlist.json
+node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-check.json
+node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-nogo.json
 ```
 
 NPM shortcuts:
@@ -78,6 +88,8 @@ Expected fixture results:
 - `mock-local-export-check-empty.json`: `CHECK`, exit `2`.
 - `mock-local-export-nogo.json`: `NO-GO`, exit `1`.
 - `mock-local-export-check-media-playlist.json`: `CHECK`, exit `2`.
+- `mock-private-dry-run-result-check.json`: `CHECK`, exit `2`.
+- `mock-private-dry-run-result-nogo.json`: `NO-GO`, exit `1`.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 
@@ -89,6 +101,8 @@ The smoke runner should exit `0` when all expected mock-only exit codes match.
   separate review phase approves it.
 - Do not run the private dry-run normalizer on a real private export until a
   separate review phase approves it.
+- Do not run the private insert manifest generator on a private real dry-run
+  result until a separate review phase approves it.
 - Do not add real intimate content to fixtures.
 - Do not use Supabase URL, keys, tokens, passwords, service-role or project refs.
 - Do not read `.env.local`.

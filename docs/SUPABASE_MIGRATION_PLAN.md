@@ -806,6 +806,12 @@ Estado de S4.6.1:
   14 items limpios, diferiria 4 pending-review y no incluiria payload intimo,
   Data URLs, rutas privadas, secretos ni valores reales. No genera manifest
   real, no crea scripts, no toca Supabase y no inserta datos.
+- S4.6.5.17 crea `scripts/migration/generate-private-insert-manifest.mjs` y
+  fixtures sanitizadas `mock-private-dry-run-result-check.json` y
+  `mock-private-dry-run-result-nogo.json`. El script lee un dry-run report
+  sanitizado mock y emite un manifest JSON sanitizado por stdout. No escribe
+  archivos, no lee dry-run privado real, no genera manifest real de usuario, no
+  crea SQL, no toca Supabase y no inserta datos.
 
 Validacion y rollback:
 
@@ -924,8 +930,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
   forma sanitizada como `CHECK`; falta disenar politica de insert controlado.
 - Controlled private lab insert policy docs-only creada; falta disenar formato
   de insert manifest sanitizado.
-- Private insert manifest format docs-only creado; falta disenar generator o
-  script local-only con fixtures sanitizadas.
+- Private insert manifest generator creado con fixtures sanitizadas; falta
+  auditarlo antes de cualquier uso con dry-run privado real.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1015,11 +1021,14 @@ diferir los 4 items con media/playlist pending-review.
 S4.6.5.16 documenta `docs/supabase/PRIVATE_INSERT_MANIFEST_FORMAT.md`: el
 manifest futuro debe registrar `selectedItemsCount` 14, `deferredItemsCount` 4,
 identity mapping privado pendiente y payload excluido del repo.
+S4.6.5.17 crea `scripts/migration/generate-private-insert-manifest.mjs`, que
+convierte fixtures sanitizadas de dry-run report en manifest sanitizado con 14
+selected y 4 deferred. Todavia no se ejecuta contra el dry-run privado real.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar un manifest generator o
-crear un generator local-only con fixtures sanitizadas, sin export privado real,
-sin crear SQL, sin ejecutar insert, sin
+desarrollo. La siguiente fase recomendada es auditar el manifest generator antes
+de cualquier uso con dry-run privado real, sin crear SQL, sin ejecutar insert,
+sin
 datos reales en Git/chat, sin
 LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
 runtime y sin Storage.

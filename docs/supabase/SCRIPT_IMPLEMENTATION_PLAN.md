@@ -13,6 +13,8 @@
 - Private dry-run normalizer design documented: yes, in S4.6.5.11.
 - Private dry-run normalizer script created: yes, in S4.6.5.12 with sanitized
   fixtures only.
+- Private insert manifest generator created: yes, in S4.6.5.17 with sanitized
+  fixtures only.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -74,6 +76,7 @@ Implemented mock-only location:
 - `scripts/migration/run-mock-migration-checks.mjs`.
 - `scripts/migration/validate-private-local-export.mjs`.
 - `scripts/migration/dry-run-private-local-export.mjs`.
+- `scripts/migration/generate-private-insert-manifest.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
@@ -81,6 +84,8 @@ Implemented mock-only location:
 - `scripts/migration/fixtures/mock-local-export-check-empty.json`.
 - `scripts/migration/fixtures/mock-local-export-nogo.json`.
 - `scripts/migration/fixtures/mock-local-export-check-media-playlist.json`.
+- `scripts/migration/fixtures/mock-private-dry-run-result-check.json`.
+- `scripts/migration/fixtures/mock-private-dry-run-result-nogo.json`.
 - `scripts/migration/README.md`.
 
 Implemented npm shortcuts:
@@ -242,8 +247,7 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Design manifest generator behavior or create a local-only generator with
-  sanitized fixtures before creating any private manifest.
+- Audit `generate-private-insert-manifest.mjs` before any private dry-run use.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

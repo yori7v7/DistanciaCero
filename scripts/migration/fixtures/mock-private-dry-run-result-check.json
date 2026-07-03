@@ -1,0 +1,290 @@
+{
+  "reportVersion": "private-local-export-dry-run-v1",
+  "generatedAt": "2026-07-03T00:00:00.000Z",
+  "inputFile": "scripts/migration/fixtures/mock-private-dry-run-result-check.json",
+  "validationStatus": "CHECK",
+  "dryRunStatus": "CHECK",
+  "sourceVersion": 2,
+  "counts": {
+    "monthlyLetters": 2,
+    "openWhenLetters": 2,
+    "reasons": 2,
+    "promises": 2,
+    "importantDates": 2,
+    "futureDreams": 2,
+    "timeline": 2,
+    "blackHoleGallery": 2,
+    "playlist": 2
+  },
+  "totalItems": 18,
+  "plannedOperationsCount": 18,
+  "plannedContentItemsCount": 18,
+  "plannedMediaAssetsPendingCount": 2,
+  "skippedItemsCount": 0,
+  "warningsCount": 4,
+  "conflictsCount": 0,
+  "duplicateCandidatesCount": 0,
+  "noGoReasonsCount": 0,
+  "identityMapping": {
+    "identities": [
+      {
+        "localIdentityKey": "local-ale",
+        "remoteProfileHint": "<private_mapping_required>",
+        "status": "known_local_label"
+      },
+      {
+        "localIdentityKey": "local-yori",
+        "remoteProfileHint": "<private_mapping_required>",
+        "status": "known_local_label"
+      }
+    ],
+    "missingCount": 0,
+    "unknownCount": 0
+  },
+  "mediaPending": {
+    "count": 2,
+    "items": [
+      {
+        "collection": "blackHoleGallery",
+        "localRef": "mock-gallery-001",
+        "targetTable": "media_assets",
+        "storageStatus": "not_uploaded",
+        "reason": "data_url_detected",
+        "requiredFutureDecision": "storage_policy_and_upload_phase_required"
+      },
+      {
+        "collection": "blackHoleGallery",
+        "localRef": "mock-gallery-002",
+        "targetTable": "media_assets",
+        "storageStatus": "not_uploaded",
+        "reason": "data_url_detected",
+        "requiredFutureDecision": "storage_policy_and_upload_phase_required"
+      }
+    ]
+  },
+  "playlistPending": {
+    "count": 2,
+    "items": [
+      {
+        "collection": "playlist",
+        "localRef": "mock-playlist-001",
+        "targetTable": "content_items",
+        "reason": "playlist_source_pending_review",
+        "requiredFutureDecision": "playlist_source_policy_required"
+      },
+      {
+        "collection": "playlist",
+        "localRef": "mock-playlist-002",
+        "targetTable": "content_items",
+        "reason": "playlist_source_pending_review",
+        "requiredFutureDecision": "playlist_source_policy_required"
+      }
+    ]
+  },
+  "plannedOperations": [
+    {
+      "operation": "planned_content_item",
+      "collection": "monthlyLetters",
+      "targetTable": "content_items",
+      "type": "monthly_letter",
+      "localRef": "mock-monthly-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "monthlyLetters",
+      "targetTable": "content_items",
+      "type": "monthly_letter",
+      "localRef": "mock-monthly-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "openWhenLetters",
+      "targetTable": "content_items",
+      "type": "open_when_letter",
+      "localRef": "mock-open-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "openWhenLetters",
+      "targetTable": "content_items",
+      "type": "open_when_letter",
+      "localRef": "mock-open-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "reasons",
+      "targetTable": "content_items",
+      "type": "reason",
+      "localRef": "mock-reason-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "reasons",
+      "targetTable": "content_items",
+      "type": "reason",
+      "localRef": "mock-reason-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "promises",
+      "targetTable": "content_items",
+      "type": "promise",
+      "localRef": "mock-promise-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "promises",
+      "targetTable": "content_items",
+      "type": "promise",
+      "localRef": "mock-promise-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "importantDates",
+      "targetTable": "content_items",
+      "type": "important_date",
+      "localRef": "mock-date-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "importantDates",
+      "targetTable": "content_items",
+      "type": "important_date",
+      "localRef": "mock-date-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "futureDreams",
+      "targetTable": "content_items",
+      "type": "future_dream",
+      "localRef": "mock-dream-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "futureDreams",
+      "targetTable": "content_items",
+      "type": "future_dream",
+      "localRef": "mock-dream-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "timeline",
+      "targetTable": "content_items",
+      "type": "timeline_event",
+      "localRef": "mock-timeline-001",
+      "identityKey": "local-yori",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "timeline",
+      "targetTable": "content_items",
+      "type": "timeline_event",
+      "localRef": "mock-timeline-002",
+      "identityKey": "local-ale",
+      "status": "planned",
+      "warningCodes": []
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "blackHoleGallery",
+      "targetTable": "content_items",
+      "type": "gallery_item",
+      "localRef": "mock-gallery-001",
+      "identityKey": "local-yori",
+      "status": "pending_review",
+      "warningCodes": ["media_pending_storage"]
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "blackHoleGallery",
+      "targetTable": "content_items",
+      "type": "gallery_item",
+      "localRef": "mock-gallery-002",
+      "identityKey": "local-ale",
+      "status": "pending_review",
+      "warningCodes": ["media_pending_storage"]
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "playlist",
+      "targetTable": "content_items",
+      "type": "playlist_item",
+      "localRef": "mock-playlist-001",
+      "identityKey": "local-yori",
+      "status": "pending_review",
+      "warningCodes": ["playlist_source_pending_review"]
+    },
+    {
+      "operation": "planned_content_item",
+      "collection": "playlist",
+      "targetTable": "content_items",
+      "type": "playlist_item",
+      "localRef": "mock-playlist-002",
+      "identityKey": "local-ale",
+      "status": "pending_review",
+      "warningCodes": ["playlist_source_pending_review"]
+    }
+  ],
+  "skippedItems": [],
+  "warnings": [
+    {
+      "code": "media_pending_storage",
+      "ref": "blackHoleGallery[0]"
+    },
+    {
+      "code": "media_pending_storage",
+      "ref": "blackHoleGallery[1]"
+    },
+    {
+      "code": "playlist_source_pending_review",
+      "ref": "playlist[0]"
+    },
+    {
+      "code": "playlist_source_pending_review",
+      "ref": "playlist[1]"
+    }
+  ],
+  "conflicts": [],
+  "duplicateCandidates": [],
+  "noGoReasons": [],
+  "nextRecommendedAction": "review_pending_media_playlist_or_warnings_before_any_insert",
+  "exitCode": 2
+}

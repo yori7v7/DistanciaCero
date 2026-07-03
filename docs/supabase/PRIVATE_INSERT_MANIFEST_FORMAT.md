@@ -4,7 +4,7 @@
 
 - Status: DOCUMENTARY DESIGN ONLY.
 - Real manifest generated: no.
-- Script created: no.
+- Script created: yes, with sanitized fixtures only.
 - Insert executed: no.
 - Supabase touched: no.
 - Storage touched: no.
@@ -12,9 +12,9 @@
 - App connection: none.
 
 This document defines the sanitized manifest format that should be reviewed
-before any future controlled private lab insert. It does not create a real
-manifest, does not create JSON output, does not create scripts, does not read
-the private export and does not touch Supabase.
+before any future controlled private lab insert. S4.6.5.17 creates a local-only
+generator for sanitized fixtures only. This document still does not create a
+real manifest, does not read the private export and does not touch Supabase.
 
 ## Purpose
 
@@ -294,14 +294,13 @@ Manifest generation or use is `NO-GO` if:
 
 Next recommended phase:
 
-- Create manifest generator design docs; or
-- create a local-only manifest generator with sanitized fixtures only.
+- Audit `generate-private-insert-manifest.mjs` before any use with the private
+  dry-run result.
 
 Still blocked:
 
 - No private export read by Codex.
 - No real manifest generated.
-- No script creation in this phase.
 - No insert.
 - No Supabase.
 - No Dashboard or CLI.

@@ -152,6 +152,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   del futuro manifest sanitizado. Selecciona conceptualmente 14 items limpios,
   difiere 4 items pending-review y no incluye payload privado, Data URLs, rutas
   privadas ni secretos. No genera manifest real, no crea scripts y no inserta.
+- S4.6.5.17 crea `../../scripts/migration/generate-private-insert-manifest.mjs`
+  y fixtures sanitizadas de dry-run report. El script genera manifest JSON
+  sanitizado con 14 selected/4 deferred desde fixtures mock. No lee dry-run
+  privado real, no genera manifest real de usuario, no toca Supabase y no
+  inserta.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -322,6 +327,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   sanitizado para el primer insert privado controlado. Define conteos,
   selected/deferred items, identity mapping privado pendiente, safety gates y
   rollback conceptual sin payload real.
+- `../../scripts/migration/generate-private-insert-manifest.mjs`: script
+  S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
+  sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y no debe
+  ejecutarse contra el dry-run privado real sin una auditoria futura.
+- `../../scripts/migration/fixtures/mock-private-dry-run-result-*.json`:
+  fixtures sanitizadas para el generador de manifest. No son reportes privados
+  reales.
 - `../../scripts/migration/dry-run-private-local-export.mjs`: script S4.6.5.12
   local-only para normalizar exports UI v2 desde una ruta local explicita hacia
   un reporte dry-run JSON sanitizado. Rechaza URLs remotas, no escribe archivos
@@ -375,7 +387,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar un manifest generator o crear un generator local-only con fixtures
-sanitizadas solamente. Todavia sin export privado real, sin manifest real, sin
-insert, sin datos reales en Git/chat, sin LocalStorage real leido por scripts,
-sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+Auditar `generate-private-insert-manifest.mjs` antes de cualquier ejecucion con
+el dry-run privado real. Todavia sin manifest real de usuario, sin insert, sin
+datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
+sin `.env.local`, sin runtime y sin Storage.

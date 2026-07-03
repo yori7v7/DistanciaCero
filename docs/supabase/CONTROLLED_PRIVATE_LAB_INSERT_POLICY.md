@@ -213,13 +213,13 @@ The future insert phase is `NO-GO` if:
 ## Suggested Next Phase
 
 The insert manifest format is documented in
-`PRIVATE_INSERT_MANIFEST_FORMAT.md`. Next, design a generator or create a
-local-only generator with sanitized fixtures.
+`PRIVATE_INSERT_MANIFEST_FORMAT.md`. The local-only generator exists with
+sanitized fixtures only; it still needs audit before any private dry-run use.
 
 Allowed next direction:
 
-- Document manifest generator behavior; or
-- create a local-only insert manifest generator using sanitized fixtures.
+- Audit `generate-private-insert-manifest.mjs`; then decide whether a private
+  manifest run is allowed in a later phase.
 
 Still blocked:
 

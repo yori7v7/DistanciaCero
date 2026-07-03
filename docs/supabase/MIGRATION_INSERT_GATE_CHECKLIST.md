@@ -169,10 +169,11 @@ Current next phase:
   `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
 - Private insert manifest format is documented in
   `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
+- Private insert manifest generator exists with sanitized fixtures only.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: design or create a local-only manifest generator with
-  sanitized fixtures before any private manifest or insert exists.
+- Next suggested phase: audit `generate-private-insert-manifest.mjs` before any
+  private dry-run use.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

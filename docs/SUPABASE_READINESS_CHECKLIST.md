@@ -245,6 +245,12 @@ Estado verificado post-S4.5.1:
       del futuro manifest sanitizado. El manifest seleccionaria 14 items
       limpios y diferiria 4 items pending-review. No genera manifest real, no
       crea scripts, no crea SQL, no toca Supabase y no inserta datos.
+- [x] S4.6.5.17 crea
+      `scripts/migration/generate-private-insert-manifest.mjs` y fixtures
+      sanitizadas `mock-private-dry-run-result-*`. El script genera manifest
+      sanitizado desde un dry-run report mock, selecciona 14 items limpios y
+      difiere 4 items pending-review. No lee dry-run privado real, no genera
+      manifest real de usuario, no crea SQL, no toca Supabase y no inserta.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -683,8 +689,14 @@ la siguiente.
   sanitizado del futuro manifest: `selectedItemsCount` 14,
   `deferredItemsCount` 4, identity mapping privado pendiente y payload no
   incluido en repo/docs. No genera manifest real ni crea script.
-- Salida futura: disenar manifest generator docs, o crear generator local-only
-  con fixtures sanitizadas solamente, sin export privado real ni insert.
+- Estado S4.6.5.17:
+  `scripts/migration/generate-private-insert-manifest.mjs` existe con alcance
+  local-only y salida JSON sanitizada. Fue probado solo con fixtures
+  sanitizadas: CHECK exit 2 con 14 selected/4 deferred, NO-GO exit 1, no args
+  exit 5, URL remota exit 5, JSON invalido temporal exit 5 y patron inseguro
+  temporal ABORTED exit 4. No lee dry-run privado real ni archivos privados.
+- Salida futura: auditar el manifest generator antes de cualquier uso con
+  dry-run privado real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -822,7 +834,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private dry-run result sanitized docs.
 - [x] Controlled private insert policy docs-only.
 - [x] Insert manifest format/design docs-only.
-- [ ] Insert manifest generator design or sanitized-fixture script.
+- [x] Insert manifest generator with sanitized fixtures only.
+- [ ] Private insert manifest generator audit.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
