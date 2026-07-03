@@ -37,6 +37,7 @@ import {
   setSimulationUnlocked,
   updateCollectionItem as updateLocalItem
 } from '../services/contentService'
+import { buildCreateMetadata, buildUpdateMetadata } from '../services/contentMetadataService'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
@@ -86,6 +87,7 @@ function CentroUniversoSection() {
   const [importantDateOverrides, setImportantDateOverrides] = useState({})
   const [hiddenImportantDateIds, setHiddenImportantDateIds] = useState([])
   const [importantDateDate, setImportantDateDate] = useState('')
+  const [importantDateLegacyDateHint, setImportantDateLegacyDateHint] = useState('')
   const [importantDateTitle, setImportantDateTitle] = useState('')
   const [importantDateDescription, setImportantDateDescription] = useState('')
   const [importantDateTag, setImportantDateTag] = useState('')
@@ -862,6 +864,7 @@ function CentroUniversoSection() {
 
   const resetImportantDateForm = () => {
     setImportantDateDate('')
+    setImportantDateLegacyDateHint('')
     setImportantDateTitle('')
     setImportantDateDescription('')
     setImportantDateTag('')
@@ -964,6 +967,38 @@ function CentroUniversoSection() {
     const rawValue = String(dateValue || '').trim()
     if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
     return parseTimelineDateForInput(rawValue) || rawValue
+  }
+
+  const parseImportantDateForInput = (dateValue) => {
+    const rawValue = String(dateValue || '').trim()
+    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
+    return parseTimelineDateForInput(rawValue)
+  }
+
+  const normalizeImportantDateForStorage = (dateValue) => {
+    const rawValue = String(dateValue || '').trim()
+    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
+    return parseImportantDateForInput(rawValue)
+  }
+
+  const buildLegacyLetterCreateItem = (item) => ({
+    ...item,
+    ...buildCreateMetadata()
+  })
+
+  const buildLegacyLetterUpdateItem = (item, patch) => {
+    const updateMetadata = buildUpdateMetadata()
+
+    return {
+      ...item,
+      ...patch,
+      createdBy: item.createdBy || updateMetadata.updatedBy,
+      createdAt: item.createdAt || updateMetadata.updatedAt,
+      updatedBy: updateMetadata.updatedBy,
+      updatedAt: updateMetadata.updatedAt,
+      source: item.source || updateMetadata.source,
+      spaceId: item.spaceId || updateMetadata.spaceId
+    }
   }
 
   const resetTimelineForm = () => {
@@ -1487,13 +1522,14 @@ function CentroUniversoSection() {
   const handleImportantDateSubmit = (event) => {
     event.preventDefault()
 
-    if (!importantDateDate.trim() || !importantDateTitle.trim() || !importantDateDescription.trim()) {
+    const stableDate = normalizeImportantDateForStorage(importantDateDate)
+    if (!stableDate || !importantDateTitle.trim() || !importantDateDescription.trim()) {
       alert('Por favor, completa fecha, titulo y descripcion.')
       return
     }
 
     const patch = {
-      date: importantDateDate.trim(),
+      date: stableDate,
       title: importantDateTitle.trim(),
       description: importantDateDescription.trim(),
       tag: importantDateTag.trim() || 'Fecha importante',
@@ -1518,7 +1554,9 @@ function CentroUniversoSection() {
     if (!dateItem.isLocal) return
     setActiveCrudAction('create')
     setEditingImportantDateId(dateItem.id)
-    setImportantDateDate(dateItem.date || '')
+    const stableDate = parseImportantDateForInput(dateItem.date)
+    setImportantDateDate(stableDate)
+    setImportantDateLegacyDateHint(stableDate ? '' : String(dateItem.date || '').trim())
     setImportantDateTitle(dateItem.title || '')
     setImportantDateDescription(dateItem.description || '')
     setImportantDateTag(dateItem.tag || '')
@@ -2235,23 +2273,24 @@ function CentroUniversoSection() {
       // Edit mode
       updatedList = currentList.map((item) => {
         if (item.id === editingId) {
-          return {
-            ...item,
+          return buildLegacyLetterUpdateItem(item, {
             title: title.trim(),
             preview: preview.trim(),
             content: contentArray,
             locked: letterLocked,
             month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
-            mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
-          }
+            mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined
+          })
         }
         return item
       })
       setEditingId(null)
     } else {
       // Create mode
-      const newItem = {
-        id: `local-${Date.now()}`,
+      const localLetterTimestamp = Date.now()
+      const localLetterId = `local-${localLetterTimestamp}`
+      const newItem = buildLegacyLetterCreateItem({
+        id: localLetterId,
         title: title.trim(),
         preview: preview.trim(),
         content: contentArray,
@@ -2259,8 +2298,8 @@ function CentroUniversoSection() {
         isLocal: true,
         month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
         mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
-        url: isMonthly ? `/local-letter/${Date.now()}` : `/local-open-when/${Date.now()}`
-      }
+        url: isMonthly ? `/local-letter/${localLetterTimestamp}` : `/local-open-when/${localLetterTimestamp}`
+      })
       updatedList = [...currentList, newItem]
     }
 
@@ -3131,7 +3170,7 @@ function CentroUniversoSection() {
                 key={dateItem.id}
               >
                 <div className="base-reason-copy">
-                  <strong>{dateItem.date} · {dateItem.title}</strong>
+                  <strong>{formatTimelineDateForDisplay(dateItem.date)} · {dateItem.title}</strong>
                   <span>{dateItem.description}</span>
                   <small>{dateItem.isHidden ? 'Oculta localmente' : dateItem.isOverridden ? 'Editada localmente' : dateItem.tag}</small>
                 </div>
@@ -3166,7 +3205,7 @@ function CentroUniversoSection() {
               <h4>Fechas ocultas</h4>
               {visibleBaseImportantDates.filter((dateItem) => dateItem.isHidden).map((dateItem) => (
                 <button type="button" className="ghost-button" key={dateItem.id} onClick={() => handleBaseImportantDateUnhide(dateItem.id)}>
-                  Mostrar {dateItem.date}
+                  Mostrar {formatTimelineDateForDisplay(dateItem.date)}
                 </button>
               ))}
             </div>
@@ -3260,12 +3299,19 @@ function CentroUniversoSection() {
               <label htmlFor="importantDateDate">Fecha *</label>
               <input
                 id="importantDateDate"
-                type="text"
-                placeholder="Ej. 17 May"
+                type="date"
                 value={importantDateDate}
-                onChange={(event) => setImportantDateDate(event.target.value)}
+                onChange={(event) => {
+                  setImportantDateDate(event.target.value)
+                  setImportantDateLegacyDateHint('')
+                }}
                 required
               />
+              {importantDateLegacyDateHint && (
+                <small className="editor-file-hint">
+                  Fecha anterior: {importantDateLegacyDateHint}. Selecciona una fecha estable para guardarla como YYYY-MM-DD.
+                </small>
+              )}
             </div>
 
             <div className="editor-field">
@@ -3330,7 +3376,7 @@ function CentroUniversoSection() {
               {localImportantDates.map((dateItem) => (
                 <div className="reason-item-row" key={dateItem.id}>
                   <div className="item-info">
-                    <strong>{dateItem.date} · {dateItem.title}</strong>
+                    <strong>{formatTimelineDateForDisplay(dateItem.date)} · {dateItem.title}</strong>
                     <span>{dateItem.description}</span>
                     <LocalContentMeta item={dateItem} />
                   </div>

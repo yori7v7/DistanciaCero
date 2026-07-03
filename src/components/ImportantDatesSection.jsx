@@ -12,6 +12,31 @@ const placeholderDate = {
   isPlaceholder: true
 }
 
+const monthNames = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre'
+]
+
+function formatImportantDateForDisplay(dateValue) {
+  const rawDate = String(dateValue || '').trim()
+  const match = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (!match) return rawDate
+
+  const day = Number(match[3])
+  const monthName = monthNames[Number(match[2]) - 1]
+  return monthName ? `${day} de ${monthName} de ${match[1]}` : rawDate
+}
+
 function ImportantDatesSection({ dates = [] }) {
   const [editableDates, setEditableDates] = useState(() => mergeCollectionWithLocal(dates, 'importantDates'))
 
@@ -52,7 +77,7 @@ function ImportantDatesSection({ dates = [] }) {
             <div className="universe-card-top">
               <span className="date-pill">
                 <CalendarDays size={16} />
-                {item.date}
+                {formatImportantDateForDisplay(item.date)}
               </span>
             </div>
 
