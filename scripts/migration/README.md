@@ -2,7 +2,8 @@
 
 ## Status
 
-- Scope: mock-only plus private local export validator.
+- Scope: mock-only plus private local export validator and private dry-run
+  normalizer tested only with sanitized fixtures.
 - Network: none.
 - Supabase: none.
 - `.env.local`: not read.
@@ -29,6 +30,13 @@ outside-repository paths and prints only a sanitized summary. In-repo tests use
 sanitized fixtures only; do not run it against a private real export until a
 separate review phase approves that.
 
+`dry-run-private-local-export.mjs` normalizes a Centro del Universo export v2
+into a sanitized dry-run report of planned `content_items` operations. It is
+local-only, rejects remote URLs, redacts outside-repository paths, does not
+write files and does not print full content, Data URLs or playlist URLs. In-repo
+tests use sanitized fixtures only; do not run it against a private real export
+until a separate review phase approves that.
+
 Run examples:
 
 ```powershell
@@ -42,6 +50,10 @@ node scripts/migration/run-mock-migration-checks.mjs
 node scripts/migration/validate-private-local-export.mjs scripts/migration/fixtures/mock-local-export-pass.json
 node scripts/migration/validate-private-local-export.mjs scripts/migration/fixtures/mock-local-export-check-empty.json
 node scripts/migration/validate-private-local-export.mjs scripts/migration/fixtures/mock-local-export-nogo.json
+node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-pass.json
+node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-check-empty.json
+node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-nogo.json
+node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-check-media-playlist.json
 ```
 
 NPM shortcuts:
@@ -65,6 +77,7 @@ Expected fixture results:
 - `mock-local-export-pass.json`: `PASS`, exit `0`.
 - `mock-local-export-check-empty.json`: `CHECK`, exit `2`.
 - `mock-local-export-nogo.json`: `NO-GO`, exit `1`.
+- `mock-local-export-check-media-playlist.json`: `CHECK`, exit `2`.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 
@@ -73,6 +86,8 @@ The smoke runner should exit `0` when all expected mock-only exit codes match.
 - Do not use this for a real migration.
 - Do not point mock scripts at real snapshots.
 - Do not run the private export validator on a real private export until a
+  separate review phase approves it.
+- Do not run the private dry-run normalizer on a real private export until a
   separate review phase approves it.
 - Do not add real intimate content to fixtures.
 - Do not use Supabase URL, keys, tokens, passwords, service-role or project refs.

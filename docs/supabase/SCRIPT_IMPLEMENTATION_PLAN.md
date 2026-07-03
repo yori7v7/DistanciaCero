@@ -11,7 +11,8 @@
 - NPM mock migration shortcuts created: yes, in S4.6.4.54.
 - Private local export validator script created: yes, in S4.6.5.4.
 - Private dry-run normalizer design documented: yes, in S4.6.5.11.
-- Private dry-run normalizer script created: no.
+- Private dry-run normalizer script created: yes, in S4.6.5.12 with sanitized
+  fixtures only.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -72,12 +73,14 @@ Implemented mock-only location:
 - `scripts/migration/dry-run-mock-snapshot.mjs`.
 - `scripts/migration/run-mock-migration-checks.mjs`.
 - `scripts/migration/validate-private-local-export.mjs`.
+- `scripts/migration/dry-run-private-local-export.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
 - `scripts/migration/fixtures/mock-local-export-pass.json`.
 - `scripts/migration/fixtures/mock-local-export-check-empty.json`.
 - `scripts/migration/fixtures/mock-local-export-nogo.json`.
+- `scripts/migration/fixtures/mock-local-export-check-media-playlist.json`.
 - `scripts/migration/README.md`.
 
 Implemented npm shortcuts:
@@ -100,8 +103,8 @@ Private local export validator:
 
 Private dry-run normalizer:
 
-- `dry-run-private-local-export.mjs` is a future conceptual script only.
-- It should be created in a separate phase using sanitized fixtures only.
+- `dry-run-private-local-export.mjs` exists and is tested only with sanitized
+  fixtures.
 - It must not be run against a private real export until a separate script audit
   approves that.
 - It must not touch Supabase, Storage, `.env.local`, LocalStorage real data or
@@ -234,7 +237,7 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Create `dry-run-private-local-export.mjs` using sanitized fixtures only.
+- Audit `dry-run-private-local-export.mjs` before any private export run.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

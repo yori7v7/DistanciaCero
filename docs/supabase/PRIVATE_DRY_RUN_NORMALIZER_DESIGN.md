@@ -2,21 +2,22 @@
 
 ## Status
 
-- Status: DOCUMENTARY DESIGN ONLY.
-- Implemented: no.
-- Script created: no.
+- Status: IMPLEMENTED WITH SANITIZED FIXTURES ONLY.
+- Implemented: yes, in `../../scripts/migration/dry-run-private-local-export.mjs`.
+- Script created: yes.
 - Private export read: no.
 - Real snapshot generated: no.
 - Real dry-run executed: no.
+- Sanitized fixture dry-run executed: yes.
 - Supabase touched: no.
 - Insert executed: no.
 - Storage touched: no.
 - App connection: none.
 
-This document records the design for a future private local-only dry-run
-normalizer. It does not create `dry-run-private-local-export.mjs`, does not read
-the private export, does not generate a real migration snapshot and does not
-write to Supabase.
+This document records the design and current local-only implementation for the
+private dry-run normalizer. The script exists, but it has only been tested with
+sanitized fixtures inside the repo. It does not read the private export, does
+not generate a real migration snapshot and does not write to Supabase.
 
 ## Purpose
 
@@ -33,9 +34,9 @@ It exists to:
 - report media and playlist risk without uploading or resolving anything;
 - keep the app disconnected while migration planning remains local.
 
-## Future Conceptual Script
+## Implemented Local Script
 
-Tentative name:
+Name:
 
 ```txt
 dry-run-private-local-export.mjs
@@ -43,8 +44,9 @@ dry-run-private-local-export.mjs
 
 Status:
 
-- Future only.
-- Do not create in this phase.
+- Created in S4.6.5.12.
+- Tested only with sanitized fixtures.
+- Do not run against the private real export until a later audit approves it.
 - Local-only.
 - No network.
 - No Supabase.
@@ -232,8 +234,9 @@ Future exit codes:
 
 - `npm run migration:mock` continues to validate mock-only migration checks.
 - `validate-private-local-export.mjs` validates the private UI export shape.
-- The future `dry-run-private-local-export.mjs` depends conceptually on a prior
-  validator result.
+- `dry-run-private-local-export.mjs` depends conceptually on a prior validator
+  result.
+- Current repo tests use sanitized fixtures only.
 - No current or future dry-run script in this path should touch Supabase.
 - No script should insert data.
 - No script should upload media.
@@ -258,9 +261,9 @@ Creating the future script is `NO-GO` if it:
 
 Recommended next phase:
 
-- Create `dry-run-private-local-export.mjs` using sanitized fixtures only.
-- Do not run it against a private real export until a later script audit passes.
-- Keep all first tests inside the repo with mock/sanitized fixture data.
+- Audit `dry-run-private-local-export.mjs` before any private export run.
+- Do not run it against a private real export until that audit passes.
+- Keep all current tests inside the repo with mock/sanitized fixture data.
 
 Still blocked:
 

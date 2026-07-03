@@ -223,6 +223,11 @@ Estado verificado post-S4.5.1:
       export UI v2 ya validado. No crea script, no lee export privado, no
       genera snapshot real, no ejecuta dry-run real, no toca Supabase, no
       inserta datos y no toca Storage.
+- [x] S4.6.5.12 crea `scripts/migration/dry-run-private-local-export.mjs` y
+      la fixture `mock-local-export-check-media-playlist.json` para probar el
+      normalizador/dry-run solo con fixtures sanitizadas. No lee export privado,
+      no lee archivos privados, no genera snapshot real, no lee LocalStorage
+      real, no toca runtime, no usa Supabase y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -637,8 +642,14 @@ la siguiente.
   validado en operaciones planeadas sanitizadas. No crea script, no lee export
   privado, no genera snapshot real, no ejecuta dry-run real, no inserta datos y
   mantiene Supabase/Storage bloqueados.
-- Salida futura: crear el normalizador/dry-run privado usando solo fixtures
-  sanitizadas y auditarlo antes de cualquier ejecucion con export privado real.
+- Estado S4.6.5.12:
+  `scripts/migration/dry-run-private-local-export.mjs` existe con alcance
+  local-only y salida JSON sanitizada. Fue probado solo con fixtures
+  sanitizadas: PASS exit 0, CHECK empty exit 2, NO-GO exit 1, no args exit 5,
+  URL remota exit 5 y media/playlist CHECK exit 2. No lee export privado real
+  ni archivos privados.
+- Salida futura: auditar el normalizador/dry-run privado antes de cualquier
+  ejecucion con export privado real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -772,7 +783,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private local export validator script review and private retest
       sanitized.
 - [x] Private dry-run normalizer design docs-only.
-- [ ] Private dry-run normalizer script with sanitized fixtures only.
+- [x] Private dry-run normalizer script with sanitized fixtures only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

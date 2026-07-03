@@ -173,9 +173,11 @@ Current next phase:
 
 - Private dry-run normalizer design is documented in
   `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
-- Next suggested phase: create `dry-run-private-local-export.mjs` with
-  sanitized fixtures only.
-- Still no private export read by Codex, executable private dry-run script, real
+- `dry-run-private-local-export.mjs` now exists and has been tested only with
+  sanitized fixtures.
+- Next suggested phase: audit the private dry-run normalizer before any private
+  export run.
+- Still no private export read by Codex, real
   snapshot, real LocalStorage read, real dry-run with private data, real insert,
   runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI, `.env.local`,
   private files, Storage or reset.

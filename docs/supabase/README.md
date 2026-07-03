@@ -135,6 +135,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   diseno del futuro normalizador/dry-run privado local-only. No crea scripts,
   no lee export privado, no genera snapshot real, no ejecuta dry-run real, no
   toca Supabase, no inserta datos y no toca Storage.
+- S4.6.5.12 crea `../../scripts/migration/dry-run-private-local-export.mjs` y
+  una fixture media/playlist sanitizada para probar normalizacion/dry-run solo
+  dentro del repo. No lee export privado real, no lee archivos privados, no lee
+  LocalStorage real, no toca Supabase y no inserta datos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -291,9 +295,15 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   la implementacion inicial y la mantiene bloqueada para datos reales hasta una
   revision futura.
 - `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`: diseno S4.6.5.11 del futuro
-  normalizador/dry-run privado local-only. Define como convertir un export UI v2
-  validado en operaciones planeadas sanitizadas, sin crear script, leer export
-  privado, ejecutar dry-run real, insertar datos, tocar Supabase o subir media.
+  normalizador/dry-run privado local-only; S4.6.5.12 crea la implementacion
+  inicial con fixtures sanitizadas solamente. Define como convertir un export
+  UI v2 validado en operaciones planeadas sanitizadas, sin leer export privado,
+  insertar datos, tocar Supabase o subir media.
+- `../../scripts/migration/dry-run-private-local-export.mjs`: script S4.6.5.12
+  local-only para normalizar exports UI v2 desde una ruta local explicita hacia
+  un reporte dry-run JSON sanitizado. Rechaza URLs remotas, no escribe archivos
+  y todavia no debe ejecutarse contra el export privado real sin una revision
+  futura.
 - `../../scripts/migration/validate-private-local-export.mjs`: script S4.6.5.4
   local-only para validar exports UI v2 desde una ruta local explicita. Rechaza
   URLs remotas, imprime solo resumen sanitizado y todavia no debe ejecutarse
@@ -342,7 +352,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Crear `dry-run-private-local-export.mjs` usando solo fixtures sanitizadas, sin
-ejecutarlo todavia contra el export privado real. Todavia sin datos reales en
-Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
-`.env.local`, sin runtime, sin Storage y sin dry-run real con datos privados.
+Auditar `dry-run-private-local-export.mjs` antes de cualquier ejecucion contra
+el export privado real. Todavia sin datos reales en Git/chat, sin LocalStorage
+real leido por scripts, sin Supabase, sin `.env.local`, sin runtime, sin
+Storage y sin dry-run real con datos privados.

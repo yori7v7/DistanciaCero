@@ -4,8 +4,8 @@
 
 - Status: DOCUMENTARY DESIGN ONLY.
 - Implementation: not implemented.
-- Script created: no.
-- Dry-run executed: no.
+- Script created: yes, private local export normalizer only.
+- Dry-run executed: only with sanitized fixtures.
 - Private dry-run normalizer design documented: yes, in
   `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
 - Real data read: no.
@@ -320,10 +320,11 @@ Current next phase:
 
 - Private dry-run normalizer design is now documented in
   `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
-- The future private report should extend this shape with `mediaPending` and
-  `playlistPending` summaries while staying sanitized.
-- Next suggested phase: create `dry-run-private-local-export.mjs` with
-  sanitized fixtures only.
+- `dry-run-private-local-export.mjs` now emits this sanitized report shape for
+  local export v2 fixtures, including `mediaPending` and `playlistPending`
+  summaries.
+- Next suggested phase: audit the private dry-run normalizer before any run
+  against the user's private export.
 - Still no private export read by Codex, real snapshot, real LocalStorage read,
   real dry-run with private data, real insert, runtime change, SQL execution,
   Supabase Dashboard, Supabase CLI, `.env.local`, private files, Storage or
@@ -331,7 +332,7 @@ Current next phase:
 
 ## Non-Goals
 
-- No dry-run script.
+- No write-capable dry-run script.
 - No real dry-run execution.
 - No real snapshot generation.
 - No real data read.

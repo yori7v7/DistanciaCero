@@ -1,0 +1,125 @@
+{
+  "version": 2,
+  "exportedAt": "2026-07-03T00:00:00.000Z",
+  "source": "Distancia Cero - Centro del Universo",
+  "content": {
+    "monthlyLetters": [
+      {
+        "id": "mock-monthly-media-1",
+        "title": "Mock monthly letter",
+        "preview": "Sanitized preview",
+        "content": ["Sanitized monthly paragraph."],
+        "month": "Mock month",
+        "locked": false,
+        "createdBy": "owner_a",
+        "updatedBy": "owner_a"
+      }
+    ],
+    "openWhenLetters": [
+      {
+        "id": "mock-openwhen-media-1",
+        "title": "Mock open when letter",
+        "preview": "Sanitized preview",
+        "content": ["Sanitized open when paragraph."],
+        "mood": "Mock mood",
+        "locked": true,
+        "createdBy": "owner_b",
+        "updatedBy": "owner_b"
+      }
+    ],
+    "reasons": [
+      {
+        "id": "mock-reason-media-1",
+        "title": "Mock reason",
+        "text": "Sanitized reason text.",
+        "createdBy": "owner_a",
+        "updatedBy": "owner_a"
+      }
+    ],
+    "promises": [
+      {
+        "id": "mock-promise-media-1",
+        "title": "Mock promise",
+        "text": "Sanitized promise text.",
+        "createdBy": "owner_b",
+        "updatedBy": "owner_b"
+      }
+    ],
+    "importantDates": [
+      {
+        "id": "mock-date-media-1",
+        "date": "2025-05-17",
+        "title": "Mock important date",
+        "description": "Sanitized important date.",
+        "createdBy": "owner_a",
+        "updatedBy": "owner_a"
+      }
+    ],
+    "futureDreams": [
+      {
+        "id": "mock-dream-media-1",
+        "category": "Mock category",
+        "title": "Mock future dream",
+        "description": "Sanitized future dream.",
+        "createdBy": "owner_b",
+        "updatedBy": "owner_b"
+      }
+    ],
+    "timeline": [
+      {
+        "id": "mock-timeline-media-1",
+        "chapter": "Mock chapter",
+        "date": "2025-08-18",
+        "title": "Mock timeline entry",
+        "description": "Sanitized timeline description.",
+        "details": ["Sanitized detail."],
+        "createdBy": "owner_a",
+        "updatedBy": "owner_a"
+      }
+    ],
+    "blackHoleGallery": [
+      {
+        "id": "mock-gallery-media-1",
+        "date": "Mock label",
+        "title": "Mock gallery item",
+        "description": "Sanitized gallery description.",
+        "image": "data:image/mock;base64,TU9DS19NRURJQV9PTkxZ",
+        "createdBy": "owner_b",
+        "updatedBy": "owner_b"
+      }
+    ],
+    "playlist": [
+      {
+        "id": "mock-playlist-media-1",
+        "title": "Mock playlist item",
+        "artist": "Mock artist",
+        "description": "Sanitized playlist description.",
+        "link": "https://example.invalid/mock-track",
+        "createdBy": "owner_a",
+        "updatedBy": "owner_a"
+      }
+    ]
+  },
+  "overrides": {
+    "monthlyLetters": {},
+    "openWhenLetters": {},
+    "reasons": {},
+    "promises": {},
+    "importantDates": {},
+    "futureDreams": {},
+    "timeline": {},
+    "blackHoleGallery": {},
+    "playlist": {}
+  },
+  "hidden": {
+    "monthlyLetters": [],
+    "openWhenLetters": [],
+    "reasons": [],
+    "promises": [],
+    "importantDates": [],
+    "futureDreams": [],
+    "timeline": [],
+    "blackHoleGallery": [],
+    "playlist": []
+  }
+}
