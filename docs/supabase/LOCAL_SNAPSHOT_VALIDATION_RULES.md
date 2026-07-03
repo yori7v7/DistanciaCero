@@ -4,7 +4,7 @@
 
 - Status: DOCUMENTARY DESIGN ONLY.
 - Implementation: not implemented.
-- Script created: no.
+- Private local export validator script created: yes, in S4.6.5.4.
 - Real snapshot generated: no.
 - Real data read: no.
 - Runtime connection: none.
@@ -218,9 +218,10 @@ Current next phase:
   `PRIVATE_SNAPSHOT_WORKFLOW.md`.
 - Private snapshot validator design is now documented in
   `PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md`.
-- Next suggested phase: create `validate-private-local-export.mjs` with
-  local-only scope and sanitized output, first tested with mock export or a
-  temporary sanitized file.
+- `validate-private-local-export.mjs` now exists and was tested only with
+  sanitized fixtures inside the repo.
+- Next suggested phase: review/audit the private local export validator before
+  any private real export run.
 - Still no real snapshot, real LocalStorage read by scripts, real dry-run, real
   insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
   `.env.local`, private files, Storage or reset.

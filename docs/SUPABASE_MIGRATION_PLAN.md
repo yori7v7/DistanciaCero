@@ -771,6 +771,11 @@ Estado de S4.6.1:
   guardados fuera del repo. No crea script, no lee export privado, no genera
   snapshot real, no lee LocalStorage real, no toca runtime, no usa Supabase, no
   toca Storage y no inserta datos.
+- S4.6.5.4 crea `scripts/migration/validate-private-local-export.mjs` con
+  alcance local-only y fixtures sanitizadas `mock-local-export-*`. El script se
+  prueba solo con fixtures dentro del repo y no se ejecuta contra el export
+  privado real, no lee archivos privados, no lee LocalStorage real, no toca
+  runtime, no usa Supabase y no inserta datos.
 
 Validacion y rollback:
 
@@ -881,8 +886,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Scripts npm mock-only de migracion creados; falta decidir si ampliar
   cobertura mock-only.
 - Private snapshot workflow docs-only creado.
-- Private snapshot validator design docs-only creado; falta implementar y
-  revisar un validador privado local-only con salida sanitizada.
+- Private snapshot validator design docs-only creado.
+- Private local export validator script creado con salida sanitizada; falta
+  revisarlo antes de cualquier ejecucion contra un export privado real.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -953,11 +959,13 @@ solo estado sanitizado, sin generar snapshot real en esta fase.
 `docs/supabase/PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md` documenta como deberia
 validarse en una fase futura ese export privado local, sin crear script, leer
 export privado, generar snapshot real, tocar Supabase o insertar datos.
+`scripts/migration/validate-private-local-export.mjs` implementa el validador
+local-only para export UI v2 y se prueba solo con fixtures sanitizadas dentro
+del repo. No se ha ejecutado contra el export privado real.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es crear
-`validate-private-local-export.mjs` con alcance local-only y salida sanitizada,
-probado primero con mock export o archivo temporal sanitizado, sin ejecutarlo
-sobre export privado real hasta revisar el script y sin datos reales en
-Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
-`.env.local`, sin runtime y sin dry-run real.
+desarrollo. La siguiente fase recomendada es revisar/auditar
+`validate-private-local-export.mjs` antes de autorizar cualquier ejecucion
+contra un export privado real, sin datos reales en Git/chat, sin LocalStorage
+real leido por scripts, sin Supabase, sin `.env.local`, sin runtime y sin
+dry-run real.

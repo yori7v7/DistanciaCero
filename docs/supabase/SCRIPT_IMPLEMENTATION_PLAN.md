@@ -9,6 +9,7 @@
 - Mock dry-run report script created: yes, in S4.6.4.50.
 - Mock migration smoke-test runner created: yes, in S4.6.4.52.
 - NPM mock migration shortcuts created: yes, in S4.6.4.54.
+- Private local export validator script created: yes, in S4.6.5.4.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -68,9 +69,13 @@ Implemented mock-only location:
 - `scripts/migration/validate-mock-snapshot.mjs`.
 - `scripts/migration/dry-run-mock-snapshot.mjs`.
 - `scripts/migration/run-mock-migration-checks.mjs`.
+- `scripts/migration/validate-private-local-export.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
+- `scripts/migration/fixtures/mock-local-export-pass.json`.
+- `scripts/migration/fixtures/mock-local-export-check-empty.json`.
+- `scripts/migration/fixtures/mock-local-export-nogo.json`.
 - `scripts/migration/README.md`.
 
 Implemented npm shortcuts:
@@ -83,12 +88,13 @@ These shortcuts do not use network access, Supabase, `.env.local`,
 LocalStorage real data or real migration inputs. They do not insert data and do
 not replace future real snapshot or migration tests.
 
-Other future options still require separate approval:
+Private local export validator:
 
-- Docs-only examples as conceptual input.
-- Private local export validator implementation for a file outside the repo,
-  still without Supabase, real data in Git/chat or private export execution
-  before script review.
+- `validate-private-local-export.mjs` accepts an explicit local JSON file,
+  rejects remote URLs and prints only a sanitized summary.
+- In S4.6.5.4 it is tested only with sanitized fixtures inside the repo.
+- It must not be run against a private real export until a separate review
+  phase approves that.
 
 Recommendation:
 
@@ -217,10 +223,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Create `validate-private-local-export.mjs` with local-only scope and
-  sanitized output.
-- First test it with a mock export or temporary sanitized file.
-- Do not run it on a private real export until the script is reviewed.
+- Review/audit `validate-private-local-export.mjs` in read-only mode before any
+  private real export run.
 - Still no real data.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

@@ -212,6 +212,11 @@ Estado verificado post-S4.5.1:
       del repo. No crea script, no lee export privado, no genera snapshot real,
       no lee LocalStorage real, no toca runtime, no usa Supabase y no inserta
       datos.
+- [x] S4.6.5.4 crea `scripts/migration/validate-private-local-export.mjs` y
+      fixtures sanitizadas `mock-local-export-*` para validar exports UI v2 con
+      salida sanitizada. No se ejecuta contra export privado real, no lee
+      archivos privados fuera del repo, no lee LocalStorage real, no toca
+      runtime, no usa Supabase y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -615,10 +620,13 @@ la siguiente.
   repo. No crea script, no lee export privado, no genera snapshot real, no lee
   LocalStorage real, no toca Supabase/CLI/Dashboard, no toca `.env.local`, no
   toca Storage y no conecta la app.
-- Salida futura: crear `validate-private-local-export.mjs` con alcance
-  local-only y salida sanitizada, primero probado con mock export o archivo
-  temporal sanitizado y sin ejecutarlo sobre export privado real hasta revisar
-  el script.
+- Estado S4.6.5.4:
+  `scripts/migration/validate-private-local-export.mjs` existe con alcance
+  local-only y salida sanitizada. Fue probado solo con fixtures sanitizadas
+  dentro del repo: PASS exit 0, CHECK exit 2, NO-GO exit 1, no args exit 5 y
+  URL remota exit 5. No lee export privado real ni archivos privados.
+- Salida futura: revisar/auditar el validador privado antes de autorizar
+  cualquier ejecucion contra un export privado real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -748,7 +756,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] NPM mock migration shortcuts with limited scope.
 - [x] Private snapshot workflow docs-only.
 - [x] Private snapshot validator design docs-only.
-- [ ] Private local export validator script with sanitized output.
+- [x] Private local export validator script with sanitized output.
+- [ ] Private local export validator script review before real private export.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

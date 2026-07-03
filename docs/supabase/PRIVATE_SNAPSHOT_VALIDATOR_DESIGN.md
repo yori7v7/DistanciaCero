@@ -3,8 +3,8 @@
 ## Status
 
 - Status: DOCUMENTARY DESIGN ONLY.
-- Implemented: no.
-- Script created: no.
+- Implemented: initial local-only script created in S4.6.5.4.
+- Script created: yes, `scripts/migration/validate-private-local-export.mjs`.
 - Private export read: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -41,8 +41,10 @@ validate-private-local-export.mjs
 
 Status:
 
-- Future only.
-- Do not create it in this phase.
+- Created in S4.6.5.4.
+- Tested only with sanitized fixtures inside the repo.
+- Do not run it on a private real export until a separate review phase approves
+  that.
 - It may live in `scripts/migration/` only if it does not store or print real
   data.
 - It must accept an explicit local file path outside the repo.
@@ -213,8 +215,8 @@ The future report may print:
 
 - The future private validator does not replace `migration:mock`.
 - `migration:mock` continues validating toy fixtures only.
-- `validate-private-local-export.mjs` would validate one private real export
-  outside the repo.
+- `validate-private-local-export.mjs` is intended to validate one private real
+  export outside the repo after a separate script review phase approves that.
 - Neither path should touch Supabase.
 - Neither path should insert data.
 
@@ -236,10 +238,9 @@ Future implementation is `NO-GO` if it:
 
 Suggested next phase:
 
-- Create `validate-private-local-export.mjs` with local-only scope and
-  sanitized output.
-- Do not run it on a private real export until the script is reviewed.
-- First test it with a mock export or a temporary sanitized file.
+- Review/audit `validate-private-local-export.mjs` in read-only mode.
+- Confirm it remains local-only and prints only sanitized output.
+- Do not run it on a private real export until that review passes.
 
 Still blocked:
 
