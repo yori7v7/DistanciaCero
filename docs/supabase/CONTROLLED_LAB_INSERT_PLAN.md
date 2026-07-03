@@ -41,6 +41,8 @@ Before any future controlled lab insert:
 - Critical duplicates are resolved.
 - Media/Storage is excluded or explicitly decided.
 - Private insert policy is documented when using the private dry-run result.
+- Private insert manifest format is documented before any future manifest is
+  generated.
 - Disposable lab is confirmed.
 - Production is ruled out.
 - Rollback/reset is confirmed.
@@ -156,11 +158,14 @@ Current next phase:
 
 - Controlled private lab insert policy is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- Private insert manifest format is documented in
+  `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
 - Recommended first private lab insert scope is 14 clean `content_items`.
 - `blackHoleGallery` and `playlist` are deferred until Storage/media and
   playlist source policies exist.
-- Next suggested phase: design sanitized insert manifest format before any
-  insert script, SQL or insert execution.
+- Next suggested phase: design or create a local-only manifest generator with
+  sanitized fixtures before any private manifest, insert script, SQL or insert
+  execution.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

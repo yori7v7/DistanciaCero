@@ -192,6 +192,8 @@ Before any real insert, create or document a sanitized manifest with:
 
 The manifest should be reviewed before any future insert command or SQL exists.
 
+The manifest format is documented in `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
+
 ## NO-GO Conditions
 
 The future insert phase is `NO-GO` if:
@@ -210,12 +212,14 @@ The future insert phase is `NO-GO` if:
 
 ## Suggested Next Phase
 
-Design the insert manifest format before creating any script.
+The insert manifest format is documented in
+`PRIVATE_INSERT_MANIFEST_FORMAT.md`. Next, design a generator or create a
+local-only generator with sanitized fixtures.
 
 Allowed next direction:
 
-- Document a sanitized insert manifest format; or
-- later create a local-only insert manifest generator using sanitized fixtures.
+- Document manifest generator behavior; or
+- create a local-only insert manifest generator using sanitized fixtures.
 
 Still blocked:
 

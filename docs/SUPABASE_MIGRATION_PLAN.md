@@ -801,6 +801,11 @@ Estado de S4.6.1:
   insertar solo 14 `content_items` limpios y diferir 2 `blackHoleGallery` y 2
   `playlist` por Storage/media y playlist source policy. No crea SQL, no crea
   scripts, no toca Supabase y no inserta datos.
+- S4.6.5.16 documenta `docs/supabase/PRIVATE_INSERT_MANIFEST_FORMAT.md` como
+  formato docs-only del futuro manifest sanitizado. El manifest seleccionaria
+  14 items limpios, diferiria 4 pending-review y no incluiria payload intimo,
+  Data URLs, rutas privadas, secretos ni valores reales. No genera manifest
+  real, no crea scripts, no toca Supabase y no inserta datos.
 
 Validacion y rollback:
 
@@ -919,6 +924,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
   forma sanitizada como `CHECK`; falta disenar politica de insert controlado.
 - Controlled private lab insert policy docs-only creada; falta disenar formato
   de insert manifest sanitizado.
+- Private insert manifest format docs-only creado; falta disenar generator o
+  script local-only con fixtures sanitizadas.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1005,10 +1012,14 @@ toco Supabase, no toco Storage y no inserto.
 S4.6.5.15 documenta `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`:
 el primer insert privado recomendado en lab debe seleccionar 14 items limpios y
 diferir los 4 items con media/playlist pending-review.
+S4.6.5.16 documenta `docs/supabase/PRIVATE_INSERT_MANIFEST_FORMAT.md`: el
+manifest futuro debe registrar `selectedItemsCount` 14, `deferredItemsCount` 4,
+identity mapping privado pendiente y payload excluido del repo.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar el formato de insert
-manifest sanitizado, sin crear SQL, sin crear scripts, sin ejecutar insert, sin
+desarrollo. La siguiente fase recomendada es disenar un manifest generator o
+crear un generator local-only con fixtures sanitizadas, sin export privado real,
+sin crear SQL, sin ejecutar insert, sin
 datos reales en Git/chat, sin
 LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
 runtime y sin Storage.

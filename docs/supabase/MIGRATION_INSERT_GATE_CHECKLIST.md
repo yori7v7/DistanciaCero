@@ -43,6 +43,7 @@ Before any future insert is allowed, these preconditions must be true:
 - Media/Storage is excluded or explicitly decided.
 - First private insert policy is documented, if the input is the private
   dry-run result.
+- Private insert manifest format is documented before any manifest generation.
 - Disposable lab is confirmed.
 - Rollback/reset plan is confirmed.
 - Target is not production.
@@ -166,10 +167,12 @@ Current next phase:
 
 - Controlled private lab insert policy is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- Private insert manifest format is documented in
+  `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: design sanitized insert manifest format before any
-  script or insert exists.
+- Next suggested phase: design or create a local-only manifest generator with
+  sanitized fixtures before any private manifest or insert exists.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

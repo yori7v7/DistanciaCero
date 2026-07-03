@@ -110,6 +110,8 @@ Private dry-run normalizer:
   `PRIVATE_DRY_RUN_RESULT.md`.
 - The controlled private lab insert policy is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- The private insert manifest format is documented in
+  `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
 - It must not touch Supabase, Storage, `.env.local`, LocalStorage real data or
   runtime.
 
@@ -240,7 +242,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Design sanitized insert manifest format before creating any insert script.
+- Design manifest generator behavior or create a local-only generator with
+  sanitized fixtures before creating any private manifest.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

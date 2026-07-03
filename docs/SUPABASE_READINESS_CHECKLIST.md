@@ -240,6 +240,11 @@ Estado verificado post-S4.5.1:
       decision recomendada es insertar solo 14 `content_items` limpios y diferir
       `blackHoleGallery` 2 y `playlist` 2 por media/Storage y source policy.
       No crea SQL, no crea scripts, no toca Supabase y no inserta datos.
+- [x] S4.6.5.16 documenta
+      `docs/supabase/PRIVATE_INSERT_MANIFEST_FORMAT.md` como formato docs-only
+      del futuro manifest sanitizado. El manifest seleccionaria 14 items
+      limpios y diferiria 4 items pending-review. No genera manifest real, no
+      crea scripts, no crea SQL, no toca Supabase y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -673,8 +678,13 @@ la siguiente.
   limpios y diferir 4 items pending-review (`blackHoleGallery` y `playlist`).
   No se ejecuta insert, no se crea SQL, no se crea script y no se toca
   Supabase.
-- Salida futura: disenar formato de insert manifest sanitizado antes de crear
-  cualquier script o ejecutar insert.
+- Estado S4.6.5.16:
+  `docs/supabase/PRIVATE_INSERT_MANIFEST_FORMAT.md` define el formato
+  sanitizado del futuro manifest: `selectedItemsCount` 14,
+  `deferredItemsCount` 4, identity mapping privado pendiente y payload no
+  incluido en repo/docs. No genera manifest real ni crea script.
+- Salida futura: disenar manifest generator docs, o crear generator local-only
+  con fixtures sanitizadas solamente, sin export privado real ni insert.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -811,7 +821,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private dry-run normalizer script with sanitized fixtures only.
 - [x] Private dry-run result sanitized docs.
 - [x] Controlled private insert policy docs-only.
-- [ ] Insert manifest format/design docs-only.
+- [x] Insert manifest format/design docs-only.
+- [ ] Insert manifest generator design or sanitized-fixture script.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

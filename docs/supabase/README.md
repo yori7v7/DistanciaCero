@@ -148,6 +148,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   politica de un futuro primer insert privado controlado en lab. Recomienda 14
   `content_items` limpios y difiere 4 items de media/playlist. No crea SQL, no
   crea scripts, no toca Supabase y no inserta datos.
+- S4.6.5.16 crea `PRIVATE_INSERT_MANIFEST_FORMAT.md` para documentar el formato
+  del futuro manifest sanitizado. Selecciona conceptualmente 14 items limpios,
+  difiere 4 items pending-review y no incluye payload privado, Data URLs, rutas
+  privadas ni secretos. No genera manifest real, no crea scripts y no inserta.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -314,6 +318,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`: politica S4.6.5.15 para un futuro
   primer insert privado en lab desechable. Recomienda incluir 14 items limpios
   y diferir media/playlist hasta politicas futuras.
+- `PRIVATE_INSERT_MANIFEST_FORMAT.md`: formato S4.6.5.16 del futuro manifest
+  sanitizado para el primer insert privado controlado. Define conteos,
+  selected/deferred items, identity mapping privado pendiente, safety gates y
+  rollback conceptual sin payload real.
 - `../../scripts/migration/dry-run-private-local-export.mjs`: script S4.6.5.12
   local-only para normalizar exports UI v2 desde una ruta local explicita hacia
   un reporte dry-run JSON sanitizado. Rechaza URLs remotas, no escribe archivos
@@ -367,7 +375,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar un formato de insert manifest sanitizado antes de crear cualquier
-script o ejecutar insert. Todavia sin datos reales en Git/chat, sin LocalStorage
-real leido por scripts, sin Supabase, sin `.env.local`, sin runtime y sin
-Storage.
+Disenar un manifest generator o crear un generator local-only con fixtures
+sanitizadas solamente. Todavia sin export privado real, sin manifest real, sin
+insert, sin datos reales en Git/chat, sin LocalStorage real leido por scripts,
+sin Supabase, sin `.env.local`, sin runtime y sin Storage.

@@ -174,10 +174,12 @@ Current next phase:
 - Private dry-run result is recorded in `PRIVATE_DRY_RUN_RESULT.md`.
 - Controlled private lab insert policy is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
+- Private insert manifest format is documented in
+  `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: design sanitized insert manifest format before any
-  script or insert exists.
+- Next suggested phase: design or create a local-only manifest generator with
+  sanitized fixtures before any private manifest or insert exists.
 - Still no private export read by Codex, real snapshot, real LocalStorage read,
   real insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
   `.env.local`, private files, Storage or reset.

@@ -120,8 +120,9 @@ Current interpretation:
 ## Suggested Next Phase
 
 The controlled private insert policy is documented in
-`CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`. The next step is to design a
-sanitized insert manifest format without executing inserts.
+`CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`, and the manifest format is
+documented in `PRIVATE_INSERT_MANIFEST_FORMAT.md`. The next step is to design or
+create a local-only manifest generator using sanitized fixtures.
 
 Open decision:
 
