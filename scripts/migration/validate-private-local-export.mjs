@@ -514,10 +514,10 @@ async function main() {
   try {
     exportJson = JSON.parse(rawText);
   } catch {
-    const exitCode = EXIT_CODES['NO-GO'];
+    const exitCode = EXIT_CODES.INVALID_USAGE;
     printReport({
       inputFile: safeFile,
-      validationStatus: 'NO-GO',
+      validationStatus: 'INVALID_USAGE',
       version: '<invalid-json>',
       collectionCounts: {},
       totalItems: 0,
