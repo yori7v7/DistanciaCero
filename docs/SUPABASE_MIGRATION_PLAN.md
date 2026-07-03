@@ -766,6 +766,11 @@ Estado de S4.6.1:
   del repo. No genera snapshot real, no lee LocalStorage real por scripts, no
   crea scripts, no toca runtime, no usa Supabase, no toca Storage y no pone
   datos reales en Git/chat.
+- S4.6.5.3 crea `docs/supabase/PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md` como
+  diseno documental del futuro validador privado local-only para exports UI
+  guardados fuera del repo. No crea script, no lee export privado, no genera
+  snapshot real, no lee LocalStorage real, no toca runtime, no usa Supabase, no
+  toca Storage y no inserta datos.
 
 Validacion y rollback:
 
@@ -875,8 +880,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Mock migration smoke-test runner con alcance limitado creado.
 - Scripts npm mock-only de migracion creados; falta decidir si ampliar
   cobertura mock-only.
-- Private snapshot workflow docs-only creado; falta decidir guia manual de
-  export privado o normalizador privado.
+- Private snapshot workflow docs-only creado.
+- Private snapshot validator design docs-only creado; falta implementar y
+  revisar un validador privado local-only con salida sanitizada.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -944,9 +950,14 @@ sin reemplazar pruebas reales futuras.
 `docs/supabase/PRIVATE_SNAPSHOT_WORKFLOW.md` documenta como obtener en una fase
 futura un export real privado desde la UI, guardarlo fuera del repo y reportar
 solo estado sanitizado, sin generar snapshot real en esta fase.
+`docs/supabase/PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md` documenta como deberia
+validarse en una fase futura ese export privado local, sin crear script, leer
+export privado, generar snapshot real, tocar Supabase o insertar datos.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es decidir entre guia manual de export
-privado o diseno de normalizador privado para un archivo fuera del repo, sin
-datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
-sin `.env.local`, sin runtime y sin dry-run real.
+desarrollo. La siguiente fase recomendada es crear
+`validate-private-local-export.mjs` con alcance local-only y salida sanitizada,
+probado primero con mock export o archivo temporal sanitizado, sin ejecutarlo
+sobre export privado real hasta revisar el script y sin datos reales en
+Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+`.env.local`, sin runtime y sin dry-run real.

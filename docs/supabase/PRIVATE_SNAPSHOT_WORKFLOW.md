@@ -10,6 +10,8 @@
 - Supabase touched: no.
 - App connection: none.
 - Storage touched: no.
+- Private snapshot validator design documented: yes, in
+  `PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md`.
 
 ## Objective
 
@@ -169,9 +171,9 @@ Stop if any of these occur:
 
 Choose one separately approved phase:
 
-- Private snapshot manual export guidance, where the user exports from the UI
-  and reports only sanitized status.
-- Private export normalizer design, where a future local tool would accept a
-  private file outside the repo and still avoid Supabase.
+- Create `validate-private-local-export.mjs` with local-only scope and
+  sanitized output.
+- First test it with a mock export or temporary sanitized file.
+- Do not run it on a private real export until the script is reviewed.
 
-Do not execute either path without explicit approval.
+Do not execute this path without explicit approval.

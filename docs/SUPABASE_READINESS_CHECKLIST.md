@@ -207,6 +207,11 @@ Estado verificado post-S4.5.1:
       fuera del repo. No genera snapshot real, no lee LocalStorage real por
       scripts, no crea scripts, no toca runtime, no usa Supabase y no pone datos
       reales en Git/chat.
+- [x] S4.6.5.3 documenta `docs/supabase/PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md`
+      como diseno del futuro validador privado de exports UI guardados fuera
+      del repo. No crea script, no lee export privado, no genera snapshot real,
+      no lee LocalStorage real, no toca runtime, no usa Supabase y no inserta
+      datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -604,9 +609,16 @@ la siguiente.
   reportar solo estado sanitizado. No genera snapshot real, no lee LocalStorage
   real por scripts, no crea scripts, no toca Supabase/CLI/Dashboard, no toca
   `.env.local`, no toca Storage y no conecta la app.
-- Salida futura: decidir entre guia manual de export privado o diseno de
-  normalizador privado para un archivo fuera del repo, todavia sin datos reales
-  en Git/chat, sin Supabase, sin `.env.local`, sin runtime y sin dry-run real.
+- Estado S4.6.5.3:
+  `docs/supabase/PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md` documenta el diseno del
+  futuro validador privado local-only para un export UI guardado fuera del
+  repo. No crea script, no lee export privado, no genera snapshot real, no lee
+  LocalStorage real, no toca Supabase/CLI/Dashboard, no toca `.env.local`, no
+  toca Storage y no conecta la app.
+- Salida futura: crear `validate-private-local-export.mjs` con alcance
+  local-only y salida sanitizada, primero probado con mock export o archivo
+  temporal sanitizado y sin ejecutarlo sobre export privado real hasta revisar
+  el script.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -735,7 +747,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Mock migration smoke-test runner with limited scope.
 - [x] NPM mock migration shortcuts with limited scope.
 - [x] Private snapshot workflow docs-only.
-- [ ] Private snapshot manual export guidance or private normalizer design.
+- [x] Private snapshot validator design docs-only.
+- [ ] Private local export validator script with sanitized output.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

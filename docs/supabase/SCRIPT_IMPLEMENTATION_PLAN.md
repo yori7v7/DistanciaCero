@@ -20,6 +20,8 @@
 - Storage touched: no.
 - Private snapshot workflow documented: yes, in
   `PRIVATE_SNAPSHOT_WORKFLOW.md`.
+- Private snapshot validator design documented: yes, in
+  `PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md`.
 - Production-ready: no.
 
 ## Recommended Decision
@@ -84,8 +86,9 @@ not replace future real snapshot or migration tests.
 Other future options still require separate approval:
 
 - Docs-only examples as conceptual input.
-- Private export normalizer design for a file outside the repo, still without
-  Supabase or real data in Git/chat.
+- Private local export validator implementation for a file outside the repo,
+  still without Supabase, real data in Git/chat or private export execution
+  before script review.
 
 Recommendation:
 
@@ -214,9 +217,10 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Use the npm mock shortcuts for repeatable mock-only checks, then decide
-  whether to design private manual export guidance or a private export
-  normalizer in a separate future phase.
+- Create `validate-private-local-export.mjs` with local-only scope and
+  sanitized output.
+- First test it with a mock export or temporary sanitized file.
+- Do not run it on a private real export until the script is reviewed.
 - Still no real data.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

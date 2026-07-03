@@ -122,6 +122,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   privado futuro de export manual desde UI hacia una carpeta fuera del repo. No
   genera snapshot real, no lee LocalStorage real por scripts, no crea scripts,
   no guarda datos reales en Git/chat y no toca Supabase.
+- S4.6.5.3 crea `PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md` para documentar el
+  diseno del futuro validador privado local-only para exports UI guardados fuera
+  del repo. No crea script, no lee export privado, no genera snapshot real, no
+  lee LocalStorage real, no toca Supabase y no inserta datos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -273,6 +277,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   sin rutas largas; no cambia dependencias.
 - `PRIVATE_SNAPSHOT_WORKFLOW.md`: workflow S4.6.4.57 para un futuro export
   privado desde UI, fuera del repo y sin datos reales en docs/chat.
+- `PRIVATE_SNAPSHOT_VALIDATOR_DESIGN.md`: diseno S4.6.5.3 del futuro validador
+  privado local-only para un export UI guardado fuera del repo, con salida
+  sanitizada y sin crear script todavia.
 - `../SUPABASE_CONTRACT_TESTS.md`: alcance y comando del verificador manual de
   aislamiento; no es una prueba de RLS/backend real.
 - `../SUPABASE_ISOLATED_ENVIRONMENT.md`: checklist S4.6.1, bloqueantes y matriz
@@ -314,7 +321,8 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Decidir entre guia manual de export privado o diseno de normalizador privado
-para un archivo fuera del repo. Todavia sin datos reales en Git/chat, sin
-LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
-runtime y sin dry-run real.
+Crear `validate-private-local-export.mjs` con alcance local-only y salida
+sanitizada, primero probado con mock export o archivo temporal sanitizado y sin
+ejecutarlo sobre export privado real hasta revisar el script. Todavia sin datos
+reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+`.env.local`, sin runtime y sin dry-run real.
