@@ -139,6 +139,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   una fixture media/playlist sanitizada para probar normalizacion/dry-run solo
   dentro del repo. No lee export privado real, no lee archivos privados, no lee
   LocalStorage real, no toca Supabase y no inserta datos.
+- S4.6.5.14 crea `PRIVATE_DRY_RUN_RESULT.md` para registrar el resultado
+  sanitizado del dry-run privado ejecutado manualmente por el usuario fuera del
+  repo. Resultado `CHECK` esperado, 18 operaciones planeadas, 0 skipped, 0
+  conflicts, 0 duplicate candidates y 0 noGoReasons. No incluye export privado,
+  rutas privadas, Data URLs, URLs completas, payload completo ni secretos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -299,6 +304,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   inicial con fixtures sanitizadas solamente. Define como convertir un export
   UI v2 validado en operaciones planeadas sanitizadas, sin leer export privado,
   insertar datos, tocar Supabase o subir media.
+- `PRIVATE_DRY_RUN_RESULT.md`: resultado S4.6.5.14 del dry-run privado
+  reportado de forma sanitizada. Registra `CHECK`, 18 operaciones planeadas,
+  pendientes media/playlist y 0 noGoReasons, sin payload privado ni secretos.
 - `../../scripts/migration/dry-run-private-local-export.mjs`: script S4.6.5.12
   local-only para normalizar exports UI v2 desde una ruta local explicita hacia
   un reporte dry-run JSON sanitizado. Rechaza URLs remotas, no escribe archivos
@@ -352,7 +360,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Auditar `dry-run-private-local-export.mjs` antes de cualquier ejecucion contra
-el export privado real. Todavia sin datos reales en Git/chat, sin LocalStorage
-real leido por scripts, sin Supabase, sin `.env.local`, sin runtime, sin
-Storage y sin dry-run real con datos privados.
+Disenar una politica de controlled private insert sin ejecutar insert ni tocar
+Supabase. Todavia sin datos reales en Git/chat, sin LocalStorage real leido por
+scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.

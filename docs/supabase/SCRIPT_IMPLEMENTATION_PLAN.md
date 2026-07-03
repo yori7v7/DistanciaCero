@@ -105,8 +105,9 @@ Private dry-run normalizer:
 
 - `dry-run-private-local-export.mjs` exists and is tested only with sanitized
   fixtures.
-- It must not be run against a private real export until a separate script audit
-  approves that.
+- It was later run manually by the user against a private export outside the
+  repo; only sanitized result counts are recorded in
+  `PRIVATE_DRY_RUN_RESULT.md`.
 - It must not touch Supabase, Storage, `.env.local`, LocalStorage real data or
   runtime.
 
@@ -237,11 +238,10 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Audit `dry-run-private-local-export.mjs` before any private export run.
+- Design controlled private insert policy without executing insert.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.
-- Still no dry-run execution with private data.
 - Still no insert.
 - Still no Supabase, CLI, Dashboard, SQL, Storage, `.env.local`, runtime or
   app connection.

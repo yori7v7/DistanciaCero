@@ -131,12 +131,14 @@ Current next phase:
 
 - Private dry-run normalizer design is now documented in
   `PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md`.
-- Next suggested phase: create `dry-run-private-local-export.mjs` with
-  sanitized fixtures only.
-- Still no private export read by Codex, private dry-run script, real snapshot,
-  real LocalStorage read, real dry-run with private data, real insert, runtime
-  change, SQL execution, Supabase Dashboard, Supabase CLI, `.env.local`,
-  private files, Storage or reset.
+- Private dry-run result is now recorded in `PRIVATE_DRY_RUN_RESULT.md` from
+  sanitized user-reported output: `CHECK`, 18 planned operations, no skipped
+  items, no conflicts, no duplicates and no no-go reasons.
+- Next suggested phase: design controlled private insert policy without
+  executing insert.
+- Still no private export read by Codex, real snapshot, real LocalStorage read,
+  real insert, runtime change, SQL execution, Supabase Dashboard, Supabase CLI,
+  `.env.local`, private files, Storage or reset.
 
 ## Non-Goals
 

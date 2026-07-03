@@ -323,10 +323,12 @@ Current next phase:
 - `dry-run-private-local-export.mjs` now emits this sanitized report shape for
   local export v2 fixtures, including `mediaPending` and `playlistPending`
   summaries.
-- Next suggested phase: audit the private dry-run normalizer before any run
-  against the user's private export.
+- The user's private dry-run result is recorded in
+  `PRIVATE_DRY_RUN_RESULT.md` from sanitized output only.
+- Next suggested phase: design controlled private insert policy without
+  executing insert.
 - Still no private export read by Codex, real snapshot, real LocalStorage read,
-  real dry-run with private data, real insert, runtime change, SQL execution,
+  real insert, runtime change, SQL execution,
   Supabase Dashboard, Supabase CLI, `.env.local`, private files, Storage or
   reset.
 

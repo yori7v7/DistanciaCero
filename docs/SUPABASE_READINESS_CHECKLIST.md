@@ -228,6 +228,12 @@ Estado verificado post-S4.5.1:
       normalizador/dry-run solo con fixtures sanitizadas. No lee export privado,
       no lee archivos privados, no genera snapshot real, no lee LocalStorage
       real, no toca runtime, no usa Supabase y no inserta datos.
+- [x] S4.6.5.14 registra en
+      `docs/supabase/PRIVATE_DRY_RUN_RESULT.md` el resultado sanitizado del
+      dry-run privado ejecutado manualmente por el usuario. Resultado `CHECK`
+      esperado por media/playlist, 18 operaciones planeadas, 0 skipped, 0
+      conflicts, 0 duplicates y 0 noGoReasons. No incluye export privado,
+      rutas privadas, Data URLs, URLs completas, payload completo ni secretos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -648,8 +654,15 @@ la siguiente.
   sanitizadas: PASS exit 0, CHECK empty exit 2, NO-GO exit 1, no args exit 5,
   URL remota exit 5 y media/playlist CHECK exit 2. No lee export privado real
   ni archivos privados.
-- Salida futura: auditar el normalizador/dry-run privado antes de cualquier
-  ejecucion con export privado real.
+- Estado S4.6.5.14:
+  `docs/supabase/PRIVATE_DRY_RUN_RESULT.md` registra el resultado sanitizado
+  reportado por el usuario tras ejecutar el dry-run contra su export privado
+  fuera del repo. Resultado `CHECK`, `totalItems` 18,
+  `plannedOperationsCount` 18, `skippedItemsCount` 0, `conflictsCount` 0,
+  `duplicateCandidatesCount` 0 y `noGoReasonsCount` 0. Los pendientes
+  esperados son `mediaPending` 2 y `playlistPending` 2.
+- Salida futura: disenar politica de controlled private insert sin ejecutar
+  insert ni tocar Supabase.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -784,6 +797,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
       sanitized.
 - [x] Private dry-run normalizer design docs-only.
 - [x] Private dry-run normalizer script with sanitized fixtures only.
+- [x] Private dry-run result sanitized docs.
+- [ ] Controlled private insert policy docs-only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

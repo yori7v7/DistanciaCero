@@ -788,6 +788,13 @@ Estado de S4.6.1:
   export UI v2 a operaciones planeadas sanitizadas y se prueba solo con fixtures
   dentro del repo. No lee export privado real, no lee archivos privados, no lee
   LocalStorage real, no toca runtime, no usa Supabase y no inserta datos.
+- S4.6.5.14 registra en `docs/supabase/PRIVATE_DRY_RUN_RESULT.md` el resultado
+  sanitizado del dry-run privado ejecutado manualmente por el usuario fuera del
+  repo. Resultado `CHECK` esperado: 18 items, 18 operaciones planeadas, 0
+  skipped, 0 conflicts, 0 duplicate candidates y 0 noGoReasons. Los unicos
+  pendientes reportados son media/Storage y playlist policy. No incluye export
+  privado, rutas privadas, Data URLs, URLs completas, payload completo ni
+  secretos.
 
 Validacion y rollback:
 
@@ -901,8 +908,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private snapshot validator design docs-only creado.
 - Private local export validator script creado con salida sanitizada; falta
   mantener su ejecucion privada fuera de Git/chat.
-- Private dry-run normalizer script creado con fixtures sanitizadas; falta
-  auditarlo antes de cualquier ejecucion con export privado real.
+- Private dry-run normalizer script creado con fixtures sanitizadas y auditado.
+- Private dry-run real ejecutado por el usuario fuera del repo y registrado de
+  forma sanitizada como `CHECK`; falta disenar politica de insert controlado.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -977,16 +985,18 @@ export privado, generar snapshot real, tocar Supabase o insertar datos.
 local-only para export UI v2 y se prueba con fixtures sanitizadas dentro del
 repo. El retest privado sanitizado reporto que los warnings de identidad y
 fechas legacy desaparecieron; quedan warnings esperados de playlist/media.
-`docs/supabase/PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` documenta el futuro
+`docs/supabase/PRIVATE_DRY_RUN_NORMALIZER_DESIGN.md` documenta el
 normalizador/dry-run privado. S4.6.5.12 crea
 `scripts/migration/dry-run-private-local-export.mjs`, que transforma fixtures
 sanitizadas de export UI v2 en reportes de operaciones planeadas sanitizadas.
-Todavia no se ejecuta contra el export privado real, no lee archivos privados,
-no toca Supabase, no toca Storage y no inserta.
+S4.6.5.14 registra en `docs/supabase/PRIVATE_DRY_RUN_RESULT.md` el resultado
+sanitizado del dry-run privado reportado por el usuario: `CHECK`, 18 items, 18
+operaciones planeadas, sin skipped/conflicts/duplicates/noGoReasons y con
+pendientes esperados de media/playlist. Codex no leyo el export privado, no
+toco Supabase, no toco Storage y no inserto.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar
-`dry-run-private-local-export.mjs` antes de cualquier uso con export privado
-real, sin datos
-reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
-`.env.local`, sin runtime, sin Storage y sin dry-run real con datos privados.
+desarrollo. La siguiente fase recomendada es disenar una politica de controlled
+private insert, sin ejecutar insert, sin datos reales en Git/chat, sin
+LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
+runtime y sin Storage.

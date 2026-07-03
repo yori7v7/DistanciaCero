@@ -9,6 +9,7 @@
 - Real snapshot generated: no.
 - Real dry-run executed: no.
 - Sanitized fixture dry-run executed: yes.
+- Private dry-run result recorded: yes, in `PRIVATE_DRY_RUN_RESULT.md`.
 - Supabase touched: no.
 - Insert executed: no.
 - Storage touched: no.
@@ -261,16 +262,15 @@ Creating the future script is `NO-GO` if it:
 
 Recommended next phase:
 
-- Audit `dry-run-private-local-export.mjs` before any private export run.
-- Do not run it against a private real export until that audit passes.
-- Keep all current tests inside the repo with mock/sanitized fixture data.
+- Design a controlled private insert policy.
+- Use `PRIVATE_DRY_RUN_RESULT.md` as sanitized input evidence.
+- Do not execute inserts in the policy-design phase.
 
 Still blocked:
 
 - No private export read in Codex.
 - No real snapshot generated.
 - No real LocalStorage read by scripts.
-- No real dry-run with private data.
 - No insert.
 - No Supabase, SQL, Dashboard, CLI, Storage, `.env.local`, runtime or app
   connection.
