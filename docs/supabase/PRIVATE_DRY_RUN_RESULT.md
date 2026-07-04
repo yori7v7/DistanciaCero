@@ -121,14 +121,15 @@ Current interpretation:
 
 The controlled private insert policy is documented in
 `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`, and the manifest format is
-documented in `PRIVATE_INSERT_MANIFEST_FORMAT.md`. The next step is to design or
-create a local-only manifest generator using sanitized fixtures.
+documented in `PRIVATE_INSERT_MANIFEST_FORMAT.md`. The sanitized private insert
+manifest result is recorded in `PRIVATE_INSERT_MANIFEST_RESULT.md`.
 
 Open decision:
 
 - First insert should select 14 clean items.
 - `blackHoleGallery` and `playlist` should be deferred from the first insert.
 - Future manifest must record selected and deferred counts without payloads.
+- Any insert still needs a manifest review gate and explicit user GO.
 
 Still blocked:
 

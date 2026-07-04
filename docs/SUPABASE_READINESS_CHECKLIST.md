@@ -251,6 +251,17 @@ Estado verificado post-S4.5.1:
       sanitizado desde un dry-run report mock, selecciona 14 items limpios y
       difiere 4 items pending-review. No lee dry-run privado real, no genera
       manifest real de usuario, no crea SQL, no toca Supabase y no inserta.
+- [x] S4.6.5.18 audita `generate-private-insert-manifest.mjs` en modo
+      read-only. Confirma alcance local-only, built-ins de Node, sin red,
+      sin Supabase, sin `src`, sin `.env.local`, sin LocalStorage real, sin
+      escritura por defecto y sin modo insert.
+- [x] S4.6.5.19 registra en
+      `docs/supabase/PRIVATE_INSERT_MANIFEST_RESULT.md` el resultado
+      sanitizado del manifest privado generado manualmente por el usuario
+      fuera del repo. Resultado `CHECK`: 14 selected, 4 deferred, 0
+      noGoReasons y `review_manifest_before_any_insert`. No incluye manifest
+      privado, dry-run privado, export privado, payload, rutas, Data URLs,
+      URLs completas ni secretos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -695,8 +706,19 @@ la siguiente.
   sanitizadas: CHECK exit 2 con 14 selected/4 deferred, NO-GO exit 1, no args
   exit 5, URL remota exit 5, JSON invalido temporal exit 5 y patron inseguro
   temporal ABORTED exit 4. No lee dry-run privado real ni archivos privados.
-- Salida futura: auditar el manifest generator antes de cualquier uso con
-  dry-run privado real.
+- Estado S4.6.5.18:
+  el manifest generator queda auditado como local-only y sin modo insert. No
+  toca Supabase, SQL, runtime, `src`, `.env.local`, Storage ni archivos
+  privados.
+- Estado S4.6.5.19:
+  `docs/supabase/PRIVATE_INSERT_MANIFEST_RESULT.md` registra el resultado
+  sanitizado reportado por el usuario tras generar el manifest privado fuera
+  del repo. Resultado `CHECK`, `selectedItemsCount` 14,
+  `deferredItemsCount` 4, `noGoReasonsCount` 0 y siguiente accion
+  `review_manifest_before_any_insert`.
+- Salida futura: disenar un gate de revision del manifest antes de cualquier
+  insert, o disenar un script de insert controlado solo con fixtures
+  sanitizadas.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -835,7 +857,9 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Controlled private insert policy docs-only.
 - [x] Insert manifest format/design docs-only.
 - [x] Insert manifest generator with sanitized fixtures only.
-- [ ] Private insert manifest generator audit.
+- [x] Private insert manifest generator audit.
+- [x] Private insert manifest result sanitized docs.
+- [ ] Manifest review gate before any insert.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

@@ -810,8 +810,18 @@ Estado de S4.6.1:
   fixtures sanitizadas `mock-private-dry-run-result-check.json` y
   `mock-private-dry-run-result-nogo.json`. El script lee un dry-run report
   sanitizado mock y emite un manifest JSON sanitizado por stdout. No escribe
-  archivos, no lee dry-run privado real, no genera manifest real de usuario, no
-  crea SQL, no toca Supabase y no inserta datos.
+  archivos por defecto. En S4.6.5.17 no lee dry-run privado real, no genera
+  manifest real de usuario, no crea SQL, no toca Supabase y no inserta datos.
+- S4.6.5.18 audita `generate-private-insert-manifest.mjs` antes de permitir
+  cualquier uso con dry-run privado real. Confirma built-ins de Node, sin red,
+  sin Supabase, sin `src`, sin `.env.local`, sin LocalStorage real, sin
+  escritura por defecto y sin modo insert.
+- S4.6.5.19 registra en `docs/supabase/PRIVATE_INSERT_MANIFEST_RESULT.md` el
+  resultado sanitizado del manifest privado generado manualmente por el usuario
+  fuera del repo. Resultado `CHECK` esperado: 14 selected, 4 deferred, 0
+  noGoReasons y `review_manifest_before_any_insert`. No incluye manifest
+  privado, dry-run privado, export privado, payload completo, rutas privadas,
+  Data URLs, URLs completas ni secretos.
 
 Validacion y rollback:
 
@@ -927,11 +937,12 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
   mantener su ejecucion privada fuera de Git/chat.
 - Private dry-run normalizer script creado con fixtures sanitizadas y auditado.
 - Private dry-run real ejecutado por el usuario fuera del repo y registrado de
-  forma sanitizada como `CHECK`; falta disenar politica de insert controlado.
-- Controlled private lab insert policy docs-only creada; falta disenar formato
-  de insert manifest sanitizado.
-- Private insert manifest generator creado con fixtures sanitizadas; falta
-  auditarlo antes de cualquier uso con dry-run privado real.
+  forma sanitizada como `CHECK`.
+- Controlled private lab insert policy docs-only creada.
+- Private insert manifest generator creado con fixtures sanitizadas y auditado.
+- Private insert manifest real generado manualmente por el usuario fuera del
+  repo y registrado solo de forma sanitizada como `CHECK`; falta gate de
+  revision antes de cualquier insert.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1023,12 +1034,14 @@ manifest futuro debe registrar `selectedItemsCount` 14, `deferredItemsCount` 4,
 identity mapping privado pendiente y payload excluido del repo.
 S4.6.5.17 crea `scripts/migration/generate-private-insert-manifest.mjs`, que
 convierte fixtures sanitizadas de dry-run report en manifest sanitizado con 14
-selected y 4 deferred. Todavia no se ejecuta contra el dry-run privado real.
+selected y 4 deferred. S4.6.5.18 audita el generador como local-only y sin modo
+insert. S4.6.5.19 registra el resultado sanitizado del manifest privado
+generado manualmente por el usuario fuera del repo: `CHECK`, 14 selected, 4
+deferred y 0 noGoReasons.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar el manifest generator antes
-de cualquier uso con dry-run privado real, sin crear SQL, sin ejecutar insert,
-sin
-datos reales en Git/chat, sin
-LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
-runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es disenar un gate de revision del
+manifest antes de cualquier insert, o disenar un script de insert controlado
+solo con fixtures sanitizadas. Todavia sin crear SQL, sin ejecutar insert, sin
+datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
+sin `.env.local`, sin runtime y sin Storage.

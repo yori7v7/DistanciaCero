@@ -154,9 +154,18 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   privadas ni secretos. No genera manifest real, no crea scripts y no inserta.
 - S4.6.5.17 crea `../../scripts/migration/generate-private-insert-manifest.mjs`
   y fixtures sanitizadas de dry-run report. El script genera manifest JSON
-  sanitizado con 14 selected/4 deferred desde fixtures mock. No lee dry-run
-  privado real, no genera manifest real de usuario, no toca Supabase y no
-  inserta.
+  sanitizado con 14 selected/4 deferred desde fixtures mock. En S4.6.5.17 no
+  lee dry-run privado real, no genera manifest real de usuario, no toca
+  Supabase y no inserta.
+- S4.6.5.18 audita el generador de manifest como local-only, built-ins de Node,
+  sin red, sin Supabase, sin `src`, sin `.env.local`, sin LocalStorage real,
+  sin escritura por defecto y sin modo insert.
+- S4.6.5.19 crea `PRIVATE_INSERT_MANIFEST_RESULT.md` para registrar el
+  resultado sanitizado del manifest privado generado manualmente por el usuario
+  fuera del repo. Resultado `CHECK`: 14 selected, 4 deferred, 0 noGoReasons y
+  `review_manifest_before_any_insert`. No incluye manifest privado, dry-run
+  privado, export privado, payload, Data URLs, URLs completas, rutas privadas ni
+  secretos.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -327,10 +336,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   sanitizado para el primer insert privado controlado. Define conteos,
   selected/deferred items, identity mapping privado pendiente, safety gates y
   rollback conceptual sin payload real.
+- `PRIVATE_INSERT_MANIFEST_RESULT.md`: resultado S4.6.5.19 del manifest
+  privado reportado de forma sanitizada. Registra `CHECK`, 14 selected, 4
+  deferred y 0 noGoReasons, sin payload privado ni secretos.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
-  sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y no debe
-  ejecutarse contra el dry-run privado real sin una auditoria futura.
+  sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
+  auditado antes de cualquier uso con dry-run privado real.
 - `../../scripts/migration/fixtures/mock-private-dry-run-result-*.json`:
   fixtures sanitizadas para el generador de manifest. No son reportes privados
   reales.
@@ -387,7 +399,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Auditar `generate-private-insert-manifest.mjs` antes de cualquier ejecucion con
-el dry-run privado real. Todavia sin manifest real de usuario, sin insert, sin
-datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
-sin `.env.local`, sin runtime y sin Storage.
+Disenar un gate de revision del manifest antes de cualquier insert, o disenar
+un script de insert controlado solo con fixtures sanitizadas. Todavia sin
+insert, sin SQL, sin datos reales en Git/chat, sin LocalStorage real leido por
+scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.

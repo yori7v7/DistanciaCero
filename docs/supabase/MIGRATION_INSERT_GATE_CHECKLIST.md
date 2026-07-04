@@ -170,10 +170,13 @@ Current next phase:
 - Private insert manifest format is documented in
   `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
 - Private insert manifest generator exists with sanitized fixtures only.
+- Private insert manifest result is documented in
+  `PRIVATE_INSERT_MANIFEST_RESULT.md` as sanitized `CHECK`: 14 selected, 4
+  deferred, 0 noGoReasons.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: audit `generate-private-insert-manifest.mjs` before any
-  private dry-run use.
+- Next suggested phase: design a manifest review gate before any insert, or
+  design a controlled lab insert script with sanitized fixtures only.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

@@ -15,11 +15,14 @@
   fixtures only.
 - Private insert manifest generator created: yes, in S4.6.5.17 with sanitized
   fixtures only.
+- Private insert manifest result documented: yes, in S4.6.5.19 as sanitized
+  `CHECK`.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
-- Real data exported: no.
-- Dry-run executed: no.
+- Real data exported by Codex/repo scripts: no.
+- Dry-run executed by Codex/repo scripts on real data: no.
+- Private manifest read by Codex: no.
 - Supabase touched: no.
 - Runtime touched: no.
 - App connection: none.
@@ -247,7 +250,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Audit `generate-private-insert-manifest.mjs` before any private dry-run use.
+- Design a manifest review gate before any insert; or design a controlled lab
+  insert script with sanitized fixtures only.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.
