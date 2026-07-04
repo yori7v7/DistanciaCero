@@ -822,6 +822,12 @@ Estado de S4.6.1:
   noGoReasons y `review_manifest_before_any_insert`. No incluye manifest
   privado, dry-run privado, export privado, payload completo, rutas privadas,
   Data URLs, URLs completas ni secretos.
+- S4.6.5.20 crea
+  `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md` como gate final
+  documental antes de cualquier insert privado controlado en el lab. Define
+  estado minimo, items permitidos/bloqueados, identity mapping, lab gate,
+  ejecucion futura, rollback, verificacion post-insert y NO-GO inmediatos. No
+  crea scripts, no crea SQL, no ejecuta insert y no toca Supabase.
 
 Validacion y rollback:
 
@@ -941,8 +947,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Controlled private lab insert policy docs-only creada.
 - Private insert manifest generator creado con fixtures sanitizadas y auditado.
 - Private insert manifest real generado manualmente por el usuario fuera del
-  repo y registrado solo de forma sanitizada como `CHECK`; falta gate de
-  revision antes de cualquier insert.
+  repo y registrado solo de forma sanitizada como `CHECK`.
+- Controlled private lab insert final gate docs-only creado; falta disenar
+  script de insert controlado con fixtures sanitizadas o dry-run/no-network.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1037,11 +1044,12 @@ convierte fixtures sanitizadas de dry-run report en manifest sanitizado con 14
 selected y 4 deferred. S4.6.5.18 audita el generador como local-only y sin modo
 insert. S4.6.5.19 registra el resultado sanitizado del manifest privado
 generado manualmente por el usuario fuera del repo: `CHECK`, 14 selected, 4
-deferred y 0 noGoReasons.
+deferred y 0 noGoReasons. S4.6.5.20 documenta el final gate obligatorio antes
+de cualquier insert privado controlado.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar un gate de revision del
-manifest antes de cualquier insert, o disenar un script de insert controlado
-solo con fixtures sanitizadas. Todavia sin crear SQL, sin ejecutar insert, sin
-datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
-sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es disenar un script de insert
+controlado solo con fixtures sanitizadas, o crear primero un script
+dry-run/no-network. Todavia sin crear SQL, sin ejecutar insert, sin datos reales
+en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+`.env.local`, sin runtime y sin Storage.

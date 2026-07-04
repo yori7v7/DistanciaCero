@@ -215,12 +215,13 @@ The future insert phase is `NO-GO` if:
 The insert manifest format is documented in
 `PRIVATE_INSERT_MANIFEST_FORMAT.md`. The local-only generator exists with
 sanitized fixtures only and has been audited. The sanitized private manifest
-result is recorded in `PRIVATE_INSERT_MANIFEST_RESULT.md`.
+result is recorded in `PRIVATE_INSERT_MANIFEST_RESULT.md`. The final gate is
+documented in `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
 
 Allowed next direction:
 
-- Design a manifest review gate before any insert; or design a controlled lab
-  insert script with sanitized fixtures only.
+- Design a controlled lab insert script with sanitized fixtures only; or create
+  a controlled insert script dry-run/no-network first.
 
 Still blocked:
 

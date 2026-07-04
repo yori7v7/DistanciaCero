@@ -94,8 +94,10 @@ app connection was used.
 
 Recommended next direction:
 
-- Design a manifest review gate before any insert; or
-- design a controlled lab insert script using sanitized fixtures only.
+- The final gate before insert is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
+- Next, design a controlled lab insert script using sanitized fixtures only; or
+- create a controlled insert script dry-run/no-network first.
 
 Still blocked:
 

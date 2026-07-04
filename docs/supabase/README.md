@@ -166,6 +166,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   `review_manifest_before_any_insert`. No incluye manifest privado, dry-run
   privado, export privado, payload, Data URLs, URLs completas, rutas privadas ni
   secretos.
+- S4.6.5.20 crea `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md` como gate final
+  documental obligatorio antes de cualquier insert privado controlado en lab.
+  Define checks minimos, items permitidos/bloqueados, identity mapping,
+  confirmacion de lab, rollback, verificacion futura y NO-GO inmediatos. No
+  crea scripts, no crea SQL, no ejecuta insert y no toca Supabase.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -339,6 +344,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `PRIVATE_INSERT_MANIFEST_RESULT.md`: resultado S4.6.5.19 del manifest
   privado reportado de forma sanitizada. Registra `CHECK`, 14 selected, 4
   deferred y 0 noGoReasons, sin payload privado ni secretos.
+- `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`: gate S4.6.5.20 obligatorio
+  antes de cualquier insert privado controlado. Bloquea insert sin GO explicito,
+  identity mapping privado, lab desechable confirmado, checks verdes y rollback
+  decidido.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
   sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
@@ -399,7 +408,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar un gate de revision del manifest antes de cualquier insert, o disenar
-un script de insert controlado solo con fixtures sanitizadas. Todavia sin
-insert, sin SQL, sin datos reales en Git/chat, sin LocalStorage real leido por
-scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+Disenar un script de insert controlado solo con fixtures sanitizadas, o crear
+primero un script dry-run/no-network. Todavia sin insert, sin SQL, sin datos
+reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+`.env.local`, sin runtime y sin Storage.

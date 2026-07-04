@@ -17,6 +17,7 @@
   fixtures only.
 - Private insert manifest result documented: yes, in S4.6.5.19 as sanitized
   `CHECK`.
+- Controlled private lab insert final gate documented: yes, in S4.6.5.20.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -250,8 +251,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Design a manifest review gate before any insert; or design a controlled lab
-  insert script with sanitized fixtures only.
+- Design a controlled lab insert script with sanitized fixtures only; or create
+  a controlled insert script dry-run/no-network first.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

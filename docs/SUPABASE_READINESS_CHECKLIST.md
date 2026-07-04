@@ -262,6 +262,11 @@ Estado verificado post-S4.5.1:
       noGoReasons y `review_manifest_before_any_insert`. No incluye manifest
       privado, dry-run privado, export privado, payload, rutas, Data URLs,
       URLs completas ni secretos.
+- [x] S4.6.5.20 documenta
+      `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md` como gate
+      final obligatorio antes de cualquier insert privado controlado en el lab.
+      No crea scripts, no crea SQL, no ejecuta insert, no toca Supabase, no
+      toca Storage y mantiene la app desconectada.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -716,9 +721,14 @@ la siguiente.
   del repo. Resultado `CHECK`, `selectedItemsCount` 14,
   `deferredItemsCount` 4, `noGoReasonsCount` 0 y siguiente accion
   `review_manifest_before_any_insert`.
-- Salida futura: disenar un gate de revision del manifest antes de cualquier
-  insert, o disenar un script de insert controlado solo con fixtures
-  sanitizadas.
+- Estado S4.6.5.20:
+  `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md` define el gate
+  final: repo limpio, checks verdes, private export/dry-run/manifest sin
+  no-go reasons, 14 selected, 4 deferred, identity mapping privado confirmado,
+  lab desechable confirmado y GO explicito del usuario antes de cualquier
+  insert.
+- Salida futura: disenar un script de insert controlado solo con fixtures
+  sanitizadas, o crear primero un script dry-run/no-network.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -859,7 +869,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Insert manifest generator with sanitized fixtures only.
 - [x] Private insert manifest generator audit.
 - [x] Private insert manifest result sanitized docs.
-- [ ] Manifest review gate before any insert.
+- [x] Controlled private lab insert final gate docs-only.
+- [ ] Controlled insert script design or fixture-only dry-run script.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

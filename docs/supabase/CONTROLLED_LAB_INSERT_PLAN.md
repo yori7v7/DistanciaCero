@@ -163,11 +163,13 @@ Current next phase:
 - Private insert manifest result is documented in
   `PRIVATE_INSERT_MANIFEST_RESULT.md` as sanitized `CHECK`: 14 selected, 4
   deferred, 0 noGoReasons.
+- Controlled private lab insert final gate is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
 - Recommended first private lab insert scope is 14 clean `content_items`.
 - `blackHoleGallery` and `playlist` are deferred until Storage/media and
   playlist source policies exist.
-- Next suggested phase: design a manifest review gate before any insert, or
-  design a controlled lab insert script with sanitized fixtures only.
+- Next suggested phase: design a controlled lab insert script with sanitized
+  fixtures only, or create a controlled insert script dry-run/no-network first.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

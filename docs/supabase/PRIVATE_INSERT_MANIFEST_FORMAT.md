@@ -270,6 +270,7 @@ Before generating or using any real manifest:
 - Private dry-run is `CHECK` or `PASS` with zero no-go reasons.
 - Controlled insert policy is approved.
 - Sanitized manifest is reviewed.
+- Final gate in `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md` is approved.
 - Private identity mapping is confirmed.
 - User gives explicit GO.
 - Disposable lab is confirmed.
@@ -299,8 +300,8 @@ Manifest generation or use is `NO-GO` if:
 
 Next recommended phase:
 
-- Design a manifest review gate before any insert; or design a controlled lab
-  insert script with sanitized fixtures only.
+- Design a controlled lab insert script with sanitized fixtures only; or create
+  a controlled insert script dry-run/no-network first.
 
 Still blocked:
 
