@@ -177,10 +177,12 @@ Current next phase:
   `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
 - Controlled private lab insert script design is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`.
+- Controlled insert preflight/no-network script exists with sanitized fixtures
+  only.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: create the controlled insert preflight/no-network
-  script with sanitized fixtures.
+- Next suggested phase: audit the controlled insert preflight/no-network script
+  before any private manifest use.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

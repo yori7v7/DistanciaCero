@@ -274,6 +274,11 @@ Estado verificado post-S4.5.1:
       14 `content_items`, exclusion de media/playlist, modos preflight/no-network
       y lab insert, reporte sanitizado, rollback y NO-GO. No crea scripts, no
       crea SQL, no ejecuta insert y no toca Supabase.
+- [x] S4.6.5.22 crea `scripts/migration/preflight-private-lab-insert.mjs` y
+      fixtures sanitizadas para validar manifest + identity mapping en modo
+      preflight/no-network. Resultado esperado: fixture buena PASS exit 0,
+      mapping missing NO-GO exit 1, selected media NO-GO exit 1. No lee
+      manifest privado real, no toca Supabase, no crea SQL y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -739,7 +744,13 @@ la siguiente.
   diseno del futuro script `scripts/migration/insert-private-lab-content-items.mjs`.
   La primera implementacion deberia ser preflight/no-network con fixtures
   sanitizadas, sin Supabase ni insert.
-- Salida futura: crear el script preflight/no-network con fixtures sanitizadas.
+- Estado S4.6.5.22:
+  `scripts/migration/preflight-private-lab-insert.mjs` existe como
+  preflight/no-network con fixtures sanitizadas. Requiere flags explicitos,
+  valida manifest + identity mapping, rechaza URLs remotas y no toca Supabase
+  ni inserta.
+- Salida futura: auditar el preflight/no-network script antes de cualquier uso
+  con manifest privado real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -882,7 +893,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert manifest result sanitized docs.
 - [x] Controlled private lab insert final gate docs-only.
 - [x] Controlled private lab insert script design docs-only.
-- [ ] Controlled insert preflight/no-network script with sanitized fixtures.
+- [x] Controlled insert preflight/no-network script with sanitized fixtures.
+- [ ] Controlled insert preflight/no-network script audit.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

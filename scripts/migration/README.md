@@ -3,8 +3,8 @@
 ## Status
 
 - Scope: mock-only plus private local export validator, private dry-run
-  normalizer and private insert manifest generator tested only with sanitized
-  fixtures.
+  normalizer, private insert manifest generator and controlled insert preflight
+  no-network script tested only with sanitized fixtures.
 - Network: none.
 - Supabase: none.
 - `.env.local`: not read.
@@ -45,6 +45,13 @@ data and does not print payloads, Data URLs, full URLs or private paths. In-repo
 tests use sanitized fixtures only; do not run it against the private real
 dry-run result until a separate review phase approves that.
 
+`preflight-private-lab-insert.mjs` validates a sanitized private insert
+manifest plus a sanitized identity mapping before any future controlled insert.
+It is preflight/no-network only: it rejects remote URLs, requires explicit
+confirmation flags, does not write files, does not touch Supabase and does not
+insert data. In-repo tests use sanitized fixtures only; do not run it against a
+private real manifest until a separate review phase approves that.
+
 Run examples:
 
 ```powershell
@@ -64,6 +71,7 @@ node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtur
 node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtures/mock-local-export-check-media-playlist.json
 node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-check.json
 node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-nogo.json
+node scripts/migration/preflight-private-lab-insert.mjs scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json --confirm-lab-disposable --confirm-no-production --confirm-no-storage --confirm-no-insert
 ```
 
 NPM shortcuts:
@@ -90,6 +98,10 @@ Expected fixture results:
 - `mock-local-export-check-media-playlist.json`: `CHECK`, exit `2`.
 - `mock-private-dry-run-result-check.json`: `CHECK`, exit `2`.
 - `mock-private-dry-run-result-nogo.json`: `NO-GO`, exit `1`.
+- `mock-private-insert-manifest-check.json` with confirmed identity mapping:
+  `PASS`, exit `0`.
+- `mock-private-identity-mapping-missing.json`: `NO-GO`, exit `1`.
+- `mock-private-insert-manifest-nogo-selected-media.json`: `NO-GO`, exit `1`.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 
@@ -103,6 +115,8 @@ The smoke runner should exit `0` when all expected mock-only exit codes match.
   separate review phase approves it.
 - Do not run the private insert manifest generator on a private real dry-run
   result until a separate review phase approves it.
+- Do not run the controlled insert preflight script on a private real manifest
+  until a separate review phase approves it.
 - Do not add real intimate content to fixtures.
 - Do not use Supabase URL, keys, tokens, passwords, service-role or project refs.
 - Do not read `.env.local`.

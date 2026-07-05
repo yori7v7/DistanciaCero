@@ -1,0 +1,292 @@
+{
+  "manifestVersion": "private-insert-manifest-v1",
+  "generatedAt": "2026-07-05T00:00:00.000Z",
+  "manifestStatus": "CHECK",
+  "selectedItemsCount": 14,
+  "deferredItemsCount": 4,
+  "noGoReasonsCount": 0,
+  "source": {
+    "dryRunReportVersion": "private-local-export-dry-run-v1",
+    "validationStatus": "CHECK",
+    "dryRunStatus": "CHECK",
+    "inputFile": "<outside-repository>"
+  },
+  "policy": {
+    "policyName": "controlled_private_lab_insert_policy",
+    "selectedMode": "clean_content_items_only",
+    "labOnly": true,
+    "productionAllowed": false
+  },
+  "target": {
+    "environment": "disposable_lab",
+    "tables": ["content_items"],
+    "excludedTables": ["media_assets", "storage", "content_events"]
+  },
+  "counts": {
+    "sourceTotalItems": 18,
+    "selectedItemsCount": 14,
+    "deferredItemsCount": 4,
+    "selectedByCollection": {
+      "monthlyLetters": 2,
+      "openWhenLetters": 2,
+      "reasons": 2,
+      "promises": 2,
+      "importantDates": 2,
+      "futureDreams": 2,
+      "timeline": 2
+    },
+    "deferredByCollection": {
+      "blackHoleGallery": 2,
+      "playlist": 2
+    }
+  },
+  "identityMapping": {
+    "local-yori": "<private_mapping_required>",
+    "local-ale": "<private_mapping_required>",
+    "status": "pending_private_resolution"
+  },
+  "selectedItems": [
+    {
+      "manifestItemId": "manifest-item-001",
+      "sourceCollection": "monthlyLetters",
+      "targetTable": "content_items",
+      "remoteType": "monthly_letter",
+      "localRef": "mock-monthly-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-002",
+      "sourceCollection": "monthlyLetters",
+      "targetTable": "content_items",
+      "remoteType": "monthly_letter",
+      "localRef": "mock-monthly-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-003",
+      "sourceCollection": "openWhenLetters",
+      "targetTable": "content_items",
+      "remoteType": "open_when_letter",
+      "localRef": "mock-open-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-004",
+      "sourceCollection": "openWhenLetters",
+      "targetTable": "content_items",
+      "remoteType": "open_when_letter",
+      "localRef": "mock-open-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-005",
+      "sourceCollection": "reasons",
+      "targetTable": "content_items",
+      "remoteType": "reason",
+      "localRef": "mock-reason-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-006",
+      "sourceCollection": "reasons",
+      "targetTable": "content_items",
+      "remoteType": "reason",
+      "localRef": "mock-reason-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-007",
+      "sourceCollection": "promises",
+      "targetTable": "content_items",
+      "remoteType": "promise",
+      "localRef": "mock-promise-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-008",
+      "sourceCollection": "promises",
+      "targetTable": "content_items",
+      "remoteType": "promise",
+      "localRef": "mock-promise-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-009",
+      "sourceCollection": "importantDates",
+      "targetTable": "content_items",
+      "remoteType": "important_date",
+      "localRef": "mock-date-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-010",
+      "sourceCollection": "importantDates",
+      "targetTable": "content_items",
+      "remoteType": "important_date",
+      "localRef": "mock-date-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-011",
+      "sourceCollection": "futureDreams",
+      "targetTable": "content_items",
+      "remoteType": "future_dream",
+      "localRef": "mock-dream-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-012",
+      "sourceCollection": "futureDreams",
+      "targetTable": "content_items",
+      "remoteType": "future_dream",
+      "localRef": "mock-dream-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-013",
+      "sourceCollection": "timeline",
+      "targetTable": "content_items",
+      "remoteType": "timeline_event",
+      "localRef": "mock-timeline-001",
+      "identityKey": "local-yori",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    },
+    {
+      "manifestItemId": "manifest-item-014",
+      "sourceCollection": "timeline",
+      "targetTable": "content_items",
+      "remoteType": "timeline_event",
+      "localRef": "mock-timeline-002",
+      "identityKey": "local-ale",
+      "hasPayload": true,
+      "payloadIncludedInManifest": false,
+      "status": "selected_for_lab_insert",
+      "warningCodes": [],
+      "rollbackGroup": "<future_migration_run_id>"
+    }
+  ],
+  "deferredItems": [
+    {
+      "sourceCollection": "blackHoleGallery",
+      "targetTable": "media_assets",
+      "remoteType": "gallery_item",
+      "localRef": "mock-gallery-001",
+      "status": "deferred",
+      "reasonCode": "media_pending_storage",
+      "requiredFutureDecision": "storage_policy_and_upload_phase_required",
+      "insertAllowedNow": false
+    },
+    {
+      "sourceCollection": "blackHoleGallery",
+      "targetTable": "media_assets",
+      "remoteType": "gallery_item",
+      "localRef": "mock-gallery-002",
+      "status": "deferred",
+      "reasonCode": "media_pending_storage",
+      "requiredFutureDecision": "storage_policy_and_upload_phase_required",
+      "insertAllowedNow": false
+    },
+    {
+      "sourceCollection": "playlist",
+      "targetTable": "content_items",
+      "remoteType": "playlist_item",
+      "localRef": "mock-playlist-001",
+      "status": "deferred",
+      "reasonCode": "playlist_source_pending_review",
+      "requiredFutureDecision": "playlist_source_policy_required",
+      "insertAllowedNow": false
+    },
+    {
+      "sourceCollection": "playlist",
+      "targetTable": "content_items",
+      "remoteType": "playlist_item",
+      "localRef": "mock-playlist-002",
+      "status": "deferred",
+      "reasonCode": "playlist_source_pending_review",
+      "requiredFutureDecision": "playlist_source_policy_required",
+      "insertAllowedNow": false
+    }
+  ],
+  "safety": {
+    "noSupabaseTouched": true,
+    "noInsertExecuted": true,
+    "noPayloadIncluded": true,
+    "noDataUrlsIncluded": true,
+    "noPrivatePathsIncluded": true,
+    "requiresExplicitGoBeforeInsert": true,
+    "labOnly": true,
+    "productionAllowed": false
+  },
+  "rollback": {
+    "rollbackStrategy": "lab_reset_or_future_migration_run_id",
+    "migrationRunId": "<future_migration_run_id>",
+    "deleteByMigrationRunIdImplemented": false
+  },
+  "noGoReasons": [],
+  "nextRecommendedAction": "review_manifest_before_any_insert",
+  "exitCode": 2
+}

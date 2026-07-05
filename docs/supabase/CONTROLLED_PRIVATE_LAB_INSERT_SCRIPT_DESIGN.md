@@ -3,7 +3,9 @@
 ## Status
 
 - Status: documentary design.
-- Script created: no.
+- Preflight/no-network script created: yes, in S4.6.5.22 with sanitized
+  fixtures only.
+- Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
 - Supabase touched: no.
@@ -11,9 +13,10 @@
 - Production allowed: no.
 - App connection: none.
 
-This document designs the future controlled private lab insert script. It does
-not create that script, create SQL, execute an insert, touch Supabase, touch
-Storage or connect the app.
+This document designs the future controlled private lab insert script. S4.6.5.22
+creates only the preflight/no-network script with sanitized fixtures. It still
+does not create a lab insert script, create SQL, execute an insert, touch
+Supabase, touch Storage or connect the app.
 
 ## Purpose
 
@@ -175,8 +178,9 @@ emails.
 
 Implementation order:
 
-- First implement preflight/no-network with fixtures.
-- Then audit it.
+- Preflight/no-network with fixtures exists in
+  `scripts/migration/preflight-private-lab-insert.mjs`.
+- Next audit it.
 - Only after that consider lab insert mode.
 
 ## Required Pre-Insert Summary
@@ -258,10 +262,9 @@ The future script is `NO-GO` if:
 
 Recommended sequence:
 
-1. Create controlled insert preflight/no-network script with sanitized fixtures.
-2. Audit the preflight script.
-3. Design private config and mapping workflow.
-4. Only with explicit GO, consider lab insert script execution.
+1. Audit the controlled insert preflight/no-network script.
+2. Design private config and mapping workflow.
+3. Only with explicit GO, consider lab insert script execution.
 
 Still blocked:
 

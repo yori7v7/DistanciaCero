@@ -186,8 +186,9 @@ Recommended next direction:
 
 - `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` documents the future script
   design.
-- Next, create the controlled insert preflight/no-network script with sanitized
-  fixtures.
+- `scripts/migration/preflight-private-lab-insert.mjs` exists with sanitized
+  fixtures only.
+- Next, audit the controlled insert preflight/no-network script.
 
 Still blocked:
 

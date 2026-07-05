@@ -836,6 +836,11 @@ Estado de S4.6.1:
   seguridad de credenciales, modos preflight/no-network y lab insert, reporte
   sanitizado, rollback y NO-GO. No crea scripts, no crea SQL, no ejecuta insert
   y no toca Supabase.
+- S4.6.5.22 crea `scripts/migration/preflight-private-lab-insert.mjs` y
+  fixtures sanitizadas para validar manifest + identity mapping en modo
+  preflight/no-network. Requiere flags explicitos de lab/no-production/no-storage/no-insert,
+  rechaza URLs remotas, no escribe archivos, no toca Supabase y no inserta
+  datos.
 
 Validacion y rollback:
 
@@ -957,8 +962,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private insert manifest real generado manualmente por el usuario fuera del
   repo y registrado solo de forma sanitizada como `CHECK`.
 - Controlled private lab insert final gate docs-only creado.
-- Controlled private lab insert script design docs-only creado; falta crear un
-  preflight/no-network script con fixtures sanitizadas.
+- Controlled private lab insert script design docs-only creado.
+- Controlled insert preflight/no-network script creado con fixtures
+  sanitizadas; falta auditarlo antes de cualquier uso con manifest privado real.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1056,10 +1062,11 @@ generado manualmente por el usuario fuera del repo: `CHECK`, 14 selected, 4
 deferred y 0 noGoReasons. S4.6.5.20 documenta el final gate obligatorio antes
 de cualquier insert privado controlado. S4.6.5.21 documenta el diseno del
 futuro script de insert controlado, empezando por preflight/no-network con
-fixtures sanitizadas.
+fixtures sanitizadas. S4.6.5.22 crea ese preflight/no-network con fixtures
+sanitizadas.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es crear el script preflight/no-network
-con fixtures sanitizadas. Todavia sin crear SQL, sin ejecutar insert, sin datos
-reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
-`.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es auditar el preflight/no-network
+script antes de cualquier uso con manifest privado real. Todavia sin crear SQL,
+sin ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real leido
+por scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.
