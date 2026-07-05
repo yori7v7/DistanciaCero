@@ -828,6 +828,14 @@ Estado de S4.6.1:
   estado minimo, items permitidos/bloqueados, identity mapping, lab gate,
   ejecucion futura, rollback, verificacion post-insert y NO-GO inmediatos. No
   crea scripts, no crea SQL, no ejecuta insert y no toca Supabase.
+- S4.6.5.21 crea
+  `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` como diseno
+  docs-only del futuro script `scripts/migration/insert-private-lab-content-items.mjs`.
+  Define entradas privadas futuras, gates obligatorios, primer scope de 14
+  `content_items`, exclusion de media/playlist, mapping remoto conceptual,
+  seguridad de credenciales, modos preflight/no-network y lab insert, reporte
+  sanitizado, rollback y NO-GO. No crea scripts, no crea SQL, no ejecuta insert
+  y no toca Supabase.
 
 Validacion y rollback:
 
@@ -948,8 +956,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private insert manifest generator creado con fixtures sanitizadas y auditado.
 - Private insert manifest real generado manualmente por el usuario fuera del
   repo y registrado solo de forma sanitizada como `CHECK`.
-- Controlled private lab insert final gate docs-only creado; falta disenar
-  script de insert controlado con fixtures sanitizadas o dry-run/no-network.
+- Controlled private lab insert final gate docs-only creado.
+- Controlled private lab insert script design docs-only creado; falta crear un
+  preflight/no-network script con fixtures sanitizadas.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1045,11 +1054,12 @@ selected y 4 deferred. S4.6.5.18 audita el generador como local-only y sin modo
 insert. S4.6.5.19 registra el resultado sanitizado del manifest privado
 generado manualmente por el usuario fuera del repo: `CHECK`, 14 selected, 4
 deferred y 0 noGoReasons. S4.6.5.20 documenta el final gate obligatorio antes
-de cualquier insert privado controlado.
+de cualquier insert privado controlado. S4.6.5.21 documenta el diseno del
+futuro script de insert controlado, empezando por preflight/no-network con
+fixtures sanitizadas.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar un script de insert
-controlado solo con fixtures sanitizadas, o crear primero un script
-dry-run/no-network. Todavia sin crear SQL, sin ejecutar insert, sin datos reales
-en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+desarrollo. La siguiente fase recomendada es crear el script preflight/no-network
+con fixtures sanitizadas. Todavia sin crear SQL, sin ejecutar insert, sin datos
+reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
 `.env.local`, sin runtime y sin Storage.

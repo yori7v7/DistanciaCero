@@ -184,8 +184,10 @@ Insert planning or execution is immediately blocked if any of these are true:
 
 Recommended next direction:
 
-- design a controlled insert script with sanitized fixtures only; or
-- create a controlled insert script dry-run/no-network first.
+- `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` documents the future script
+  design.
+- Next, create the controlled insert preflight/no-network script with sanitized
+  fixtures.
 
 Still blocked:
 

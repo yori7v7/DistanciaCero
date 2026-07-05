@@ -96,8 +96,10 @@ Recommended next direction:
 
 - The final gate before insert is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
-- Next, design a controlled lab insert script using sanitized fixtures only; or
-- create a controlled insert script dry-run/no-network first.
+- The future script design is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`.
+- Next, create the controlled insert preflight/no-network script with sanitized
+  fixtures.
 
 Still blocked:
 

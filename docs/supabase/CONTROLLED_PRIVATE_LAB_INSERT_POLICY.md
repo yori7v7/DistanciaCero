@@ -217,11 +217,13 @@ The insert manifest format is documented in
 sanitized fixtures only and has been audited. The sanitized private manifest
 result is recorded in `PRIVATE_INSERT_MANIFEST_RESULT.md`. The final gate is
 documented in `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
+The future script design is documented in
+`CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`.
 
 Allowed next direction:
 
-- Design a controlled lab insert script with sanitized fixtures only; or create
-  a controlled insert script dry-run/no-network first.
+- Create the controlled insert preflight/no-network script with sanitized
+  fixtures.
 
 Still blocked:
 

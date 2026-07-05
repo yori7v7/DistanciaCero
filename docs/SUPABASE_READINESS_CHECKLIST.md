@@ -267,6 +267,13 @@ Estado verificado post-S4.5.1:
       final obligatorio antes de cualquier insert privado controlado en el lab.
       No crea scripts, no crea SQL, no ejecuta insert, no toca Supabase, no
       toca Storage y mantiene la app desconectada.
+- [x] S4.6.5.21 documenta
+      `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` como
+      diseno docs-only del futuro script de insert controlado en lab. Define
+      script tentativo, entradas privadas futuras, gates obligatorios, scope de
+      14 `content_items`, exclusion de media/playlist, modos preflight/no-network
+      y lab insert, reporte sanitizado, rollback y NO-GO. No crea scripts, no
+      crea SQL, no ejecuta insert y no toca Supabase.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -727,8 +734,12 @@ la siguiente.
   no-go reasons, 14 selected, 4 deferred, identity mapping privado confirmado,
   lab desechable confirmado y GO explicito del usuario antes de cualquier
   insert.
-- Salida futura: disenar un script de insert controlado solo con fixtures
-  sanitizadas, o crear primero un script dry-run/no-network.
+- Estado S4.6.5.21:
+  `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` define el
+  diseno del futuro script `scripts/migration/insert-private-lab-content-items.mjs`.
+  La primera implementacion deberia ser preflight/no-network con fixtures
+  sanitizadas, sin Supabase ni insert.
+- Salida futura: crear el script preflight/no-network con fixtures sanitizadas.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -870,7 +881,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert manifest generator audit.
 - [x] Private insert manifest result sanitized docs.
 - [x] Controlled private lab insert final gate docs-only.
-- [ ] Controlled insert script design or fixture-only dry-run script.
+- [x] Controlled private lab insert script design docs-only.
+- [ ] Controlled insert preflight/no-network script with sanitized fixtures.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

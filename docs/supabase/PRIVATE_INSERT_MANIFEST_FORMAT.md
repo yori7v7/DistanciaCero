@@ -271,6 +271,8 @@ Before generating or using any real manifest:
 - Controlled insert policy is approved.
 - Sanitized manifest is reviewed.
 - Final gate in `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md` is approved.
+- Script design in `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` is
+  reviewed.
 - Private identity mapping is confirmed.
 - User gives explicit GO.
 - Disposable lab is confirmed.
@@ -300,8 +302,8 @@ Manifest generation or use is `NO-GO` if:
 
 Next recommended phase:
 
-- Design a controlled lab insert script with sanitized fixtures only; or create
-  a controlled insert script dry-run/no-network first.
+- Create the controlled insert preflight/no-network script with sanitized
+  fixtures.
 
 Still blocked:
 

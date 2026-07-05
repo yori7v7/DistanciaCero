@@ -18,6 +18,7 @@
 - Private insert manifest result documented: yes, in S4.6.5.19 as sanitized
   `CHECK`.
 - Controlled private lab insert final gate documented: yes, in S4.6.5.20.
+- Controlled private lab insert script design documented: yes, in S4.6.5.21.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -81,6 +82,7 @@ Implemented mock-only location:
 - `scripts/migration/validate-private-local-export.mjs`.
 - `scripts/migration/dry-run-private-local-export.mjs`.
 - `scripts/migration/generate-private-insert-manifest.mjs`.
+- Future only: `scripts/migration/insert-private-lab-content-items.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
@@ -251,8 +253,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Design a controlled lab insert script with sanitized fixtures only; or create
-  a controlled insert script dry-run/no-network first.
+- Create the controlled insert preflight/no-network script with sanitized
+  fixtures.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

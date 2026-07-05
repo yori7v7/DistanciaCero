@@ -165,11 +165,13 @@ Current next phase:
   deferred, 0 noGoReasons.
 - Controlled private lab insert final gate is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
+- Controlled private lab insert script design is documented in
+  `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`.
 - Recommended first private lab insert scope is 14 clean `content_items`.
 - `blackHoleGallery` and `playlist` are deferred until Storage/media and
   playlist source policies exist.
-- Next suggested phase: design a controlled lab insert script with sanitized
-  fixtures only, or create a controlled insert script dry-run/no-network first.
+- Next suggested phase: create the controlled insert preflight/no-network
+  script with sanitized fixtures.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

@@ -171,6 +171,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   Define checks minimos, items permitidos/bloqueados, identity mapping,
   confirmacion de lab, rollback, verificacion futura y NO-GO inmediatos. No
   crea scripts, no crea SQL, no ejecuta insert y no toca Supabase.
+- S4.6.5.21 crea `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` como diseno
+  docs-only del futuro script de insert controlado en lab. Define el script
+  tentativo, gates, scope de 14 `content_items`, exclusion de media/playlist,
+  modos preflight/no-network y lab insert, reporte sanitizado y rollback. No
+  crea scripts, no crea SQL, no ejecuta insert y no toca Supabase.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -348,6 +353,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   antes de cualquier insert privado controlado. Bloquea insert sin GO explicito,
   identity mapping privado, lab desechable confirmado, checks verdes y rollback
   decidido.
+- `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`: diseno S4.6.5.21 del
+  futuro script `../../scripts/migration/insert-private-lab-content-items.mjs`.
+  La primera implementacion recomendada es preflight/no-network con fixtures
+  sanitizadas, sin Supabase ni insert.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
   sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
@@ -408,7 +417,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar un script de insert controlado solo con fixtures sanitizadas, o crear
-primero un script dry-run/no-network. Todavia sin insert, sin SQL, sin datos
-reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
-`.env.local`, sin runtime y sin Storage.
+Crear el script preflight/no-network con fixtures sanitizadas para el insert
+controlado. Todavia sin insert, sin SQL, sin datos reales en Git/chat, sin
+LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
+runtime y sin Storage.
