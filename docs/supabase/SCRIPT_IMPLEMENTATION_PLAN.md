@@ -35,6 +35,8 @@
 - Private insert payload persistence workflow documented: yes, in S4.6.5.33.
 - Private insert payload optional output write implemented: yes, in S4.6.5.34
   with sanitized fixtures only.
+- Private insert payload persistence result documented: yes, in S4.6.5.36 as
+  sanitized `PASS`, with output outside the repo and no payload included.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.

@@ -196,15 +196,18 @@ Current next phase:
 - S4.6.5.32 records the sanitized private payload builder result as `PASS`: 14
   selected, 14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons,
   identity mapping confirmed, no Supabase and no insert.
-- S4.6.5.33 documents private payload persistence/review. Payload real is still
-  not generated, and any future output file must stay outside the repo.
+- S4.6.5.33 documents private payload persistence/review. Any output file must
+  stay outside the repo.
 - S4.6.5.34 adds optional output writing to the payload builder with sanitized
-  fixtures only. Output inside the repo is blocked; no private real payload has
-  been generated.
+  fixtures only. Output inside the repo is blocked.
+- S4.6.5.36 records the sanitized private payload persistence result as `PASS`:
+  14 selected, 14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons,
+  identity mapping confirmed, output written outside the repo, no Supabase, no
+  Storage and no insert.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: audit optional private output writing before any
-  private use.
+- Next suggested phase: design a controlled lab insert executor workflow before
+  any real Supabase insert.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

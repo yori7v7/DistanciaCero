@@ -202,7 +202,10 @@ Recommended next direction:
 - The private payload persistence workflow is documented in
   `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`.
 - Optional private output writing exists with sanitized fixtures only.
-- Next, audit optional private output writing before any private use.
+- The sanitized private payload persistence result is recorded in
+  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
+- Next, design the controlled lab insert executor workflow before any real
+  Supabase insert.
 
 Still blocked:
 

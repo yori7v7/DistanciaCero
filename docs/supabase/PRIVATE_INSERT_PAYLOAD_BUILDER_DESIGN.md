@@ -4,7 +4,9 @@
 
 - Status: mock implementation created after design.
 - Script created: yes, `../../scripts/migration/build-private-insert-payload.mjs`.
-- Real payload generated: no.
+- Real payload generated manually outside the repo later: yes, recorded only as
+  a sanitized result in `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
+- Real payload included in repo or read by Codex: no.
 - Insert executed: no.
 - Supabase touched: no.
 - Storage touched: no.
@@ -12,9 +14,10 @@
 - App connection: none.
 
 This document designed the private payload builder. S4.6.5.26 created the
-mock-only implementation with sanitized fixtures. It still does not generate
-private JSON, execute an insert, touch Supabase, touch Storage or connect the
-app.
+mock-only implementation with sanitized fixtures. S4.6.5.36 later records that
+the user generated private JSON outside the repo and reported only a sanitized
+summary. The builder result still does not execute an insert, touch Supabase,
+touch Storage or connect the app.
 
 ## Purpose
 
@@ -311,6 +314,19 @@ The output file is lab-only/not-production and contains only the 14
 `outputWritten` and `outputFile: <outside-repository>`; it does not print the
 payload.
 
+## S4.6.5.36 Sanitized Persistence Result
+
+S4.6.5.36 records the sanitized result in
+`PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`. The user ran the builder
+manually against private files outside the repo with `--out` and
+`--confirm-write-private-output`. The reported result is `PASS`: 14 selected,
+14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons, identity
+mapping confirmed, `outputWritten: true`, `outputFile: <outside-repository>`,
+no network, no Supabase, no Storage and no insert.
+
+The private payload itself is not documented, not read by Codex, not committed
+and not authorized for insert.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -342,7 +358,7 @@ Recommended next direction:
 
 Still blocked:
 
-- No real payload.
+- No real payload in repo, docs, chat or Codex.
 - No Supabase touch.
 - No insert.
 - No SQL creation or execution.

@@ -13,6 +13,8 @@
 - Private payload persistence workflow documented: yes, in S4.6.5.33.
 - Private payload optional output write implemented: yes, in S4.6.5.34 with
   sanitized fixtures only.
+- Private payload persistence result documented: yes, in S4.6.5.36 as sanitized
+  `PASS`; the private payload remains outside the repo.
 - Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -202,8 +204,11 @@ Implementation order:
   optional private payload file workflow.
 - Optional private payload output writing now exists with sanitized fixtures
   only.
-- Only after output-write audit and private payload review should lab insert
-  mode be considered.
+- The sanitized private payload persistence result is documented in
+  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`; the payload itself remains
+  outside the repo and unread by Codex.
+- Only after a new executor workflow design/audit should lab insert mode be
+  considered.
 
 ## Required Pre-Insert Summary
 

@@ -11,7 +11,9 @@
 - Private identity mapping included in repo: no.
 - Private identity mapping read by Codex: no.
 - Private payload included in repo: no.
-- Persistent private payload file generated or reported: no.
+- Persistent private payload file generated or reported in this phase: no.
+- Later persistent private payload result: documented separately in
+  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
 - Supabase touched: no.
 - Network used: no.
 - Insert executed: no.
@@ -93,8 +95,10 @@ Media and playlist still require a future Storage/source policy phase.
 - The builder did not store private payload rows in the repo.
 - The builder did not touch Supabase.
 - The builder did not execute an insert.
-- This result confirms that the conceptual payload build is ready for a future
+- This result confirms that the conceptual payload build was ready for a future
   private persistence/review or controlled insert phase.
+- S4.6.5.36 later records a sanitized persistence result, without including the
+  private payload or private paths.
 - This result does not authorize automatic insert.
 
 ## Pending Before Any Real Insert

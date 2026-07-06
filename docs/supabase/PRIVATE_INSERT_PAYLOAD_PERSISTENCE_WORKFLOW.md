@@ -4,7 +4,10 @@
 
 - Status: documentary design.
 - Optional fixture implementation: yes, in S4.6.5.34.
-- Real payload generated: no.
+- Real payload generated manually outside the repo: yes, recorded only as a
+  sanitized result in `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
+- Real payload included in repo: no.
+- Real payload read by Codex: no.
 - Script modified: yes, with optional `--out` writing tested only with
   sanitized fixtures.
 - Insert executed: no.
@@ -15,8 +18,10 @@
 
 This document defines a workflow for saving a private insert payload JSON
 outside the repository. S4.6.5.34 adds optional `--out` support to the builder
-and tests it only with sanitized fixtures. It does not generate a real private
-payload, read private files, touch Supabase, touch Storage or execute an insert.
+and tests it only with sanitized fixtures. S4.6.5.36 records that the user later
+generated the private payload outside the repo and reported only a sanitized
+summary. The payload itself remains private and outside the repo. This workflow
+does not touch Supabase, touch Storage or execute an insert.
 
 ## Purpose
 
@@ -166,13 +171,26 @@ Any real insert remains a separate future phase and requires:
 - Do not delete remote data in this phase.
 - Do not reset anything in this phase.
 
+## S4.6.5.36 Sanitized Persistence Result
+
+S4.6.5.36 records the private payload persistence result in
+`PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`. The reported status is `PASS`:
+14 selected items, 14 payload rows, 4 deferred items, 0 missing local refs,
+0 noGoReasons, identity mapping confirmed, `outputWritten: true`,
+`outputFile: <outside-repository>`, no network, no Supabase, no Storage and no
+insert.
+
+The private payload is sensitive. It must stay outside the repo, must not be
+pasted in chat, must not be opened by Codex and must not be used for insert
+without a future explicit phase.
+
 ## Suggested Next Phase
 
 Recommended next direction:
 
-- audit optional private output writing with sanitized fixtures only;
-- only then consider running against private real files to save a private
-  payload outside the repo.
+- design the controlled lab insert executor workflow;
+- create any insert executor first as fixture/no-network or dry-run/no-write;
+- keep real Supabase insert blocked until a future explicit GO.
 
 Still blocked:
 

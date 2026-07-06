@@ -207,6 +207,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   documentar el workflow futuro de escritura opcional de payload privado fuera
   del repo. No crea scripts, no modifica scripts, no genera payload real, no
   toca Supabase y no inserta.
+- S4.6.5.34 implementa escritura opcional `--out` en
+  `../../scripts/migration/build-private-insert-payload.mjs`, probada solo con
+  fixtures sanitizadas. Bloquea output dentro del repo y no toca Supabase.
+- S4.6.5.36 crea `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md` para registrar
+  el resultado sanitizado de la persistencia privada reportada por el usuario:
+  `PASS`, 14 selected, 14 payload rows, 4 deferred, output fuera del repo, sin
+  payload real en Git/chat/Codex, sin Supabase, sin Storage y sin insert.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -404,12 +411,17 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   del repo/chat y sigue sin Supabase ni insert.
 - `../../scripts/migration/build-private-insert-payload.mjs`: script S4.6.5.26
   local-only/no-network para construir un payload conceptual desde fixtures
-  sanitizadas de export v2, manifest e identity mapping. No escribe archivos,
-  no imprime payload completo, no toca Supabase y no inserta.
+  sanitizadas de export v2, manifest e identity mapping. Desde S4.6.5.34 puede
+  escribir opcionalmente con `--out` solo fuera del repo y con confirmacion
+  explicita. No imprime payload completo, no toca Supabase y no inserta.
 - `../../scripts/migration/fixtures/mock-private-local-export-v2-*.json` y
   `../../scripts/migration/fixtures/mock-private-insert-payload-expected-summary.json`:
   fixtures sanitizadas del payload builder. No son exports privados reales ni
   payloads privados de usuario.
+- `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`: resultado S4.6.5.36 de la
+  persistencia privada reportada de forma sanitizada. Registra `PASS`, 14
+  payload rows, output fuera del repo, no payload impreso, no red, no Supabase
+  y no insert.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
   sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
@@ -470,7 +482,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Auditar el payload builder con fixtures sanitizadas solamente antes de cualquier
-uso privado real. Todavia sin payload real, sin insert, sin SQL, sin datos
-reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
-sin `.env.local`, sin runtime y sin Storage.
+Disenar el controlled lab insert executor workflow antes de cualquier insert
+real. Todavia sin insert, sin SQL nuevo, sin datos reales en Git/chat, sin
+LocalStorage real leido por scripts, sin Supabase desde Codex, sin `.env.local`,
+sin runtime y sin Storage.

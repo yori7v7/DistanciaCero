@@ -1002,7 +1002,10 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
   explicito, sin generar payload real todavia.
 - Private insert payload builder actualizado con escritura opcional `--out`
   fuera del repo y confirm flag, probado solo con fixtures sanitizadas; no se
-  genera payload real del usuario.
+  genera payload real del usuario desde Codex.
+- Private insert payload persistence result registrado de forma sanitizada:
+  `PASS`, 14 selected, 14 payload rows, 4 deferred, output fuera del repo, no
+  payload impreso, no Supabase, no Storage y no insert.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1120,10 +1123,13 @@ S4.6.5.33 documenta el workflow futuro para guardar un private insert payload
 JSON fuera del repo, con resumen sanitizado y GO explicito; no crea script, no
 modifica script y no genera payload real. S4.6.5.34 implementa escritura
 opcional `--out` con confirmacion explicita, bloqueando rutas dentro del repo y
-probando solo con fixtures sanitizadas; no genera payload real del usuario.
+probando solo con fixtures sanitizadas. S4.6.5.36 registra que el usuario
+genero el payload privado fuera del repo y reporto solo un resumen sanitizado:
+`PASS`, 14 payload rows, output fuera del repo, sin payload impreso, sin
+Supabase, sin Storage y sin insert.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar optional private payload
-output write antes de cualquier uso privado. Todavia sin crear SQL, sin ejecutar
-insert, sin datos reales en Git/chat, sin LocalStorage real leido por scripts,
-sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es disenar el controlled lab insert
+executor workflow antes de cualquier insert real. Todavia sin crear SQL, sin
+ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real leido por
+scripts, sin Supabase desde Codex, sin `.env.local`, sin runtime y sin Storage.
