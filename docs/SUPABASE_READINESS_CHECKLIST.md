@@ -803,7 +803,14 @@ la siguiente.
   el builder resuelve `identityKey` placeholder desde metadata local del export
   seleccionado y reporta solo conteos/status de identidad; el mapping privado
   confirmado sigue siendo obligatorio.
-- Salida futura: auditar/commitear el fix antes de cualquier uso privado.
+- Estado S4.6.5.32:
+  `docs/supabase/PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md` registra el
+  resultado sanitizado del builder privado ejecutado manualmente fuera del repo:
+  `PASS`, 14 selected, 14 payload rows, 4 deferred, 0 missing local refs,
+  0 noGoReasons, identity mapping confirmed, sin red, sin Supabase, sin payload
+  impreso y sin insert.
+- Salida futura: disenar private payload persistence/review o un futuro script
+  de insert en una fase separada.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -953,6 +960,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert payload builder with sanitized fixtures only.
 - [x] Private insert payload builder script audit and deferred media hardening.
 - [x] Private insert payload builder identity inference hardening.
+- [x] Private insert payload builder result sanitized docs.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

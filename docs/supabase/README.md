@@ -198,6 +198,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   mock, construye filas conceptuales de `content_items` en memoria e imprime
   solo resumen sanitizado. No lee export/manifest/mapping privados reales, no
   escribe payload real, no toca Supabase y no inserta.
+- S4.6.5.32 crea `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md` para registrar el
+  resultado sanitizado del payload builder privado ejecutado manualmente por el
+  usuario fuera del repo. Resultado `PASS`: 14 selected, 14 payload rows, 4
+  deferred, 0 missing local refs, 0 noGoReasons, identity mapping confirmed,
+  no network, no Supabase, no payload impreso y no insert.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.

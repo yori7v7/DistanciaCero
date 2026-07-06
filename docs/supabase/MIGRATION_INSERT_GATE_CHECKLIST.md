@@ -193,9 +193,13 @@ Current next phase:
 - S4.6.5.30 lets the payload builder resolve manifest identity placeholders
   from selected export metadata, but confirmed private identity mapping remains
   mandatory before any future insert.
+- S4.6.5.32 records the sanitized private payload builder result as `PASS`: 14
+  selected, 14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons,
+  identity mapping confirmed, no Supabase and no insert.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: audit the payload builder before any private use.
+- Next suggested phase: design private payload persistence/review or a future
+  insert script in a separate phase.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

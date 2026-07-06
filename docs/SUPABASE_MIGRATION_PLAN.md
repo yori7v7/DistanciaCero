@@ -993,7 +993,10 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private insert payload builder creado con fixtures sanitizadas solamente;
   ajustado para diferir Data URLs de media excluida y para inferir identidad
   local desde metadata del export cuando el manifest sanitizado usa placeholder.
-  Falta commitear/revisar el fix antes de cualquier uso privado real.
+- Private insert payload builder privado ejecutado manualmente por el usuario
+  fuera del repo y registrado solo de forma sanitizada como `PASS`: 14 selected,
+  14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons, identity
+  mapping confirmed, no Supabase, no network y no insert.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1103,10 +1106,14 @@ ejecuta insert. S4.6.5.28 corrige el manejo de Data URLs diferidas para que
 solo bloqueen si pertenecen a selected items. S4.6.5.30 corrige la inferencia
 de identidad cuando el manifest sanitizado trae `identityKey` placeholder:
 resuelve desde metadata local del export seleccionado y mantiene obligatorio el
-mapping privado confirmado.
+mapping privado confirmado. S4.6.5.32 registra el resultado sanitizado del
+payload builder privado reportado por el usuario: `PASS`, 14 selected, 14
+payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons e identity mapping
+confirmed; no imprime payload real, no toca Supabase y no ejecuta insert.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es commitear el fix del payload
-builder antes de cualquier uso privado real. Todavia sin crear SQL, sin ejecutar
-insert, sin datos reales en Git/chat, sin LocalStorage real leido por scripts,
-sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es disenar private payload
+persistence/review o un futuro script de insert en una fase separada. Todavia
+sin crear SQL, sin ejecutar insert, sin datos reales en Git/chat, sin
+LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin runtime
+y sin Storage.

@@ -91,9 +91,13 @@ intentionally not included.
 
 Recommended next direction:
 
-- `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md` documents the future private
-  payload builder.
-- Next, create the payload builder script with sanitized fixtures only.
+- `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md` documents the private payload
+  builder.
+- `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md` records the sanitized manual
+  private builder result as `PASS`: 14 selected, 14 payload rows, 4 deferred,
+  identity mapping confirmed, no Supabase and no insert.
+- Next, design a private payload persistence/review workflow or a future insert
+  script in a separate phase.
 
 Still blocked:
 

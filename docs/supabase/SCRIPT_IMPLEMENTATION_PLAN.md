@@ -30,6 +30,8 @@
 - Private insert payload builder deferred media hardening: yes, in S4.6.5.28.
 - Private insert payload builder identity inference hardening: yes, in
   S4.6.5.30.
+- Private insert payload builder result documented: yes, in S4.6.5.32 as
+  sanitized `PASS`.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -155,8 +157,11 @@ Private insert payload builder:
 - It resolves manifest identity placeholders from selected export item metadata
   when local identity is present, while still requiring confirmed private
   mapping.
+- It was run manually by the user against private files outside the repo; only
+  the sanitized `PASS` result is recorded in
+  `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md`.
 - It must not be run against private real export, manifest or mapping files
-  until a separate review phase approves that.
+  again until a separate review phase approves that.
 
 Recommendation:
 
@@ -285,7 +290,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Audit the payload builder with sanitized fixtures only.
+- Design private payload persistence/review, or design a future controlled
+  insert script in a separate phase.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

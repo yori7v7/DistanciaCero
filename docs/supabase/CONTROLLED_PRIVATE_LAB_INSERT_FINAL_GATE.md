@@ -51,6 +51,8 @@ Before any insert is allowed:
 - private export validation is `CHECK` or `PASS` with zero no-go reasons;
 - private dry-run is `CHECK` or `PASS` with zero no-go reasons;
 - private manifest is `CHECK` or `PASS` with zero no-go reasons;
+- private payload builder result is `PASS` with `payloadRowsCount` `14`, if a
+  payload build is used for the future insert path;
 - `selectedItemsCount` is `14`;
 - `deferredItemsCount` is `4`;
 - identity missing count is `0`;
@@ -193,7 +195,10 @@ Recommended next direction:
   `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`.
 - The private insert payload builder is designed in
   `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
-- Next, create the payload builder with sanitized fixtures only.
+- The sanitized private payload builder result is recorded in
+  `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md`.
+- Next, design a private payload persistence/review workflow or a future insert
+  script in a separate phase.
 
 Still blocked:
 

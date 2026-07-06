@@ -278,6 +278,18 @@ prints only `identityResolvedCount`, `identityMissingCount` and
 `identityMappingStatus`; it does not print full identity metadata, UUIDs, emails
 or payload rows.
 
+## S4.6.5.32 Sanitized Private Result
+
+S4.6.5.32 records the sanitized result in
+`PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md`. The user ran the builder manually
+against private files outside the repo and reported `PASS`: 14 selected items,
+14 conceptual `content_items` rows, 4 deferred items, 0 missing local refs,
+0 no-go reasons, `identityResolvedCount` 14 and `identityMappingStatus`
+confirmed.
+
+The private export, manifest, identity mapping and payload rows are not included
+in the repo or chat. This result still does not authorize automatic insert.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -303,8 +315,9 @@ The future builder is `NO-GO` if:
 
 Recommended next direction:
 
-- audit the payload builder script;
-- then consider private local execution to generate payload outside the repo;
+- design a private payload persistence/review workflow, if a persistent private
+  payload file is needed outside the repo;
+- then design/audit any future controlled insert path separately;
 - keep insert, SQL, Supabase and Storage blocked.
 
 Still blocked:
