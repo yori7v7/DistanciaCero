@@ -113,9 +113,10 @@ Media and playlist still require a future Storage/source policy phase.
 
 Recommended next direction:
 
-- design a private payload persistence/review workflow; or
-- create a script that writes a private payload file outside the repo only after
-  explicit GO.
+- `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md` documents the private
+  payload persistence/review workflow.
+- Next, implement optional private output writing with sanitized fixtures only,
+  if explicitly approved in a future phase.
 
 Still blocked:
 

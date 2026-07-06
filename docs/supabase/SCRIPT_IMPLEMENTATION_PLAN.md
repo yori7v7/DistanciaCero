@@ -32,6 +32,7 @@
   S4.6.5.30.
 - Private insert payload builder result documented: yes, in S4.6.5.32 as
   sanitized `PASS`.
+- Private insert payload persistence workflow documented: yes, in S4.6.5.33.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -160,6 +161,8 @@ Private insert payload builder:
 - It was run manually by the user against private files outside the repo; only
   the sanitized `PASS` result is recorded in
   `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md`.
+- The optional private payload file workflow is documented in
+  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`.
 - It must not be run against private real export, manifest or mapping files
   again until a separate review phase approves that.
 
@@ -290,8 +293,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Design private payload persistence/review, or design a future controlled
-  insert script in a separate phase.
+- Implement optional private output writing with sanitized fixtures only, if
+  explicitly approved in a future phase.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

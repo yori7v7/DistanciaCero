@@ -10,6 +10,7 @@
 - Private insert payload builder designed: yes, in S4.6.5.25.
 - Private insert payload builder created with sanitized fixtures: yes, in
   S4.6.5.26.
+- Private payload persistence workflow documented: yes, in S4.6.5.33.
 - Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -56,6 +57,7 @@ Status:
 Conceptual future inputs, without real paths:
 
 - private insert manifest sanitized JSON;
+- private insert payload JSON, if a future persistence phase creates one;
 - private identity mapping JSON;
 - lab Supabase URL or another approved lab connection mechanism;
 - user explicit GO;
@@ -65,6 +67,7 @@ Rules:
 
 - private manifest stays outside the repo;
 - private identity mapping stays outside the repo;
+- private payload stays outside the repo, if used;
 - private values are not pasted in chat;
 - private files are not committed;
 - `service-role` is not used.
@@ -193,7 +196,10 @@ Implementation order:
 - The private payload builder implementation exists as
   `../../scripts/migration/build-private-insert-payload.mjs` with sanitized
   fixtures only.
-- Only after that consider lab insert mode.
+- `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md` documents the future
+  optional private payload file workflow.
+- Only after payload persistence/review and separate audit should lab insert
+  mode be considered.
 
 ## Required Pre-Insert Summary
 

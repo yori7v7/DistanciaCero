@@ -203,6 +203,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   usuario fuera del repo. Resultado `PASS`: 14 selected, 14 payload rows, 4
   deferred, 0 missing local refs, 0 noGoReasons, identity mapping confirmed,
   no network, no Supabase, no payload impreso y no insert.
+- S4.6.5.33 crea `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md` para
+  documentar el workflow futuro de escritura opcional de payload privado fuera
+  del repo. No crea scripts, no modifica scripts, no genera payload real, no
+  toca Supabase y no inserta.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.

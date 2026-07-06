@@ -809,8 +809,12 @@ la siguiente.
   `PASS`, 14 selected, 14 payload rows, 4 deferred, 0 missing local refs,
   0 noGoReasons, identity mapping confirmed, sin red, sin Supabase, sin payload
   impreso y sin insert.
-- Salida futura: disenar private payload persistence/review o un futuro script
-  de insert en una fase separada.
+- Estado S4.6.5.33:
+  `docs/supabase/PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md` documenta el
+  workflow futuro para guardar un private insert payload JSON fuera del repo,
+  con GO explicito y resumen sanitizado. Payload real todavia no generado.
+- Salida futura: implementar escritura opcional de output privado con fixtures
+  sanitizadas solamente y auditar antes de cualquier uso privado.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -961,6 +965,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert payload builder script audit and deferred media hardening.
 - [x] Private insert payload builder identity inference hardening.
 - [x] Private insert payload builder result sanitized docs.
+- [x] Private insert payload persistence workflow docs-only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

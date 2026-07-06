@@ -290,6 +290,14 @@ confirmed.
 The private export, manifest, identity mapping and payload rows are not included
 in the repo or chat. This result still does not authorize automatic insert.
 
+## S4.6.5.33 Persistence Workflow
+
+S4.6.5.33 documents the future private payload persistence workflow in
+`PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`. The workflow defines how a
+future explicit-write mode could save a private payload JSON outside the repo,
+while printing only a sanitized summary and keeping Supabase, insert, Storage
+and runtime out of scope.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -316,7 +324,9 @@ The future builder is `NO-GO` if:
 Recommended next direction:
 
 - design a private payload persistence/review workflow, if a persistent private
-  payload file is needed outside the repo;
+- payload file is needed outside the repo, as documented in
+  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`;
+- then implement optional private output writing with sanitized fixtures only;
 - then design/audit any future controlled insert path separately;
 - keep insert, SQL, Supabase and Storage blocked.
 

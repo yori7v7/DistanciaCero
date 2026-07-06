@@ -997,6 +997,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
   fuera del repo y registrado solo de forma sanitizada como `PASS`: 14 selected,
   14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons, identity
   mapping confirmed, no Supabase, no network y no insert.
+- Private insert payload persistence workflow docs-only creado para definir
+  como un futuro payload privado podria guardarse fuera del repo con GO
+  explicito, sin generar payload real todavia.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1110,10 +1113,13 @@ mapping privado confirmado. S4.6.5.32 registra el resultado sanitizado del
 payload builder privado reportado por el usuario: `PASS`, 14 selected, 14
 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons e identity mapping
 confirmed; no imprime payload real, no toca Supabase y no ejecuta insert.
+S4.6.5.33 documenta el workflow futuro para guardar un private insert payload
+JSON fuera del repo, con resumen sanitizado y GO explicito; no crea script, no
+modifica script y no genera payload real.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar private payload
-persistence/review o un futuro script de insert en una fase separada. Todavia
-sin crear SQL, sin ejecutar insert, sin datos reales en Git/chat, sin
-LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin runtime
-y sin Storage.
+desarrollo. La siguiente fase recomendada es implementar escritura opcional de
+output privado con fixtures sanitizadas solamente, y auditar antes de cualquier
+uso privado. Todavia sin crear SQL, sin ejecutar insert, sin datos reales en
+Git/chat, sin LocalStorage real leido por scripts, sin Supabase, sin
+`.env.local`, sin runtime y sin Storage.
