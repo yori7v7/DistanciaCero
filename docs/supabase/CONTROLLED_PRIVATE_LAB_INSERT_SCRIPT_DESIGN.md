@@ -11,6 +11,8 @@
 - Private insert payload builder created with sanitized fixtures: yes, in
   S4.6.5.26.
 - Private payload persistence workflow documented: yes, in S4.6.5.33.
+- Private payload optional output write implemented: yes, in S4.6.5.34 with
+  sanitized fixtures only.
 - Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -198,7 +200,9 @@ Implementation order:
   fixtures only.
 - `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md` documents the future
   optional private payload file workflow.
-- Only after payload persistence/review and separate audit should lab insert
+- Optional private payload output writing now exists with sanitized fixtures
+  only.
+- Only after output-write audit and private payload review should lab insert
   mode be considered.
 
 ## Required Pre-Insert Summary

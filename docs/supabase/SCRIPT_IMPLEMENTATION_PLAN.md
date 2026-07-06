@@ -33,6 +33,8 @@
 - Private insert payload builder result documented: yes, in S4.6.5.32 as
   sanitized `PASS`.
 - Private insert payload persistence workflow documented: yes, in S4.6.5.33.
+- Private insert payload optional output write implemented: yes, in S4.6.5.34
+  with sanitized fixtures only.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -163,6 +165,8 @@ Private insert payload builder:
   `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md`.
 - The optional private payload file workflow is documented in
   `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`.
+- Optional `--out` writing exists and is allowed only outside the repo with
+  `--confirm-write-private-output`; fixture tests must remove temporary output.
 - It must not be run against private real export, manifest or mapping files
   again until a separate review phase approves that.
 
@@ -293,8 +297,7 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Implement optional private output writing with sanitized fixtures only, if
-  explicitly approved in a future phase.
+- Audit optional private output writing with sanitized fixtures only.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

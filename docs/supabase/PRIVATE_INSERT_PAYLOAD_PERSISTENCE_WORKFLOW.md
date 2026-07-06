@@ -3,16 +3,19 @@
 ## Status
 
 - Status: documentary design.
+- Optional fixture implementation: yes, in S4.6.5.34.
 - Real payload generated: no.
-- Script modified: no.
+- Script modified: yes, with optional `--out` writing tested only with
+  sanitized fixtures.
 - Insert executed: no.
 - Supabase touched: no.
 - Storage touched: no.
 - Production allowed: no.
 - App connection: none.
 
-This document defines a future workflow for saving a private insert payload JSON
-outside the repository. It does not create or modify any script, generate a real
+This document defines a workflow for saving a private insert payload JSON
+outside the repository. S4.6.5.34 adds optional `--out` support to the builder
+and tests it only with sanitized fixtures. It does not generate a real private
 payload, read private files, touch Supabase, touch Storage or execute an insert.
 
 ## Purpose
@@ -64,7 +67,7 @@ It must:
 
 ## Allowed Sanitized Stdout
 
-A future persistence command may print only:
+A persistence command may print only:
 
 - `payloadBuildStatus`;
 - `outputFile`: `<outside-repository>`;
@@ -97,7 +100,7 @@ Do not print or document:
 
 ## Future Write Gate
 
-A future script may write a private payload file only if all of these are true:
+The builder may write a private payload file only if all of these are true:
 
 - output path is outside the repo;
 - export, manifest and mapping inputs are outside the repo;
@@ -111,6 +114,8 @@ A future script may write a private payload file only if all of these are true:
 - Supabase is not touched;
 - insert is not executed;
 - the user gives explicit GO to write the private file.
+- the command includes `--out <output-file.json>` and
+  `--confirm-write-private-output`.
 
 ## Private File Rules
 
@@ -165,10 +170,7 @@ Any real insert remains a separate future phase and requires:
 
 Recommended next direction:
 
-- modify `build-private-insert-payload.mjs` to support optional private output
-  writing outside the repo with an explicit flag;
-- implement first with sanitized fixtures only;
-- audit the write behavior;
+- audit optional private output writing with sanitized fixtures only;
 - only then consider running against private real files to save a private
   payload outside the repo.
 

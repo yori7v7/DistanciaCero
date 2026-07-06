@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile, stat, writeFile } from 'fs/promises';
 import path from 'path';
 import process from 'process';
 import { fileURLToPath } from 'url';
@@ -78,8 +78,9 @@ const IDENTITY_ALIASES = Object.freeze({
 
 function usage() {
   return [
-    `Usage: node scripts/migration/${SCRIPT_NAME} <export-v2.json> <manifest.json> <identity-mapping.json>`,
+    `Usage: node scripts/migration/${SCRIPT_NAME} <export-v2.json> <manifest.json> <identity-mapping.json> [--out <output-file.json> --confirm-write-private-output]`,
     'Inputs must be explicit local JSON files. Remote URLs are rejected.',
+    'Optional --out writes a private payload file only outside the repository after explicit confirmation.',
   ];
 }
 
@@ -97,6 +98,15 @@ function sanitizePathForOutput(resolvedPath) {
     return '<outside-repository>';
   }
   return relativePath.split(path.sep).join('/');
+}
+
+function isInsideRepository(resolvedPath) {
+  const relativePath = path.relative(process.cwd(), resolvedPath);
+  return Boolean(relativePath) && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+}
+
+function hasGitSegment(resolvedPath) {
+  return resolvedPath.split(path.sep).some((part) => part === '.git');
 }
 
 function sanitizeLocalRef(value) {
@@ -473,6 +483,22 @@ function buildPayloadRows({ exportIndex, manifest, identityMap }) {
   });
 }
 
+function buildPrivatePayloadFile({ payloadRows }) {
+  return {
+    payloadVersion: 'private-insert-payload-v1',
+    generatedAt: new Date().toISOString(),
+    labOnly: true,
+    notProduction: true,
+    targetTable: 'content_items',
+    migrationRunId: '<future_migration_run_id>',
+    deferredCollections: EXCLUDED_COLLECTIONS,
+    excludedTargets: EXCLUDED_TARGETS,
+    noSupabaseCredentials: true,
+    noStorageData: true,
+    rows: payloadRows,
+  };
+}
+
 function buildSummary({
   status,
   exportFile,
@@ -485,6 +511,8 @@ function buildSummary({
   identityResolvedCount,
   identityMissingCount,
   identityMappingStatus,
+  outputWritten = false,
+  outputFile,
   noGoReasons,
   exitCode,
 }) {
@@ -507,6 +535,8 @@ function buildSummary({
     identityResolvedCount,
     identityMissingCount,
     identityMappingStatus,
+    outputWritten,
+    outputFile,
     targetTable: 'content_items',
     excludedTargets: EXCLUDED_TARGETS,
     noSupabaseTouched: true,
@@ -532,6 +562,8 @@ function buildErrorSummary({ status, code, exportFile, manifestFile, identityMap
     identityResolvedCount: 0,
     identityMissingCount: 0,
     identityMappingStatus: '<unknown>',
+    outputWritten: false,
+    outputFile: undefined,
     noGoReasons: [issue(code)],
     exitCode,
   });
@@ -563,15 +595,60 @@ function printUsage(exitCode) {
 }
 
 function validateArgs(args) {
-  if (args.length !== 3) return { ok: false, code: 'invalid_argument_count' };
-  const [exportInput, manifestInput, identityInput] = args;
+  if (args.length !== 3 && args.length !== 6) return { ok: false, code: 'invalid_argument_count' };
+  const [exportInput, manifestInput, identityInput, ...rest] = args;
+  let outputInput;
+  if (rest.length > 0) {
+    if (rest[0] !== '--out' || rest[2] !== '--confirm-write-private-output') {
+      return { ok: false, code: 'invalid_output_flags' };
+    }
+    if (typeof rest[1] !== 'string' || rest[1].trim() === '') {
+      return { ok: false, code: 'output_path_missing' };
+    }
+    outputInput = rest[1];
+  }
   if ([exportInput, manifestInput, identityInput].some(isRemoteInput)) {
     return { ok: false, code: 'remote_input_rejected' };
+  }
+  if (outputInput && isRemoteInput(outputInput)) {
+    return { ok: false, code: 'remote_output_rejected' };
   }
   if ([exportInput, manifestInput, identityInput].some((input) => input.includes('.env.local'))) {
     return { ok: false, code: 'env_file_rejected', aborted: true };
   }
-  return { ok: true, exportInput, manifestInput, identityInput };
+  if (outputInput && outputInput.includes('.env.local')) {
+    return { ok: false, code: 'env_file_rejected', aborted: true };
+  }
+  return { ok: true, exportInput, manifestInput, identityInput, outputInput };
+}
+
+async function validateOutputTarget(outputInput) {
+  if (!outputInput) return { ok: true, outputFile: undefined };
+  const resolvedOutputPath = path.resolve(process.cwd(), outputInput);
+  if (hasGitSegment(resolvedOutputPath)) {
+    return { ok: false, code: 'output_git_path_rejected' };
+  }
+  if (isInsideRepository(resolvedOutputPath)) {
+    return { ok: false, code: 'output_inside_repository_rejected' };
+  }
+  const parentDir = path.dirname(resolvedOutputPath);
+  try {
+    const parentStat = await stat(parentDir);
+    if (!parentStat.isDirectory()) {
+      return { ok: false, code: 'output_parent_not_directory' };
+    }
+  } catch {
+    return { ok: false, code: 'output_parent_missing' };
+  }
+  try {
+    const outputStat = await stat(resolvedOutputPath);
+    if (outputStat.isDirectory()) {
+      return { ok: false, code: 'output_path_is_directory' };
+    }
+  } catch {
+    // A missing output file is expected for first-time private payload writes.
+  }
+  return { ok: true, outputPath: resolvedOutputPath, outputFile: '<outside-repository>' };
 }
 
 async function readJsonInput(inputPath, options = {}) {
@@ -618,6 +695,20 @@ async function main() {
     return;
   }
 
+  const outputTarget = await validateOutputTarget(parsed.outputInput);
+  if (!outputTarget.ok) {
+    printJson(buildErrorSummary({
+      status: 'INVALID_USAGE',
+      code: outputTarget.code,
+      exportFile: '<missing-or-invalid-input>',
+      manifestFile: '<missing-or-invalid-input>',
+      identityMappingFile: '<missing-or-invalid-input>',
+      exitCode: EXIT_CODES.INVALID_USAGE,
+    }));
+    process.exitCode = EXIT_CODES.INVALID_USAGE;
+    return;
+  }
+
   const exportRead = await readJsonInput(parsed.exportInput, { allowDataUrls: true });
   const manifestRead = await readJsonInput(parsed.manifestInput);
   const identityRead = await readJsonInput(parsed.identityInput);
@@ -654,6 +745,55 @@ async function main() {
   const payloadRows = status === 'PASS'
     ? buildPayloadRows({ exportIndex, manifest: manifestRead.value, identityMap })
     : [];
+  let outputWritten = false;
+  if (status === 'PASS' && outputTarget.outputPath) {
+    const privatePayload = buildPrivatePayloadFile({ payloadRows });
+    const payloadText = `${JSON.stringify(privatePayload, null, 2)}\n`;
+    const outputFindings = scanForSecrets(payloadText);
+    if (outputFindings.length > 0) {
+      printJson(buildSummary({
+        status: 'ABORTED',
+        exportFile,
+        manifestFile,
+        identityMappingFile,
+        selectedItemsCount: getCount(manifestRead.value, 'selectedItemsCount') ?? 0,
+        payloadRowsCount: 0,
+        deferredItemsCount: getCount(manifestRead.value, 'deferredItemsCount') ?? 0,
+        rowsByCollection: {},
+        ...buildIdentityStats({ exportIndex, manifest: manifestRead.value }),
+        identityMappingStatus: identityRead.value?.status || identityRead.value?.identityMappingStatus || '<unknown>',
+        outputWritten: false,
+        outputFile: outputTarget.outputFile,
+        noGoReasons: [outputFindings[0]],
+        exitCode: EXIT_CODES.ABORTED,
+      }));
+      process.exitCode = EXIT_CODES.ABORTED;
+      return;
+    }
+    try {
+      await writeFile(outputTarget.outputPath, payloadText, 'utf8');
+    } catch {
+      printJson(buildSummary({
+        status: 'INVALID_USAGE',
+        exportFile,
+        manifestFile,
+        identityMappingFile,
+        selectedItemsCount: getCount(manifestRead.value, 'selectedItemsCount') ?? 0,
+        payloadRowsCount: 0,
+        deferredItemsCount: getCount(manifestRead.value, 'deferredItemsCount') ?? 0,
+        rowsByCollection: {},
+        ...buildIdentityStats({ exportIndex, manifest: manifestRead.value }),
+        identityMappingStatus: identityRead.value?.status || identityRead.value?.identityMappingStatus || '<unknown>',
+        outputWritten: false,
+        outputFile: outputTarget.outputFile,
+        noGoReasons: [issue('output_write_failed')],
+        exitCode: EXIT_CODES.INVALID_USAGE,
+      }));
+      process.exitCode = EXIT_CODES.INVALID_USAGE;
+      return;
+    }
+    outputWritten = true;
+  }
 
   printJson(buildSummary({
     status,
@@ -666,6 +806,8 @@ async function main() {
     rowsByCollection: countByCollection(payloadRows),
     ...buildIdentityStats({ exportIndex, manifest: manifestRead.value }),
     identityMappingStatus: identityRead.value?.status || identityRead.value?.identityMappingStatus || '<unknown>',
+    outputWritten,
+    outputFile: outputTarget.outputFile,
     noGoReasons,
     exitCode,
   }));

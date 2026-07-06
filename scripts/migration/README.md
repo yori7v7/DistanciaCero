@@ -65,6 +65,19 @@ builder resolves local identity only from selected export item metadata such as
 `createdBy`, `updatedBy`, `created_by`, `updated_by`, `metadata`, `author`,
 `identity` or `localIdentity`; stdout reports only identity counts/status and
 never prints private identity metadata.
+
+Optional output writing is available only with:
+
+```powershell
+node scripts/migration/build-private-insert-payload.mjs <export-v2.json> <manifest.json> <identity-mapping.json> --out <outside-repository-output.json> --confirm-write-private-output
+```
+
+The output path must be a local file outside the repository, must not be remote
+and must have an existing parent directory. Stdout still prints only a
+sanitized summary with `outputFile: <outside-repository>` and never prints the
+payload. The written file is lab-only, not production, contains only the 14
+`content_items` rows, and excludes media, playlist, Storage and
+`content_events`.
 In-repo tests use sanitized fixtures only; do not run it against private real
 export/manifest/mapping files until a separate review phase approves that.
 
@@ -89,6 +102,7 @@ node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fi
 node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-nogo.json
 node scripts/migration/preflight-private-lab-insert.mjs scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json --confirm-lab-disposable --confirm-no-production --confirm-no-storage --confirm-no-insert
 node scripts/migration/build-private-insert-payload.mjs scripts/migration/fixtures/mock-private-local-export-v2-selected.json scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json
+node scripts/migration/build-private-insert-payload.mjs scripts/migration/fixtures/mock-private-local-export-v2-selected.json scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json --out <outside-repository-output.json> --confirm-write-private-output
 ```
 
 NPM shortcuts:
@@ -120,7 +134,8 @@ Expected fixture results:
 - `mock-private-identity-mapping-missing.json`: `NO-GO`, exit `1`.
 - `mock-private-insert-manifest-nogo-selected-media.json`: `NO-GO`, exit `1`.
 - `mock-private-local-export-v2-selected.json` with confirmed identity mapping:
-  `PASS`, exit `0`, `payloadRowsCount` `14`, `identityResolvedCount` `14`.
+  `PASS`, exit `0`, `payloadRowsCount` `14`, `identityResolvedCount` `14`,
+  `outputWritten` `false` without `--out`.
 - `mock-private-local-export-v2-placeholder-identity.json` with a manifest
   identity placeholder and confirmed mapping: `PASS`, exit `0`,
   `payloadRowsCount` `14`, `identityResolvedCount` `14`.
@@ -131,6 +146,8 @@ Expected fixture results:
   summary only; it contains no full payload.
 - Deferred media Data URLs are expected to stay outside payload v1; selected
   item Data URLs and selected item URLs remain blocking.
+- Optional `--out` fixture tests should write only to a temporary path outside
+  the repo and remove the mock output afterward.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 

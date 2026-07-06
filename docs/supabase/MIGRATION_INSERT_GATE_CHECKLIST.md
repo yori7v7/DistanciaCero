@@ -198,10 +198,13 @@ Current next phase:
   identity mapping confirmed, no Supabase and no insert.
 - S4.6.5.33 documents private payload persistence/review. Payload real is still
   not generated, and any future output file must stay outside the repo.
+- S4.6.5.34 adds optional output writing to the payload builder with sanitized
+  fixtures only. Output inside the repo is blocked; no private real payload has
+  been generated.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: implement optional private output writing with sanitized
-  fixtures only, then audit before any private use.
+- Next suggested phase: audit optional private output writing before any
+  private use.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

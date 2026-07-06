@@ -813,8 +813,13 @@ la siguiente.
   `docs/supabase/PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md` documenta el
   workflow futuro para guardar un private insert payload JSON fuera del repo,
   con GO explicito y resumen sanitizado. Payload real todavia no generado.
-- Salida futura: implementar escritura opcional de output privado con fixtures
-  sanitizadas solamente y auditar antes de cualquier uso privado.
+- Estado S4.6.5.34:
+  `scripts/migration/build-private-insert-payload.mjs` soporta escritura
+  opcional con `--out` + `--confirm-write-private-output`, bloquea output dentro
+  del repo y se prueba solo con fixtures sanitizadas. Payload real todavia no
+  generado.
+- Salida futura: auditar optional private payload output write antes de
+  cualquier uso privado.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -966,6 +971,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert payload builder identity inference hardening.
 - [x] Private insert payload builder result sanitized docs.
 - [x] Private insert payload persistence workflow docs-only.
+- [x] Private insert payload optional output write with sanitized fixtures only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

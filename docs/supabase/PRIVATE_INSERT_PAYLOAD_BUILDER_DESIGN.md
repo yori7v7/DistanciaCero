@@ -298,6 +298,19 @@ future explicit-write mode could save a private payload JSON outside the repo,
 while printing only a sanitized summary and keeping Supabase, insert, Storage
 and runtime out of scope.
 
+## S4.6.5.34 Optional Output Write
+
+S4.6.5.34 adds optional `--out <output-file.json>
+--confirm-write-private-output` support to
+`../../scripts/migration/build-private-insert-payload.mjs`. The write path must
+be local, outside the repository, not remote, not inside `.git`, and must have
+an existing parent directory. Without `--out`, behavior stays summary-only.
+
+The output file is lab-only/not-production and contains only the 14
+`content_items` rows when the build is `PASS`. Stdout reports only
+`outputWritten` and `outputFile: <outside-repository>`; it does not print the
+payload.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -323,10 +336,7 @@ The future builder is `NO-GO` if:
 
 Recommended next direction:
 
-- design a private payload persistence/review workflow, if a persistent private
-- payload file is needed outside the repo, as documented in
-  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`;
-- then implement optional private output writing with sanitized fixtures only;
+- audit optional private output writing with sanitized fixtures only;
 - then design/audit any future controlled insert path separately;
 - keep insert, SQL, Supabase and Storage blocked.
 

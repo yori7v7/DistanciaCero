@@ -19,6 +19,7 @@
   "identityResolvedCount": 14,
   "identityMissingCount": 0,
   "identityMappingStatus": "confirmed",
+  "outputWritten": false,
   "targetTable": "content_items",
   "excludedTargets": ["media_assets", "storage", "content_events"],
   "noSupabaseTouched": true,

@@ -201,8 +201,8 @@ Recommended next direction:
   `PRIVATE_INSERT_PAYLOAD_BUILDER_RESULT.md`.
 - The private payload persistence workflow is documented in
   `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_WORKFLOW.md`.
-- Next, implement optional private output writing with sanitized fixtures only,
-  then audit it before any private use.
+- Optional private output writing exists with sanitized fixtures only.
+- Next, audit optional private output writing before any private use.
 
 Still blocked:
 
