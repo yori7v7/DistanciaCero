@@ -854,6 +854,12 @@ Estado de S4.6.1:
   manifest sanitizado e identity/space mapping privado para producir un payload
   privado de 14 `content_items` fuera del repo. No crea script, no genera
   payload real, no toca Supabase y no inserta datos.
+- S4.6.5.26 crea `scripts/migration/build-private-insert-payload.mjs` y
+  fixtures sanitizadas para construir un payload conceptual de 14
+  `content_items` desde export v2 + manifest + identity mapping mock. El script
+  usa solo built-ins de Node, rechaza URLs remotas, no escribe archivos, no
+  imprime payload completo, no lee inputs privados reales, no toca Supabase y
+  no inserta datos.
 
 Validacion y rollback:
 
@@ -980,8 +986,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
   sanitizadas y auditado.
 - Private lab insert preflight no-network real ejecutado por el usuario fuera
   del repo y registrado solo de forma sanitizada como `PASS`.
-- Private insert payload builder design docs-only creado; falta crear el
-  payload builder con fixtures sanitizadas solamente.
+- Private insert payload builder creado con fixtures sanitizadas solamente;
+  falta auditarlo antes de cualquier uso privado real.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1085,9 +1091,12 @@ del preflight privado real reportado por el usuario: `PASS`, 14 selected, 4
 deferred, identity mapping confirmed, 0 warnings y 0 noGoReasons. S4.6.5.25
 documenta el futuro payload builder privado para convertir export + manifest +
 mapping en payload privado de 14 `content_items`, todavia fuera del repo.
+S4.6.5.26 crea el builder local-only con fixtures sanitizadas: construye filas
+conceptuales en memoria, imprime solo resumen sanitizado y no toca Supabase ni
+ejecuta insert.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es crear el payload builder con
-fixtures sanitizadas solamente. Todavia sin crear SQL, sin ejecutar insert, sin
+desarrollo. La siguiente fase recomendada es auditar el payload builder antes
+de cualquier uso privado real. Todavia sin crear SQL, sin ejecutar insert, sin
 datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
 sin `.env.local`, sin runtime y sin Storage.

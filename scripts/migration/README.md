@@ -3,8 +3,9 @@
 ## Status
 
 - Scope: mock-only plus private local export validator, private dry-run
-  normalizer, private insert manifest generator and controlled insert preflight
-  no-network script tested only with sanitized fixtures.
+  normalizer, private insert manifest generator, controlled insert preflight
+  no-network script and private insert payload builder tested only with
+  sanitized fixtures.
 - Network: none.
 - Supabase: none.
 - `.env.local`: not read.
@@ -52,6 +53,14 @@ confirmation flags, does not write files, does not touch Supabase and does not
 insert data. In-repo tests use sanitized fixtures only; do not run it against a
 private real manifest until a separate review phase approves that.
 
+`build-private-insert-payload.mjs` reads a sanitized export v2 fixture, a
+sanitized insert manifest fixture and a sanitized identity mapping fixture,
+then builds conceptual `content_items` rows in memory and prints only a
+sanitized summary. It is local-only, rejects remote URLs, does not write files,
+does not print payloads, does not touch Supabase and does not insert data.
+In-repo tests use sanitized fixtures only; do not run it against private real
+export/manifest/mapping files until a separate review phase approves that.
+
 Run examples:
 
 ```powershell
@@ -72,6 +81,7 @@ node scripts/migration/dry-run-private-local-export.mjs scripts/migration/fixtur
 node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-check.json
 node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fixtures/mock-private-dry-run-result-nogo.json
 node scripts/migration/preflight-private-lab-insert.mjs scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json --confirm-lab-disposable --confirm-no-production --confirm-no-storage --confirm-no-insert
+node scripts/migration/build-private-insert-payload.mjs scripts/migration/fixtures/mock-private-local-export-v2-selected.json scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json
 ```
 
 NPM shortcuts:
@@ -102,6 +112,11 @@ Expected fixture results:
   `PASS`, exit `0`.
 - `mock-private-identity-mapping-missing.json`: `NO-GO`, exit `1`.
 - `mock-private-insert-manifest-nogo-selected-media.json`: `NO-GO`, exit `1`.
+- `mock-private-local-export-v2-selected.json` with confirmed identity mapping:
+  `PASS`, exit `0`, `payloadRowsCount` `14`.
+- `mock-private-local-export-v2-missing-selected.json`: `NO-GO`, exit `1`.
+- `mock-private-insert-payload-expected-summary.json`: sanitized expected
+  summary only; it contains no full payload.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 
@@ -117,6 +132,8 @@ The smoke runner should exit `0` when all expected mock-only exit codes match.
   result until a separate review phase approves it.
 - Do not run the controlled insert preflight script on a private real manifest
   until a separate review phase approves it.
+- Do not run the private insert payload builder on a private real export,
+  manifest or mapping until a separate review phase approves it.
 - Do not add real intimate content to fixtures.
 - Do not use Supabase URL, keys, tokens, passwords, service-role or project refs.
 - Do not read `.env.local`.

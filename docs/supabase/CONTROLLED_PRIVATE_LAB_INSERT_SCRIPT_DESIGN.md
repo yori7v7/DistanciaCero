@@ -8,6 +8,8 @@
 - Preflight/no-network script audited: yes, in S4.6.5.23.
 - Private preflight result documented: yes, in S4.6.5.24 as sanitized `PASS`.
 - Private insert payload builder designed: yes, in S4.6.5.25.
+- Private insert payload builder created with sanitized fixtures: yes, in
+  S4.6.5.26.
 - Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -188,6 +190,9 @@ Implementation order:
   `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`.
 - The private payload builder is designed in
   `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
+- The private payload builder implementation exists as
+  `../../scripts/migration/build-private-insert-payload.mjs` with sanitized
+  fixtures only.
 - Only after that consider lab insert mode.
 
 ## Required Pre-Insert Summary
@@ -269,12 +274,11 @@ The future script is `NO-GO` if:
 
 Recommended sequence:
 
-1. Create the payload builder with sanitized fixtures only.
-2. Audit the payload builder.
-3. Consider private local payload generation outside the repo.
-4. Design private config and mapping workflow.
-5. Audit any real insert script before private use.
-6. Only with explicit GO, consider lab insert script execution.
+1. Audit the payload builder.
+2. Consider private local payload generation outside the repo.
+3. Design private config and mapping workflow.
+4. Audit any real insert script before private use.
+5. Only with explicit GO, consider lab insert script execution.
 
 Still blocked:
 

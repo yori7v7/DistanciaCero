@@ -1,0 +1,27 @@
+{
+  "payloadBuildVersion": "private-insert-payload-builder-v1",
+  "payloadBuildStatus": "PASS",
+  "selectedItemsCount": 14,
+  "payloadRowsCount": 14,
+  "deferredItemsCount": 4,
+  "excludedCollections": ["blackHoleGallery", "playlist"],
+  "missingLocalRefsCount": 0,
+  "noGoReasonsCount": 0,
+  "rowsByCollection": {
+    "monthlyLetters": 2,
+    "openWhenLetters": 2,
+    "reasons": 2,
+    "promises": 2,
+    "importantDates": 2,
+    "futureDreams": 2,
+    "timeline": 2
+  },
+  "targetTable": "content_items",
+  "excludedTargets": ["media_assets", "storage", "content_events"],
+  "noSupabaseTouched": true,
+  "noInsertExecuted": true,
+  "noNetwork": true,
+  "payloadPrinted": false,
+  "nextRecommendedAction": "review_sanitized_payload_build_summary_before_private_use",
+  "exitCode": 0
+}

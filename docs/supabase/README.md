@@ -193,6 +193,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   manifest sanitizado e identity/space mapping privado para producir un payload
   privado de 14 `content_items` fuera del repo. No crea script, no genera
   payload real, no toca Supabase y no inserta.
+- S4.6.5.26 crea `../../scripts/migration/build-private-insert-payload.mjs` y
+  fixtures sanitizadas. El script toma export v2 + manifest + identity mapping
+  mock, construye filas conceptuales de `content_items` en memoria e imprime
+  solo resumen sanitizado. No lee export/manifest/mapping privados reales, no
+  escribe payload real, no toca Supabase y no inserta.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -388,6 +393,14 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`: diseno S4.6.5.25 del futuro
   payload builder privado para 14 `content_items`. Mantiene payload real fuera
   del repo/chat y sigue sin Supabase ni insert.
+- `../../scripts/migration/build-private-insert-payload.mjs`: script S4.6.5.26
+  local-only/no-network para construir un payload conceptual desde fixtures
+  sanitizadas de export v2, manifest e identity mapping. No escribe archivos,
+  no imprime payload completo, no toca Supabase y no inserta.
+- `../../scripts/migration/fixtures/mock-private-local-export-v2-*.json` y
+  `../../scripts/migration/fixtures/mock-private-insert-payload-expected-summary.json`:
+  fixtures sanitizadas del payload builder. No son exports privados reales ni
+  payloads privados de usuario.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
   sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
@@ -448,6 +461,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Crear el payload builder con fixtures sanitizadas solamente. Todavia sin payload
-real, sin insert, sin SQL, sin datos reales en Git/chat, sin LocalStorage real
-leido por scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+Auditar el payload builder con fixtures sanitizadas solamente antes de cualquier
+uso privado real. Todavia sin payload real, sin insert, sin SQL, sin datos
+reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
+sin `.env.local`, sin runtime y sin Storage.

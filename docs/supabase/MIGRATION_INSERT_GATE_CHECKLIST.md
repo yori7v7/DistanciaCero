@@ -185,10 +185,12 @@ Current next phase:
   4 deferred, identity mapping confirmed, 0 warnings and 0 noGoReasons.
 - Private insert payload builder design is documented in
   `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
+- Private insert payload builder exists as
+  `../../scripts/migration/build-private-insert-payload.mjs` with sanitized
+  fixtures only.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: create the payload builder with sanitized fixtures
-  only.
+- Next suggested phase: audit the payload builder before any private use.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

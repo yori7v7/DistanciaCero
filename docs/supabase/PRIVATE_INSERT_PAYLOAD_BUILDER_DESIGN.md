@@ -2,8 +2,8 @@
 
 ## Status
 
-- Status: documentary design.
-- Script created: no.
+- Status: mock implementation created after design.
+- Script created: yes, `../../scripts/migration/build-private-insert-payload.mjs`.
 - Real payload generated: no.
 - Insert executed: no.
 - Supabase touched: no.
@@ -11,9 +11,10 @@
 - Production allowed: no.
 - App connection: none.
 
-This document designs a future private payload builder. It does not create a
-script, generate private JSON, execute an insert, touch Supabase, touch Storage
-or connect the app.
+This document designed the private payload builder. S4.6.5.26 created the
+mock-only implementation with sanitized fixtures. It still does not generate
+private JSON, execute an insert, touch Supabase, touch Storage or connect the
+app.
 
 ## Purpose
 
@@ -217,6 +218,33 @@ The future builder should print only:
 - `noInsertExecuted`: `true`;
 - `nextRecommendedAction`.
 
+## S4.6.5.26 Implementation
+
+Implemented files:
+
+- `../../scripts/migration/build-private-insert-payload.mjs`;
+- `../../scripts/migration/fixtures/mock-private-local-export-v2-selected.json`;
+- `../../scripts/migration/fixtures/mock-private-local-export-v2-missing-selected.json`;
+- `../../scripts/migration/fixtures/mock-private-insert-payload-expected-summary.json`.
+
+The implementation:
+
+- uses Node ESM and built-in modules only;
+- accepts three explicit local JSON files;
+- rejects remote URLs;
+- validates export v2, manifest counts and identity mapping;
+- selects exactly the 14 manifest `selectedItems`;
+- builds conceptual `content_items` rows in memory;
+- excludes `blackHoleGallery`, `playlist`, `media_assets`, Storage and
+  `content_events`;
+- prints only sanitized summary JSON;
+- does not write files by default;
+- does not touch Supabase;
+- does not execute insert.
+
+It remains unapproved for private real export/manifest/mapping inputs until a
+separate script audit phase.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -240,9 +268,9 @@ The future builder is `NO-GO` if:
 
 Recommended next direction:
 
-- create the payload builder script with sanitized fixtures only;
-- audit it;
-- then consider private local execution to generate payload outside the repo.
+- audit the payload builder script;
+- then consider private local execution to generate payload outside the repo;
+- keep insert, SQL, Supabase and Storage blocked.
 
 Still blocked:
 

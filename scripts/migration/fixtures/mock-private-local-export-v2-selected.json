@@ -1,0 +1,236 @@
+{
+  "version": 2,
+  "exportedAt": "<mock_iso_timestamp>",
+  "source": {
+    "kind": "sanitized_fixture",
+    "privateData": false
+  },
+  "content": {
+    "monthlyLetters": [
+      {
+        "id": "mock-monthly-001",
+        "title": "<mock_monthly_title_1>",
+        "month": "<mock_month_label_1>",
+        "preview": "<mock_monthly_preview_1>",
+        "body": "<mock_monthly_body_1>",
+        "locked": false,
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-monthly-002",
+        "title": "<mock_monthly_title_2>",
+        "month": "<mock_month_label_2>",
+        "preview": "<mock_monthly_preview_2>",
+        "body": "<mock_monthly_body_2>",
+        "locked": true,
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "openWhenLetters": [
+      {
+        "id": "mock-open-001",
+        "title": "<mock_open_when_title_1>",
+        "label": "<mock_open_when_label_1>",
+        "preview": "<mock_open_when_preview_1>",
+        "body": "<mock_open_when_body_1>",
+        "locked": false,
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-open-002",
+        "title": "<mock_open_when_title_2>",
+        "label": "<mock_open_when_label_2>",
+        "preview": "<mock_open_when_preview_2>",
+        "body": "<mock_open_when_body_2>",
+        "locked": true,
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "reasons": [
+      {
+        "id": "mock-reason-001",
+        "title": "<mock_reason_title_1>",
+        "text": "<mock_reason_text_1>",
+        "order": 1,
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-reason-002",
+        "title": "<mock_reason_title_2>",
+        "text": "<mock_reason_text_2>",
+        "order": 2,
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "promises": [
+      {
+        "id": "mock-promise-001",
+        "title": "<mock_promise_title_1>",
+        "text": "<mock_promise_text_1>",
+        "order": 1,
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-promise-002",
+        "title": "<mock_promise_title_2>",
+        "text": "<mock_promise_text_2>",
+        "order": 2,
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "importantDates": [
+      {
+        "id": "mock-date-001",
+        "title": "<mock_date_title_1>",
+        "date": "2026-01-01",
+        "description": "<mock_date_description_1>",
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-date-002",
+        "title": "<mock_date_title_2>",
+        "date": "2026-02-01",
+        "description": "<mock_date_description_2>",
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "futureDreams": [
+      {
+        "id": "mock-dream-001",
+        "title": "<mock_dream_title_1>",
+        "text": "<mock_dream_text_1>",
+        "order": 1,
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-dream-002",
+        "title": "<mock_dream_title_2>",
+        "text": "<mock_dream_text_2>",
+        "order": 2,
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "timeline": [
+      {
+        "id": "mock-timeline-001",
+        "title": "<mock_timeline_title_1>",
+        "subtitle": "<mock_timeline_subtitle_1>",
+        "date": "2026-03-01",
+        "description": "<mock_timeline_description_1>",
+        "order": 1,
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      },
+      {
+        "id": "mock-timeline-002",
+        "title": "<mock_timeline_title_2>",
+        "subtitle": "<mock_timeline_subtitle_2>",
+        "date": "2026-04-01",
+        "description": "<mock_timeline_description_2>",
+        "order": 2,
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale",
+        "createdAt": "<mock_iso_timestamp>",
+        "updatedAt": "<mock_iso_timestamp>",
+        "source": "mock-local-export",
+        "spaceId": "mock-local-space"
+      }
+    ],
+    "blackHoleGallery": [
+      {
+        "id": "mock-gallery-001",
+        "title": "<mock_gallery_title_1>",
+        "storageStatus": "deferred_mock_storage",
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori"
+      },
+      {
+        "id": "mock-gallery-002",
+        "title": "<mock_gallery_title_2>",
+        "storageStatus": "deferred_mock_storage",
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale"
+      }
+    ],
+    "playlist": [
+      {
+        "id": "mock-playlist-001",
+        "title": "<mock_playlist_title_1>",
+        "sourcePolicy": "deferred_mock_playlist_policy",
+        "createdBy": "local-yori",
+        "updatedBy": "local-yori"
+      },
+      {
+        "id": "mock-playlist-002",
+        "title": "<mock_playlist_title_2>",
+        "sourcePolicy": "deferred_mock_playlist_policy",
+        "createdBy": "local-ale",
+        "updatedBy": "local-ale"
+      }
+    ]
+  }
+}

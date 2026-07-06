@@ -25,6 +25,8 @@
 - Private lab insert preflight result documented: yes, in S4.6.5.24 as
   sanitized `PASS`.
 - Private insert payload builder design documented: yes, in S4.6.5.25.
+- Private insert payload builder created: yes, in S4.6.5.26 with sanitized
+  fixtures only.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -89,6 +91,7 @@ Implemented mock-only location:
 - `scripts/migration/dry-run-private-local-export.mjs`.
 - `scripts/migration/generate-private-insert-manifest.mjs`.
 - `scripts/migration/preflight-private-lab-insert.mjs`.
+- `scripts/migration/build-private-insert-payload.mjs`.
 - Future only: `scripts/migration/insert-private-lab-content-items.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
@@ -99,6 +102,9 @@ Implemented mock-only location:
 - `scripts/migration/fixtures/mock-local-export-check-media-playlist.json`.
 - `scripts/migration/fixtures/mock-private-dry-run-result-check.json`.
 - `scripts/migration/fixtures/mock-private-dry-run-result-nogo.json`.
+- `scripts/migration/fixtures/mock-private-local-export-v2-selected.json`.
+- `scripts/migration/fixtures/mock-private-local-export-v2-missing-selected.json`.
+- `scripts/migration/fixtures/mock-private-insert-payload-expected-summary.json`.
 - `scripts/migration/README.md`.
 
 Implemented npm shortcuts:
@@ -132,6 +138,15 @@ Private dry-run normalizer:
   `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
 - It must not touch Supabase, Storage, `.env.local`, LocalStorage real data or
   runtime.
+
+Private insert payload builder:
+
+- `build-private-insert-payload.mjs` exists and is tested only with sanitized
+  fixtures.
+- It builds conceptual `content_items` rows in memory and prints only a
+  sanitized summary.
+- It must not be run against private real export, manifest or mapping files
+  until a separate review phase approves that.
 
 Recommendation:
 
@@ -260,7 +275,7 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Create the payload builder with sanitized fixtures only.
+- Audit the payload builder with sanitized fixtures only.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

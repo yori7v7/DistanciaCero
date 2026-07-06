@@ -296,6 +296,12 @@ Estado verificado post-S4.5.1:
       conceptual de 14 `content_items`, validaciones, seguridad, modos futuros
       y NO-GO. No crea script, no genera payload real, no toca Supabase y no
       inserta datos.
+- [x] S4.6.5.26 crea
+      `scripts/migration/build-private-insert-payload.mjs` y fixtures
+      sanitizadas para construir un payload conceptual de 14 `content_items`
+      desde export v2 + manifest + identity mapping mock. El script imprime
+      solo resumen sanitizado, no escribe archivos, no lee inputs privados
+      reales, no toca Supabase y no inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -780,7 +786,12 @@ la siguiente.
   builder futuro tomaria export privado v2, manifest sanitizado y mapping
   privado para producir un payload privado de 14 `content_items` fuera del repo.
   No genera payload real ni toca Supabase.
-- Salida futura: crear el payload builder con fixtures sanitizadas solamente.
+- Estado S4.6.5.26:
+  `scripts/migration/build-private-insert-payload.mjs` existe como builder
+  local-only/no-network con fixtures sanitizadas. Construye filas conceptuales
+  en memoria, imprime solo resumen, preserva 14 selected/4 deferred y mantiene
+  media/playlist/Storage fuera.
+- Salida futura: auditar el payload builder antes de cualquier uso privado.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -927,7 +938,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Controlled insert preflight/no-network script audit.
 - [x] Private lab insert preflight result sanitized docs.
 - [x] Private insert payload builder design docs-only.
-- [ ] Private insert payload builder with sanitized fixtures only.
+- [x] Private insert payload builder with sanitized fixtures only.
+- [ ] Private insert payload builder script audit.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.
