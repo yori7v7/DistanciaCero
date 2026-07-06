@@ -34,6 +34,9 @@ The future insert manifest should:
 - support human review before any insert decision;
 - make rollback grouping explicit before any write happens.
 
+The manifest remains selection metadata only. Private payload construction is
+documented separately in `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
+
 ## Manifest Basis
 
 The manifest should derive from the sanitized private dry-run result and the
@@ -302,8 +305,7 @@ Manifest generation or use is `NO-GO` if:
 
 Next recommended phase:
 
-- Create the controlled insert preflight/no-network script with sanitized
-  fixtures.
+- Create the payload builder with sanitized fixtures only.
 
 Still blocked:
 

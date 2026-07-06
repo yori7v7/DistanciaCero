@@ -849,6 +849,11 @@ Estado de S4.6.1:
   usuario contra manifest + identity mapping privados fuera del repo. Resultado
   `PASS`: 14 selected, 4 deferred, identity mapping confirmed, 0 noGoReasons,
   0 warnings, no network, no Supabase y no insert.
+- S4.6.5.25 crea `docs/supabase/PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`
+  como diseno docs-only del futuro builder que tomara export privado v2,
+  manifest sanitizado e identity/space mapping privado para producir un payload
+  privado de 14 `content_items` fuera del repo. No crea script, no genera
+  payload real, no toca Supabase y no inserta datos.
 
 Validacion y rollback:
 
@@ -974,9 +979,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Controlled insert preflight/no-network script creado con fixtures
   sanitizadas y auditado.
 - Private lab insert preflight no-network real ejecutado por el usuario fuera
-  del repo y registrado solo de forma sanitizada como `PASS`; falta disenar o
-  crear el script de insert real en modo fixture/no-network, o el workflow
-  privado de config/mapping.
+  del repo y registrado solo de forma sanitizada como `PASS`.
+- Private insert payload builder design docs-only creado; falta crear el
+  payload builder con fixtures sanitizadas solamente.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1077,11 +1082,12 @@ futuro script de insert controlado, empezando por preflight/no-network con
 fixtures sanitizadas. S4.6.5.22 crea ese preflight/no-network con fixtures
 sanitizadas. S4.6.5.23 lo audita. S4.6.5.24 registra el resultado sanitizado
 del preflight privado real reportado por el usuario: `PASS`, 14 selected, 4
-deferred, identity mapping confirmed, 0 warnings y 0 noGoReasons.
+deferred, identity mapping confirmed, 0 warnings y 0 noGoReasons. S4.6.5.25
+documenta el futuro payload builder privado para convertir export + manifest +
+mapping en payload privado de 14 `content_items`, todavia fuera del repo.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar o crear el controlled lab
-insert script en modo fixture/no-network primero, o disenar el workflow privado
-de config/mapping para un futuro insert real. Todavia sin crear SQL, sin
-ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real leido por
-scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es crear el payload builder con
+fixtures sanitizadas solamente. Todavia sin crear SQL, sin ejecutar insert, sin
+datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
+sin `.env.local`, sin runtime y sin Storage.

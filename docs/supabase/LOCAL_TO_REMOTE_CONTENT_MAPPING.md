@@ -144,11 +144,13 @@ Recommended future path:
 8. Validate counts per collection and per kind.
 9. Validate identity mapping privately, outside Git.
 10. Validate duplicate detection using legacy ids and source markers.
-11. Insert into a disposable lab only after explicit approval.
-12. Run read-only verification of counts, FK chain and metadata.
-13. Run RLS verification with synthetic users.
-14. Integrate one UI feature behind an off-by-default feature flag.
-15. Keep rollback to local-only mode available.
+11. Build private insert payload outside the repo only after payload builder
+    review.
+12. Insert into a disposable lab only after explicit approval.
+13. Run read-only verification of counts, FK chain and metadata.
+14. Run RLS verification with synthetic users.
+15. Integrate one UI feature behind an off-by-default feature flag.
+16. Keep rollback to local-only mode available.
 
 ## NO-GO Criteria
 
@@ -176,10 +178,13 @@ Current next phase:
   `CONTROLLED_PRIVATE_LAB_INSERT_POLICY.md`.
 - Private insert manifest format is documented in
   `PRIVATE_INSERT_MANIFEST_FORMAT.md`.
+- Private lab insert preflight result is documented in
+  `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`.
+- Private insert payload builder design is documented in
+  `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: design or create a local-only manifest generator with
-  sanitized fixtures before any private manifest or insert exists.
+- Next suggested phase: create the payload builder with sanitized fixtures only.
 - Still no private export read by Codex, real snapshot, real LocalStorage read,
   real insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
   `.env.local`, private files, Storage or reset.

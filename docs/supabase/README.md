@@ -188,6 +188,11 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   usuario contra manifest + identity mapping privados fuera del repo. Resultado
   `PASS`: 14 selected, 4 deferred, identity mapping confirmed, 0 warnings, 0
   noGoReasons, no network, no Supabase y no insert.
+- S4.6.5.25 crea `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md` para documentar el
+  futuro payload builder privado. El builder tomaria export privado v2,
+  manifest sanitizado e identity/space mapping privado para producir un payload
+  privado de 14 `content_items` fuera del repo. No crea script, no genera
+  payload real, no toca Supabase y no inserta.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -380,6 +385,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   privado no-network reportado de forma sanitizada. Registra `PASS`, 14
   selected, 4 deferred, identity mapping confirmed, 0 warnings y 0 noGoReasons,
   sin payload privado ni secretos.
+- `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`: diseno S4.6.5.25 del futuro
+  payload builder privado para 14 `content_items`. Mantiene payload real fuera
+  del repo/chat y sigue sin Supabase ni insert.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
   sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
@@ -440,8 +448,6 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar o crear el controlled lab insert script en modo fixture/no-network
-primero, o disenar el workflow privado de config/mapping para un futuro insert
-real. Todavia sin insert, sin SQL, sin datos reales en Git/chat, sin
-LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
-runtime y sin Storage.
+Crear el payload builder con fixtures sanitizadas solamente. Todavia sin payload
+real, sin insert, sin SQL, sin datos reales en Git/chat, sin LocalStorage real
+leido por scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.

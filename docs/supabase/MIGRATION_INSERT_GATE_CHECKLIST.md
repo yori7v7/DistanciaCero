@@ -183,11 +183,12 @@ Current next phase:
 - Private lab insert preflight result is documented in
   `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md` as sanitized `PASS`: 14 selected,
   4 deferred, identity mapping confirmed, 0 warnings and 0 noGoReasons.
+- Private insert payload builder design is documented in
+  `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: design or create the controlled lab insert script in
-  fixture/no-network mode first, or design the private config and mapping
-  workflow.
+- Next suggested phase: create the payload builder with sanitized fixtures
+  only.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

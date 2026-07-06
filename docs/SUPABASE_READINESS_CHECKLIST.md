@@ -289,6 +289,13 @@ Estado verificado post-S4.5.1:
       contra manifest + identity mapping privados fuera del repo. Resultado
       `PASS`: 14 selected, 4 deferred, identity mapping confirmed, 0 warnings,
       0 noGoReasons, no network, no Supabase y no insert.
+- [x] S4.6.5.25 documenta
+      `docs/supabase/PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md` como diseno
+      docs-only del futuro payload builder privado. Define entradas privadas,
+      salida privada fuera del repo, diferencia manifest/payload, construccion
+      conceptual de 14 `content_items`, validaciones, seguridad, modos futuros
+      y NO-GO. No crea script, no genera payload real, no toca Supabase y no
+      inserta datos.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -768,9 +775,12 @@ la siguiente.
   `selectedItemsCount` 14, `deferredItemsCount` 4,
   `identityMappingStatus` confirmed, 0 noGoReasons, 0 warnings, no network,
   no Supabase y no insert.
-- Salida futura: disenar o crear el controlled lab insert script en modo
-  fixture/no-network primero, o disenar el workflow privado de config/mapping
-  para un futuro insert real.
+- Estado S4.6.5.25:
+  `docs/supabase/PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md` documenta como un
+  builder futuro tomaria export privado v2, manifest sanitizado y mapping
+  privado para producir un payload privado de 14 `content_items` fuera del repo.
+  No genera payload real ni toca Supabase.
+- Salida futura: crear el payload builder con fixtures sanitizadas solamente.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -916,7 +926,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Controlled insert preflight/no-network script with sanitized fixtures.
 - [x] Controlled insert preflight/no-network script audit.
 - [x] Private lab insert preflight result sanitized docs.
-- [ ] Controlled lab insert script fixture/no-network design or implementation.
+- [x] Private insert payload builder design docs-only.
+- [ ] Private insert payload builder with sanitized fixtures only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

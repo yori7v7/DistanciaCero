@@ -191,8 +191,9 @@ Recommended next direction:
 - The controlled insert preflight/no-network script has been audited.
 - The sanitized private preflight result is recorded in
   `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`.
-- Next, design or create the controlled lab insert script in fixture/no-network
-  mode first, or design the private config and mapping workflow.
+- The private insert payload builder is designed in
+  `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md`.
+- Next, create the payload builder with sanitized fixtures only.
 
 Still blocked:
 

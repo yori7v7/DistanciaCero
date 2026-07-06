@@ -91,9 +91,9 @@ intentionally not included.
 
 Recommended next direction:
 
-- Design or create the controlled lab insert script in fixture/no-network mode
-  first; or
-- design the private config and mapping workflow for a future real insert.
+- `PRIVATE_INSERT_PAYLOAD_BUILDER_DESIGN.md` documents the future private
+  payload builder.
+- Next, create the payload builder script with sanitized fixtures only.
 
 Still blocked:
 
@@ -111,4 +111,5 @@ Before any real insert, require:
 - real insert script audited;
 - disposable lab confirmed;
 - real private identity mapping confirmed;
+- private payload reviewed;
 - explicit user GO.
