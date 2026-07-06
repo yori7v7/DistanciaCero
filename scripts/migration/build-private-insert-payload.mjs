@@ -54,7 +54,6 @@ const SECRET_PATTERNS = Object.freeze([
   { code: 'access_or_refresh_token', pattern: /"?(access_token|refresh_token)"?\s*:/i },
   { code: 'api_key_value', pattern: /"(api[_-]?key|client[_-]?secret|secret[_-]?key)"\s*:\s*"(?!<)[A-Za-z0-9._-]{12,}"/i },
   { code: 'oauth_token_value', pattern: /"(oauth[_-]?token|oauth[_-]?access[_-]?token)"\s*:\s*"(?!<)[A-Za-z0-9._-]{12,}"/i },
-  { code: 'data_url', pattern: /data:[a-z]+\/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=]+/i },
 ]);
 
 const DATA_URL_PATTERN = /data:[a-z]+\/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=]+/i;
@@ -117,12 +116,15 @@ function countsMatch(actual, expected) {
   return expectedKeys.every((key) => actual[key] === expected[key]);
 }
 
-function scanForSecrets(rawText) {
+function scanForSecrets(rawText, { allowDataUrls = false } = {}) {
   const findings = [];
   for (const check of SECRET_PATTERNS) {
     if (check.pattern.test(rawText)) {
       findings.push({ code: check.code, ref: '<input>' });
     }
+  }
+  if (!allowDataUrls && DATA_URL_PATTERN.test(rawText)) {
+    findings.push({ code: 'data_url', ref: '<input>' });
   }
   return findings;
 }
@@ -447,7 +449,7 @@ function validateArgs(args) {
   return { ok: true, exportInput, manifestInput, identityInput };
 }
 
-async function readJsonInput(inputPath) {
+async function readJsonInput(inputPath, options = {}) {
   const resolvedPath = path.resolve(process.cwd(), inputPath);
   const safeFile = sanitizePathForOutput(resolvedPath);
 
@@ -458,7 +460,7 @@ async function readJsonInput(inputPath) {
     return { ok: false, safeFile, status: 'INVALID_USAGE', exitCode: EXIT_CODES.INVALID_USAGE, code: 'file_unreadable' };
   }
 
-  const securityFindings = scanForSecrets(rawText);
+  const securityFindings = scanForSecrets(rawText, options);
   if (securityFindings.length > 0) {
     return { ok: false, safeFile, status: 'ABORTED', exitCode: EXIT_CODES.ABORTED, code: securityFindings[0].code };
   }
@@ -491,7 +493,7 @@ async function main() {
     return;
   }
 
-  const exportRead = await readJsonInput(parsed.exportInput);
+  const exportRead = await readJsonInput(parsed.exportInput, { allowDataUrls: true });
   const manifestRead = await readJsonInput(parsed.manifestInput);
   const identityRead = await readJsonInput(parsed.identityInput);
   const exportFile = exportRead.safeFile || '<input>';

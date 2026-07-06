@@ -27,6 +27,7 @@
 - Private insert payload builder design documented: yes, in S4.6.5.25.
 - Private insert payload builder created: yes, in S4.6.5.26 with sanitized
   fixtures only.
+- Private insert payload builder deferred media hardening: yes, in S4.6.5.28.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -145,6 +146,8 @@ Private insert payload builder:
   fixtures.
 - It builds conceptual `content_items` rows in memory and prints only a
   sanitized summary.
+- It tolerates Data URLs only in deferred/excluded media input and blocks Data
+  URLs or URLs in selected items.
 - It must not be run against private real export, manifest or mapping files
   until a separate review phase approves that.
 

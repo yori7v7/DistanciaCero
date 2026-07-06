@@ -302,6 +302,10 @@ Estado verificado post-S4.5.1:
       desde export v2 + manifest + identity mapping mock. El script imprime
       solo resumen sanitizado, no escribe archivos, no lee inputs privados
       reales, no toca Supabase y no inserta datos.
+- [x] S4.6.5.28 ajusta `build-private-insert-payload.mjs` para no abortar por
+      Data URLs ubicadas solo en colecciones deferred/excluded del export. Las
+      Data URLs en selected items siguen bloqueadas, no se imprimen payloads y
+      media/playlist siguen fuera de payload v1.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -791,6 +795,10 @@ la siguiente.
   local-only/no-network con fixtures sanitizadas. Construye filas conceptuales
   en memoria, imprime solo resumen, preserva 14 selected/4 deferred y mantiene
   media/playlist/Storage fuera.
+- Estado S4.6.5.28:
+  el builder permite Data URLs solo cuando pertenecen a colecciones deferred o
+  excluidas, y las mantiene fuera de payload rows/stdout. Data URL o URL en un
+  selected item sigue siendo `NO-GO`.
 - Salida futura: auditar el payload builder antes de cualquier uso privado.
 
 ### S4.7: bootstrap owner/partner controlado

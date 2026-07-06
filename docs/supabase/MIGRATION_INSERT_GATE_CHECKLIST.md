@@ -188,6 +188,8 @@ Current next phase:
 - Private insert payload builder exists as
   `../../scripts/migration/build-private-insert-payload.mjs` with sanitized
   fixtures only.
+- S4.6.5.28 keeps deferred/excluded media Data URLs out of payload v1 while
+  preserving a hard block for selected item Data URLs or URLs.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
 - Next suggested phase: audit the payload builder before any private use.

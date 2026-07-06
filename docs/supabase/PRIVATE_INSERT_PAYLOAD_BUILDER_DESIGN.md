@@ -123,6 +123,8 @@ The future builder must validate:
 - no selected item has warning codes;
 - selected payload contains no Data URLs;
 - selected payload contains no playlist URLs;
+- Data URLs in deferred/excluded `blackHoleGallery` or `playlist` input are
+  tolerated only because they do not enter payload v1;
 - no real UUID, email or secret is printed;
 - no private path is printed;
 - export version is `2`;
@@ -162,7 +164,9 @@ All shapes are conceptual and must not include real content in docs:
 
 - `blackHoleGallery` does not enter payload v1.
 - `playlist` does not enter payload v1.
-- Data URLs stay out.
+- Data URLs in deferred/excluded collections stay out of payload rows and
+  stdout.
+- Data URLs in selected items are blocking.
 - Playlist URLs and paths stay out.
 - Storage stays out.
 - Media and playlist require a future phase.
@@ -245,6 +249,18 @@ The implementation:
 It remains unapproved for private real export/manifest/mapping inputs until a
 separate script audit phase.
 
+## S4.6.5.28 Deferred Media Hardening
+
+S4.6.5.28 narrows Data URL handling so the builder does not abort on input-level
+Data URLs that live only in deferred/excluded collections such as
+`blackHoleGallery`. The builder now allows those deferred media values to exist
+in the export input while still excluding them from payload rows and stdout.
+
+It still blocks selected items that contain Data URLs, full URLs or playlist
+source-like data, and it still aborts on real secrets such as Supabase keys,
+JWTs, passwords, service-role values, private paths, UUIDs or non-example
+emails.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -252,7 +268,7 @@ The future builder is `NO-GO` if:
 - selected count is not `14`;
 - deferred count is not `4`;
 - a selected `localRef` is missing;
-- payload includes a Data URL;
+- selected payload includes a Data URL;
 - payload includes playlist source data;
 - payload includes gallery or playlist;
 - identity mapping is missing;

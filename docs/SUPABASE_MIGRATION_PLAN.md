@@ -860,6 +860,10 @@ Estado de S4.6.1:
   usa solo built-ins de Node, rechaza URLs remotas, no escribe archivos, no
   imprime payload completo, no lee inputs privados reales, no toca Supabase y
   no inserta datos.
+- S4.6.5.28 ajusta el builder para que Data URLs en colecciones
+  deferred/excluded del export, como `blackHoleGallery`, no bloqueen el build
+  de los 14 selected limpios. Las Data URLs y URLs dentro de selected items
+  siguen bloqueadas, y media/playlist siguen fuera de payload v1.
 
 Validacion y rollback:
 
@@ -987,7 +991,8 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private lab insert preflight no-network real ejecutado por el usuario fuera
   del repo y registrado solo de forma sanitizada como `PASS`.
 - Private insert payload builder creado con fixtures sanitizadas solamente;
-  falta auditarlo antes de cualquier uso privado real.
+  ajustado para diferir Data URLs de media excluida; falta auditarlo antes de
+  cualquier uso privado real.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1093,7 +1098,8 @@ documenta el futuro payload builder privado para convertir export + manifest +
 mapping en payload privado de 14 `content_items`, todavia fuera del repo.
 S4.6.5.26 crea el builder local-only con fixtures sanitizadas: construye filas
 conceptuales en memoria, imprime solo resumen sanitizado y no toca Supabase ni
-ejecuta insert.
+ejecuta insert. S4.6.5.28 corrige el manejo de Data URLs diferidas para que
+solo bloqueen si pertenecen a selected items.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
 desarrollo. La siguiente fase recomendada es auditar el payload builder antes

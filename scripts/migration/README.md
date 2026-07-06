@@ -58,6 +58,9 @@ sanitized insert manifest fixture and a sanitized identity mapping fixture,
 then builds conceptual `content_items` rows in memory and prints only a
 sanitized summary. It is local-only, rejects remote URLs, does not write files,
 does not print payloads, does not touch Supabase and does not insert data.
+Data URLs in deferred/excluded collections are allowed to exist in the input
+export, but selected items with Data URLs or full URLs remain `NO-GO` and are
+never printed.
 In-repo tests use sanitized fixtures only; do not run it against private real
 export/manifest/mapping files until a separate review phase approves that.
 
@@ -117,6 +120,8 @@ Expected fixture results:
 - `mock-private-local-export-v2-missing-selected.json`: `NO-GO`, exit `1`.
 - `mock-private-insert-payload-expected-summary.json`: sanitized expected
   summary only; it contains no full payload.
+- Deferred media Data URLs are expected to stay outside payload v1; selected
+  item Data URLs and selected item URLs remain blocking.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 
