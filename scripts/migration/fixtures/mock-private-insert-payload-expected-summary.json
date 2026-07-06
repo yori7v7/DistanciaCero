@@ -16,6 +16,9 @@
     "futureDreams": 2,
     "timeline": 2
   },
+  "identityResolvedCount": 14,
+  "identityMissingCount": 0,
+  "identityMappingStatus": "confirmed",
   "targetTable": "content_items",
   "excludedTargets": ["media_assets", "storage", "content_events"],
   "noSupabaseTouched": true,

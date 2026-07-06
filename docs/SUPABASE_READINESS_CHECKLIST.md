@@ -799,7 +799,11 @@ la siguiente.
   el builder permite Data URLs solo cuando pertenecen a colecciones deferred o
   excluidas, y las mantiene fuera de payload rows/stdout. Data URL o URL en un
   selected item sigue siendo `NO-GO`.
-- Salida futura: auditar el payload builder antes de cualquier uso privado.
+- Estado S4.6.5.30:
+  el builder resuelve `identityKey` placeholder desde metadata local del export
+  seleccionado y reporta solo conteos/status de identidad; el mapping privado
+  confirmado sigue siendo obligatorio.
+- Salida futura: auditar/commitear el fix antes de cualquier uso privado.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -947,7 +951,8 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private lab insert preflight result sanitized docs.
 - [x] Private insert payload builder design docs-only.
 - [x] Private insert payload builder with sanitized fixtures only.
-- [ ] Private insert payload builder script audit.
+- [x] Private insert payload builder script audit and deferred media hardening.
+- [x] Private insert payload builder identity inference hardening.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

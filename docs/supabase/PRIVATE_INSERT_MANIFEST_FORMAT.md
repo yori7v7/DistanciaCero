@@ -185,7 +185,10 @@ Each selected item must be sanitized and include:
 - `targetTable`: `content_items`.
 - `remoteType`.
 - `localRef`: sanitized, truncated or placeholder.
-- `identityKey`: `local-yori`, `local-ale` or an unknown placeholder.
+- `identityKey`: `local-yori`, `local-ale` or an unknown placeholder. If a
+  sanitized manifest uses a placeholder, the payload builder must infer local
+  identity from the selected export item metadata before any payload rows are
+  allowed.
 - `hasPayload`: `true`.
 - `payloadIncludedInManifest`: `false`.
 - `status`: `selected_for_lab_insert`.
@@ -233,7 +236,9 @@ silently discarded.
 - Real emails must not be documented.
 - Private mapping must not be pasted in chat.
 - If mapping is missing, insert is blocked.
-- The sanitized manifest may use `<private_mapping_required>`.
+- The sanitized manifest may use `<private_mapping_required>`, but a future
+  payload build still requires selected export metadata that resolves to a
+  known local identity and a confirmed private mapping.
 
 ## Payload Policy
 

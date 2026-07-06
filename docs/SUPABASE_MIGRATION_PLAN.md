@@ -991,8 +991,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private lab insert preflight no-network real ejecutado por el usuario fuera
   del repo y registrado solo de forma sanitizada como `PASS`.
 - Private insert payload builder creado con fixtures sanitizadas solamente;
-  ajustado para diferir Data URLs de media excluida; falta auditarlo antes de
-  cualquier uso privado real.
+  ajustado para diferir Data URLs de media excluida y para inferir identidad
+  local desde metadata del export cuando el manifest sanitizado usa placeholder.
+  Falta commitear/revisar el fix antes de cualquier uso privado real.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1099,10 +1100,13 @@ mapping en payload privado de 14 `content_items`, todavia fuera del repo.
 S4.6.5.26 crea el builder local-only con fixtures sanitizadas: construye filas
 conceptuales en memoria, imprime solo resumen sanitizado y no toca Supabase ni
 ejecuta insert. S4.6.5.28 corrige el manejo de Data URLs diferidas para que
-solo bloqueen si pertenecen a selected items.
+solo bloqueen si pertenecen a selected items. S4.6.5.30 corrige la inferencia
+de identidad cuando el manifest sanitizado trae `identityKey` placeholder:
+resuelve desde metadata local del export seleccionado y mantiene obligatorio el
+mapping privado confirmado.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar el payload builder antes
-de cualquier uso privado real. Todavia sin crear SQL, sin ejecutar insert, sin
-datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase,
-sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es commitear el fix del payload
+builder antes de cualquier uso privado real. Todavia sin crear SQL, sin ejecutar
+insert, sin datos reales en Git/chat, sin LocalStorage real leido por scripts,
+sin Supabase, sin `.env.local`, sin runtime y sin Storage.

@@ -125,6 +125,8 @@ The future builder must validate:
 - selected payload contains no playlist URLs;
 - Data URLs in deferred/excluded `blackHoleGallery` or `playlist` input are
   tolerated only because they do not enter payload v1;
+- if manifest identity is a placeholder, selected export metadata must resolve
+  to a known local identity before payload rows can be built;
 - no real UUID, email or secret is printed;
 - no private path is printed;
 - export version is `2`;
@@ -261,6 +263,21 @@ source-like data, and it still aborts on real secrets such as Supabase keys,
 JWTs, passwords, service-role values, private paths, UUIDs or non-example
 emails.
 
+## S4.6.5.30 Identity Inference Hardening
+
+S4.6.5.30 fixes the case where a sanitized manifest uses
+`<private_mapping_required>` for `identityKey`. The builder now treats that as a
+placeholder, then resolves local identity from the selected export item only.
+Supported sanitized sources include `createdBy`, `updatedBy`, `created_by`,
+`updated_by`, `metadata.createdBy`, `metadata.updatedBy`, `author`, `identity`,
+`localIdentity`, `localIdentityKey` and documented local aliases.
+
+The fix preserves the mapping gate: resolved local identities still require a
+confirmed private identity mapping before any payload rows are accepted. Stdout
+prints only `identityResolvedCount`, `identityMissingCount` and
+`identityMappingStatus`; it does not print full identity metadata, UUIDs, emails
+or payload rows.
+
 ## NO-GO Conditions
 
 The future builder is `NO-GO` if:
@@ -272,6 +289,8 @@ The future builder is `NO-GO` if:
 - payload includes playlist source data;
 - payload includes gallery or playlist;
 - identity mapping is missing;
+- selected export metadata cannot resolve local identity when manifest identity
+  is only a placeholder;
 - export is invalid;
 - manifest is invalid;
 - output would be inside the repo;

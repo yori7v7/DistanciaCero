@@ -60,7 +60,11 @@ sanitized summary. It is local-only, rejects remote URLs, does not write files,
 does not print payloads, does not touch Supabase and does not insert data.
 Data URLs in deferred/excluded collections are allowed to exist in the input
 export, but selected items with Data URLs or full URLs remain `NO-GO` and are
-never printed.
+never printed. If a sanitized manifest uses an identity placeholder, the
+builder resolves local identity only from selected export item metadata such as
+`createdBy`, `updatedBy`, `created_by`, `updated_by`, `metadata`, `author`,
+`identity` or `localIdentity`; stdout reports only identity counts/status and
+never prints private identity metadata.
 In-repo tests use sanitized fixtures only; do not run it against private real
 export/manifest/mapping files until a separate review phase approves that.
 
@@ -116,7 +120,12 @@ Expected fixture results:
 - `mock-private-identity-mapping-missing.json`: `NO-GO`, exit `1`.
 - `mock-private-insert-manifest-nogo-selected-media.json`: `NO-GO`, exit `1`.
 - `mock-private-local-export-v2-selected.json` with confirmed identity mapping:
-  `PASS`, exit `0`, `payloadRowsCount` `14`.
+  `PASS`, exit `0`, `payloadRowsCount` `14`, `identityResolvedCount` `14`.
+- `mock-private-local-export-v2-placeholder-identity.json` with a manifest
+  identity placeholder and confirmed mapping: `PASS`, exit `0`,
+  `payloadRowsCount` `14`, `identityResolvedCount` `14`.
+- `mock-private-local-export-v2-missing-identity.json` with a manifest identity
+  placeholder: `NO-GO`, exit `1`, `identity_mapping_missing`.
 - `mock-private-local-export-v2-missing-selected.json`: `NO-GO`, exit `1`.
 - `mock-private-insert-payload-expected-summary.json`: sanitized expected
   summary only; it contains no full payload.

@@ -28,6 +28,8 @@
 - Private insert payload builder created: yes, in S4.6.5.26 with sanitized
   fixtures only.
 - Private insert payload builder deferred media hardening: yes, in S4.6.5.28.
+- Private insert payload builder identity inference hardening: yes, in
+  S4.6.5.30.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -105,6 +107,8 @@ Implemented mock-only location:
 - `scripts/migration/fixtures/mock-private-dry-run-result-nogo.json`.
 - `scripts/migration/fixtures/mock-private-local-export-v2-selected.json`.
 - `scripts/migration/fixtures/mock-private-local-export-v2-missing-selected.json`.
+- `scripts/migration/fixtures/mock-private-local-export-v2-placeholder-identity.json`.
+- `scripts/migration/fixtures/mock-private-local-export-v2-missing-identity.json`.
 - `scripts/migration/fixtures/mock-private-insert-payload-expected-summary.json`.
 - `scripts/migration/README.md`.
 
@@ -148,6 +152,9 @@ Private insert payload builder:
   sanitized summary.
 - It tolerates Data URLs only in deferred/excluded media input and blocks Data
   URLs or URLs in selected items.
+- It resolves manifest identity placeholders from selected export item metadata
+  when local identity is present, while still requiring confirmed private
+  mapping.
 - It must not be run against private real export, manifest or mapping files
   until a separate review phase approves that.
 

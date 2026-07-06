@@ -58,6 +58,23 @@ const SECRET_PATTERNS = Object.freeze([
 
 const DATA_URL_PATTERN = /data:[a-z]+\/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=]+/i;
 const URL_PATTERN = /https?:\/\//i;
+const IDENTITY_PLACEHOLDER_PATTERN = /^<[^>]+>$/;
+
+const IDENTITY_ALIASES = Object.freeze({
+  yori: 'local-yori',
+  local_yori: 'local-yori',
+  diego: 'local-yori',
+  owner_a: 'local-yori',
+  local_owner_a: 'local-yori',
+  synthetic_owner_a: 'local-yori',
+  owner_a_sintetico: 'local-yori',
+  ale: 'local-ale',
+  local_ale: 'local-ale',
+  partner_a: 'local-ale',
+  local_partner_a: 'local-ale',
+  synthetic_partner_a: 'local-ale',
+  partner_a_sintetico: 'local-ale',
+});
 
 function usage() {
   return [
@@ -87,6 +104,19 @@ function sanitizeLocalRef(value) {
   if (!text) return '<unknown>';
   const sanitized = text.replace(/[^\w:.[\]-]/g, '_');
   return sanitized.length > 80 ? `${sanitized.slice(0, 77)}...` : sanitized;
+}
+
+function normalizeIdentityLabel(value) {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  if (!trimmed || IDENTITY_PLACEHOLDER_PATTERN.test(trimmed)) return undefined;
+  const normalized = trimmed
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  return IDENTITY_ALIASES[normalized];
 }
 
 function issue(code, ref = '<input>') {
@@ -268,37 +298,116 @@ function buildIdentityMap(mapping) {
   return identityMap;
 }
 
-function validateIdentityMapping(mapping, manifest) {
+function validateIdentityMapping(mapping) {
   const errors = [];
   if (!isPlainObject(mapping)) return [issue('identity_mapping_not_object')];
   if (mapping.status !== 'confirmed' && mapping.identityMappingStatus !== 'confirmed') {
     errors.push(issue('identity_mapping_not_confirmed'));
   }
 
-  const identityMap = buildIdentityMap(mapping);
-  const requiredKeys = new Set();
-  for (const item of Array.isArray(manifest?.selectedItems) ? manifest.selectedItems : []) {
-    if (typeof item?.identityKey === 'string' && item.identityKey.trim()) {
-      requiredKeys.add(item.identityKey);
-    }
-  }
-
-  for (const key of requiredKeys) {
-    const entry = identityMap.get(key);
-    if (!entry) {
-      errors.push(issue('identity_mapping_missing', key));
-      continue;
-    }
+  for (const entry of getIdentityEntries(mapping)) {
     if (entry.status !== 'confirmed') {
-      errors.push(issue('identity_mapping_entry_not_confirmed', key));
+      errors.push(issue('identity_mapping_entry_not_confirmed', '<identity_mapping>'));
     }
     const ref = entry.remoteProfileRef || entry.remoteProfileHint || entry.remoteProfileId;
     if (typeof ref !== 'string' || ref.trim() === '' || ref === '<private_mapping_required>') {
-      errors.push(issue('identity_mapping_placeholder', key));
+      errors.push(issue('identity_mapping_placeholder', '<identity_mapping>'));
     }
   }
 
   return errors;
+}
+
+function candidateValuesFromMetadata(metadata, keys) {
+  if (!isPlainObject(metadata)) return [];
+  return keys.map((key) => metadata[key]);
+}
+
+function inferLocalIdentity(item, manifestItem) {
+  const candidates = [
+    manifestItem?.identityKey,
+    item?.createdBy,
+    item?.updatedBy,
+    item?.created_by,
+    item?.updated_by,
+    ...candidateValuesFromMetadata(item?.metadata, [
+      'createdBy',
+      'updatedBy',
+      'created_by',
+      'updated_by',
+      'author',
+      'identity',
+      'localIdentity',
+      'localIdentityKey',
+      'identityKey',
+    ]),
+    item?.localIdentity,
+    item?.localIdentityKey,
+    item?.identity,
+    item?.identityKey,
+    item?.author,
+    item?.source,
+  ];
+
+  for (const value of candidates) {
+    const normalized = normalizeIdentityLabel(value);
+    if (normalized) return normalized;
+  }
+  return undefined;
+}
+
+function inferActorIdentity(item, manifestItem, actor) {
+  const fieldNames = actor === 'created'
+    ? ['createdBy', 'created_by']
+    : ['updatedBy', 'updated_by'];
+  const candidates = [
+    ...fieldNames.map((field) => item?.[field]),
+    ...candidateValuesFromMetadata(item?.metadata, fieldNames),
+    inferLocalIdentity(item, manifestItem),
+  ];
+
+  for (const value of candidates) {
+    const normalized = normalizeIdentityLabel(value);
+    if (normalized) return normalized;
+  }
+  return undefined;
+}
+
+function validateMappedIdentity(identityMap, identity, ref, errors) {
+  if (!identity) {
+    errors.push(issue('identity_mapping_missing', ref));
+    return;
+  }
+  const entry = identityMap.get(identity);
+  if (!entry) {
+    errors.push(issue('identity_mapping_missing', ref));
+    return;
+  }
+  if (entry.status !== 'confirmed') {
+    errors.push(issue('identity_mapping_entry_not_confirmed', ref));
+  }
+  const remoteRef = entry.remoteProfileRef || entry.remoteProfileHint || entry.remoteProfileId;
+  if (typeof remoteRef !== 'string' || remoteRef.trim() === '' || remoteRef === '<private_mapping_required>') {
+    errors.push(issue('identity_mapping_placeholder', ref));
+  }
+}
+
+function buildIdentityStats({ exportIndex, manifest }) {
+  const selectedItems = Array.isArray(manifest?.selectedItems) ? manifest.selectedItems : [];
+  let identityResolvedCount = 0;
+  let identityMissingCount = 0;
+
+  for (const item of selectedItems) {
+    const exportItem = exportIndex.get(`${item.sourceCollection}::${item.localRef}`);
+    if (!exportItem) continue;
+    if (inferLocalIdentity(exportItem, item)) {
+      identityResolvedCount += 1;
+    } else {
+      identityMissingCount += 1;
+    }
+  }
+
+  return { identityResolvedCount, identityMissingCount };
 }
 
 function validateSelectedPayloads({ exportIndex, manifest, identityMap }) {
@@ -322,10 +431,16 @@ function validateSelectedPayloads({ exportIndex, manifest, identityMap }) {
       errors.push(issue('selected_url_detected', ref));
     }
 
-    const createdBy = exportItem.createdBy || item.identityKey;
-    const updatedBy = exportItem.updatedBy || item.identityKey;
-    if (!identityMap.has(createdBy)) errors.push(issue('created_by_mapping_missing', ref));
-    if (!identityMap.has(updatedBy)) errors.push(issue('updated_by_mapping_missing', ref));
+    const primaryIdentity = inferLocalIdentity(exportItem, item);
+    const createdBy = inferActorIdentity(exportItem, item, 'created') || primaryIdentity;
+    const updatedBy = inferActorIdentity(exportItem, item, 'updated') || primaryIdentity;
+    if (!primaryIdentity) {
+      errors.push(issue('identity_mapping_missing', ref));
+      continue;
+    }
+    for (const identity of new Set([primaryIdentity, createdBy, updatedBy].filter(Boolean))) {
+      validateMappedIdentity(identityMap, identity, ref, errors);
+    }
   }
 
   return errors;
@@ -334,8 +449,9 @@ function validateSelectedPayloads({ exportIndex, manifest, identityMap }) {
 function buildPayloadRows({ exportIndex, manifest, identityMap }) {
   return manifest.selectedItems.map((item) => {
     const exportItem = exportIndex.get(`${item.sourceCollection}::${item.localRef}`);
-    const createdBy = exportItem.createdBy || item.identityKey;
-    const updatedBy = exportItem.updatedBy || item.identityKey;
+    const primaryIdentity = inferLocalIdentity(exportItem, item);
+    const createdBy = inferActorIdentity(exportItem, item, 'created') || primaryIdentity;
+    const updatedBy = inferActorIdentity(exportItem, item, 'updated') || primaryIdentity;
     const createdMapping = identityMap.get(createdBy);
     const updatedMapping = identityMap.get(updatedBy);
 
@@ -344,7 +460,7 @@ function buildPayloadRows({ exportIndex, manifest, identityMap }) {
       type: item.remoteType,
       sourceCollection: item.sourceCollection,
       sourceLocalRef: sanitizeLocalRef(item.localRef),
-      identityKey: item.identityKey,
+      identityKey: primaryIdentity,
       mappedCreatedBy: createdMapping.remoteProfileRef || createdMapping.remoteProfileHint,
       mappedUpdatedBy: updatedMapping.remoteProfileRef || updatedMapping.remoteProfileHint,
       migrationRunId: '<future_migration_run_id>',
@@ -366,6 +482,9 @@ function buildSummary({
   payloadRowsCount,
   deferredItemsCount,
   rowsByCollection,
+  identityResolvedCount,
+  identityMissingCount,
+  identityMappingStatus,
   noGoReasons,
   exitCode,
 }) {
@@ -385,6 +504,9 @@ function buildSummary({
     missingLocalRefsCount: noGoReasons.filter((item) => item.code === 'selected_local_ref_not_found').length,
     noGoReasonsCount: noGoReasons.length,
     rowsByCollection,
+    identityResolvedCount,
+    identityMissingCount,
+    identityMappingStatus,
     targetTable: 'content_items',
     excludedTargets: EXCLUDED_TARGETS,
     noSupabaseTouched: true,
@@ -407,6 +529,9 @@ function buildErrorSummary({ status, code, exportFile, manifestFile, identityMap
     payloadRowsCount: 0,
     deferredItemsCount: 0,
     rowsByCollection: {},
+    identityResolvedCount: 0,
+    identityMissingCount: 0,
+    identityMappingStatus: '<unknown>',
     noGoReasons: [issue(code)],
     exitCode,
   });
@@ -517,7 +642,7 @@ async function main() {
 
   const exportErrors = validateExport(exportRead.value);
   const manifestErrors = validateManifest(manifestRead.value);
-  const identityErrors = validateIdentityMapping(identityRead.value, manifestRead.value);
+  const identityErrors = validateIdentityMapping(identityRead.value);
   const exportIndex = buildExportIndex(exportRead.value);
   const identityMap = buildIdentityMap(identityRead.value);
   const payloadErrors = exportErrors.length === 0 && manifestErrors.length === 0 && identityErrors.length === 0
@@ -539,6 +664,8 @@ async function main() {
     payloadRowsCount: payloadRows.length,
     deferredItemsCount: getCount(manifestRead.value, 'deferredItemsCount') ?? 0,
     rowsByCollection: countByCollection(payloadRows),
+    ...buildIdentityStats({ exportIndex, manifest: manifestRead.value }),
+    identityMappingStatus: identityRead.value?.status || identityRead.value?.identityMappingStatus || '<unknown>',
     noGoReasons,
     exitCode,
   }));

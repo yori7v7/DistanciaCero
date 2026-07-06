@@ -190,6 +190,9 @@ Current next phase:
   fixtures only.
 - S4.6.5.28 keeps deferred/excluded media Data URLs out of payload v1 while
   preserving a hard block for selected item Data URLs or URLs.
+- S4.6.5.30 lets the payload builder resolve manifest identity placeholders
+  from selected export metadata, but confirmed private identity mapping remains
+  mandatory before any future insert.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
 - Next suggested phase: audit the payload builder before any private use.

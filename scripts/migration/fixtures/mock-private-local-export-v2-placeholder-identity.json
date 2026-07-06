@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "exportedAt": "<mock_iso_timestamp>",
+  "source": {
+    "kind": "sanitized_fixture_placeholder_identity",
+    "privateData": false
+  },
+  "content": {
+    "monthlyLetters": [
+      {"id": "mock-monthly-001", "title": "<mock_monthly_title_1>", "body": "<mock_monthly_body_1>", "createdBy": "local-yori", "updatedBy": "local-yori"},
+      {"id": "mock-monthly-002", "title": "<mock_monthly_title_2>", "body": "<mock_monthly_body_2>", "createdBy": "local-ale", "updatedBy": "local-ale"}
+    ],
+    "openWhenLetters": [
+      {"id": "mock-open-001", "title": "<mock_open_when_title_1>", "body": "<mock_open_when_body_1>", "created_by": "owner_a", "updated_by": "owner_a"},
+      {"id": "mock-open-002", "title": "<mock_open_when_title_2>", "body": "<mock_open_when_body_2>", "created_by": "partner_a", "updated_by": "partner_a"}
+    ],
+    "reasons": [
+      {"id": "mock-reason-001", "title": "<mock_reason_title_1>", "text": "<mock_reason_text_1>", "metadata": {"createdBy": "local-yori", "updatedBy": "local-yori"}},
+      {"id": "mock-reason-002", "title": "<mock_reason_title_2>", "text": "<mock_reason_text_2>", "metadata": {"createdBy": "local-ale", "updatedBy": "local-ale"}}
+    ],
+    "promises": [
+      {"id": "mock-promise-001", "title": "<mock_promise_title_1>", "text": "<mock_promise_text_1>", "metadata": {"created_by": "owner_a", "updated_by": "owner_a"}},
+      {"id": "mock-promise-002", "title": "<mock_promise_title_2>", "text": "<mock_promise_text_2>", "metadata": {"created_by": "partner_a", "updated_by": "partner_a"}}
+    ],
+    "importantDates": [
+      {"id": "mock-date-001", "title": "<mock_date_title_1>", "date": "2026-01-01", "localIdentity": "local-yori"},
+      {"id": "mock-date-002", "title": "<mock_date_title_2>", "date": "2026-02-01", "localIdentity": "local-ale"}
+    ],
+    "futureDreams": [
+      {"id": "mock-dream-001", "title": "<mock_dream_title_1>", "text": "<mock_dream_text_1>", "identity": "owner_a"},
+      {"id": "mock-dream-002", "title": "<mock_dream_title_2>", "text": "<mock_dream_text_2>", "identity": "partner_a"}
+    ],
+    "timeline": [
+      {"id": "mock-timeline-001", "title": "<mock_timeline_title_1>", "date": "2026-03-01", "metadata": {"localIdentityKey": "local-yori"}},
+      {"id": "mock-timeline-002", "title": "<mock_timeline_title_2>", "date": "2026-04-01", "metadata": {"localIdentityKey": "local-ale"}}
+    ],
+    "blackHoleGallery": [],
+    "playlist": []
+  }
+}
