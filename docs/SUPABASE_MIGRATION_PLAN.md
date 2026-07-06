@@ -841,6 +841,14 @@ Estado de S4.6.1:
   preflight/no-network. Requiere flags explicitos de lab/no-production/no-storage/no-insert,
   rechaza URLs remotas, no escribe archivos, no toca Supabase y no inserta
   datos.
+- S4.6.5.23 audita `scripts/migration/preflight-private-lab-insert.mjs` en modo
+  read-only. Confirma built-ins de Node, sin red, sin Supabase, sin `src`,
+  sin `.env.local`, sin escrituras, sin modo insert y salida sanitizada.
+- S4.6.5.24 registra en `docs/supabase/PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`
+  el resultado sanitizado del preflight no-network ejecutado manualmente por el
+  usuario contra manifest + identity mapping privados fuera del repo. Resultado
+  `PASS`: 14 selected, 4 deferred, identity mapping confirmed, 0 noGoReasons,
+  0 warnings, no network, no Supabase y no insert.
 
 Validacion y rollback:
 
@@ -964,7 +972,11 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Controlled private lab insert final gate docs-only creado.
 - Controlled private lab insert script design docs-only creado.
 - Controlled insert preflight/no-network script creado con fixtures
-  sanitizadas; falta auditarlo antes de cualquier uso con manifest privado real.
+  sanitizadas y auditado.
+- Private lab insert preflight no-network real ejecutado por el usuario fuera
+  del repo y registrado solo de forma sanitizada como `PASS`; falta disenar o
+  crear el script de insert real en modo fixture/no-network, o el workflow
+  privado de config/mapping.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1063,10 +1075,13 @@ deferred y 0 noGoReasons. S4.6.5.20 documenta el final gate obligatorio antes
 de cualquier insert privado controlado. S4.6.5.21 documenta el diseno del
 futuro script de insert controlado, empezando por preflight/no-network con
 fixtures sanitizadas. S4.6.5.22 crea ese preflight/no-network con fixtures
-sanitizadas.
+sanitizadas. S4.6.5.23 lo audita. S4.6.5.24 registra el resultado sanitizado
+del preflight privado real reportado por el usuario: `PASS`, 14 selected, 4
+deferred, identity mapping confirmed, 0 warnings y 0 noGoReasons.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar el preflight/no-network
-script antes de cualquier uso con manifest privado real. Todavia sin crear SQL,
-sin ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real leido
-por scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es disenar o crear el controlled lab
+insert script en modo fixture/no-network primero, o disenar el workflow privado
+de config/mapping para un futuro insert real. Todavia sin crear SQL, sin
+ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real leido por
+scripts, sin Supabase, sin `.env.local`, sin runtime y sin Storage.

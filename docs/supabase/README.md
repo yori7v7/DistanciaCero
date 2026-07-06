@@ -180,6 +180,14 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   fixtures sanitizadas de manifest + identity mapping. El script es
   preflight/no-network, requiere flags explicitos, valida 14 selected/4
   deferred, bloquea media/playlist selected, no toca Supabase y no inserta.
+- S4.6.5.23 audita el preflight no-network como local-only, sin red, sin
+  Supabase, sin `src`, sin `.env.local`, sin escrituras, sin modo insert y sin
+  secretos.
+- S4.6.5.24 crea `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md` para registrar el
+  resultado sanitizado del preflight no-network ejecutado manualmente por el
+  usuario contra manifest + identity mapping privados fuera del repo. Resultado
+  `PASS`: 14 selected, 4 deferred, identity mapping confirmed, 0 warnings, 0
+  noGoReasons, no network, no Supabase y no insert.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -368,6 +376,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../../scripts/migration/fixtures/mock-private-insert-manifest-*.json` y
   `../../scripts/migration/fixtures/mock-private-identity-mapping-*.json`:
   fixtures sanitizadas del preflight.
+- `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`: resultado S4.6.5.24 del preflight
+  privado no-network reportado de forma sanitizada. Registra `PASS`, 14
+  selected, 4 deferred, identity mapping confirmed, 0 warnings y 0 noGoReasons,
+  sin payload privado ni secretos.
 - `../../scripts/migration/generate-private-insert-manifest.mjs`: script
   S4.6.5.17 local-only para generar manifests sanitizados desde dry-run reports
   sanitizados. Rechaza URLs remotas, no escribe archivos, no inserta y fue
@@ -428,7 +440,8 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Auditar el script preflight/no-network antes de cualquier uso con manifest
-privado real. Todavia sin insert, sin SQL, sin datos reales en Git/chat, sin
+Disenar o crear el controlled lab insert script en modo fixture/no-network
+primero, o disenar el workflow privado de config/mapping para un futuro insert
+real. Todavia sin insert, sin SQL, sin datos reales en Git/chat, sin
 LocalStorage real leido por scripts, sin Supabase, sin `.env.local`, sin
 runtime y sin Storage.

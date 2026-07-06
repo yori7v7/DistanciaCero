@@ -279,6 +279,16 @@ Estado verificado post-S4.5.1:
       preflight/no-network. Resultado esperado: fixture buena PASS exit 0,
       mapping missing NO-GO exit 1, selected media NO-GO exit 1. No lee
       manifest privado real, no toca Supabase, no crea SQL y no inserta datos.
+- [x] S4.6.5.23 audita `scripts/migration/preflight-private-lab-insert.mjs`
+      en modo read-only antes de cualquier uso con manifest privado real.
+      Resultado: audit PASS, sin cambios, sin Supabase, sin insert, sin runtime
+      y sin secretos.
+- [x] S4.6.5.24 registra en
+      `docs/supabase/PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md` el resultado
+      sanitizado del preflight no-network ejecutado manualmente por el usuario
+      contra manifest + identity mapping privados fuera del repo. Resultado
+      `PASS`: 14 selected, 4 deferred, identity mapping confirmed, 0 warnings,
+      0 noGoReasons, no network, no Supabase y no insert.
 - [x] Reset, Storage, conexion de app, backend readiness y production readiness
       siguen pendientes.
 
@@ -749,8 +759,18 @@ la siguiente.
   preflight/no-network con fixtures sanitizadas. Requiere flags explicitos,
   valida manifest + identity mapping, rechaza URLs remotas y no toca Supabase
   ni inserta.
-- Salida futura: auditar el preflight/no-network script antes de cualquier uso
-  con manifest privado real.
+- Estado S4.6.5.23:
+  el preflight/no-network queda auditado como local-only, sin red, sin
+  Supabase, sin insert, sin `src`, sin `.env.local` y sin escrituras.
+- Estado S4.6.5.24:
+  `docs/supabase/PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md` registra el resultado
+  sanitizado del preflight privado real: `PASS`, `manifestStatus` `CHECK`,
+  `selectedItemsCount` 14, `deferredItemsCount` 4,
+  `identityMappingStatus` confirmed, 0 noGoReasons, 0 warnings, no network,
+  no Supabase y no insert.
+- Salida futura: disenar o crear el controlled lab insert script en modo
+  fixture/no-network primero, o disenar el workflow privado de config/mapping
+  para un futuro insert real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -894,7 +914,9 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Controlled private lab insert final gate docs-only.
 - [x] Controlled private lab insert script design docs-only.
 - [x] Controlled insert preflight/no-network script with sanitized fixtures.
-- [ ] Controlled insert preflight/no-network script audit.
+- [x] Controlled insert preflight/no-network script audit.
+- [x] Private lab insert preflight result sanitized docs.
+- [ ] Controlled lab insert script fixture/no-network design or implementation.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

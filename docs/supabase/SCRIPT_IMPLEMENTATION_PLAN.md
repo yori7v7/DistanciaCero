@@ -21,6 +21,9 @@
 - Controlled private lab insert script design documented: yes, in S4.6.5.21.
 - Controlled insert preflight/no-network script created: yes, in S4.6.5.22 with
   sanitized fixtures only.
+- Controlled insert preflight/no-network audit complete: yes, in S4.6.5.23.
+- Private lab insert preflight result documented: yes, in S4.6.5.24 as
+  sanitized `PASS`.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -256,8 +259,8 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Audit the controlled insert preflight/no-network script before any private
-  manifest use.
+- Design or create the controlled lab insert script in fixture/no-network mode
+  first, or design the private config and mapping workflow.
 - Still no private export read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.

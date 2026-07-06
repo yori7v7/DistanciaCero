@@ -5,6 +5,8 @@
 - Status: documentary design.
 - Preflight/no-network script created: yes, in S4.6.5.22 with sanitized
   fixtures only.
+- Preflight/no-network script audited: yes, in S4.6.5.23.
+- Private preflight result documented: yes, in S4.6.5.24 as sanitized `PASS`.
 - Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -180,7 +182,9 @@ Implementation order:
 
 - Preflight/no-network with fixtures exists in
   `scripts/migration/preflight-private-lab-insert.mjs`.
-- Next audit it.
+- It has been audited.
+- The private no-network preflight result is documented in
+  `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`.
 - Only after that consider lab insert mode.
 
 ## Required Pre-Insert Summary
@@ -262,9 +266,10 @@ The future script is `NO-GO` if:
 
 Recommended sequence:
 
-1. Audit the controlled insert preflight/no-network script.
+1. Design or create the controlled lab insert script in fixture/no-network mode.
 2. Design private config and mapping workflow.
-3. Only with explicit GO, consider lab insert script execution.
+3. Audit any real insert script before private use.
+4. Only with explicit GO, consider lab insert script execution.
 
 Still blocked:
 

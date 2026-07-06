@@ -98,8 +98,12 @@ Recommended next direction:
   `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
 - The future script design is documented in
   `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`.
-- Next, create the controlled insert preflight/no-network script with sanitized
-  fixtures.
+- The controlled insert preflight/no-network script exists and has been
+  audited.
+- The sanitized private preflight result is recorded in
+  `PRIVATE_LAB_INSERT_PREFLIGHT_RESULT.md`.
+- Next, design or create the controlled lab insert script in fixture/no-network
+  mode first, or design the private config and mapping workflow.
 
 Still blocked:
 
