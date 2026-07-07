@@ -1011,6 +1011,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Controlled lab insert executor workflow documentado: no crea script, no lee
   payload privado, no toca Supabase, no inserta y define como siguiente paso un
   executor fixture/no-network only.
+- Controlled lab insert executor fixture/no-network script creado con fixtures
+  sanitizadas: valida un payload mock lab-only de 14 rows, no lee payload
+  privado, no toca Supabase, no inserta y reporta `insertedRowsCount` 0.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1135,10 +1138,14 @@ Supabase, sin Storage y sin insert. S4.6.5.37 documenta el workflow del futuro
 controlled lab insert executor: primero fixture/no-network, despues auditoria,
 despues validacion privada no-write y solo al final insert real con GO
 explicito.
+S4.6.5.38 crea `scripts/migration/execute-controlled-lab-insert.mjs` en
+fixture/no-network mode only, con fixtures sanitizadas PASS/NO-GO. El script no
+lee payload privado, no toca Supabase, no ejecuta insert y reporta
+`insertedRowsCount` 0.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es crear el controlled lab insert
-executor script en fixture/no-network mode only. Todavia sin leer payload
-privado desde Codex, sin crear SQL, sin ejecutar insert, sin datos reales en
-Git/chat, sin LocalStorage real leido por scripts, sin Supabase desde Codex, sin
-`.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es auditar el controlled lab insert
+executor fixture/no-network script. Todavia sin leer payload privado desde
+Codex, sin crear SQL, sin ejecutar insert, sin datos reales en Git/chat, sin
+LocalStorage real leido por scripts, sin Supabase desde Codex, sin `.env.local`,
+sin runtime y sin Storage.

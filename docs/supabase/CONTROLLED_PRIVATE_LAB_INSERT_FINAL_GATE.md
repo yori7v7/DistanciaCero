@@ -206,8 +206,11 @@ Recommended next direction:
   `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
 - The controlled lab insert executor workflow is documented in
   `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`.
-- Next, create the executor script in fixture/no-network mode only before any
-  real Supabase insert.
+- The controlled lab insert executor fixture/no-network script exists as
+  `../../scripts/migration/execute-controlled-lab-insert.mjs` with sanitized
+  fixtures only.
+- Next, audit the executor before any private payload mode or real Supabase
+  insert.
 
 Still blocked:
 

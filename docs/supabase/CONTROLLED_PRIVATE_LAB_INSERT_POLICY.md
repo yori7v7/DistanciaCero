@@ -224,8 +224,7 @@ The controlled lab insert executor workflow is documented in
 
 Allowed next direction:
 
-- Create the controlled lab insert executor script in fixture/no-network mode
-  only.
+- Audit the controlled lab insert executor fixture/no-network script.
 
 Still blocked:
 

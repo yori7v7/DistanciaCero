@@ -190,7 +190,8 @@ Recommended next direction:
 
 - `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the controlled lab
   insert executor workflow;
-- create any insert executor first in fixture/no-network mode only;
+- `execute-controlled-lab-insert.mjs` now exists in fixture/no-network mode only;
+- audit the executor before any private payload mode;
 - keep real Supabase insert blocked until a future explicit GO.
 
 Still blocked:

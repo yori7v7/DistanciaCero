@@ -218,6 +218,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   el workflow del futuro executor de insert controlado en lab. No crea script,
   no lee payload privado, no toca Supabase, no inserta y mantiene Storage
   bloqueado.
+- S4.6.5.38 crea `../../scripts/migration/execute-controlled-lab-insert.mjs`
+  en fixture/no-network mode only con fixtures sanitizadas. Valida un payload
+  mock lab-only de 14 rows, no lee payload privado, no toca Supabase, no inserta
+  y reporta `insertedRowsCount` `0`.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -403,6 +407,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`: workflow S4.6.5.37 del futuro
   executor. La siguiente implementacion permitida es fixture/no-network only,
   sin payload privado, sin Supabase y sin insert.
+- `../../scripts/migration/execute-controlled-lab-insert.mjs`: script
+  S4.6.5.38 fixture/no-network only para validar payloads mock lab-only. Rechaza
+  URLs remotas, requiere flags explicitos, no escribe, no toca Supabase y no
+  inserta.
 - `../../scripts/migration/preflight-private-lab-insert.mjs`: script S4.6.5.22
   local-only para validar manifest + identity mapping con fixtures sanitizadas.
   No escribe archivos, no toca Supabase, no inserta y no debe ejecutarse contra
@@ -490,7 +498,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Crear el controlled lab insert executor script en fixture/no-network mode only.
-Todavia sin payload privado leido por Codex, sin insert, sin SQL nuevo, sin
-datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase
-desde Codex, sin `.env.local`, sin runtime y sin Storage.
+Auditar el controlled lab insert executor fixture/no-network script. Todavia
+sin payload privado leido por Codex, sin insert, sin SQL nuevo, sin datos reales
+en Git/chat, sin LocalStorage real leido por scripts, sin Supabase desde Codex,
+sin `.env.local`, sin runtime y sin Storage.

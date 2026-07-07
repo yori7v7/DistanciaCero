@@ -4,8 +4,8 @@
 
 - Scope: mock-only plus private local export validator, private dry-run
   normalizer, private insert manifest generator, controlled insert preflight
-  no-network script and private insert payload builder tested only with
-  sanitized fixtures.
+  no-network script, private insert payload builder and controlled lab insert
+  executor fixture/no-network script tested only with sanitized fixtures.
 - Network: none.
 - Supabase: none.
 - `.env.local`: not read.
@@ -81,6 +81,14 @@ payload. The written file is lab-only, not production, contains only the 14
 In-repo tests use sanitized fixtures only; do not run it against private real
 export/manifest/mapping files until a separate review phase approves that.
 
+`execute-controlled-lab-insert.mjs` validates a lab-only mock private payload
+and simulates the first controlled insert plan in `fixture-no-network` mode
+only. It requires explicit no-Supabase/no-insert/lab-only flags, rejects remote
+URLs, reads one local payload file, writes nothing, touches no Supabase and
+always reports `insertedRowsCount: 0`. In-repo tests use sanitized fixtures
+only; do not run it against the private real payload until a separate review
+phase approves private payload validate/no-write mode.
+
 Run examples:
 
 ```powershell
@@ -103,6 +111,7 @@ node scripts/migration/generate-private-insert-manifest.mjs scripts/migration/fi
 node scripts/migration/preflight-private-lab-insert.mjs scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json --confirm-lab-disposable --confirm-no-production --confirm-no-storage --confirm-no-insert
 node scripts/migration/build-private-insert-payload.mjs scripts/migration/fixtures/mock-private-local-export-v2-selected.json scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json
 node scripts/migration/build-private-insert-payload.mjs scripts/migration/fixtures/mock-private-local-export-v2-selected.json scripts/migration/fixtures/mock-private-insert-manifest-check.json scripts/migration/fixtures/mock-private-identity-mapping-confirmed.json --out <outside-repository-output.json> --confirm-write-private-output
+node scripts/migration/execute-controlled-lab-insert.mjs scripts/migration/fixtures/mock-controlled-lab-insert-payload-pass.json --mode fixture-no-network --confirm-no-supabase --confirm-no-insert --confirm-lab-only
 ```
 
 NPM shortcuts:
@@ -148,6 +157,11 @@ Expected fixture results:
   item Data URLs and selected item URLs remain blocking.
 - Optional `--out` fixture tests should write only to a temporary path outside
   the repo and remove the mock output afterward.
+- `mock-controlled-lab-insert-payload-pass.json`: `PASS`, exit `0`,
+  `plannedRowsCount` `14`, `insertedRowsCount` `0`.
+- `mock-controlled-lab-insert-payload-nogo-row-count.json`: `NO-GO`, exit `1`.
+- `mock-controlled-lab-insert-payload-nogo-media.json`: `NO-GO`, exit `1`.
+- `mock-controlled-lab-insert-payload-nogo-production.json`: `NO-GO`, exit `1`.
 
 The smoke runner should exit `0` when all expected mock-only exit codes match.
 
@@ -165,6 +179,8 @@ The smoke runner should exit `0` when all expected mock-only exit codes match.
   until a separate review phase approves it.
 - Do not run the private insert payload builder on a private real export,
   manifest or mapping until a separate review phase approves it.
+- Do not run the controlled lab insert executor against a private real payload
+  until a separate review phase approves private payload validate/no-write mode.
 - Do not add real intimate content to fixtures.
 - Do not use Supabase URL, keys, tokens, passwords, service-role or project refs.
 - Do not read `.env.local`.

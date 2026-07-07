@@ -3,7 +3,7 @@
 ## Status
 
 - Status: documentary design.
-- Executor script created: no.
+- Executor script created: yes, in fixture/no-network mode only.
 - Insert executed: no.
 - Supabase touched: no.
 - Private payload read by Codex: no.
@@ -12,7 +12,8 @@
 - App connection: none.
 
 This document defines the workflow for a future controlled lab insert executor.
-It does not create a script, read the private payload, execute an insert, touch
+S4.6.5.38 creates the first fixture/no-network script with sanitized fixtures
+only. It still does not read the private payload, execute an insert, touch
 Supabase, touch Storage or connect the app.
 
 ## Purpose
@@ -209,11 +210,28 @@ Rollback rules:
 
 Recommended next sequence:
 
-1. Create the executor script in fixture/no-network mode only.
-2. Audit that executor.
-3. Add private payload validate/no-write mode only after audit.
-4. Design lab dry-run/no-write separately.
-5. Consider real lab insert only at the end, with explicit user GO.
+1. Audit the fixture/no-network executor.
+2. Add private payload validate/no-write mode only after audit.
+3. Design lab dry-run/no-write separately.
+4. Consider real lab insert only at the end, with explicit user GO.
+
+## S4.6.5.38 Fixture/No-Network Script
+
+S4.6.5.38 creates
+`../../scripts/migration/execute-controlled-lab-insert.mjs` and four sanitized
+fixtures. The script validates a lab-only mock payload, requires
+`--mode fixture-no-network`, `--confirm-no-supabase`,
+`--confirm-no-insert` and `--confirm-lab-only`, and prints only a sanitized JSON
+summary. It does not touch Supabase, does not write files, does not read private
+payloads and does not insert data.
+
+Expected fixture results:
+
+- PASS fixture: `PASS`, exit `0`, `plannedRowsCount` `14`,
+  `insertedRowsCount` `0`.
+- Row-count fixture: `NO-GO`, exit `1`.
+- Media fixture: `NO-GO`, exit `1`.
+- Production fixture: `NO-GO`, exit `1`.
 
 Still blocked:
 

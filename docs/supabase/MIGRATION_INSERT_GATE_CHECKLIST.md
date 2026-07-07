@@ -207,10 +207,12 @@ Current next phase:
 - S4.6.5.37 documents the controlled lab insert executor workflow. No executor
   script is created, no private payload is read by Codex, no Supabase is
   touched and no insert is executed.
+- S4.6.5.38 creates the controlled lab insert executor in fixture/no-network
+  mode only with sanitized fixtures. It validates a mock lab-only payload,
+  touches no Supabase, reads no private payload and inserts nothing.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: create the executor script in fixture/no-network mode
-  only.
+- Next suggested phase: audit the executor before any private payload mode.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

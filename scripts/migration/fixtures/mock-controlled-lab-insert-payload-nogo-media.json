@@ -1,0 +1,19 @@
+{
+  "payloadVersion": "mock-controlled-lab-insert-payload-v1",
+  "labOnly": true,
+  "notProduction": true,
+  "productionAllowed": false,
+  "targetTable": "content_items",
+  "migrationRunId": "mock-migration-run",
+  "deferredRowsCount": 4,
+  "rows": [
+    {
+      "targetTable": "content_items",
+      "type": "gallery_item",
+      "sourceCollection": "blackHoleGallery",
+      "sourceLocalRef": "mock-gallery-001",
+      "migrationRunId": "mock-migration-run",
+      "payload": { "title": "<mock_gallery_title_1>" }
+    }
+  ]
+}

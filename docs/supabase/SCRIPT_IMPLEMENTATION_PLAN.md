@@ -38,6 +38,8 @@
 - Private insert payload persistence result documented: yes, in S4.6.5.36 as
   sanitized `PASS`, with output outside the repo and no payload included.
 - Controlled lab insert executor workflow documented: yes, in S4.6.5.37.
+- Controlled lab insert executor fixture/no-network script created: yes, in
+  S4.6.5.38 with sanitized fixtures only.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -103,7 +105,10 @@ Implemented mock-only location:
 - `scripts/migration/generate-private-insert-manifest.mjs`.
 - `scripts/migration/preflight-private-lab-insert.mjs`.
 - `scripts/migration/build-private-insert-payload.mjs`.
-- Future only: `scripts/migration/controlled-lab-insert-executor.mjs`.
+- `scripts/migration/execute-controlled-lab-insert.mjs`.
+- Future private modes for this script: private payload validate/no-write,
+  lab dry-run/no-write and lab insert mode.
+- Historical workflow name: `scripts/migration/controlled-lab-insert-executor.mjs`.
 - Superseded tentative name:
   `scripts/migration/insert-private-lab-content-items.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
@@ -179,8 +184,9 @@ Controlled lab insert executor:
 
 - `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the future executor
   workflow.
-- No executor script exists yet.
-- The next implementation phase should create fixture/no-network mode only.
+- `execute-controlled-lab-insert.mjs` exists in fixture/no-network mode only.
+- It validates sanitized mock lab-only payload fixtures and always reports
+  `insertedRowsCount` `0`.
 - It must not read the private payload, touch Supabase, touch Storage or insert
   until separate future phases approve those modes.
 
@@ -311,8 +317,7 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Create the controlled lab insert executor script in fixture/no-network mode
-  only.
+- Audit the controlled lab insert executor fixture/no-network script.
 - Still no private export read by Codex.
 - Still no private payload read by Codex.
 - Still no real LocalStorage read by scripts.

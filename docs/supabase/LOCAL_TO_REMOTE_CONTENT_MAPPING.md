@@ -191,8 +191,7 @@ Current next phase:
   `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: create the executor script in fixture/no-network mode
-  only.
+- Next suggested phase: audit the executor fixture/no-network script.
 - Still no private export read by Codex, real snapshot, real LocalStorage read,
   private payload read by Codex, real insert, runtime change, `src`, SQL,
   Supabase Dashboard, Supabase CLI, `.env.local`, private files, Storage or
