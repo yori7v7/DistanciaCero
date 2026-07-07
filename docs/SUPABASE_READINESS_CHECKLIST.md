@@ -830,12 +830,18 @@ la siguiente.
   workflow del futuro executor de insert controlado. No crea script, no lee el
   payload privado, no toca Supabase, no inserta y mantiene Storage bloqueado.
 - Estado S4.6.5.38:
-  `scripts/migration/execute-controlled-lab-insert.mjs` existe en
-  fixture/no-network mode only con fixtures sanitizadas. Requiere flags
+  `scripts/migration/execute-controlled-lab-insert.mjs` existe con modo inicial
+  fixture/no-network y fixtures sanitizadas. Requiere flags
   explicitos, valida payload mock lab-only de 14 rows, no lee payload privado,
   no toca Supabase, no inserta y siempre reporta `insertedRowsCount` `0`.
-- Salida futura: auditar controlled lab insert executor fixture/no-network
-  script antes de cualquier modo privado.
+- Estado S4.6.5.40:
+  `execute-controlled-lab-insert.mjs` agrega `private-validate-no-network`.
+  Exige payload fuera del repo y
+  `--confirm-private-payload-outside-repo`; no toca Supabase, no hace red, no
+  inserta y siempre reporta `insertedRowsCount` `0`. Se probo solo con mocks
+  temporales fuera del repo; el payload privado real no fue leido por Codex.
+- Salida futura: auditar private validate/no-network mode antes de cualquier
+  validacion del payload privado real.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -991,6 +997,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert payload persistence result sanitized docs.
 - [x] Controlled lab insert executor workflow docs-only.
 - [x] Controlled lab insert executor fixture/no-network script with sanitized fixtures.
+- [x] Controlled lab insert executor private validate/no-network mode.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

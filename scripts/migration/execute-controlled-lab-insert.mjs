@@ -13,14 +13,22 @@ const EXIT_CODES = Object.freeze({
   INVALID_USAGE: 5,
 });
 
-const MODE = 'fixture-no-network';
+const MODES = Object.freeze({
+  FIXTURE: 'fixture-no-network',
+  PRIVATE_VALIDATE: 'private-validate-no-network',
+});
 const EXPECTED_ROW_COUNT = 14;
 const EXPECTED_DEFERRED_COUNT = 4;
 
-const REQUIRED_FLAGS = new Set([
+const BASE_REQUIRED_FLAGS = new Set([
   '--confirm-no-supabase',
   '--confirm-no-insert',
   '--confirm-lab-only',
+]);
+
+const PRIVATE_VALIDATE_REQUIRED_FLAGS = new Set([
+  ...BASE_REQUIRED_FLAGS,
+  '--confirm-private-payload-outside-repo',
 ]);
 
 const ALLOWED_TYPES = new Set([
@@ -49,6 +57,7 @@ const SECRET_PATTERNS = Object.freeze([
   { code: 'project_ref_like', pattern: /\b[a-z0-9]{20}\b/ },
   { code: 'publishable_or_secret_key', pattern: /\bsb_(publishable|secret)_[A-Za-z0-9_-]{16,}\b/ },
   { code: 'jwt_like_token', pattern: /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/ },
+  { code: 'service_role_marker', pattern: /\bservice[-_]?role\b/i },
   { code: 'service_role_value', pattern: /"(service[_-]?role|service-role)"\s*:\s*"(?!<)[^"]{6,}"/i },
   { code: 'password_value', pattern: /"password"\s*:\s*"(?!<)[^"]{3,}"/i },
   { code: 'uuid_value', pattern: /\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\b/ },
@@ -65,8 +74,9 @@ const URL_PATTERN = /https?:\/\//i;
 function usage() {
   return [
     `Usage: node scripts/migration/${SCRIPT_NAME} <payload.json> --mode fixture-no-network --confirm-no-supabase --confirm-no-insert --confirm-lab-only`,
+    `   or: node scripts/migration/${SCRIPT_NAME} <payload.json> --mode private-validate-no-network --confirm-no-supabase --confirm-no-insert --confirm-lab-only --confirm-private-payload-outside-repo`,
     'Input must be an explicit local JSON file. Remote URLs are rejected.',
-    'This script is fixture/no-network only and never inserts data.',
+    'This script is no-network only and never inserts data.',
   ];
 }
 
@@ -84,6 +94,15 @@ function sanitizePathForOutput(resolvedPath) {
     return '<outside-repository>';
   }
   return relativePath.split(path.sep).join('/');
+}
+
+function isInsideRepository(resolvedPath) {
+  const relativePath = path.relative(process.cwd(), resolvedPath);
+  return Boolean(relativePath) && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+}
+
+function hasGitSegment(resolvedPath) {
+  return resolvedPath.split(path.sep).some((part) => part === '.git');
 }
 
 function issue(code, ref = '<input>') {
@@ -125,17 +144,36 @@ function isSanitizedRef(value) {
 }
 
 function validateArgs(args) {
-  if (args.length !== 6) return { ok: false, code: 'invalid_argument_count' };
+  if (args.length !== 6 && args.length !== 7) return { ok: false, code: 'invalid_argument_count' };
   const [payloadInput, modeFlag, modeValue, ...flags] = args;
   if (isRemoteInput(payloadInput)) return { ok: false, code: 'remote_input_rejected' };
   if (payloadInput.includes('.env.local')) return { ok: false, code: 'env_file_rejected', aborted: true };
-  if (modeFlag !== '--mode' || modeValue !== MODE) return { ok: false, code: 'invalid_mode' };
-  const flagSet = new Set(flags);
-  for (const required of REQUIRED_FLAGS) {
-    if (!flagSet.has(required)) return { ok: false, code: 'missing_required_flag' };
+  if (modeFlag !== '--mode' || !Object.values(MODES).includes(modeValue)) {
+    return { ok: false, code: 'invalid_mode' };
   }
-  if (flagSet.size !== REQUIRED_FLAGS.size) return { ok: false, code: 'unknown_flag' };
-  return { ok: true, payloadInput };
+  const requiredFlags = modeValue === MODES.PRIVATE_VALIDATE
+    ? PRIVATE_VALIDATE_REQUIRED_FLAGS
+    : BASE_REQUIRED_FLAGS;
+  const flagSet = new Set(flags);
+  for (const required of requiredFlags) {
+    if (!flagSet.has(required)) return { ok: false, code: 'missing_required_flag', mode: modeValue };
+  }
+  if (flagSet.size !== requiredFlags.size) return { ok: false, code: 'unknown_flag', mode: modeValue };
+  if (modeValue === MODES.FIXTURE && flagSet.has('--confirm-private-payload-outside-repo')) {
+    return { ok: false, code: 'private_payload_flag_not_allowed_in_fixture_mode', mode: modeValue };
+  }
+  return { ok: true, payloadInput, mode: modeValue };
+}
+
+function validatePrivatePayloadLocation(inputPath) {
+  const resolvedPath = path.resolve(process.cwd(), inputPath);
+  if (hasGitSegment(resolvedPath)) {
+    return { ok: false, code: 'private_payload_git_path_rejected' };
+  }
+  if (isInsideRepository(resolvedPath)) {
+    return { ok: false, code: 'private_payload_inside_repository_rejected' };
+  }
+  return { ok: true };
 }
 
 async function readPayload(inputPath) {
@@ -206,6 +244,20 @@ function validatePayload(payload) {
   const warnings = [];
   if (!isPlainObject(payload)) return { errors: [issue('payload_not_object')], warnings };
 
+  const payloadText = JSON.stringify(payload);
+  if (URL_PATTERN.test(payloadText)) errors.push(issue('payload_full_url_detected'));
+  for (const blockedType of BLOCKED_TYPES) {
+    if (payloadText.includes(blockedType)) errors.push(issue('payload_blocked_type_detected', blockedType));
+  }
+  for (const blockedCollection of BLOCKED_COLLECTIONS) {
+    if (payloadText.includes(blockedCollection)) {
+      errors.push(issue('payload_blocked_collection_detected', blockedCollection));
+    }
+  }
+  for (const blockedTarget of BLOCKED_ROW_TARGETS) {
+    if (payloadText.includes(blockedTarget)) errors.push(issue('payload_blocked_target_detected', blockedTarget));
+  }
+
   if (typeof payload.payloadVersion !== 'string' || payload.payloadVersion.trim() === '') {
     errors.push(issue('payload_version_missing'));
   }
@@ -232,11 +284,16 @@ function validatePayload(payload) {
   return { errors, warnings };
 }
 
-function nextRecommendedAction(status) {
-  if (status === 'PASS') return 'audit_fixture_no_network_executor_before_private_payload_validate_mode';
+function nextRecommendedAction(status, mode) {
+  if (status === 'PASS' && mode === MODES.PRIVATE_VALIDATE) {
+    return 'review_private_validate_no_network_result_before_real_payload_use';
+  }
+  if (status === 'PASS') return 'audit_private_validate_no_network_mode_before_real_payload_use';
   if (status === 'NO-GO') return 'repair_mock_payload_before_executor_use';
   if (status === 'ABORTED') return 'stop_and_remove_sensitive_input';
-  return 'rerun_with_local_payload_and_required_fixture_no_network_flags';
+  return mode === MODES.PRIVATE_VALIDATE
+    ? 'rerun_with_outside_repo_payload_and_required_private_validate_flags'
+    : 'rerun_with_local_payload_and_required_fixture_no_network_flags';
 }
 
 function buildSummary({
@@ -247,13 +304,15 @@ function buildSummary({
   noGoReasons,
   warnings,
   exitCode,
+  mode,
 }) {
   const plannedRowsCount = status === 'PASS' ? rows.length : 0;
+  const reportMode = mode || MODES.FIXTURE;
   return {
-    executorVersion: 'controlled-lab-insert-executor-fixture-v1',
+    executorVersion: 'controlled-lab-insert-executor-v1',
     generatedAt: new Date().toISOString(),
     executorStatus: status,
-    mode: MODE,
+    mode: reportMode,
     target: 'lab-only',
     payloadFile,
     targetTable: 'content_items',
@@ -269,10 +328,11 @@ function buildSummary({
     noNetwork: true,
     payloadPrinted: false,
     appStillDisconnected: true,
+    privatePayloadValidated: reportMode === MODES.PRIVATE_VALIDATE && status === 'PASS',
     rollbackRequiredBeforeRealInsert: true,
     noGoReasons: summarizeIssues(noGoReasons),
     warnings: summarizeIssues(warnings),
-    nextRecommendedAction: nextRecommendedAction(status),
+    nextRecommendedAction: nextRecommendedAction(status, reportMode),
     exitCode,
   };
 }
@@ -281,7 +341,7 @@ function printJson(report) {
   console.log(JSON.stringify(report, null, 2));
 }
 
-function printInvalidUsage(code) {
+function printInvalidUsage(code, mode = MODES.FIXTURE) {
   const exitCode = EXIT_CODES.INVALID_USAGE;
   printJson({
     ...buildSummary({
@@ -292,6 +352,7 @@ function printInvalidUsage(code) {
       noGoReasons: [issue(code)],
       warnings: [],
       exitCode,
+      mode,
     }),
     usage: usage(),
   });
@@ -311,12 +372,32 @@ async function main() {
         noGoReasons: [issue(parsed.code)],
         warnings: [],
         exitCode,
+        mode: MODES.FIXTURE,
       }));
       process.exitCode = exitCode;
       return;
     }
-    printInvalidUsage(parsed.code);
+    printInvalidUsage(parsed.code, parsed.mode || MODES.FIXTURE);
     return;
+  }
+
+  if (parsed.mode === MODES.PRIVATE_VALIDATE) {
+    const location = validatePrivatePayloadLocation(parsed.payloadInput);
+    if (!location.ok) {
+      const exitCode = EXIT_CODES.INVALID_USAGE;
+      printJson(buildSummary({
+        status: 'INVALID_USAGE',
+        payloadFile: '<outside-repository>',
+        payload: undefined,
+        rows: [],
+        noGoReasons: [issue(location.code)],
+        warnings: [],
+        exitCode,
+        mode: parsed.mode,
+      }));
+      process.exitCode = exitCode;
+      return;
+    }
   }
 
   const payloadRead = await readPayload(parsed.payloadInput);
@@ -329,6 +410,7 @@ async function main() {
       noGoReasons: [issue(payloadRead.code)],
       warnings: [],
       exitCode: payloadRead.exitCode,
+      mode: parsed.mode,
     }));
     process.exitCode = payloadRead.exitCode;
     return;
@@ -347,6 +429,7 @@ async function main() {
     noGoReasons: errors,
     warnings,
     exitCode,
+    mode: parsed.mode,
   }));
   process.exitCode = exitCode;
 }

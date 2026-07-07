@@ -209,8 +209,10 @@ Recommended next direction:
 - The controlled lab insert executor fixture/no-network script exists as
   `../../scripts/migration/execute-controlled-lab-insert.mjs` with sanitized
   fixtures only.
-- Next, audit the executor before any private payload mode or real Supabase
-  insert.
+- The executor also supports `private-validate-no-network`, which still reads
+  only a local file outside the repo, touches no Supabase and inserts nothing.
+- Next, audit private validate/no-network mode before any private real payload
+  validation or real Supabase insert.
 
 Still blocked:
 

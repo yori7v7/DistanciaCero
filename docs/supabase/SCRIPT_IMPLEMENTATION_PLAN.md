@@ -40,6 +40,8 @@
 - Controlled lab insert executor workflow documented: yes, in S4.6.5.37.
 - Controlled lab insert executor fixture/no-network script created: yes, in
   S4.6.5.38 with sanitized fixtures only.
+- Controlled lab insert executor private validate/no-network mode added: yes,
+  in S4.6.5.40, tested only with sanitized mocks outside the repo.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -184,11 +186,14 @@ Controlled lab insert executor:
 
 - `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the future executor
   workflow.
-- `execute-controlled-lab-insert.mjs` exists in fixture/no-network mode only.
-- It validates sanitized mock lab-only payload fixtures and always reports
-  `insertedRowsCount` `0`.
-- It must not read the private payload, touch Supabase, touch Storage or insert
-  until separate future phases approve those modes.
+- `execute-controlled-lab-insert.mjs` exists with fixture/no-network mode and
+  private validate/no-network mode.
+- Fixture mode validates sanitized mock lab-only payload fixtures and always
+  reports `insertedRowsCount` `0`.
+- `private-validate-no-network` mode exists and requires payload files outside
+  the repo plus `--confirm-private-payload-outside-repo`.
+- It must not read the private real payload, touch Supabase, touch Storage or
+  insert until separate future phases approve those exact actions.
 
 Recommendation:
 
@@ -317,7 +322,7 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Audit the controlled lab insert executor fixture/no-network script.
+- Audit the controlled lab insert executor private validate/no-network mode.
 - Still no private export read by Codex.
 - Still no private payload read by Codex.
 - Still no real LocalStorage read by scripts.

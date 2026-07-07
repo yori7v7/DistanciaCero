@@ -3,7 +3,9 @@
 ## Status
 
 - Status: documentary design.
-- Executor script created: yes, in fixture/no-network mode only.
+- Executor script created: yes.
+- Fixture/no-network mode: yes.
+- Private validate/no-network mode: yes, added in S4.6.5.40.
 - Insert executed: no.
 - Supabase touched: no.
 - Private payload read by Codex: no.
@@ -12,9 +14,11 @@
 - App connection: none.
 
 This document defines the workflow for a future controlled lab insert executor.
-S4.6.5.38 creates the first fixture/no-network script with sanitized fixtures
-only. It still does not read the private payload, execute an insert, touch
-Supabase, touch Storage or connect the app.
+S4.6.5.38 creates the first fixture/no-network script with sanitized fixtures.
+S4.6.5.40 adds `private-validate-no-network`, which requires the payload path to
+be outside the repo and still does not touch Supabase, insert data, touch
+Storage or connect the app. This phase still does not read the private real
+payload.
 
 ## Purpose
 
@@ -115,6 +119,8 @@ Before any insert can run, all of these must be true:
 - Does not touch Supabase.
 - Does not insert.
 - Prints only sanitized status, counts and gate results.
+- Requires `--confirm-private-payload-outside-repo`.
+- Rejects payload files inside the repo or inside `.git`.
 
 ### Lab Dry-Run/No-Write Mode
 
@@ -210,8 +216,8 @@ Rollback rules:
 
 Recommended next sequence:
 
-1. Audit the fixture/no-network executor.
-2. Add private payload validate/no-write mode only after audit.
+1. Audit the private validate/no-network mode.
+2. Run private payload validation only after that audit and explicit approval.
 3. Design lab dry-run/no-write separately.
 4. Consider real lab insert only at the end, with explicit user GO.
 
@@ -232,6 +238,26 @@ Expected fixture results:
 - Row-count fixture: `NO-GO`, exit `1`.
 - Media fixture: `NO-GO`, exit `1`.
 - Production fixture: `NO-GO`, exit `1`.
+
+## S4.6.5.40 Private Validate/No-Network Mode
+
+S4.6.5.40 adds `--mode private-validate-no-network` to
+`../../scripts/migration/execute-controlled-lab-insert.mjs`. The mode requires:
+
+- `--confirm-no-supabase`;
+- `--confirm-no-insert`;
+- `--confirm-lab-only`;
+- `--confirm-private-payload-outside-repo`.
+
+The mode rejects remote URLs, payload files inside the repo and payload files
+inside `.git`. It reads a local file only for structural validation, writes no
+files, touches no Supabase, performs no network calls and inserts nothing.
+Stdout reports `payloadFile: <outside-repository>` and never prints private
+paths or payload rows.
+
+S4.6.5.40 tests this mode only with a sanitized mock payload copied to a
+temporary folder outside the repo, then deletes the temporary file. The private
+real payload remains unread by Codex.
 
 Still blocked:
 

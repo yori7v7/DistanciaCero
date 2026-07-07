@@ -1014,6 +1014,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Controlled lab insert executor fixture/no-network script creado con fixtures
   sanitizadas: valida un payload mock lab-only de 14 rows, no lee payload
   privado, no toca Supabase, no inserta y reporta `insertedRowsCount` 0.
+- Controlled lab insert executor private validate/no-network mode agregado:
+  exige payload fuera del repo, no toca Supabase, no hace red, no inserta y fue
+  probado solo con mocks temporales sanitizados.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1138,14 +1141,18 @@ Supabase, sin Storage y sin insert. S4.6.5.37 documenta el workflow del futuro
 controlled lab insert executor: primero fixture/no-network, despues auditoria,
 despues validacion privada no-write y solo al final insert real con GO
 explicito.
-S4.6.5.38 crea `scripts/migration/execute-controlled-lab-insert.mjs` en
-fixture/no-network mode only, con fixtures sanitizadas PASS/NO-GO. El script no
+S4.6.5.38 crea `scripts/migration/execute-controlled-lab-insert.mjs` con modo
+inicial fixture/no-network y fixtures sanitizadas PASS/NO-GO. El script no
 lee payload privado, no toca Supabase, no ejecuta insert y reporta
 `insertedRowsCount` 0.
+S4.6.5.40 agrega `private-validate-no-network`, exige
+`--confirm-private-payload-outside-repo` y bloquea payloads dentro del repo o
+`.git`; fue probado solo con mocks fuera del repo, sin leer el payload privado
+real.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar el controlled lab insert
-executor fixture/no-network script. Todavia sin leer payload privado desde
-Codex, sin crear SQL, sin ejecutar insert, sin datos reales en Git/chat, sin
-LocalStorage real leido por scripts, sin Supabase desde Codex, sin `.env.local`,
-sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es auditar el private validate
+no-network mode. Todavia sin leer payload privado real desde Codex, sin crear
+SQL, sin ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real
+leido por scripts, sin Supabase desde Codex, sin `.env.local`, sin runtime y
+sin Storage.

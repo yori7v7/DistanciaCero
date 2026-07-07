@@ -17,6 +17,7 @@
   `PASS`; the private payload remains outside the repo.
 - Controlled lab insert executor workflow documented: yes, in S4.6.5.37.
 - Fixture/no-network executor script created: yes, in S4.6.5.38.
+- Private validate/no-network mode added: yes, in S4.6.5.40.
 - Lab insert mode created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -214,9 +215,11 @@ Implementation order:
   outside the repo and unread by Codex.
 - `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the executor workflow.
 - `../../scripts/migration/execute-controlled-lab-insert.mjs` exists in
-  fixture/no-network mode only.
-- Only after that executor is audited should private payload validate/no-write
-  mode be considered.
+  fixture/no-network mode and private validate/no-network mode.
+- It also supports `private-validate-no-network`, requiring the payload outside
+  the repo and `--confirm-private-payload-outside-repo`.
+- Only after that mode is audited should any private real payload validation be
+  considered.
 
 ## Required Pre-Insert Summary
 
@@ -297,8 +300,8 @@ The future script is `NO-GO` if:
 
 Recommended sequence:
 
-1. Audit the fixture/no-network executor.
-2. Add private payload validate/no-write mode after audit.
+1. Audit private validate/no-network mode.
+2. Validate the private real payload only after audit and explicit approval.
 3. Design lab dry-run/no-write separately.
 4. Only with explicit GO, consider lab insert script execution.
 

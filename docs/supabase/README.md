@@ -219,9 +219,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   no lee payload privado, no toca Supabase, no inserta y mantiene Storage
   bloqueado.
 - S4.6.5.38 crea `../../scripts/migration/execute-controlled-lab-insert.mjs`
-  en fixture/no-network mode only con fixtures sanitizadas. Valida un payload
+  con modo inicial fixture/no-network y fixtures sanitizadas. Valida un payload
   mock lab-only de 14 rows, no lee payload privado, no toca Supabase, no inserta
   y reporta `insertedRowsCount` `0`.
+- S4.6.5.40 agrega `private-validate-no-network` al executor. El modo exige
+  payload fuera del repo y `--confirm-private-payload-outside-repo`, no toca
+  Supabase, no hace red, no inserta y fue probado solo con mocks temporales
+  fuera del repo.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -410,7 +414,8 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
 - `../../scripts/migration/execute-controlled-lab-insert.mjs`: script
   S4.6.5.38 fixture/no-network only para validar payloads mock lab-only. Rechaza
   URLs remotas, requiere flags explicitos, no escribe, no toca Supabase y no
-  inserta.
+  inserta. Desde S4.6.5.40 tambien soporta `private-validate-no-network`, que
+  exige payload fuera del repo y sigue sin Supabase, red ni insert.
 - `../../scripts/migration/preflight-private-lab-insert.mjs`: script S4.6.5.22
   local-only para validar manifest + identity mapping con fixtures sanitizadas.
   No escribe archivos, no toca Supabase, no inserta y no debe ejecutarse contra
@@ -498,7 +503,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Auditar el controlled lab insert executor fixture/no-network script. Todavia
-sin payload privado leido por Codex, sin insert, sin SQL nuevo, sin datos reales
-en Git/chat, sin LocalStorage real leido por scripts, sin Supabase desde Codex,
-sin `.env.local`, sin runtime y sin Storage.
+Auditar el controlled lab insert executor private validate/no-network mode.
+Todavia sin payload privado real leido por Codex, sin insert, sin SQL nuevo, sin
+datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase
+desde Codex, sin `.env.local`, sin runtime y sin Storage.
