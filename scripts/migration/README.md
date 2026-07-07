@@ -92,6 +92,13 @@ report `insertedRowsCount: 0`. The private validation mode also requires
 repo or inside `.git`. In-repo tests use sanitized fixtures and temporary mock
 files only; do not run it against the private real payload until a separate
 review phase approves that exact private command.
+In `private-validate-no-network`, deferred/excluded metadata such as
+`deferredCollections: ["blackHoleGallery", "playlist"]` and
+`excludedTargets: ["media_assets", "storage", "content_events"]` is allowed
+when it is not part of insertable `rows`. Blocked media, playlist, Storage or
+`content_events` values still fail if they appear as row types, row collections,
+row targets or row payload. Private local `sourceLocalRef` values are accepted
+only as sanitized local references and are never printed.
 
 Run examples:
 
@@ -164,6 +171,10 @@ Expected fixture results:
   the repo and remove the mock output afterward.
 - `mock-controlled-lab-insert-payload-pass.json`: `PASS`, exit `0`,
   `plannedRowsCount` `14`, `insertedRowsCount` `0`.
+- `mock-controlled-lab-insert-payload-private-metadata-pass.json`: `PASS`,
+  exit `0` in `private-validate-no-network` when copied outside the repo.
+- `mock-controlled-lab-insert-payload-private-localrefs-pass.json`: `PASS`,
+  exit `0` in `private-validate-no-network` when copied outside the repo.
 - `mock-controlled-lab-insert-payload-nogo-row-count.json`: `NO-GO`, exit `1`.
 - `mock-controlled-lab-insert-payload-nogo-media.json`: `NO-GO`, exit `1`.
 - `mock-controlled-lab-insert-payload-nogo-production.json`: `NO-GO`, exit `1`.

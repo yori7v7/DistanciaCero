@@ -70,6 +70,7 @@ const SECRET_PATTERNS = Object.freeze([
 ]);
 
 const URL_PATTERN = /https?:\/\//i;
+const SAFE_PRIVATE_LOCAL_REF_PATTERN = /^[A-Za-z0-9_.:[\]-]{1,120}$/;
 
 function usage() {
   return [
@@ -143,6 +144,13 @@ function isSanitizedRef(value) {
   );
 }
 
+function isSafePrivateLocalRef(value) {
+  if (isSanitizedRef(value)) return true;
+  if (typeof value !== 'string') return false;
+  const text = value.trim();
+  return Boolean(text) && SAFE_PRIVATE_LOCAL_REF_PATTERN.test(text);
+}
+
 function validateArgs(args) {
   if (args.length !== 6 && args.length !== 7) return { ok: false, code: 'invalid_argument_count' };
   const [payloadInput, modeFlag, modeValue, ...flags] = args;
@@ -214,7 +222,7 @@ function countRowsByType(rows) {
   return counts;
 }
 
-function validateRow(row, index) {
+function validateRow(row, index, mode) {
   const errors = [];
   const ref = `rows[${index}]`;
   if (!isPlainObject(row)) return [issue('row_not_object', ref)];
@@ -224,10 +232,15 @@ function validateRow(row, index) {
   const type = row.type;
   if (!ALLOWED_TYPES.has(type)) errors.push(issue('row_type_not_allowed', ref));
   if (BLOCKED_TYPES.has(type)) errors.push(issue('row_type_blocked', ref));
-  if (BLOCKED_COLLECTIONS.has(row.sourceCollection)) errors.push(issue('row_collection_blocked', ref));
+  if (BLOCKED_COLLECTIONS.has(row.sourceCollection) || BLOCKED_COLLECTIONS.has(row.collection)) {
+    errors.push(issue('row_collection_blocked', ref));
+  }
   if (BLOCKED_ROW_TARGETS.has(row.targetTable)) errors.push(issue('row_blocked_target', ref));
 
-  if (!isSanitizedRef(row.sourceLocalRef)) errors.push(issue('row_source_local_ref_not_sanitized', ref));
+  const localRefIsAllowed = mode === MODES.PRIVATE_VALIDATE
+    ? isSafePrivateLocalRef(row.sourceLocalRef)
+    : isSanitizedRef(row.sourceLocalRef);
+  if (!localRefIsAllowed) errors.push(issue('row_source_local_ref_not_sanitized', ref));
   if (!isSanitizedRef(row.migrationRunId)) errors.push(issue('row_migration_run_id_not_sanitized', ref));
 
   const rowText = JSON.stringify(row);
@@ -239,24 +252,13 @@ function validateRow(row, index) {
   return errors;
 }
 
-function validatePayload(payload) {
+function validatePayload(payload, mode) {
   const errors = [];
   const warnings = [];
   if (!isPlainObject(payload)) return { errors: [issue('payload_not_object')], warnings };
 
   const payloadText = JSON.stringify(payload);
   if (URL_PATTERN.test(payloadText)) errors.push(issue('payload_full_url_detected'));
-  for (const blockedType of BLOCKED_TYPES) {
-    if (payloadText.includes(blockedType)) errors.push(issue('payload_blocked_type_detected', blockedType));
-  }
-  for (const blockedCollection of BLOCKED_COLLECTIONS) {
-    if (payloadText.includes(blockedCollection)) {
-      errors.push(issue('payload_blocked_collection_detected', blockedCollection));
-    }
-  }
-  for (const blockedTarget of BLOCKED_ROW_TARGETS) {
-    if (payloadText.includes(blockedTarget)) errors.push(issue('payload_blocked_target_detected', blockedTarget));
-  }
 
   if (typeof payload.payloadVersion !== 'string' || payload.payloadVersion.trim() === '') {
     errors.push(issue('payload_version_missing'));
@@ -271,7 +273,7 @@ function validatePayload(payload) {
   if (rows.length !== EXPECTED_ROW_COUNT) errors.push(issue('rows_count_not_14'));
 
   for (const [index, row] of rows.entries()) {
-    errors.push(...validateRow(row, index));
+    errors.push(...validateRow(row, index, mode));
   }
 
   const rowsByType = countRowsByType(rows);
@@ -417,7 +419,7 @@ async function main() {
   }
 
   const rows = Array.isArray(payloadRead.value.rows) ? payloadRead.value.rows : [];
-  const { errors, warnings } = validatePayload(payloadRead.value);
+  const { errors, warnings } = validatePayload(payloadRead.value, parsed.mode);
   const status = errors.length > 0 ? 'NO-GO' : 'PASS';
   const exitCode = EXIT_CODES[status];
 

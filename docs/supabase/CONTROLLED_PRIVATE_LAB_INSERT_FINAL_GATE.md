@@ -211,8 +211,10 @@ Recommended next direction:
   fixtures only.
 - The executor also supports `private-validate-no-network`, which still reads
   only a local file outside the repo, touches no Supabase and inserts nothing.
-- Next, audit private validate/no-network mode before any private real payload
-  validation or real Supabase insert.
+- S4.6.5.41 keeps deferred/excluded metadata allowed only outside insertable
+  rows and keeps media, playlist, Storage and `content_events` blocked in rows.
+- Next, audit/commit the private validate false-positive fix before any repeat
+  private real payload validation or real Supabase insert.
 
 Still blocked:
 

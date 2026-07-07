@@ -42,6 +42,8 @@
   S4.6.5.38 with sanitized fixtures only.
 - Controlled lab insert executor private validate/no-network mode added: yes,
   in S4.6.5.40, tested only with sanitized mocks outside the repo.
+- Controlled lab insert executor private validate false-positive fix added:
+  yes, in S4.6.5.41, tested only with sanitized mocks outside the repo.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -192,6 +194,9 @@ Controlled lab insert executor:
   reports `insertedRowsCount` `0`.
 - `private-validate-no-network` mode exists and requires payload files outside
   the repo plus `--confirm-private-payload-outside-repo`.
+- S4.6.5.41 allows deferred/excluded metadata outside rows and safe local
+  `sourceLocalRef` values in private validate mode. Blocked media, playlist,
+  Storage and `content_events` targets remain blocked in rows.
 - It must not read the private real payload, touch Supabase, touch Storage or
   insert until separate future phases approve those exact actions.
 

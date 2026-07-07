@@ -226,6 +226,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   payload fuera del repo y `--confirm-private-payload-outside-repo`, no toca
   Supabase, no hace red, no inserta y fue probado solo con mocks temporales
   fuera del repo.
+- S4.6.5.41 corrige falsos positivos de private validate: metadata
+  deferred/excluded de media, playlist, Storage y `content_events` queda
+  permitida solo como metadata, pero sigue bloqueada en rows. `sourceLocalRef`
+  local seguro queda permitido sin imprimirse.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -415,7 +419,9 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   S4.6.5.38 fixture/no-network only para validar payloads mock lab-only. Rechaza
   URLs remotas, requiere flags explicitos, no escribe, no toca Supabase y no
   inserta. Desde S4.6.5.40 tambien soporta `private-validate-no-network`, que
-  exige payload fuera del repo y sigue sin Supabase, red ni insert.
+  exige payload fuera del repo y sigue sin Supabase, red ni insert. S4.6.5.41
+  permite metadata deferred/excluded no insertable y refs locales privadas
+  seguras sin imprimirlas.
 - `../../scripts/migration/preflight-private-lab-insert.mjs`: script S4.6.5.22
   local-only para validar manifest + identity mapping con fixtures sanitizadas.
   No escribe archivos, no toca Supabase, no inserta y no debe ejecutarse contra

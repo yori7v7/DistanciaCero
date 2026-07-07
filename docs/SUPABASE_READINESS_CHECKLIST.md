@@ -840,8 +840,14 @@ la siguiente.
   `--confirm-private-payload-outside-repo`; no toca Supabase, no hace red, no
   inserta y siempre reporta `insertedRowsCount` `0`. Se probo solo con mocks
   temporales fuera del repo; el payload privado real no fue leido por Codex.
-- Salida futura: auditar private validate/no-network mode antes de cualquier
-  validacion del payload privado real.
+- Estado S4.6.5.41:
+  el executor distingue metadata deferred/excluded permitida de rows
+  insertables. `blackHoleGallery`, `playlist`, `media_assets`, Storage y
+  `content_events` pueden aparecer solo como metadata de exclusion, mientras
+  que siguen bloqueados en rows. `sourceLocalRef` local seguro queda permitido
+  en private validate sin imprimirse.
+- Salida futura: auditar/commitear el fix de private validate antes de repetir
+  la validacion privada real.
 
 ### S4.7: bootstrap owner/partner controlado
 

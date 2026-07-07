@@ -214,10 +214,14 @@ Current next phase:
   the payload outside the repo and keeps no Supabase, no network and no insert.
   It was tested only with sanitized mocks/temporaries; the private real payload
   remains unread by Codex.
+- S4.6.5.41 fixes private validate false positives: deferred/excluded metadata
+  can mention media/playlist/Storage targets outside rows, but rows still block
+  those types, collections and targets. Safe private local `sourceLocalRef`
+  values are accepted without being printed.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: audit private validate/no-network mode before any
-  private real payload validation.
+- Next suggested phase: audit/commit the private validate false-positive fix
+  before repeating private real payload validation.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

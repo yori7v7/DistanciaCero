@@ -1149,10 +1149,15 @@ S4.6.5.40 agrega `private-validate-no-network`, exige
 `--confirm-private-payload-outside-repo` y bloquea payloads dentro del repo o
 `.git`; fue probado solo con mocks fuera del repo, sin leer el payload privado
 real.
+S4.6.5.41 corrige falsos positivos de ese modo: metadata deferred/excluded
+como `blackHoleGallery`, `playlist`, `media_assets`, Storage y `content_events`
+ya no se trata como row insertable, pero esos valores siguen bloqueados si
+aparecen en rows. `sourceLocalRef` local seguro queda permitido en private
+validate y no se imprime.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es auditar el private validate
-no-network mode. Todavia sin leer payload privado real desde Codex, sin crear
-SQL, sin ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real
-leido por scripts, sin Supabase desde Codex, sin `.env.local`, sin runtime y
-sin Storage.
+desarrollo. La siguiente fase recomendada es auditar/commitear el fix de
+private validate antes de repetir la validacion privada real. Todavia sin leer
+payload privado real desde Codex, sin crear SQL, sin ejecutar insert, sin datos
+reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase desde
+Codex, sin `.env.local`, sin runtime y sin Storage.

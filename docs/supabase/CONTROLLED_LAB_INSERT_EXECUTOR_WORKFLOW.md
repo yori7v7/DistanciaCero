@@ -19,6 +19,9 @@ S4.6.5.40 adds `private-validate-no-network`, which requires the payload path to
 be outside the repo and still does not touch Supabase, insert data, touch
 Storage or connect the app. This phase still does not read the private real
 payload.
+S4.6.5.41 fixes private validate false positives by allowing deferred/excluded
+metadata outside insertable `rows` and by allowing safe local `sourceLocalRef`
+values without printing them.
 
 ## Purpose
 
@@ -258,6 +261,29 @@ paths or payload rows.
 S4.6.5.40 tests this mode only with a sanitized mock payload copied to a
 temporary folder outside the repo, then deletes the temporary file. The private
 real payload remains unread by Codex.
+
+## S4.6.5.41 Private Validate False Positive Fix
+
+S4.6.5.41 keeps the executor no-network and no-insert, while narrowing blocked
+media checks to insertable `rows`.
+
+Allowed only as non-insertable metadata:
+
+- `deferredCollections`: `blackHoleGallery`, `playlist`;
+- `excludedTargets`: `media_assets`, `storage`, `content_events`.
+
+Still blocked inside rows:
+
+- `gallery_item`, `playlist_item`, `media_asset`, `content_event`,
+  `storage_object`;
+- row collection `blackHoleGallery` or `playlist`;
+- row target `media_assets`, `storage` or `content_events`;
+- Data URLs, full URLs, UUIDs, personal emails, private paths, keys, tokens,
+  passwords or service-role markers.
+
+Private `sourceLocalRef` values may be sanitized local refs such as `local-*`.
+The executor reports only `rows[index]` references and never prints the full
+local ref.
 
 Still blocked:
 

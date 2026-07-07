@@ -18,6 +18,7 @@
 - Controlled lab insert executor workflow documented: yes, in S4.6.5.37.
 - Fixture/no-network executor script created: yes, in S4.6.5.38.
 - Private validate/no-network mode added: yes, in S4.6.5.40.
+- Private validate false-positive fix added: yes, in S4.6.5.41.
 - Lab insert mode created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -218,8 +219,11 @@ Implementation order:
   fixture/no-network mode and private validate/no-network mode.
 - It also supports `private-validate-no-network`, requiring the payload outside
   the repo and `--confirm-private-payload-outside-repo`.
-- Only after that mode is audited should any private real payload validation be
-  considered.
+- S4.6.5.41 allows deferred/excluded metadata outside rows and safe private
+  local `sourceLocalRef` values, while keeping blocked media/playlist targets
+  blocked in rows.
+- Only after that fix is audited should any repeat private real payload
+  validation be considered.
 
 ## Required Pre-Insert Summary
 
