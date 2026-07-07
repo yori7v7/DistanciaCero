@@ -768,9 +768,11 @@ la siguiente.
   insert.
 - Estado S4.6.5.21:
   `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` define el
-  diseno del futuro script `scripts/migration/insert-private-lab-content-items.mjs`.
-  La primera implementacion deberia ser preflight/no-network con fixtures
-  sanitizadas, sin Supabase ni insert.
+  diseno del futuro script. El nombre tentativo historico
+  `scripts/migration/insert-private-lab-content-items.mjs` queda superado por
+  el workflow S4.6.5.37, que recomienda
+  `scripts/migration/controlled-lab-insert-executor.mjs` en fixture/no-network
+  mode only, sin Supabase ni insert.
 - Estado S4.6.5.22:
   `scripts/migration/preflight-private-lab-insert.mjs` existe como
   preflight/no-network con fixtures sanitizadas. Requiere flags explicitos,
@@ -823,8 +825,12 @@ la siguiente.
   payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons, identity
   mapping confirmed, `outputWritten: true`, `outputFile: <outside-repository>`,
   sin red, sin Supabase, sin Storage, sin payload impreso y sin insert.
-- Salida futura: disenar controlled lab insert executor workflow antes de
-  cualquier insert real.
+- Estado S4.6.5.37:
+  `docs/supabase/CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documenta el
+  workflow del futuro executor de insert controlado. No crea script, no lee el
+  payload privado, no toca Supabase, no inserta y mantiene Storage bloqueado.
+- Salida futura: crear controlled lab insert executor script en
+  fixture/no-network mode only.
 
 ### S4.7: bootstrap owner/partner controlado
 
@@ -978,6 +984,7 @@ Ninguna captura o log debe incluir tokens, cookies, claves o contenido privado.
 - [x] Private insert payload persistence workflow docs-only.
 - [x] Private insert payload optional output write with sanitized fixtures only.
 - [x] Private insert payload persistence result sanitized docs.
+- [x] Controlled lab insert executor workflow docs-only.
 - [ ] Estrategia de conflictos owner_a/owner_b.
 - [ ] Versionado optimista o mecanismo equivalente.
 - [ ] Estrategia de rollback y cleanup de media.

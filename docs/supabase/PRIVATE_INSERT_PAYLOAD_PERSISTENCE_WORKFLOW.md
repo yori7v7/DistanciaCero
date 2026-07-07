@@ -188,8 +188,9 @@ without a future explicit phase.
 
 Recommended next direction:
 
-- design the controlled lab insert executor workflow;
-- create any insert executor first as fixture/no-network or dry-run/no-write;
+- `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the controlled lab
+  insert executor workflow;
+- create any insert executor first in fixture/no-network mode only;
 - keep real Supabase insert blocked until a future explicit GO.
 
 Still blocked:

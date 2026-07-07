@@ -114,9 +114,9 @@ handling still require a separate future policy and implementation phase.
 
 Recommended next direction:
 
-- Design the controlled lab insert executor workflow.
-- Then create an insert script first in fixture/no-network or dry-run/no-write
-  mode.
+- `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the controlled lab
+  insert executor workflow.
+- Next, create an executor script in fixture/no-network mode only.
 - Keep Supabase real access blocked until a later explicit phase.
 - Keep real insert blocked until a later explicit phase.
 - Keep Storage blocked.

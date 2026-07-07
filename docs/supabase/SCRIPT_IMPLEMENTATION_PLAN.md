@@ -37,6 +37,7 @@
   with sanitized fixtures only.
 - Private insert payload persistence result documented: yes, in S4.6.5.36 as
   sanitized `PASS`, with output outside the repo and no payload included.
+- Controlled lab insert executor workflow documented: yes, in S4.6.5.37.
 - Real migration script created: no.
 - Real snapshot generated: no.
 - Real LocalStorage read: no.
@@ -102,7 +103,9 @@ Implemented mock-only location:
 - `scripts/migration/generate-private-insert-manifest.mjs`.
 - `scripts/migration/preflight-private-lab-insert.mjs`.
 - `scripts/migration/build-private-insert-payload.mjs`.
-- Future only: `scripts/migration/insert-private-lab-content-items.mjs`.
+- Future only: `scripts/migration/controlled-lab-insert-executor.mjs`.
+- Superseded tentative name:
+  `scripts/migration/insert-private-lab-content-items.mjs`.
 - `scripts/migration/fixtures/mock-snapshot-pass.json`.
 - `scripts/migration/fixtures/mock-snapshot-check.json`.
 - `scripts/migration/fixtures/mock-snapshot-nogo.json`.
@@ -171,6 +174,15 @@ Private insert payload builder:
   `--confirm-write-private-output`; fixture tests must remove temporary output.
 - It must not be run against private real export, manifest or mapping files
   again until a separate review phase approves that.
+
+Controlled lab insert executor:
+
+- `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the future executor
+  workflow.
+- No executor script exists yet.
+- The next implementation phase should create fixture/no-network mode only.
+- It must not read the private payload, touch Supabase, touch Storage or insert
+  until separate future phases approve those modes.
 
 Recommendation:
 
@@ -299,11 +311,12 @@ The future script design is `NO-GO` if it:
 
 Suggested next phase:
 
-- Audit optional private output writing with sanitized fixtures only.
+- Create the controlled lab insert executor script in fixture/no-network mode
+  only.
 - Still no private export read by Codex.
+- Still no private payload read by Codex.
 - Still no real LocalStorage read by scripts.
 - Still no real snapshot generation.
-- Still no insert script.
 - Still no insert.
 - Still no Supabase, CLI, Dashboard, SQL, Storage, `.env.local`, runtime or
   app connection.

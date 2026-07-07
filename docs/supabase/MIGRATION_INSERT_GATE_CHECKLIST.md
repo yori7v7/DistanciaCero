@@ -204,10 +204,13 @@ Current next phase:
   14 selected, 14 payload rows, 4 deferred, 0 missing local refs, 0 noGoReasons,
   identity mapping confirmed, output written outside the repo, no Supabase, no
   Storage and no insert.
+- S4.6.5.37 documents the controlled lab insert executor workflow. No executor
+  script is created, no private payload is read by Codex, no Supabase is
+  touched and no insert is executed.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: design a controlled lab insert executor workflow before
-  any real Supabase insert.
+- Next suggested phase: create the executor script in fixture/no-network mode
+  only.
 - Still no insert, runtime change, SQL creation/execution, Supabase Dashboard,
   Supabase CLI, `.env.local`, private files, Storage or reset.
 

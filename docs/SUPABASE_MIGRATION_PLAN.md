@@ -830,7 +830,9 @@ Estado de S4.6.1:
   crea scripts, no crea SQL, no ejecuta insert y no toca Supabase.
 - S4.6.5.21 crea
   `docs/supabase/CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md` como diseno
-  docs-only del futuro script `scripts/migration/insert-private-lab-content-items.mjs`.
+  docs-only del futuro script. El nombre tentativo historico
+  `scripts/migration/insert-private-lab-content-items.mjs` queda superado por
+  `scripts/migration/controlled-lab-insert-executor.mjs` en S4.6.5.37.
   Define entradas privadas futuras, gates obligatorios, primer scope de 14
   `content_items`, exclusion de media/playlist, mapping remoto conceptual,
   seguridad de credenciales, modos preflight/no-network y lab insert, reporte
@@ -1006,6 +1008,9 @@ React Router tambien permanece fuera de alcance hasta una decision explicita.
 - Private insert payload persistence result registrado de forma sanitizada:
   `PASS`, 14 selected, 14 payload rows, 4 deferred, output fuera del repo, no
   payload impreso, no Supabase, no Storage y no insert.
+- Controlled lab insert executor workflow documentado: no crea script, no lee
+  payload privado, no toca Supabase, no inserta y define como siguiente paso un
+  executor fixture/no-network only.
 - Si `content_items.data` debe guardar `mediaAssetId` o paths.
 - Cuando activar React Router.
 - Cuando proteger rutas.
@@ -1126,10 +1131,14 @@ opcional `--out` con confirmacion explicita, bloqueando rutas dentro del repo y
 probando solo con fixtures sanitizadas. S4.6.5.36 registra que el usuario
 genero el payload privado fuera del repo y reporto solo un resumen sanitizado:
 `PASS`, 14 payload rows, output fuera del repo, sin payload impreso, sin
-Supabase, sin Storage y sin insert.
+Supabase, sin Storage y sin insert. S4.6.5.37 documenta el workflow del futuro
+controlled lab insert executor: primero fixture/no-network, despues auditoria,
+despues validacion privada no-write y solo al final insert real con GO
+explicito.
 
 La app local debe seguir funcionando como fallback, backup offline y entorno de
-desarrollo. La siguiente fase recomendada es disenar el controlled lab insert
-executor workflow antes de cualquier insert real. Todavia sin crear SQL, sin
-ejecutar insert, sin datos reales en Git/chat, sin LocalStorage real leido por
-scripts, sin Supabase desde Codex, sin `.env.local`, sin runtime y sin Storage.
+desarrollo. La siguiente fase recomendada es crear el controlled lab insert
+executor script en fixture/no-network mode only. Todavia sin leer payload
+privado desde Codex, sin crear SQL, sin ejecutar insert, sin datos reales en
+Git/chat, sin LocalStorage real leido por scripts, sin Supabase desde Codex, sin
+`.env.local`, sin runtime y sin Storage.

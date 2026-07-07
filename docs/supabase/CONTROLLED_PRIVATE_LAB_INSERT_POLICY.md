@@ -219,11 +219,13 @@ result is recorded in `PRIVATE_INSERT_MANIFEST_RESULT.md`. The final gate is
 documented in `CONTROLLED_PRIVATE_LAB_INSERT_FINAL_GATE.md`.
 The future script design is documented in
 `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`.
+The controlled lab insert executor workflow is documented in
+`CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`.
 
 Allowed next direction:
 
-- Create the controlled insert preflight/no-network script with sanitized
-  fixtures.
+- Create the controlled lab insert executor script in fixture/no-network mode
+  only.
 
 Still blocked:
 

@@ -15,6 +15,7 @@
   sanitized fixtures only.
 - Private payload persistence result documented: yes, in S4.6.5.36 as sanitized
   `PASS`; the private payload remains outside the repo.
+- Controlled lab insert executor workflow documented: yes, in S4.6.5.37.
 - Lab insert script created: no.
 - SQL created: no.
 - Insert executed: no.
@@ -46,7 +47,7 @@ The future script should:
 Tentative path:
 
 ```txt
-scripts/migration/insert-private-lab-content-items.mjs
+scripts/migration/controlled-lab-insert-executor.mjs
 ```
 
 Status:
@@ -55,6 +56,9 @@ Status:
 - Do not create it in this phase.
 - Implement it first with sanitized fixtures or no-network mode before any real
   Supabase execution is considered.
+- Historical tentative name
+  `scripts/migration/insert-private-lab-content-items.mjs` is superseded by the
+  workflow name above.
 
 ## Future Inputs
 
@@ -207,8 +211,9 @@ Implementation order:
 - The sanitized private payload persistence result is documented in
   `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`; the payload itself remains
   outside the repo and unread by Codex.
-- Only after a new executor workflow design/audit should lab insert mode be
-  considered.
+- `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` documents the executor workflow.
+- Only after a fixture/no-network executor exists and is audited should lab
+  insert mode be considered.
 
 ## Required Pre-Insert Summary
 
@@ -289,10 +294,10 @@ The future script is `NO-GO` if:
 
 Recommended sequence:
 
-1. Audit the payload builder.
-2. Consider private local payload generation outside the repo.
-3. Design private config and mapping workflow.
-4. Audit any real insert script before private use.
+1. Create the executor script in fixture/no-network mode only.
+2. Audit the fixture/no-network executor.
+3. Add private payload validate/no-write mode after audit.
+4. Design lab dry-run/no-write separately.
 5. Only with explicit GO, consider lab insert script execution.
 
 Still blocked:

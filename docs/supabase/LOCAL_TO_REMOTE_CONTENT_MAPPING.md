@@ -185,12 +185,18 @@ Current next phase:
 - Private insert payload builder exists as
   `../../scripts/migration/build-private-insert-payload.mjs` with sanitized
   fixtures only.
+- Private insert payload persistence result is documented in
+  `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
+- Controlled lab insert executor workflow is documented in
+  `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`.
 - Recommended first insert scope is 14 clean `content_items`; media and playlist
   are deferred.
-- Next suggested phase: audit the payload builder before any private use.
+- Next suggested phase: create the executor script in fixture/no-network mode
+  only.
 - Still no private export read by Codex, real snapshot, real LocalStorage read,
-  real insert, runtime change, `src`, SQL, Supabase Dashboard, Supabase CLI,
-  `.env.local`, private files, Storage or reset.
+  private payload read by Codex, real insert, runtime change, `src`, SQL,
+  Supabase Dashboard, Supabase CLI, `.env.local`, private files, Storage or
+  reset.
 
 ## Non-Goals
 

@@ -214,6 +214,10 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   el resultado sanitizado de la persistencia privada reportada por el usuario:
   `PASS`, 14 selected, 14 payload rows, 4 deferred, output fuera del repo, sin
   payload real en Git/chat/Codex, sin Supabase, sin Storage y sin insert.
+- S4.6.5.37 crea `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md` para documentar
+  el workflow del futuro executor de insert controlado en lab. No crea script,
+  no lee payload privado, no toca Supabase, no inserta y mantiene Storage
+  bloqueado.
 - Reset, Storage, app connection, backend readiness y production readiness
   siguen pendientes.
 - No hay backend conectado a la app ni listo para produccion.
@@ -392,9 +396,13 @@ de laboratorio, tambien con alcance limitado y sin conectar la app.
   identity mapping privado, lab desechable confirmado, checks verdes y rollback
   decidido.
 - `CONTROLLED_PRIVATE_LAB_INSERT_SCRIPT_DESIGN.md`: diseno S4.6.5.21 del
-  futuro script `../../scripts/migration/insert-private-lab-content-items.mjs`.
-  La primera implementacion recomendada es preflight/no-network con fixtures
-  sanitizadas, sin Supabase ni insert.
+  futuro script, ahora alineado con
+  `../../scripts/migration/controlled-lab-insert-executor.mjs`. La primera
+  implementacion recomendada es fixture/no-network con fixtures sanitizadas,
+  sin Supabase ni insert.
+- `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`: workflow S4.6.5.37 del futuro
+  executor. La siguiente implementacion permitida es fixture/no-network only,
+  sin payload privado, sin Supabase y sin insert.
 - `../../scripts/migration/preflight-private-lab-insert.mjs`: script S4.6.5.22
   local-only para validar manifest + identity mapping con fixtures sanitizadas.
   No escribe archivos, no toca Supabase, no inserta y no debe ejecutarse contra
@@ -482,7 +490,7 @@ No ejecutar estos SQL tal cual contra Supabase sin revision. Estan escritos como
 
 ## Siguiente fase recomendada
 
-Disenar el controlled lab insert executor workflow antes de cualquier insert
-real. Todavia sin insert, sin SQL nuevo, sin datos reales en Git/chat, sin
-LocalStorage real leido por scripts, sin Supabase desde Codex, sin `.env.local`,
-sin runtime y sin Storage.
+Crear el controlled lab insert executor script en fixture/no-network mode only.
+Todavia sin payload privado leido por Codex, sin insert, sin SQL nuevo, sin
+datos reales en Git/chat, sin LocalStorage real leido por scripts, sin Supabase
+desde Codex, sin `.env.local`, sin runtime y sin Storage.

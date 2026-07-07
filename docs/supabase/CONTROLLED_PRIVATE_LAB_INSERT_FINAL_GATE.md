@@ -204,8 +204,10 @@ Recommended next direction:
 - Optional private output writing exists with sanitized fixtures only.
 - The sanitized private payload persistence result is recorded in
   `PRIVATE_INSERT_PAYLOAD_PERSISTENCE_RESULT.md`.
-- Next, design the controlled lab insert executor workflow before any real
-  Supabase insert.
+- The controlled lab insert executor workflow is documented in
+  `CONTROLLED_LAB_INSERT_EXECUTOR_WORKFLOW.md`.
+- Next, create the executor script in fixture/no-network mode only before any
+  real Supabase insert.
 
 Still blocked:
 
