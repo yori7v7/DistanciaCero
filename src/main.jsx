@@ -67,7 +67,7 @@ function AppRoutes() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter basename="/DistanciaCero">
+    <BrowserRouter basename={import.meta.env.VITE_BASE || '/DistanciaCero'}>
       <AppRoutes />
     </BrowserRouter>
   </React.StrictMode>,
