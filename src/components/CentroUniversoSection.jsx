@@ -5019,6 +5019,7 @@ function CentroUniversoSection() {
                       <div className="item-info">
                         <strong>{item.title}</strong>
                         <span>{item.month}</span>
+                        <LocalContentMeta item={item} />
                       </div>
                       <div className="item-actions">
                         <button
@@ -5056,6 +5057,7 @@ function CentroUniversoSection() {
                       <div className="item-info">
                         <strong>{item.title}</strong>
                         <span>{item.mood}</span>
+                        <LocalContentMeta item={item} />
                       </div>
                       <div className="item-actions">
                         <button
