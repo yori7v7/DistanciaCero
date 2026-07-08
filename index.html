@@ -9,6 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <script>
+      // Restore SPA path after GitHub Pages 404 redirect
+      (function() {
+        var redirect = sessionStorage.getItem('redirect')
+        if (redirect) {
+          sessionStorage.removeItem('redirect')
+          var base = '/DistanciaCero/'
+          if (redirect.startsWith(base)) {
+            redirect = redirect.slice(base.length - 1)
+          }
+          window.history.replaceState(null, '', redirect)
+        }
+      })()
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
