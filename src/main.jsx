@@ -1,6 +1,8 @@
-﻿import React from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import App from './App.jsx'
+import PublicLanding from './components/PublicLanding'
 import { AudioProvider } from './context/AudioContext.jsx'
 
 import './styles/global.css'
@@ -29,6 +31,7 @@ import './styles/space-3d-upgrade.css'
 import './styles/blackhole-gallery.css'
 import './styles/auth-gate.css'
 import './styles/file-uploader.css'
+import './styles/public-landing.css'
 
 const resetParams = new URLSearchParams(window.location.search)
 
@@ -39,16 +42,33 @@ if (resetParams.get('reset') === '1') {
   window.location.reload()
 }
 
+function AppRoutes() {
+  const navigate = useNavigate()
+
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <PublicLanding onEnter={() => navigate('/app')} />
+        }
+      />
+      <Route
+        path="/app"
+        element={
+          <AudioProvider>
+            <App />
+          </AudioProvider>
+        }
+      />
+    </Routes>
+  )
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AudioProvider>
-      <App />
-    </AudioProvider>
+    <BrowserRouter basename="/DistanciaCero">
+      <AppRoutes />
+    </BrowserRouter>
   </React.StrictMode>,
 )
-
-
-
-
-
-

@@ -1,0 +1,245 @@
+/* ============================================================
+   Public Landing — Beautiful intro for unauthenticated visitors
+   ============================================================ */
+
+.public-landing {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 30%, #1a0a2e 0%, #050008 70%);
+}
+
+/* ---- Background ---- */
+
+.public-landing__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.public-landing__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+}
+
+.public-landing__orb--pink {
+  width: 500px;
+  height: 500px;
+  top: -200px;
+  left: -100px;
+  background: rgba(255, 122, 200, 0.3);
+}
+
+.public-landing__orb--red {
+  width: 400px;
+  height: 400px;
+  bottom: -150px;
+  right: -100px;
+  background: rgba(255, 23, 68, 0.25);
+}
+
+.public-landing__stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 15% 85%, rgba(255,122,200,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 60% 30%, rgba(255,122,200,0.4), transparent),
+    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.4), transparent);
+  animation: starsFloat 20s linear infinite;
+}
+
+@keyframes starsFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-40px); }
+}
+
+/* ---- Content ---- */
+
+.public-landing__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 24px;
+  max-width: 600px;
+}
+
+.public-landing__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid rgba(255, 122, 200, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 122, 200, 0.08);
+  color: var(--pink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 28px;
+  animation: fadeUpIn 0.8s ease both;
+}
+
+.public-landing__title {
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  font-weight: 900;
+  letter-spacing: -3px;
+  line-height: 0.95;
+  margin: 0 0 20px;
+  animation: fadeUpIn 0.8s 0.15s ease both;
+}
+
+.public-landing__title-line {
+  display: block;
+}
+
+.public-landing__title-line--accent {
+  background: linear-gradient(135deg, #ff7ac8 0%, #ff1744 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.public-landing__names {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  animation: fadeUpIn 0.8s 0.3s ease both;
+}
+
+.public-landing__name {
+  font-size: 1.1rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.public-landing__heart {
+  color: var(--red);
+  filter: drop-shadow(0 0 10px rgba(255, 23, 68, 0.6));
+  animation: heartBeat 1.4s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+  30% { transform: scale(1); }
+}
+
+.public-landing__subtitle {
+  font-size: 1.05rem;
+  color: #9b8ac4;
+  line-height: 1.7;
+  margin: 0 0 36px;
+  animation: fadeUpIn 0.8s 0.45s ease both;
+}
+
+/* ---- CTA ---- */
+
+.public-landing__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e94d8c 0%, #c73e6f 100%);
+  color: #fff;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 0 4px 30px rgba(233, 77, 140, 0.35);
+  transition: all 0.3s ease;
+  animation: fadeUpIn 0.8s 0.6s ease both;
+}
+
+.public-landing__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 40px rgba(233, 77, 140, 0.5);
+}
+
+.public-landing__cta svg {
+  transition: transform 0.3s;
+}
+
+.public-landing__cta:hover svg {
+  transform: translateX(3px);
+}
+
+.public-landing__hint {
+  font-size: 0.78rem;
+  color: #5c4d80;
+  margin-top: 20px;
+  animation: fadeUpIn 0.8s 0.75s ease both;
+}
+
+/* ---- Footer ---- */
+
+.public-landing__footer {
+  position: absolute;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4a3860;
+  font-size: 0.75rem;
+  z-index: 2;
+}
+
+.public-landing__footer svg {
+  opacity: 0.5;
+}
+
+/* ---- Animations ---- */
+
+@keyframes fadeUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 620px) {
+  .public-landing__title {
+    font-size: 3rem;
+    letter-spacing: -1.5px;
+  }
+
+  .public-landing__subtitle {
+    font-size: 0.92rem;
+  }
+
+  .public-landing__cta {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+
+  .public-landing__orb--pink {
+    width: 300px;
+    height: 300px;
+  }
+
+  .public-landing__orb--red {
+    width: 250px;
+    height: 250px;
+  }
+}
