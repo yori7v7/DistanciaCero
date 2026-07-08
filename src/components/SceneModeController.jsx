@@ -1,8 +1,14 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
-import { BookHeart, ChevronLeft, ChevronRight, Compass, Heart, Home, Music2, Sparkles } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  BookHeart, ChevronLeft, ChevronRight, Compass, Heart, Home, Music2, Sparkles,
+  Settings, LogOut, ShieldAlert, X
+} from 'lucide-react'
 import scenesData from '../data/scenes.json'
+import { signOut as supabaseSignOut, isSupabaseAuthenticated } from '../services/supabaseAuthService'
+import { isRemoteContentEnabled } from '../integrations/supabase/client'
 
 const SCENE_STORAGE_KEY = 'distancia-cero-active-scene'
+const CENTRO_VISIBLE_KEY = 'distancia-cero-centro-visible'
 
 const iconMap = {
   inicio: Home,
@@ -13,22 +19,16 @@ const iconMap = {
   cartas: BookHeart,
   musica: Music2,
   promesas: Heart,
-  distancia: Compass
+  distancia: Compass,
+  'centro-universo': ShieldAlert
 }
 
 function getInitialSceneId(scenes) {
   const hash = window.location.hash.replace('#/', '').replace('#', '').trim()
   const stored = localStorage.getItem(SCENE_STORAGE_KEY)
-
-  if (hash && scenes.some((scene) => scene.id === hash)) {
-    return hash
-  }
-
-  if (stored && scenes.some((scene) => scene.id === stored)) {
-    return stored
-  }
-
-  return scenes[0]?.id || 'inicio'
+  if (hash && scenes.some((s) => s.id === hash && s.id !== 'centro-universo')) return hash
+  if (stored && scenes.some((s) => s.id === stored && s.id !== 'centro-universo')) return stored
+  return scenes.find((s) => s.id !== 'centro-universo')?.id || 'inicio'
 }
 
 function getSectionElements() {
@@ -37,155 +37,186 @@ function getSectionElements() {
 
 function SceneModeController() {
   const scenes = useMemo(() => Array.isArray(scenesData) ? scenesData : [], [])
+  // Filter out centro-universo from main navigation
+  const navScenes = useMemo(() => scenes.filter((s) => s.id !== 'centro-universo'), [scenes])
   const [activeSceneId, setActiveSceneId] = useState(() => getInitialSceneId(scenes))
   const [navPulse, setNavPulse] = useState(false)
   const [navDirection, setNavDirection] = useState('next')
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [centroVisible, setCentroVisible] = useState(() =>
+    localStorage.getItem(CENTRO_VISIBLE_KEY) === 'true'
+  )
+  const [loggingOut, setLoggingOut] = useState(false)
 
   const firstRunRef = useRef(true)
   const linkRefs = useRef({})
+  const settingsRef = useRef(null)
 
-  const activeIndex = Math.max(0, scenes.findIndex((scene) => scene.id === activeSceneId))
-  const activeScene = scenes[activeIndex] || scenes[0]
+  const remoteEnabled = isRemoteContentEnabled()
+  const isLoggedIn = remoteEnabled && isSupabaseAuthenticated()
+  const centroScene = scenes.find((s) => s.id === 'centro-universo')
+
+  const activeIndex = Math.max(0, navScenes.findIndex((s) => s.id === activeSceneId))
+  const activeScene = navScenes[activeIndex] || navScenes[0]
   const ActiveIcon = iconMap[activeScene?.id] || Sparkles
 
-  const centerActiveLink = (smooth = true) => {
-    const activeButton = linkRefs.current[activeScene?.id]
+  // Close settings on outside click
+  useEffect(() => {
+    if (!settingsOpen) return
+    const handler = (e) => {
+      if (settingsRef.current && !settingsRef.current.contains(e.target)) {
+        setSettingsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [settingsOpen])
 
-    if (!activeButton) return
-
-    activeButton.scrollIntoView({
-      behavior: smooth ? 'smooth' : 'auto',
-      inline: 'center',
-      block: 'nearest'
-    })
-  }
-
+  // Scene mode init
   useEffect(() => {
     document.body.classList.add('scene-mode-enabled')
-
     return () => {
       document.body.classList.remove('scene-mode-enabled')
-
-      getSectionElements().forEach((element) => {
-        element.classList.remove('scene-hidden', 'scene-visible')
-        element.removeAttribute('aria-hidden')
+      getSectionElements().forEach((el) => {
+        el.classList.remove('scene-hidden', 'scene-visible')
+        el.removeAttribute('aria-hidden')
       })
     }
   }, [])
 
+  // Hash change listener
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#/', '').replace('#', '').trim()
-
-      if (hash && scenes.some((scene) => scene.id === hash)) {
-        setActiveSceneId(hash)
-      }
+      if (hash && navScenes.some((s) => s.id === hash)) setActiveSceneId(hash)
     }
-
     window.addEventListener('hashchange', handleHashChange)
     handleHashChange()
-
     return () => window.removeEventListener('hashchange', handleHashChange)
-  }, [scenes])
+  }, [navScenes])
 
+  // Scene change effect
   useEffect(() => {
     if (!activeScene) return
-
+    // Include centro sections if visible
     const activeIds = new Set(activeScene.sectionIds || [])
+    if (centroVisible && centroScene) {
+      centroScene.sectionIds.forEach((id) => activeIds.add(id))
+    }
     const allSections = getSectionElements()
-
     localStorage.setItem(SCENE_STORAGE_KEY, activeScene.id)
 
     if (window.location.hash !== `#/${activeScene.id}`) {
       window.history.replaceState(null, '', `#/${activeScene.id}`)
     }
 
-    allSections.forEach((element) => {
-      const shouldShow = activeIds.has(element.id)
-
-      element.classList.toggle('scene-visible', shouldShow)
-      element.classList.toggle('scene-hidden', !shouldShow)
-      element.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+    allSections.forEach((el) => {
+      const shouldShow = activeIds.has(el.id)
+      el.classList.toggle('scene-visible', shouldShow)
+      el.classList.toggle('scene-hidden', !shouldShow)
+      el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
     })
 
-    window.dispatchEvent(
-      new CustomEvent('distancia-cero-scene-change', {
-        detail: {
-          sceneId: activeScene.musicSectionId || activeScene.id,
-          appSceneId: activeScene.id
-        }
-      })
-    )
+    window.dispatchEvent(new CustomEvent('distancia-cero-scene-change', {
+      detail: { sceneId: activeScene.musicSectionId || activeScene.id, appSceneId: activeScene.id }
+    }))
 
-    const firstVisible = allSections.find((element) => activeIds.has(element.id))
-
+    const firstVisible = allSections.find((el) => activeIds.has(el.id))
     setTimeout(() => {
       centerActiveLink(!firstRunRef.current)
-
       if (firstVisible) {
-        firstVisible.scrollIntoView({
-          behavior: firstRunRef.current ? 'auto' : 'smooth',
-          block: 'start'
-        })
+        firstVisible.scrollIntoView({ behavior: firstRunRef.current ? 'auto' : 'smooth', block: 'start' })
       } else {
-        window.scrollTo({
-          top: 0,
-          behavior: firstRunRef.current ? 'auto' : 'smooth'
-        })
+        window.scrollTo({ top: 0, behavior: firstRunRef.current ? 'auto' : 'smooth' })
       }
-
       firstRunRef.current = false
     }, 90)
 
     setNavPulse(true)
-    const pulseTimer = setTimeout(() => setNavPulse(false), 520)
+    const timer = setTimeout(() => setNavPulse(false), 520)
+    return () => clearTimeout(timer)
+  }, [activeScene, centroVisible])
 
-    return () => clearTimeout(pulseTimer)
-  }, [activeScene])
+  // Re-run when centro visibility changes
+  useEffect(() => {
+    localStorage.setItem(CENTRO_VISIBLE_KEY, centroVisible ? 'true' : 'false')
+    if (!activeScene) return
+    const activeIds = new Set(activeScene.sectionIds || [])
+    if (centroVisible && centroScene) {
+      centroScene.sectionIds.forEach((id) => activeIds.add(id))
+    }
+    const allSections = getSectionElements()
+    allSections.forEach((el) => {
+      const shouldShow = activeIds.has(el.id)
+      el.classList.toggle('scene-visible', shouldShow)
+      el.classList.toggle('scene-hidden', !shouldShow)
+      el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+    })
+  }, [centroVisible])
+
+  const centerActiveLink = (smooth = true) => {
+    const btn = linkRefs.current[activeScene?.id]
+    if (!btn) return
+    btn.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', inline: 'center', block: 'nearest' })
+  }
 
   const goToScene = (sceneId, direction = 'next') => {
-    if (!scenes.some((scene) => scene.id === sceneId)) return
+    if (!navScenes.some((s) => s.id === sceneId)) return
     setNavDirection(direction)
     setActiveSceneId(sceneId)
   }
 
   const goPrev = () => {
-    const nextIndex = activeIndex <= 0 ? scenes.length - 1 : activeIndex - 1
-    goToScene(scenes[nextIndex].id, 'prev')
+    const idx = activeIndex <= 0 ? navScenes.length - 1 : activeIndex - 1
+    goToScene(navScenes[idx].id, 'prev')
   }
 
   const goNext = () => {
-    const nextIndex = activeIndex >= scenes.length - 1 ? 0 : activeIndex + 1
-    goToScene(scenes[nextIndex].id, 'next')
+    const idx = activeIndex >= navScenes.length - 1 ? 0 : activeIndex + 1
+    goToScene(navScenes[idx].id, 'next')
+  }
+
+  const toggleCentro = () => {
+    setCentroVisible((v) => !v)
+    setSettingsOpen(false)
+  }
+
+  const handleLogout = async () => {
+    setLoggingOut(true)
+    setSettingsOpen(false)
+    try {
+      await supabaseSignOut()
+      window.location.reload()
+    } catch (_) {
+      setLoggingOut(false)
+    }
   }
 
   if (!activeScene) return null
 
   return (
-    <nav className={`scene-portal scene-nav-${navDirection} ${navPulse ? 'scene-portal-pulse' : ''}`} aria-label="Navegación de escenas">
-      <div className="scene-portal-current">
-        <div className="scene-portal-orb">
-          <ActiveIcon size={18} />
-        </div>
+    <nav className={`scene-portal scene-nav-${navDirection} ${navPulse ? 'scene-portal-pulse' : ''}`} aria-label="Navegación principal">
+      {/* Logo / Home */}
+      <button
+        className="scene-portal-logo"
+        onClick={() => goToScene('inicio', 'prev')}
+        title="Ir al inicio"
+        aria-label="Ir al inicio"
+      >
+        <Heart size={18} />
+        <span className="scene-portal-logo-text">Distancia Cero</span>
+      </button>
 
-        <div>
-          <span>Escena activa</span>
-          <strong>{activeScene.label}</strong>
-        </div>
-      </div>
-
+      {/* Scene links */}
       <div className="scene-portal-links">
-        {scenes.map((scene, index) => {
+        {navScenes.map((scene, index) => {
           const Icon = iconMap[scene.id] || Sparkles
           const direction = index >= activeIndex ? 'next' : 'prev'
-
           return (
             <button
               key={scene.id}
-              ref={(element) => {
-                linkRefs.current[scene.id] = element
-              }}
-              className={`scene-link ${scene.id === activeScene.id ? 'active' : ''}`}
+              ref={(el) => { linkRefs.current[scene.id] = el }}
+              className={`scene-link ${scene.id === activeSceneId ? 'active' : ''}`}
               type="button"
               onClick={() => goToScene(scene.id, direction)}
             >
@@ -196,14 +227,64 @@ function SceneModeController() {
         })}
       </div>
 
-      <div className="scene-portal-actions scene-portal-actions-two">
-        <button type="button" onClick={goPrev} aria-label="Escena anterior">
+      {/* Right side: settings + prev/next */}
+      <div className="scene-portal-actions">
+        <button type="button" onClick={goPrev} aria-label="Escena anterior" className="scene-nav-arrow">
           <ChevronLeft size={18} />
         </button>
 
-        <button type="button" onClick={goNext} aria-label="Escena siguiente">
+        <button type="button" onClick={goNext} aria-label="Escena siguiente" className="scene-nav-arrow">
           <ChevronRight size={18} />
         </button>
+
+        {/* Settings gear */}
+        <div className="scene-settings-wrapper" ref={settingsRef}>
+          <button
+            type="button"
+            className={`scene-settings-gear ${settingsOpen ? 'active' : ''} ${centroVisible ? 'centro-active' : ''}`}
+            onClick={() => setSettingsOpen((o) => !o)}
+            aria-label="Ajustes"
+            title="Ajustes"
+          >
+            <Settings size={18} />
+          </button>
+
+          {settingsOpen && (
+            <div className="scene-settings-dropdown">
+              <div className="scene-settings-dropdown__header">
+                <span>Ajustes</span>
+                <button onClick={() => setSettingsOpen(false)} aria-label="Cerrar">
+                  <X size={14} />
+                </button>
+              </div>
+
+              <button
+                className={`scene-settings-item ${centroVisible ? 'scene-settings-item--active' : ''}`}
+                onClick={toggleCentro}
+              >
+                <ShieldAlert size={16} />
+                <div className="scene-settings-item__text">
+                  <strong>Centro del Universo</strong>
+                  <small>Agregar, editar, ocultar o mover contenido de cada sección</small>
+                </div>
+                <span className={`scene-settings-toggle ${centroVisible ? 'on' : ''}`}>
+                  {centroVisible ? 'ON' : 'OFF'}
+                </span>
+              </button>
+
+              {isLoggedIn && (
+                <button
+                  className="scene-settings-item scene-settings-item--logout"
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                >
+                  <LogOut size={16} />
+                  <span>{loggingOut ? 'Cerrando...' : 'Cerrar sesión'}</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   )

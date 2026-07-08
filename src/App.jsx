@@ -1,6 +1,5 @@
 import AuthGate from './components/AuthGate'
 import LoadingIntro from './components/LoadingIntro'
-import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProposalSection from './components/ProposalSection'
 import QuickIndex from './components/QuickIndex'
@@ -48,8 +47,6 @@ function App() {
 
       <div className="energy-lines"></div>
       <div className="stars-layer"></div>
-
-      <Navbar />
 
       <main>
         <Hero />
