@@ -503,6 +503,42 @@ input {
   margin-bottom: 18px;
 }
 
+/* Playlist upload rows */
+.playlist-row-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.playlist-row-wrapper .playlist-row {
+  flex: 1;
+}
+
+.playlist-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 50%;
+  background: transparent;
+  color: #fca5a5;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.playlist-row-wrapper:hover .playlist-delete-btn {
+  opacity: 1;
+}
+
+.playlist-delete-btn:hover {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.4);
+}
+
 /* Gallery upload & image display */
 .gallery-upload-wrapper {
   max-width: 640px;
