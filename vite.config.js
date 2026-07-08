@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// Vercel deploys at root (/), GitHub Pages at /DistanciaCero/
-const base = process.env.VITE_BASE || '/DistanciaCero/'
+// Default: root (Vercel). Set VITE_BASE=/DistanciaCero/ for GitHub Pages.
+const base = process.env.VITE_BASE || '/'
 
 export default defineConfig({
   plugins: [
