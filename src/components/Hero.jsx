@@ -42,12 +42,17 @@ function Hero() {
           <a href="#carta" className="main-button">
             {siteConfig.hero.primaryButton}
           </a>
-
-          <button className="ghost-button hero-secondary-button" onClick={toggleBackground}>
-            <Music size={18} />
-            {backgroundPlaying ? 'Pausar canción principal' : 'Activar canción principal'}
-          </button>
         </div>
+
+        <button
+          className="hero-music-toggle"
+          onClick={toggleBackground}
+          title={backgroundPlaying ? 'Pausar música' : 'Activar música'}
+          aria-label={backgroundPlaying ? 'Pausar música de fondo' : 'Activar música de fondo'}
+        >
+          <Music size={16} />
+          <span>{backgroundPlaying ? 'Pausar canción' : 'Activar canción'}</span>
+        </button>
       </div>
     </section>
   )

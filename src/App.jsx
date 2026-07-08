@@ -1,3 +1,4 @@
+import AuthGate from './components/AuthGate'
 import LoadingIntro from './components/LoadingIntro'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -35,6 +36,7 @@ import promises from './data/promises.json'
 
 function App() {
   return (
+    <AuthGate>
     <div className="app">
       <LoadingIntro />
 
@@ -74,6 +76,7 @@ function App() {
       <BackToTop />
       <Footer />
     </div>
+    </AuthGate>
   )
 }
 

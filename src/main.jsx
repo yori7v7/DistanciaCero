@@ -27,6 +27,7 @@ import './styles/diary-story.css'
 import './styles/true-3d.css'
 import './styles/space-3d-upgrade.css'
 import './styles/blackhole-gallery.css'
+import './styles/auth-gate.css'
 
 const resetParams = new URLSearchParams(window.location.search)
 

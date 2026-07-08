@@ -1,5 +1,51 @@
 import * as contentRepository from '../repositories/contentRepository'
 
+// Sync hooks: fire-and-forget to Supabase on every write.
+// These never throw and never block the local flow.
+let _syncHooksPromise = null
+function getSyncHooks() {
+  if (!_syncHooksPromise) {
+    _syncHooksPromise = import('./supabaseSyncService').catch(() => null)
+  }
+  return _syncHooksPromise
+}
+
+async function syncCreate(collection, item) {
+  const hooks = await getSyncHooks()
+  if (hooks) {
+    hooks.pushCreateToSupabase(collection, item).catch(() => {})
+  }
+}
+
+async function syncUpdate(collection, id, patch) {
+  const hooks = await getSyncHooks()
+  if (hooks) {
+    hooks.pushUpdateToSupabase(collection, id, patch).catch(() => {})
+  }
+}
+
+async function syncDelete(collection, id) {
+  const hooks = await getSyncHooks()
+  if (hooks) {
+    hooks.pushDeleteToSupabase(collection, id).catch(() => {})
+  }
+}
+
+// Override-specific sync: overrides are stored separately from items
+async function syncOverrideUpdate(collection, baseId, patch) {
+  const hooks = await getSyncHooks()
+  if (hooks) {
+    hooks.pushOverrideToSupabase(collection, baseId, patch).catch(() => {})
+  }
+}
+
+async function syncOverrideDelete(collection, baseId) {
+  const hooks = await getSyncHooks()
+  if (hooks) {
+    hooks.pushDeleteOverrideToSupabase(collection, baseId).catch(() => {})
+  }
+}
+
 // Fachada sync sobre LocalStorage. Deja el contrato listo para un backend futuro
 // sin cambiar todavia el comportamiento local actual.
 export function getCollectionItems(collectionName) {
@@ -11,15 +57,21 @@ export function saveCollectionItems(collectionName, items) {
 }
 
 export function addCollectionItem(collectionName, item) {
-  return contentRepository.addCollectionItem(collectionName, item)
+  const result = contentRepository.addCollectionItem(collectionName, item)
+  syncCreate(collectionName, item)
+  return result
 }
 
 export function updateCollectionItem(collectionName, id, patch) {
-  return contentRepository.updateCollectionItem(collectionName, id, patch)
+  const result = contentRepository.updateCollectionItem(collectionName, id, patch)
+  syncUpdate(collectionName, id, patch)
+  return result
 }
 
 export function deleteCollectionItem(collectionName, id) {
-  return contentRepository.deleteCollectionItem(collectionName, id)
+  const result = contentRepository.deleteCollectionItem(collectionName, id)
+  syncDelete(collectionName, id)
+  return result
 }
 
 export function getCollectionOverrides(collectionName) {
@@ -31,11 +83,15 @@ export function saveCollectionOverrides(collectionName, overrides) {
 }
 
 export function setCollectionOverride(collectionName, id, patch) {
-  return contentRepository.setCollectionOverride(collectionName, id, patch)
+  const result = contentRepository.setCollectionOverride(collectionName, id, patch)
+  syncOverrideUpdate(collectionName, id, patch)
+  return result
 }
 
 export function deleteCollectionOverride(collectionName, id) {
-  return contentRepository.deleteCollectionOverride(collectionName, id)
+  const result = contentRepository.deleteCollectionOverride(collectionName, id)
+  syncOverrideDelete(collectionName, id)
+  return result
 }
 
 export function getCollectionHiddenIds(collectionName) {
@@ -46,12 +102,18 @@ export function saveCollectionHiddenIds(collectionName, ids) {
   return contentRepository.saveCollectionHiddenIds(collectionName, ids)
 }
 
-export function hideCollectionItem(collectionName, id) {
-  return contentRepository.hideCollectionItem(collectionName, id)
+export async function hideCollectionItem(collectionName, id) {
+  const result = contentRepository.hideCollectionItem(collectionName, id)
+  const hooks = await getSyncHooks()
+  if (hooks) hooks.pushHideToSupabase(collectionName, id).catch(() => {})
+  return result
 }
 
-export function restoreCollectionItem(collectionName, id) {
-  return contentRepository.restoreCollectionItem(collectionName, id)
+export async function restoreCollectionItem(collectionName, id) {
+  const result = contentRepository.restoreCollectionItem(collectionName, id)
+  const hooks = await getSyncHooks()
+  if (hooks) hooks.pushRestoreToSupabase(collectionName, id).catch(() => {})
+  return result
 }
 
 export function mergeCollectionWithLocal(defaultItems, collectionName) {

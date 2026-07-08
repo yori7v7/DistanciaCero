@@ -42,6 +42,25 @@ input {
   font: inherit;
 }
 
+/* Accessibility: focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .app {
   position: relative;
   min-height: 100vh;
@@ -100,6 +119,46 @@ input {
 
 .nav-links a:hover {
   color: var(--pink);
+}
+
+/* Logout button in navbar */
+.navbar__logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-left: 8px;
+}
+
+.navbar__logout:hover:not(:disabled) {
+  color: var(--pink);
+  border-color: rgba(233, 77, 140, 0.4);
+  background: rgba(233, 77, 140, 0.1);
+}
+
+.navbar__logout:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.navbar__logout-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: navLogoutSpin 0.6s linear infinite;
+}
+
+@keyframes navLogoutSpin {
+  to { transform: rotate(360deg); }
 }
 
 .hero {
