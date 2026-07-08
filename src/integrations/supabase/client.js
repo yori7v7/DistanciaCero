@@ -193,9 +193,9 @@ export function createSupabaseClient(env = getDefaultEnv()) {
 
   return createSupabaseJsClient(inspected.url, inspected.key, {
     auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
     }
   })
 }
