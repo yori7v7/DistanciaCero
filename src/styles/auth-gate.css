@@ -1,5 +1,6 @@
 /* ============================================================
-   AuthGate — Login / Signup screen
+   AuthGate — Login / Signup screens
+   Uses same background elements as main app + public landing
    ============================================================ */
 
 .auth-gate {
@@ -7,14 +8,84 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at 50% 30%, #1a0a2e 0%, #0a0a14 70%);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(255, 122, 200, 0.16), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(255, 23, 68, 0.15), transparent 38%),
+    #050008;
   padding: 1.5rem;
 }
 
-.auth-gate--loading {
-  flex-direction: column;
-  gap: 1.25rem;
+/* Reuse main app background elements with subtle adjustments */
+.auth-gate .background-orbs .orb-pink {
+  top: -100px;
+  left: -60px;
 }
+
+.auth-gate .background-orbs .orb-red {
+  bottom: -80px;
+  right: -40px;
+}
+
+/* Floating particles on auth screen */
+.auth-gate__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.auth-gate__particle {
+  position: absolute;
+  bottom: -6px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--pink-soft);
+  animation: authParticleRise 5s linear infinite;
+  opacity: 0;
+}
+
+@keyframes authParticleRise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.2; }
+  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
+
+/* ---- Card ---- */
+
+.auth-gate__card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(15, 10, 30, 0.78);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 122, 200, 0.18);
+  border-radius: 24px;
+  padding: 36px 28px;
+  box-shadow:
+    0 0 60px rgba(255, 122, 200, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+  animation: authCardIn 0.5s ease both;
+}
+
+.auth-gate__card--center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+@keyframes authCardIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---- Loading ---- */
 
 .auth-gate__loading-icon {
   color: #e94d8c;
@@ -27,55 +98,54 @@
 }
 
 .auth-gate__loading-text {
-  color: #c8b8e8;
-  font-size: 1.05rem;
+  color: var(--muted);
+  font-size: 1rem;
   letter-spacing: 0.02em;
 }
 
-.auth-gate__card {
-  width: 100%;
-  max-width: 400px;
-  background: rgba(15, 10, 30, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(233, 77, 140, 0.18);
-  border-radius: 1.25rem;
-  padding: 2.25rem 2rem;
-  box-shadow: 0 0 60px rgba(233, 77, 140, 0.08);
-}
+/* ---- Header ---- */
 
 .auth-gate__header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 28px;
 }
 
 .auth-gate__logo {
   color: #e94d8c;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
 }
 
 .auth-gate__verified-icon {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.8rem;
+  margin-bottom: 8px;
   animation: authPulse 0.8s ease both;
 }
 
 .auth-gate__title {
-  font-size: 1.65rem;
-  font-weight: 700;
+  font-size: 1.55rem;
+  font-weight: 800;
   color: #f0e6ff;
-  margin: 0 0 0.35rem;
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
 }
 
 .auth-gate__subtitle {
   color: #9b8ac4;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   margin: 0;
+  line-height: 1.5;
 }
+
+.auth-gate__subtitle strong {
+  color: var(--pink-soft);
+}
+
+/* ---- Form ---- */
 
 .auth-gate__form {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 12px;
 }
 
 .auth-gate__field {
@@ -86,7 +156,7 @@
 
 .auth-gate__field-icon {
   position: absolute;
-  left: 0.85rem;
+  left: 14px;
   color: #9b8ac4;
   pointer-events: none;
   flex-shrink: 0;
@@ -94,85 +164,83 @@
 
 .auth-gate__input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.6rem;
-  border: 1px solid rgba(233, 77, 140, 0.2);
-  border-radius: 0.65rem;
-  background: rgba(20, 15, 40, 0.7);
+  padding: 13px 16px 13px 44px;
+  border: 1px solid rgba(255, 122, 200, 0.18);
+  border-radius: 12px;
+  background: rgba(20, 15, 40, 0.6);
   color: #f0e6ff;
   font-size: 0.92rem;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-.auth-gate__input::placeholder {
-  color: #5c4d80;
-}
+.auth-gate__input::placeholder { color: #5c4d80; }
 
 .auth-gate__input:focus {
-  border-color: rgba(233, 77, 140, 0.55);
+  border-color: rgba(255, 122, 200, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 122, 200, 0.08);
 }
 
 .auth-gate__password-toggle {
   position: absolute;
-  right: 0.65rem;
+  right: 10px;
   background: none;
   border: none;
   color: #9b8ac4;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 4px;
   display: flex;
+  transition: color 0.2s;
 }
 
-.auth-gate__password-toggle:hover {
-  color: #c8b8e8;
-}
+.auth-gate__password-toggle:hover { color: var(--pink-soft); }
+
+/* ---- Error ---- */
 
 .auth-gate__error {
   display: flex;
   align-items: flex-start;
-  gap: 0.45rem;
-  padding: 0.65rem 0.85rem;
-  background: rgba(220, 38, 38, 0.12);
-  border: 1px solid rgba(220, 38, 38, 0.25);
-  border-radius: 0.55rem;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 10px;
   color: #fca5a5;
   font-size: 0.82rem;
   line-height: 1.4;
 }
 
-.auth-gate__error svg {
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
+.auth-gate__error svg { flex-shrink: 0; margin-top: 1px; }
+
+/* ---- Submit button ---- */
 
 .auth-gate__submit {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.8rem;
+  gap: 8px;
+  padding: 13px;
   border: none;
-  border-radius: 0.65rem;
+  border-radius: 12px;
   background: linear-gradient(135deg, #e94d8c, #c73e6f);
   color: #fff;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-  margin-top: 0.3rem;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  margin-top: 4px;
+  box-shadow: 0 4px 20px rgba(233, 77, 140, 0.25);
 }
 
 .auth-gate__submit:hover:not(:disabled) {
-  opacity: 0.92;
+  opacity: 0.94;
   transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(233, 77, 140, 0.4);
 }
 
-.auth-gate__submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+.auth-gate__submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .auth-gate__spinner {
   width: 1.1rem;
@@ -183,9 +251,9 @@
   animation: authSpin 0.7s linear infinite;
 }
 
-@keyframes authSpin {
-  to { transform: rotate(360deg); }
-}
+@keyframes authSpin { to { transform: rotate(360deg); } }
+
+/* ---- Switch link ---- */
 
 .auth-gate__switch {
   background: none;
@@ -194,16 +262,9 @@
   font-size: 0.82rem;
   font-family: inherit;
   cursor: pointer;
-  padding: 0.4rem;
+  padding: 6px;
   transition: color 0.2s;
 }
 
-.auth-gate__switch:hover:not(:disabled) {
-  color: #c8b8e8;
-  text-decoration: underline;
-}
-
-.auth-gate__switch:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.auth-gate__switch:hover:not(:disabled) { color: var(--pink-soft); text-decoration: underline; }
+.auth-gate__switch:disabled { opacity: 0.5; cursor: not-allowed; }

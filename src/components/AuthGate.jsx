@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { LogIn, UserPlus, Heart, Mail, Lock, User, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { LogIn, UserPlus, Heart, Mail, Lock, User, AlertCircle, Eye, EyeOff, Sparkles } from 'lucide-react'
 import {
   signInWithEmail,
   signUpWithEmail,
-  signOut,
   restoreSession,
-  isSupabaseAuthenticated,
   getAuthenticatedClient,
   onSessionChange
 } from '../services/supabaseAuthService'
@@ -15,61 +13,52 @@ import { notifyAllContentUpdated } from '../services/contentService'
 
 /**
  * After login/signup, ensures the user has a profile and space.
- * If no space exists for the user, auto-bootstraps one.
  */
 async function ensureSpaceSetup() {
   const client = getAuthenticatedClient()
   if (!client) return
-
   try {
-    // Check if user already belongs to a space
     const { data: memberships, error } = await client
       .from('universe_members')
       .select('space_id')
       .limit(1)
-
-    if (error) {
-      console.warn('[setup] could not check memberships:', error.message)
-      return
-    }
-
-    if (memberships && memberships.length > 0) {
-      // User already has a space — nothing to do
-      return
-    }
-
-    // No space found — bootstrap one
-    const { data: spaceId, error: bootstrapError } = await client
-      .rpc('bootstrap_space', {
+    if (error || !memberships?.length) {
+      await client.rpc('bootstrap_space', {
         space_name: 'Distancia Cero',
         space_slug: 'distancia-cero'
-      })
-
-    if (bootstrapError) {
-      // Space might already exist but user is not a member.
-      // That's fine — an owner can add them later.
-      console.warn('[setup] bootstrap skipped:', bootstrapError.message)
-      return
+      }).catch(() => {})
     }
-
-    console.log('[setup] space created:', spaceId)
   } catch (err) {
-    console.warn('[setup] error:', err.message)
+    console.warn('[auth] ensureSpaceSetup:', err.message)
   }
 }
 
 /**
- * AuthGate
- *
- * When remote is enabled, shows a login/signup screen before revealing the app.
- * In local mode (VITE_REMOTE_CONTENT_ENABLED != 'true'), children render immediately.
- *
- * Props:
- *   children - the app content (rendered when authenticated or local-only)
- *   onReady  - called after successful login + data sync (optional)
+ * Background wrapper used by all auth screens.
  */
+function AuthBackground({ children }) {
+  return (
+    <div className="auth-gate">
+      <div className="background-orbs">
+        <span className="orb orb-pink"></span>
+        <span className="orb orb-red"></span>
+        <span className="orb orb-soft"></span>
+      </div>
+      <div className="energy-lines"></div>
+      <div className="stars-layer"></div>
+      <div className="auth-gate__particles">
+        {[...Array(8)].map((_, i) => (
+          <span key={i} className="auth-gate__particle"
+            style={{ left: `${10 + i * 10}%`, animationDelay: `${i * 0.5}s` }} />
+        ))}
+      </div>
+      {children}
+    </div>
+  )
+}
+
 function AuthGate({ children, onReady }) {
-  const [mode, setMode] = useState('login') // 'login' | 'signup'
+  const [mode, setMode] = useState('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -83,25 +72,17 @@ function AuthGate({ children, onReady }) {
   const onReadyRef = useRef(onReady)
   onReadyRef.current = onReady
 
-  // Detect email verification redirect
   useEffect(() => {
     const hash = window.location.hash
     if (hash.includes('type=signup') || hash.includes('type=email_change')) {
       setVerified(true)
-      // Clean URL
       window.history.replaceState(null, '', window.location.pathname)
     }
   }, [])
 
-  // Restore session on mount
   useEffect(() => {
-    if (!remoteEnabled) {
-      setChecking(false)
-      return
-    }
-
+    if (!remoteEnabled) { setChecking(false); return }
     let cancelled = false
-
     restoreSession().then(async (session) => {
       if (cancelled) return
       if (session) {
@@ -114,137 +95,53 @@ function AuthGate({ children, onReady }) {
       }
       setChecking(false)
     })
-
     const unsubscribe = onSessionChange((session) => {
-      if (session) {
-        setAuthenticated(true)
-      } else {
-        setAuthenticated(false)
-      }
+      if (session) setAuthenticated(true)
+      else setAuthenticated(false)
     })
-
-    return () => {
-      cancelled = true
-      unsubscribe()
-    }
+    return () => { cancelled = true; unsubscribe() }
   }, [remoteEnabled])
 
-  // If remote is disabled, render children directly (local-only mode)
-  if (!remoteEnabled) {
-    return children
-  }
+  if (!remoteEnabled) return children
 
-  // Show nothing while checking for existing session
+  // ---- Loading ----
   if (checking) {
     return (
-      <div className="auth-gate auth-gate--loading">
-        <Heart className="auth-gate__loading-icon" size={48} />
-        <p className="auth-gate__loading-text">Cargando tu universo...</p>
-      </div>
+      <AuthBackground>
+        <div className="auth-gate__card auth-gate__card--center">
+          <Heart className="auth-gate__loading-icon" size={48} />
+          <p className="auth-gate__loading-text">Cargando tu universo...</p>
+        </div>
+      </AuthBackground>
     )
   }
 
-  // Authenticated: render children
-  if (authenticated) {
-    return children
-  }
+  if (authenticated) return children
 
-  // ---- Helpers ----
-
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    setError(null)
-
-    if (!email.trim() || !password.trim()) {
-      setError('Llena todos los campos.')
-      return
-    }
-
-    setBusy(true)
-    try {
-      const result = await signInWithEmail(email.trim(), password)
-      if (result.error) {
-        setError(result.error.message)
-      } else {
-        await ensureSpaceSetup()
-        setAuthenticated(true)
-        await pullFromSupabase()
-        notifyAllContentUpdated()
-        if (onReadyRef.current) onReadyRef.current()
-      }
-    } catch (err) {
-      setError(err.message || 'Error inesperado.')
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  const handleSignup = async (e) => {
-    e.preventDefault()
-    setError(null)
-
-    if (!email.trim() || !password.trim() || !displayName.trim()) {
-      setError('Llena todos los campos.')
-      return
-    }
-
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.')
-      return
-    }
-
-    setBusy(true)
-    try {
-      const result = await signUpWithEmail(email.trim(), password, displayName.trim())
-      if (result.error) {
-        setError(result.error.message)
-      } else if (result.needsEmailConfirmation) {
-        setMode('confirm')
-      } else {
-        await ensureSpaceSetup()
-        setAuthenticated(true)
-        await pullFromSupabase()
-        notifyAllContentUpdated()
-        if (onReadyRef.current) onReadyRef.current()
-      }
-    } catch (err) {
-      setError(err.message || 'Error inesperado.')
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  const switchMode = () => {
-    setError(null)
-    setMode((m) => (m === 'login' ? 'signup' : 'login'))
-  }
-
-  // ---- Render ----
-
-  // Email verified success screen (after clicking verification link)
-  if (verified && !authenticated) {
+  // ---- Verified ----
+  if (verified) {
     return (
-      <div className="auth-gate">
+      <AuthBackground>
         <div className="auth-gate__card">
           <div className="auth-gate__header">
-            <div className="auth-gate__verified-icon">✅</div>
+            <div className="auth-gate__verified-icon">💖</div>
             <h1 className="auth-gate__title">¡Email verificado!</h1>
             <p className="auth-gate__subtitle">
-              Tu cuenta fue confirmada. Ahora inicia sesión para entrar a nuestro universo.
+              Tu cuenta fue confirmada. Inicia sesión para entrar.
             </p>
           </div>
-          <button className="auth-gate__submit" onClick={() => setMode('login')}>
+          <button className="auth-gate__submit" onClick={() => { setVerified(false); setMode('login') }}>
             <LogIn size={18} /> Iniciar sesión
           </button>
         </div>
-      </div>
+      </AuthBackground>
     )
   }
 
-  // Email confirmation screen
+  // ---- Confirm ----
   if (mode === 'confirm') {
     return (
-      <div className="auth-gate">
+      <AuthBackground>
         <div className="auth-gate__card">
           <div className="auth-gate__header">
             <Heart className="auth-gate__logo" size={40} />
@@ -258,115 +155,121 @@ function AuthGate({ children, onReady }) {
             <LogIn size={18} /> Ir al inicio de sesión
           </button>
         </div>
-      </div>
+      </AuthBackground>
     )
+  }
+
+  // ---- Handlers ----
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setError(null)
+    if (!email.trim() || !password.trim()) { setError('Llena todos los campos.'); return }
+    setBusy(true)
+    try {
+      const result = await signInWithEmail(email.trim(), password)
+      if (result.error) { setError(result.error.message) }
+      else {
+        await ensureSpaceSetup()
+        setAuthenticated(true)
+        await pullFromSupabase()
+        notifyAllContentUpdated()
+        if (onReadyRef.current) onReadyRef.current()
+      }
+    } catch (err) { setError(err.message || 'Error inesperado.') }
+    finally { setBusy(false) }
+  }
+
+  const handleSignup = async (e) => {
+    e.preventDefault()
+    setError(null)
+    if (!email.trim() || !password.trim() || !displayName.trim()) { setError('Llena todos los campos.'); return }
+    if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres.'); return }
+    setBusy(true)
+    try {
+      const result = await signUpWithEmail(email.trim(), password, displayName.trim())
+      if (result.error) { setError(result.error.message) }
+      else if (result.needsEmailConfirmation) { setMode('confirm') }
+      else {
+        await ensureSpaceSetup()
+        setAuthenticated(true)
+        await pullFromSupabase()
+        notifyAllContentUpdated()
+        if (onReadyRef.current) onReadyRef.current()
+      }
+    } catch (err) { setError(err.message || 'Error inesperado.') }
+    finally { setBusy(false) }
   }
 
   const isLogin = mode === 'login'
 
   return (
-    <div className="auth-gate">
+    <AuthBackground>
       <div className="auth-gate__card">
         <div className="auth-gate__header">
-          <Heart className="auth-gate__logo" size={40} />
-          <h1 className="auth-gate__title">Distancia Cero</h1>
+          <div className="small-pill" style={{ margin: '0 auto 16px' }}>
+            <Sparkles size={14} />
+            <span>Distancia Cero</span>
+          </div>
+          <h1 className="auth-gate__title">
+            {isLogin ? 'Bienvenida de vuelta' : 'Crea tu cuenta'}
+          </h1>
           <p className="auth-gate__subtitle">
-            {isLogin ? 'Bienvenida de vuelta, Alecita' : 'Crea tu cuenta'}
+            {isLogin ? 'Nuestro universo te extraña, Alecita 💖' : 'Únete al universo de Ale & Yori'}
           </p>
         </div>
 
-        <form
-          className="auth-gate__form"
-          onSubmit={isLogin ? handleLogin : handleSignup}
-        >
+        <form className="auth-gate__form" onSubmit={isLogin ? handleLogin : handleSignup}>
           {!isLogin && (
             <div className="auth-gate__field">
               <User className="auth-gate__field-icon" size={18} />
-              <input
-                className="auth-gate__input"
-                type="text"
-                placeholder="Nombre (ej: Ale, Yori)"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                disabled={busy}
-                autoComplete="name"
-              />
+              <input className="auth-gate__input" type="text" placeholder="Nombre (ej: Ale, Yori)"
+                value={displayName} onChange={(e) => setDisplayName(e.target.value)}
+                disabled={busy} autoComplete="name" />
             </div>
           )}
-
           <div className="auth-gate__field">
             <Mail className="auth-gate__field-icon" size={18} />
-            <input
-              className="auth-gate__input"
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={busy}
-              autoComplete="email"
-            />
+            <input className="auth-gate__input" type="email" placeholder="Correo electrónico"
+              value={email} onChange={(e) => setEmail(e.target.value)}
+              disabled={busy} autoComplete="email" />
           </div>
-
           <div className="auth-gate__field">
             <Lock className="auth-gate__field-icon" size={18} />
-            <input
-              className="auth-gate__input"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Contraseña"
-              value={password}
+            <input className="auth-gate__input" type={showPassword ? 'text' : 'password'}
+              placeholder="Contraseña" value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={busy}
-              autoComplete={isLogin ? 'current-password' : 'new-password'}
-            />
-            <button
-              type="button"
-              className="auth-gate__password-toggle"
-              onClick={() => setShowPassword((s) => !s)}
-              tabIndex={-1}
-              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            >
+              disabled={busy} autoComplete={isLogin ? 'current-password' : 'new-password'} />
+            <button type="button" className="auth-gate__password-toggle"
+              onClick={() => setShowPassword((s) => !s)} tabIndex={-1}
+              aria-label={showPassword ? 'Ocultar' : 'Mostrar'}>
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
 
           {error && (
             <div className="auth-gate__error">
-              <AlertCircle size={16} />
-              <span>{error}</span>
+              <AlertCircle size={16} /><span>{error}</span>
             </div>
           )}
 
-          <button
-            className="auth-gate__submit"
-            type="submit"
-            disabled={busy}
-          >
+          <button className="auth-gate__submit" type="submit" disabled={busy}>
             {busy ? (
               <span className="auth-gate__spinner" />
             ) : isLogin ? (
-              <>
-                <LogIn size={18} /> Entrar
-              </>
+              <><LogIn size={18} /> Entrar</>
             ) : (
-              <>
-                <UserPlus size={18} /> Crear cuenta
-              </>
+              <><UserPlus size={18} /> Crear cuenta</>
             )}
           </button>
 
-          <button
-            type="button"
-            className="auth-gate__switch"
-            onClick={switchMode}
-            disabled={busy}
-          >
-            {isLogin
-              ? '¿No tienes cuenta? Crea una aquí'
-              : '¿Ya tienes cuenta? Inicia sesión'}
+          <button type="button" className="auth-gate__switch"
+            onClick={() => { setError(null); setMode(isLogin ? 'signup' : 'login') }}
+            disabled={busy}>
+            {isLogin ? '¿No tienes cuenta? Crea una aquí' : '¿Ya tienes cuenta? Inicia sesión'}
           </button>
         </form>
       </div>
-    </div>
+    </AuthBackground>
   )
 }
 
