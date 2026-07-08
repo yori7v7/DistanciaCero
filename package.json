@@ -8,10 +8,7 @@
         "build": "vite build",
         "preview": "vite preview",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist",
-        "migration:mock": "node scripts/migration/run-mock-migration-checks.mjs",
-        "migration:mock:validate": "node scripts/migration/validate-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-pass.json",
-        "migration:mock:dry-run": "node scripts/migration/dry-run-mock-snapshot.mjs scripts/migration/fixtures/mock-snapshot-pass.json"
+        "deploy": "gh-pages -d dist"
     },
     "dependencies": {
         "@react-three/drei": "^10.7.7",
