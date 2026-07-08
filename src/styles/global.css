@@ -503,6 +503,120 @@ input {
   margin-bottom: 18px;
 }
 
+/* Gallery upload & image display */
+.gallery-upload-wrapper {
+  max-width: 640px;
+  margin: 0 auto 28px;
+}
+
+.gallery-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.gallery-card--uploaded {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.gallery-image-wrapper {
+  position: relative;
+  height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.gallery-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gallery-card--uploaded:hover .gallery-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.gallery-image-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.gallery-card--uploaded:hover .gallery-image-actions {
+  opacity: 1;
+}
+
+.gallery-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gallery-action-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.gallery-action-btn--delete:hover {
+  background: rgba(220, 38, 38, 0.8);
+}
+
+/* Lightbox */
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.92);
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  cursor: pointer;
+}
+
+.gallery-lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 12px;
+  object-fit: contain;
+  cursor: default;
+}
+
+.gallery-lightbox__close {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.gallery-lightbox__close:hover {
+  opacity: 1;
+}
+
 .secret-card {
   text-align: center;
 }
