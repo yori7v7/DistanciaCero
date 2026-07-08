@@ -186,8 +186,7 @@ function AuthGate({ children, onReady }) {
       if (result.error) {
         setError(result.error.message)
       } else if (result.needsEmailConfirmation) {
-        setError('Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.')
-        setMode('login')
+        setMode('confirm')
       } else {
         await ensureSpaceSetup()
         setAuthenticated(true)
@@ -208,6 +207,27 @@ function AuthGate({ children, onReady }) {
   }
 
   // ---- Render ----
+
+  // Email confirmation screen
+  if (mode === 'confirm') {
+    return (
+      <div className="auth-gate">
+        <div className="auth-gate__card">
+          <div className="auth-gate__header">
+            <Heart className="auth-gate__logo" size={40} />
+            <h1 className="auth-gate__title">¡Revisa tu correo!</h1>
+            <p className="auth-gate__subtitle">
+              Enviamos un enlace de confirmación a <strong>{email}</strong>.
+              Haz click en el enlace y luego inicia sesión.
+            </p>
+          </div>
+          <button className="auth-gate__submit" onClick={() => setMode('login')}>
+            <LogIn size={18} /> Ir al inicio de sesión
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   const isLogin = mode === 'login'
 
