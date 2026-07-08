@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirma tu cuenta — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #050008;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .email-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .email-card {
+    background: linear-gradient(160deg, rgba(15, 5, 25, 0.95) 0%, rgba(10, 2, 18, 0.98) 100%);
+    border: 1px solid rgba(255, 122, 200, 0.2);
+    border-radius: 24px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(255, 122, 200, 0.08), 0 0 30px rgba(255, 23, 68, 0.06);
+  }
+
+  .heart-icon {
+    display: block;
+    margin: 0 auto 16px;
+    font-size: 48px;
+    filter: drop-shadow(0 0 12px rgba(255, 23, 68, 0.6));
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #f0e6ff;
+    margin: 0 0 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #c8b8e8;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .subtitle strong {
+    color: #ffb3dd;
+  }
+
+  .confirm-button {
+    display: inline-block;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, #e94d8c 0%, #c73e6f 100%);
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 20px rgba(233, 77, 140, 0.35);
+    transition: all 0.2s;
+  }
+
+  .confirm-button:hover {
+    box-shadow: 0 6px 28px rgba(233, 77, 140, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255, 122, 200, 0.25);
+    margin: 28px auto;
+  }
+
+  .info-text {
+    font-size: 13px;
+    color: #6b5880;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .info-text a {
+    color: #c8b8e8;
+    text-decoration: underline;
+  }
+
+  .stars {
+    color: rgba(255, 122, 200, 0.3);
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+  }
+
+  .footer-note {
+    font-size: 12px;
+    color: #4a3860;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-card">
+      <div class="stars">✦ ✦ ✦</div>
+      <div class="heart-icon">💖</div>
+      <h1>Distancia Cero</h1>
+      <p class="subtitle">
+        Una cuenta fue creada para <strong>{{ .Email }}</strong>.<br>
+        Solo falta un paso para entrar a nuestro universo.
+      </p>
+
+      <a href="{{ .ConfirmationURL }}" class="confirm-button">
+        Confirmar mi cuenta
+      </a>
+
+      <div class="divider"></div>
+
+      <p class="info-text">
+        O copia y pega este enlace en tu navegador:<br>
+        <a href="{{ .ConfirmationURL }}">{{ .ConfirmationURL }}</a>
+      </p>
+    </div>
+
+    <p class="footer-note">
+      Distancia Cero — Un universo digital para Ale & Yori
+    </p>
+  </div>
+</body>
+</html>

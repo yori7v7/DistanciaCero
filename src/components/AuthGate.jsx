@@ -79,6 +79,17 @@ function AuthGate({ children, onReady }) {
   const [remoteEnabled] = useState(() => isRemoteContentEnabled())
   const [authenticated, setAuthenticated] = useState(false)
   const [checking, setChecking] = useState(remoteEnabled)
+  const [verified, setVerified] = useState(false)
+
+  // Detect email verification redirect
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.includes('type=signup') || hash.includes('type=email_change')) {
+      setVerified(true)
+      // Clean URL
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  }, [])
 
   // Restore session on mount
   useEffect(() => {
@@ -207,6 +218,26 @@ function AuthGate({ children, onReady }) {
   }
 
   // ---- Render ----
+
+  // Email verified success screen (after clicking verification link)
+  if (verified && !authenticated) {
+    return (
+      <div className="auth-gate">
+        <div className="auth-gate__card">
+          <div className="auth-gate__header">
+            <div className="auth-gate__verified-icon">✅</div>
+            <h1 className="auth-gate__title">¡Email verificado!</h1>
+            <p className="auth-gate__subtitle">
+              Tu cuenta fue confirmada. Ahora inicia sesión para entrar a nuestro universo.
+            </p>
+          </div>
+          <button className="auth-gate__submit" onClick={() => setMode('login')}>
+            <LogIn size={18} /> Iniciar sesión
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   // Email confirmation screen
   if (mode === 'confirm') {

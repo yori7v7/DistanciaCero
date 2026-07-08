@@ -53,6 +53,12 @@
   margin-bottom: 0.5rem;
 }
 
+.auth-gate__verified-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  animation: authPulse 0.8s ease both;
+}
+
 .auth-gate__title {
   font-size: 1.65rem;
   font-weight: 700;
