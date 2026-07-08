@@ -528,11 +528,11 @@ function CentroUniversoSection() {
           }
 
           const confirmed = window.confirm(
-          'Esto reemplazará solo las cartas locales guardadas en este navegador. No tocará razones, promesas, fechas, wishlist, diario, galería ni playlist. ¿Quieres continuar?'
+          'Esto reemplazará solo las cartas guardadas en este navegador. No tocará razones, promesas, fechas, wishlist, diario, galería ni playlist. ¿Quieres continuar?'
           )
 
           if (!confirmed) {
-            setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron datos locales.' })
+            setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron tus datos.' })
             return
           }
 
@@ -548,7 +548,7 @@ function CentroUniversoSection() {
           setLetterLocked(false)
           dispatchLettersUpdate('monthlyLetters')
           dispatchLettersUpdate('openWhenLetters')
-          setBackupStatus({ type: 'success', text: 'Respaldo v1 importado: solo cartas locales.' })
+          setBackupStatus({ type: 'success', text: 'Respaldo v1 importado: solo cartas tuyas.' })
           return
         }
 
@@ -636,7 +636,7 @@ function CentroUniversoSection() {
         )
 
         if (!confirmed) {
-          setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron datos locales.' })
+          setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron tus datos.' })
           return
         }
 
@@ -1093,10 +1093,10 @@ function CentroUniversoSection() {
       const result = typeof reader.result === 'string' ? reader.result : ''
       if (target === 'base') {
         setBaseBlackHoleImage(result)
-        setBaseBlackHoleImageStatus('Imagen cargada como respaldo local.')
+        setBaseBlackHoleImageStatus('Imagen guardada como respaldo.')
       } else {
         setBlackHoleImage(result)
-        setBlackHoleImageStatus('Imagen cargada como respaldo local.')
+        setBlackHoleImageStatus('Imagen guardada como respaldo.')
       }
     }
     reader.onerror = () => {
@@ -2517,7 +2517,7 @@ function CentroUniversoSection() {
       <div className="backup-card">
         <div className="backup-header">
           <h3>Respaldo local del universo</h3>
-          <p>Exporta o restaura cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist con sus ediciones locales y elementos ocultos.</p>
+          <p>Exporta o restaura cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist con sus ediciones y elementos ocultos.</p>
         </div>
 
         <div className="backup-actions">
@@ -2923,7 +2923,7 @@ function CentroUniversoSection() {
           <div className="editor-warning">
             <AlertTriangle size={15} />
             <span>
-              <strong>Aviso de pruebas</strong>: Estas razones son locales y de prueba; las razones originales no se modifican.
+              <strong>Aviso de pruebas</strong>: Estas razones son tuyas y de prueba; las razones originales no se modifican.
             </span>
           </div>
 
@@ -2969,8 +2969,8 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Razones locales actuales</h3>
-            <span>{localReasons.length} locales</span>
+            <h3>Razones creadas por ti</h3>
+            <span>{localReasons.length} tuyas</span>
           </div>
 
           {localReasons.length === 0 ? (
@@ -3291,7 +3291,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estas fechas son locales; el JSON original no se modifica.</span>
+            <span>Estas fechas son tuyas; el JSON original no se modifica.</span>
           </div>
 
           <form className="editor-form" onSubmit={handleImportantDateSubmit}>
@@ -3365,8 +3365,8 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Fechas locales</h3>
-            <span>{localImportantDates.length} locales</span>
+            <h3>Fechas creadas por ti</h3>
+            <span>{localImportantDates.length} tuyas</span>
           </div>
 
           {localImportantDates.length === 0 ? (
@@ -3540,7 +3540,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estos planes son locales; el JSON original no se modifica.</span>
+            <span>Estos planes son tuyos; el JSON original no se modifica.</span>
           </div>
 
           <form className="editor-form" onSubmit={handleFutureDreamSubmit}>
@@ -3597,7 +3597,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
             <h3>Wishlist local</h3>
-            <span>{localFutureDreams.length} locales</span>
+            <span>{localFutureDreams.length} tuyas</span>
           </div>
 
           {localFutureDreams.length === 0 ? (
@@ -3827,7 +3827,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estas páginas son locales; el JSON original no se modifica.</span>
+            <span>Estas páginas son tuyas; el JSON original no se modifica.</span>
           </div>
 
           <form className="editor-form" onSubmit={handleTimelineSubmit}>
@@ -3939,7 +3939,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
             <h3>Diario local</h3>
-            <span>{localTimelinePages.length} locales</span>
+            <span>{localTimelinePages.length} tuyas</span>
           </div>
 
           {localTimelinePages.length === 0 ? (
@@ -4184,7 +4184,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estos recuerdos son locales; el JSON original no se modifica.</span>
+            <span>Estos recuerdos son tuyos; el JSON original no se modifica.</span>
           </div>
 
           <form className="editor-form" onSubmit={handleBlackHoleSubmit}>
@@ -4310,8 +4310,8 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Recuerdos locales</h3>
-            <span>{localBlackHoleGallery.length} locales</span>
+            <h3>Recuerdos creados por ti</h3>
+            <span>{localBlackHoleGallery.length} tuyas</span>
           </div>
 
           {localBlackHoleGallery.length === 0 ? (
@@ -4530,7 +4530,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estas canciones son locales; el JSON original no se modifica.</span>
+            <span>Estas canciones son tuyas; el JSON original no se modifica.</span>
           </div>
 
           <form className="editor-form" onSubmit={handlePlaylistSubmit}>
@@ -4631,7 +4631,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
             <h3>Playlist local</h3>
-            <span>{localPlaylist.length} locales</span>
+            <span>{localPlaylist.length} tuyas</span>
           </div>
 
           {localPlaylist.length === 0 ? (
@@ -4682,7 +4682,7 @@ function CentroUniversoSection() {
           <div className="editor-warning">
             <AlertTriangle size={15} />
             <span>
-              <strong>Aviso de pruebas</strong>: Las promesas locales y overrides solo viven en este navegador.
+              <strong>Aviso de pruebas</strong>: Las promesas y overrides se sincronizan con la nube.
             </span>
           </div>
 
@@ -4738,8 +4738,8 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Promesas locales</h3>
-            <span>{localPromises.length} locales</span>
+            <h3>Promesas creadas por ti</h3>
+            <span>{localPromises.length} tuyas</span>
           </div>
 
           {localPromises.length === 0 ? (
@@ -5004,14 +5004,14 @@ function CentroUniversoSection() {
         {/* Local Letters Listings */}
         <div className="local-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
-          <h3>Cartas locales creadas</h3>
+          <h3>Cartas creadas por ti</h3>
           
           <div className="local-lists-split">
             {/* Monthly Local List */}
             <div className="list-column monthly-local-column">
               <h4>Mensuales ({localMonthly.length})</h4>
               {localMonthly.length === 0 ? (
-                <p className="no-items">No hay cartas mensuales locales.</p>
+                <p className="no-items">No hay cartas mensuales tuyas.</p>
               ) : (
                 <div className="items-list">
                   {localMonthly.map((item) => (
@@ -5048,7 +5048,7 @@ function CentroUniversoSection() {
             <div className="list-column openwhen-local-column">
               <h4>Abrir cuando ({localOpenWhen.length})</h4>
               {localOpenWhen.length === 0 ? (
-                <p className="no-items">No hay cartas abrir cuando locales.</p>
+                <p className="no-items">No hay cartas abrir cuando tuyas.</p>
               ) : (
                 <div className="items-list">
                   {localOpenWhen.map((item) => (
