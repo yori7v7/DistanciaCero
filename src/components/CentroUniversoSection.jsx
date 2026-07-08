@@ -508,7 +508,7 @@ function CentroUniversoSection() {
     link.click()
     link.remove()
     URL.revokeObjectURL(downloadUrl)
-    setBackupStatus({ type: 'success', text: 'Respaldo local v2 creado correctamente.' })
+    setBackupStatus({ type: 'success', text: 'Respaldo v2 creado correctamente.' })
   }
 
 
@@ -528,7 +528,7 @@ function CentroUniversoSection() {
           }
 
           const confirmed = window.confirm(
-          'Esto reemplazará solo las cartas guardadas en este navegador. No tocará razones, promesas, fechas, wishlist, diario, galería ni playlist. ¿Quieres continuar?'
+          'Esto reemplazará solo las cartas guardadas. No tocará, promesas, fechas, wishlist, diario, galería ni playlist. ¿Quieres continuar?'
           )
 
           if (!confirmed) {
@@ -632,7 +632,7 @@ function CentroUniversoSection() {
         }
 
         const confirmed = window.confirm(
-          'Esto reemplazará el respaldo local de cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist en este navegador. ¿Quieres continuar?'
+          'Esto reemplazará el respaldo de cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist en este navegador. ¿Quieres continuar?'
         )
 
         if (!confirmed) {
@@ -1169,7 +1169,7 @@ function CentroUniversoSection() {
   const handleReasonDelete = (reason) => {
     if (!reason.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta razon local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta razon tuya?')) {
       const updatedReasons = deleteLocalItem('reasons', reason.id)
       setLocalReasons(updatedReasons)
 
@@ -1293,7 +1293,7 @@ function CentroUniversoSection() {
   const handlePromiseDelete = (promise) => {
     if (!promise.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta promesa local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta promesa tuya?')) {
       const updatedPromises = deleteLocalItem('promises', promise.id)
       setLocalPromises(updatedPromises)
 
@@ -1565,7 +1565,7 @@ function CentroUniversoSection() {
   const handleImportantDateDelete = (dateItem) => {
     if (!dateItem.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta fecha local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta fecha tuya?')) {
       const updatedDates = deleteLocalItem('importantDates', dateItem.id)
       setLocalImportantDates(updatedDates)
 
@@ -1682,7 +1682,7 @@ function CentroUniversoSection() {
   const handleFutureDreamDelete = (dream) => {
     if (!dream.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar este plan local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar este plan tuyo?')) {
       const updatedDreams = deleteLocalItem('futureDreams', dream.id)
       setLocalFutureDreams(updatedDreams)
 
@@ -1978,7 +1978,7 @@ function CentroUniversoSection() {
   const handleBlackHoleDelete = (item) => {
     if (!item.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar este recuerdo local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar este recuerdo tuyo?')) {
       const updatedItems = deleteLocalItem('blackHoleGallery', item.id)
       setLocalBlackHoleGallery(updatedItems)
 
@@ -2230,7 +2230,7 @@ function CentroUniversoSection() {
   const handleReset = () => {
     if (
       window.confirm(
-        '¿Seguro que quieres borrar el progreso de lectura de las cartas? Esto no afectará las cartas creadas localmente ni la música.'
+        '¿Seguro que quieres borrar el progreso de lectura de las cartas? Esto no afectará las cartas creadas ni la música.'
       )
     ) {
       // Clear progress keys for JSON letters
@@ -2278,7 +2278,7 @@ function CentroUniversoSection() {
             preview: preview.trim(),
             content: contentArray,
             locked: letterLocked,
-            month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
+            month: isMonthly ? (tag.trim() || 'Carta') : undefined,
             mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined
           })
         }
@@ -2296,7 +2296,7 @@ function CentroUniversoSection() {
         content: contentArray,
         locked: letterLocked,
         isLocal: true,
-        month: isMonthly ? (tag.trim() || 'Carta local') : undefined,
+        month: isMonthly ? (tag.trim() || 'Carta') : undefined,
         mood: !isMonthly ? (tag.trim() || 'Abrir cuando...') : undefined,
         url: isMonthly ? `/local-letter/${localLetterTimestamp}` : `/local-open-when/${localLetterTimestamp}`
       })
@@ -2342,7 +2342,7 @@ function CentroUniversoSection() {
   }
 
   const handleDelete = (id, type) => {
-    if (window.confirm('¿Seguro que quieres eliminar esta carta local?')) {
+    if (window.confirm('¿Seguro que quieres eliminar esta carta tuya?')) {
       const isMonthly = type === 'monthly'
       const currentList = isMonthly ? localMonthly : localOpenWhen
       const updatedList = currentList.filter((item) => item.id !== id)
@@ -2441,7 +2441,7 @@ function CentroUniversoSection() {
           <h3>Cartas Mensuales</h3>
           <div className="control-stats">
             <div className="stat-item">
-              <span className="stat-label">Total (Base + Local)</span>
+              <span className="stat-label">Total (Base + Tuyas)</span>
               <span className="stat-value">{totalMonthly}</span>
             </div>
             <div className="stat-item">
@@ -2469,7 +2469,7 @@ function CentroUniversoSection() {
           <h3>Cartas Abrir Cuando</h3>
           <div className="control-stats">
             <div className="stat-item">
-              <span className="stat-label">Total (Base + Local)</span>
+              <span className="stat-label">Total (Base + Tuyas)</span>
               <span className="stat-value">{totalOpenWhen}</span>
             </div>
             <div className="stat-item">
@@ -2516,19 +2516,19 @@ function CentroUniversoSection() {
       {/* Local letters backup */}
       <div className="backup-card">
         <div className="backup-header">
-          <h3>Respaldo local del universo</h3>
+          <h3>Respaldo del universo</h3>
           <p>Exporta o restaura cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist con sus ediciones y elementos ocultos.</p>
         </div>
 
         <div className="backup-actions">
           <button className="control-btn backup-export-btn" onClick={handleExportLocalLetters} type="button">
             <Download size={18} />
-            Exportar respaldo local
+            Exportar respaldo
           </button>
 
           <label className="control-btn backup-import-label" htmlFor="localLettersImport">
             <Upload size={18} />
-            Importar respaldo local
+            Importar respaldo
           </label>
           <input
             id="localLettersImport"
@@ -2610,7 +2610,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estas ediciones son overrides locales; el JSON original no se modifica.</span>
+            <span>Estas ediciones son tuyas; el JSON original no se modifica.</span>
           </div>
 
           <div className="base-reasons-list">
@@ -2625,7 +2625,7 @@ function CentroUniversoSection() {
                   <strong>{letter.month} · {letter.title}</strong>
                   <span>{letter.preview}</span>
                   <small>
-                    {letter.isHidden ? 'Oculta localmente' : letter.isOverridden ? 'Editada localmente' : letter.locked ? 'Base bloqueada' : 'Base disponible'}
+                    {letter.isHidden ? 'Oculta' : letter.isOverridden ? 'Editada' : letter.locked ? 'Base bloqueada' : 'Base disponible'}
                   </small>
                 </div>
 
@@ -2771,7 +2771,7 @@ function CentroUniversoSection() {
 
           <div className="editor-warning">
             <AlertTriangle size={15} />
-            <span>Estas ediciones son overrides locales; el JSON original no se modifica.</span>
+            <span>Estas ediciones son tuyas; el JSON original no se modifica.</span>
           </div>
 
           <div className="base-reasons-list">
@@ -2786,7 +2786,7 @@ function CentroUniversoSection() {
                   <strong>{card.mood}</strong>
                   <span>{card.title} · {card.preview}</span>
                   <small>
-                    {card.isHidden ? 'Oculta localmente' : card.isOverridden ? 'Editada localmente' : card.locked ? 'Base bloqueada' : 'Base disponible'}
+                    {card.isHidden ? 'Oculta' : card.isOverridden ? 'Editada' : card.locked ? 'Base bloqueada' : 'Base disponible'}
                   </small>
                 </div>
 
@@ -2917,7 +2917,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local de 100 razones
+            Editor de 100 razones
           </h3>
 
           <div className="editor-warning">
@@ -2945,7 +2945,7 @@ function CentroUniversoSection() {
               <textarea
                 id="reasonText"
                 rows="4"
-                placeholder="Escribe una nueva razon local para que flote en la seccion."
+                placeholder="Escribe una nueva razon para que flote en la seccion."
                 value={reasonText}
                 onChange={(event) => setReasonText(event.target.value)}
                 required
@@ -2960,7 +2960,7 @@ function CentroUniversoSection() {
               )}
 
               <button type="submit" className="control-btn submit-btn">
-                {editingReasonId ? 'Actualizar razon local' : 'Guardar razon local'}
+                {editingReasonId ? 'Actualizar razon' : 'Guardar razon'}
               </button>
             </div>
           </form>
@@ -2974,7 +2974,7 @@ function CentroUniversoSection() {
           </div>
 
           {localReasons.length === 0 ? (
-            <p className="no-items">No hay razones locales creadas.</p>
+            <p className="no-items">No hay razones tuyas creadas.</p>
           ) : (
             <div className="reason-items-list">
               {localReasons.map((reason) => (
@@ -2990,7 +2990,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handleReasonEdit(reason)}
-                      title="Editar razon local"
+                      title="Editar razon tuya"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -2998,7 +2998,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handleReasonDelete(reason)}
-                      title="Eliminar razon local"
+                      title="Eliminar razon tuya"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -3050,7 +3050,7 @@ function CentroUniversoSection() {
                   </strong>
                   <span>{reason.text}</span>
                   <small>
-                    {reason.isHidden ? 'Oculta localmente' : reason.isOverridden ? 'Editada localmente' : 'Original'}
+                    {reason.isHidden ? 'Oculta' : reason.isOverridden ? 'Editada' : 'Original'}
                   </small>
                 </div>
 
@@ -3091,7 +3091,7 @@ function CentroUniversoSection() {
           <div className="editor-warning">
             <AlertTriangle size={15} />
             <span>
-              <strong>Override local</strong>: Esto no modifica reasons.json; solo guarda una version local en este navegador.
+              <strong>Edicion tuya</strong>: Esto no modifica reasons.json; solo guarda una version tuya.
             </span>
           </div>
 
@@ -3172,7 +3172,7 @@ function CentroUniversoSection() {
                 <div className="base-reason-copy">
                   <strong>{formatTimelineDateForDisplay(dateItem.date)} · {dateItem.title}</strong>
                   <span>{dateItem.description}</span>
-                  <small>{dateItem.isHidden ? 'Oculta localmente' : dateItem.isOverridden ? 'Editada localmente' : dateItem.tag}</small>
+                  <small>{dateItem.isHidden ? 'Oculta' : dateItem.isOverridden ? 'Editada' : dateItem.tag}</small>
                 </div>
 
                 <div className="base-reason-actions">
@@ -3286,7 +3286,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local de fechas importantes
+            Editor de fechas importantes
           </h3>
 
           <div className="editor-warning">
@@ -3356,7 +3356,7 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn">
-                {editingImportantDateId ? 'Actualizar fecha local' : 'Guardar fecha local'}
+                {editingImportantDateId ? 'Actualizar fecha tuya' : 'Guardar fecha tuya'}
               </button>
             </div>
           </form>
@@ -3370,7 +3370,7 @@ function CentroUniversoSection() {
           </div>
 
           {localImportantDates.length === 0 ? (
-            <p className="no-items">No hay fechas locales creadas.</p>
+            <p className="no-items">No hay fechas tuyas creadas.</p>
           ) : (
             <div className="reason-items-list">
               {localImportantDates.map((dateItem) => (
@@ -3386,7 +3386,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handleImportantDateEdit(dateItem)}
-                      title="Editar fecha local"
+                      title="Editar fecha tuya"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -3394,7 +3394,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handleImportantDateDelete(dateItem)}
-                      title="Eliminar fecha local"
+                      title="Eliminar fecha tuya"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -3432,7 +3432,7 @@ function CentroUniversoSection() {
                 <div className="base-reason-copy">
                   <strong>{dream.category} · {dream.title}</strong>
                   <span>{dream.description}</span>
-                  <small>{dream.isHidden ? 'Oculto localmente' : dream.isOverridden ? 'Editado localmente' : 'Original'}</small>
+                  <small>{dream.isHidden ? 'Oculto' : dream.isOverridden ? 'Editado' : 'Original'}</small>
                 </div>
 
                 <div className="base-reason-actions">
@@ -3535,7 +3535,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local de Wishlist
+            Editor de Wishlist
           </h3>
 
           <div className="editor-warning">
@@ -3587,7 +3587,7 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn">
-                {editingFutureDreamId ? 'Actualizar plan local' : 'Guardar plan local'}
+                {editingFutureDreamId ? 'Actualizar plan tuyo' : 'Guardar plan tuyo'}
               </button>
             </div>
           </form>
@@ -3596,12 +3596,12 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Wishlist local</h3>
+            <h3>Wishlist</h3>
             <span>{localFutureDreams.length} tuyas</span>
           </div>
 
           {localFutureDreams.length === 0 ? (
-            <p className="no-items">No hay planes locales creados.</p>
+            <p className="no-items">No hay planes tuyos creados.</p>
           ) : (
             <div className="reason-items-list">
               {localFutureDreams.map((dream) => (
@@ -3617,7 +3617,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handleFutureDreamEdit(dream)}
-                      title="Editar plan local"
+                      title="Editar plan tuyo"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -3625,7 +3625,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handleFutureDreamDelete(dream)}
-                      title="Eliminar plan local"
+                      title="Eliminar plan tuyo"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -3663,7 +3663,7 @@ function CentroUniversoSection() {
                 <div className="base-reason-copy">
                   <strong>{page.chapter} · {formatTimelineDateForDisplay(page.date)} · {page.title}</strong>
                   <span>{page.description}</span>
-                  <small>{page.isHidden ? 'Oculta localmente' : page.isOverridden ? 'Editada localmente' : 'Original'}</small>
+                  <small>{page.isHidden ? 'Oculta' : page.isOverridden ? 'Editada' : 'Original'}</small>
                 </div>
 
                 <div className="base-reason-actions">
@@ -3822,7 +3822,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local del diario
+            Editor del diario
           </h3>
 
           <div className="editor-warning">
@@ -3938,7 +3938,7 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Diario local</h3>
+            <h3>Diario</h3>
             <span>{localTimelinePages.length} tuyas</span>
           </div>
 
@@ -4005,7 +4005,7 @@ function CentroUniversoSection() {
                 <div className="base-reason-copy">
                   <strong>{item.date} · {item.title}</strong>
                   <span>{item.description}</span>
-                  <small>{item.isHidden ? 'Oculto localmente' : item.isOverridden ? 'Editado localmente' : 'Original'}</small>
+                  <small>{item.isHidden ? 'Oculto' : item.isOverridden ? 'Editado' : 'Original'}</small>
                 </div>
 
                 <div className="base-reason-actions">
@@ -4179,7 +4179,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local del agujero negro
+            Editor del agujero negro
           </h3>
 
           <div className="editor-warning">
@@ -4301,7 +4301,7 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn">
-                {editingBlackHoleId ? 'Actualizar recuerdo local' : 'Guardar recuerdo local'}
+                {editingBlackHoleId ? 'Actualizar recuerdo tuyo' : 'Guardar recuerdo tuyo'}
               </button>
             </div>
           </form>
@@ -4315,7 +4315,7 @@ function CentroUniversoSection() {
           </div>
 
           {localBlackHoleGallery.length === 0 ? (
-            <p className="no-items">No hay recuerdos locales creados.</p>
+            <p className="no-items">No hay recuerdos tuyos creados.</p>
           ) : (
             <div className="reason-items-list">
               {localBlackHoleGallery.map((item) => (
@@ -4331,7 +4331,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handleBlackHoleEdit(item)}
-                      title="Editar recuerdo local"
+                      title="Editar recuerdo tuyo"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -4339,7 +4339,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handleBlackHoleDelete(item)}
-                      title="Eliminar recuerdo local"
+                      title="Eliminar recuerdo tuyo"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -4377,7 +4377,7 @@ function CentroUniversoSection() {
                 <div className="base-reason-copy">
                   <strong>{item.title} · {item.artist || 'Sin artista'}</strong>
                   <span>{item.description}</span>
-                  <small>{item.isHidden ? 'Oculta localmente' : item.isOverridden ? 'Editada localmente' : item.sourceType === 'local' ? 'Archivo local' : 'Enlace externo'}</small>
+                  <small>{item.isHidden ? 'Oculta' : item.isOverridden ? 'Editada' : item.sourceType === 'local' ? 'Archivo' : 'Enlace externo'}</small>
                 </div>
 
                 <div className="base-reason-actions">
@@ -4474,7 +4474,7 @@ function CentroUniversoSection() {
             </div>
 
             <div className="editor-field">
-              <label htmlFor="basePlaylistSrc">Ruta local</label>
+              <label htmlFor="basePlaylistSrc">Ruta</label>
               <input
                 id="basePlaylistSrc"
                 type="text"
@@ -4525,7 +4525,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local de Playlist
+            Editor de Playlist
           </h3>
 
           <div className="editor-warning">
@@ -4582,7 +4582,7 @@ function CentroUniversoSection() {
             </div>
 
             <div className="editor-field">
-              <label htmlFor="playlistSrc">Ruta local</label>
+              <label htmlFor="playlistSrc">Ruta</label>
               <input
                 id="playlistSrc"
                 type="text"
@@ -4630,12 +4630,12 @@ function CentroUniversoSection() {
         <div className="reasons-list-card">
           <div className="crud-subsection-title">Creadas por ti</div>
           <div className="reasons-list-header">
-            <h3>Playlist local</h3>
+            <h3>Playlist</h3>
             <span>{localPlaylist.length} tuyas</span>
           </div>
 
           {localPlaylist.length === 0 ? (
-            <p className="no-items">No hay canciones locales creadas.</p>
+            <p className="no-items">No hay canciones tuyas creadas.</p>
           ) : (
             <div className="reason-items-list">
               {localPlaylist.map((item) => (
@@ -4676,7 +4676,7 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            Editor local de promesas
+            Editor de promesas
           </h3>
 
           <div className="editor-warning">
@@ -4729,7 +4729,7 @@ function CentroUniversoSection() {
                 </button>
               )}
               <button type="submit" className="control-btn submit-btn">
-                {editingPromiseId ? 'Actualizar promesa local' : 'Guardar promesa local'}
+                {editingPromiseId ? 'Actualizar promesa tuya' : 'Guardar promesa tuya'}
               </button>
             </div>
           </form>
@@ -4743,7 +4743,7 @@ function CentroUniversoSection() {
           </div>
 
           {localPromises.length === 0 ? (
-            <p className="no-items">No hay promesas locales creadas.</p>
+            <p className="no-items">No hay promesas tuyas creadas.</p>
           ) : (
             <div className="reason-items-list">
               {localPromises.map((promise) => (
@@ -4759,7 +4759,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn edit"
                       onClick={() => handlePromiseEdit(promise)}
-                      title="Editar promesa local"
+                      title="Editar promesa tuya"
                     >
                       <Edit2 size={14} />
                     </button>
@@ -4767,7 +4767,7 @@ function CentroUniversoSection() {
                       type="button"
                       className="action-icon-btn delete"
                       onClick={() => handlePromiseDelete(promise)}
-                      title="Eliminar promesa local"
+                      title="Eliminar promesa tuya"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -4805,7 +4805,7 @@ function CentroUniversoSection() {
                 <div className="base-reason-copy">
                   <strong>{promise.title}</strong>
                   <span>{promise.text}</span>
-                  <small>{promise.isHidden ? 'Oculta localmente' : promise.isOverridden ? 'Editada localmente' : promise.tag}</small>
+                  <small>{promise.isHidden ? 'Oculta' : promise.isOverridden ? 'Editada' : promise.tag}</small>
                 </div>
 
                 <div className="base-reason-actions">
@@ -4898,12 +4898,12 @@ function CentroUniversoSection() {
           <div className="crud-subsection-title">Crear nueva</div>
           <h3>
             <Plus size={18} />
-            {editingId ? 'Editar Carta Local' : 'Crear Carta Local'}
+            {editingId ? 'Editar Carta' : 'Crear Carta'}
           </h3>
           <div className="editor-warning">
             <AlertTriangle size={15} />
             <span>
-              <strong>Aviso de pruebas</strong>: Estas cartas se guardan solo localmente en tu navegador.
+              <strong>Aviso de pruebas</strong>: Estas cartas se sincronizan con la nube.
             </span>
           </div>
 
