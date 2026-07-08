@@ -2605,7 +2605,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseMonthly)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseMonthlyCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseMonthlyCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localMonthly.length} label="Locales" />
+            <CrudStatButton filter="local" value={localMonthly.length} label="Tuyos" />
           </div>
 
           <div className="editor-warning">
@@ -2766,7 +2766,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseOpenWhen)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseOpenWhenCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseOpenWhenCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localOpenWhen.length} label="Locales" />
+            <CrudStatButton filter="local" value={localOpenWhen.length} label="Tuyos" />
           </div>
 
           <div className="editor-warning">
@@ -3022,7 +3022,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseReasons)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseReasonsCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseReasonsCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localReasons.length} label="Locales" />
+            <CrudStatButton filter="local" value={localReasons.length} label="Tuyos" />
           </div>
 
           <div className="editor-field">
@@ -3158,7 +3158,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseImportantDates)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseImportantDatesCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseImportantDatesCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localImportantDates.length} label="Locales" />
+            <CrudStatButton filter="local" value={localImportantDates.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -3418,7 +3418,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseFutureDreams)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseFutureDreamsCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseFutureDreamsCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localFutureDreams.length} label="Locales" />
+            <CrudStatButton filter="local" value={localFutureDreams.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -3649,7 +3649,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseTimelinePages)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseTimelineCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseTimelineCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localTimelinePages.length} label="Locales" />
+            <CrudStatButton filter="local" value={localTimelinePages.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -3991,7 +3991,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseBlackHoleGallery)} label="Base" />
             <CrudStatButton filter="edited" value={editedBaseBlackHoleGalleryCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBaseBlackHoleGalleryCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localBlackHoleGallery.length} label="Locales" />
+            <CrudStatButton filter="local" value={localBlackHoleGallery.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -4363,7 +4363,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBasePlaylist)} label="Base" />
             <CrudStatButton filter="edited" value={editedBasePlaylistCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBasePlaylistCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localPlaylist.length} label="Locales" />
+            <CrudStatButton filter="local" value={localPlaylist.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -4468,7 +4468,7 @@ function CentroUniversoSection() {
                 onChange={(event) => setBasePlaylistSourceType(event.target.value)}
                 disabled={!editingBasePlaylistId}
               >
-                <option value="local">Local</option>
+                <option value="local">Creado por ti</option>
                 <option value="external">External</option>
               </select>
             </div>
@@ -4576,7 +4576,7 @@ function CentroUniversoSection() {
                 value={playlistSourceType}
                 onChange={(event) => setPlaylistSourceType(event.target.value)}
               >
-                <option value="local">Local</option>
+                <option value="local">Creado por ti</option>
                 <option value="external">External</option>
               </select>
             </div>
@@ -4791,7 +4791,7 @@ function CentroUniversoSection() {
             <CrudStatButton filter="base" value={getNormalBaseCount(visibleBasePromises)} label="Base" />
             <CrudStatButton filter="edited" value={editedBasePromisesCount} label="Editadas" />
             <CrudStatButton filter="hidden" value={hiddenBasePromisesCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localPromises.length} label="Locales" />
+            <CrudStatButton filter="local" value={localPromises.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
