@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { LogIn, UserPlus, Heart, Mail, Lock, User, AlertCircle, Eye, EyeOff } from 'lucide-react'
 import {
   signInWithEmail,
@@ -80,6 +80,8 @@ function AuthGate({ children, onReady }) {
   const [authenticated, setAuthenticated] = useState(false)
   const [checking, setChecking] = useState(remoteEnabled)
   const [verified, setVerified] = useState(false)
+  const onReadyRef = useRef(onReady)
+  onReadyRef.current = onReady
 
   // Detect email verification redirect
   useEffect(() => {
@@ -107,7 +109,7 @@ function AuthGate({ children, onReady }) {
         setAuthenticated(true)
         pullFromSupabase().then(() => {
           notifyAllContentUpdated()
-          if (onReady) onReady()
+          if (onReadyRef.current) onReadyRef.current()
         })
       }
       setChecking(false)
@@ -168,7 +170,7 @@ function AuthGate({ children, onReady }) {
         setAuthenticated(true)
         await pullFromSupabase()
         notifyAllContentUpdated()
-        if (onReady) onReady()
+        if (onReadyRef.current) onReadyRef.current()
       }
     } catch (err) {
       setError(err.message || 'Error inesperado.')
@@ -203,7 +205,7 @@ function AuthGate({ children, onReady }) {
         setAuthenticated(true)
         await pullFromSupabase()
         notifyAllContentUpdated()
-        if (onReady) onReady()
+        if (onReadyRef.current) onReadyRef.current()
       }
     } catch (err) {
       setError(err.message || 'Error inesperado.')

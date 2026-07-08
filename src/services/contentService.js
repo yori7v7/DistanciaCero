@@ -102,17 +102,19 @@ export function saveCollectionHiddenIds(collectionName, ids) {
   return contentRepository.saveCollectionHiddenIds(collectionName, ids)
 }
 
-export async function hideCollectionItem(collectionName, id) {
+export function hideCollectionItem(collectionName, id) {
   const result = contentRepository.hideCollectionItem(collectionName, id)
-  const hooks = await getSyncHooks()
-  if (hooks) hooks.pushHideToSupabase(collectionName, id).catch(() => {})
+  getSyncHooks().then(hooks => {
+    if (hooks) hooks.pushHideToSupabase(collectionName, id).catch(() => {})
+  })
   return result
 }
 
-export async function restoreCollectionItem(collectionName, id) {
+export function restoreCollectionItem(collectionName, id) {
   const result = contentRepository.restoreCollectionItem(collectionName, id)
-  const hooks = await getSyncHooks()
-  if (hooks) hooks.pushRestoreToSupabase(collectionName, id).catch(() => {})
+  getSyncHooks().then(hooks => {
+    if (hooks) hooks.pushRestoreToSupabase(collectionName, id).catch(() => {})
+  })
   return result
 }
 

@@ -235,7 +235,8 @@ export async function restoreSession() {
     }
 
     return data.session
-  } catch (_) {
+  } catch (err) {
+    console.warn('[auth] restoreSession failed:', err.message)
     supabaseSession = null
     notifyListeners()
     return null

@@ -43,7 +43,8 @@ async function resolveSpaceId() {
 
     _cachedSpaceId = data.space_id
     return _cachedSpaceId
-  } catch (_) {
+  } catch (err) {
+    console.warn('[sync] resolveSpaceId failed:', err.message)
     return null
   }
 }

@@ -691,6 +691,11 @@ input {
   border-radius: 12px;
 }
 
+/* Uploaded song card */
+.song-card--uploaded {
+  border-color: rgba(255, 122, 200, 0.2);
+}
+
 /* Song delete button */
 .song-delete-btn {
   color: #fca5a5 !important;
@@ -711,14 +716,6 @@ input {
 
 .memory-thumb--video:hover {
   transform: scale(1.05);
-}
-
-.secret-card {
-  text-align: center;
-}
-
-.secret-icon {
-  margin: 0 auto 18px;
 }
 
 .secret-form {

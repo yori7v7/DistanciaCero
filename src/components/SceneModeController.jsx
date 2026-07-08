@@ -101,7 +101,7 @@ function SceneModeController() {
     // Include centro sections if visible
     const activeIds = new Set(activeScene.sectionIds || [])
     if (centroVisible && centroScene) {
-      centroScene.sectionIds.forEach((id) => activeIds.add(id))
+      centroScene.sectionIds?.forEach((id) => activeIds.add(id))
     }
     const allSections = getSectionElements()
     localStorage.setItem(SCENE_STORAGE_KEY, activeScene.id)
@@ -137,21 +137,9 @@ function SceneModeController() {
     return () => clearTimeout(timer)
   }, [activeScene, centroVisible])
 
-  // Re-run when centro visibility changes
+  // Persist centro visibility preference
   useEffect(() => {
     localStorage.setItem(CENTRO_VISIBLE_KEY, centroVisible ? 'true' : 'false')
-    if (!activeScene) return
-    const activeIds = new Set(activeScene.sectionIds || [])
-    if (centroVisible && centroScene) {
-      centroScene.sectionIds.forEach((id) => activeIds.add(id))
-    }
-    const allSections = getSectionElements()
-    allSections.forEach((el) => {
-      const shouldShow = activeIds.has(el.id)
-      el.classList.toggle('scene-visible', shouldShow)
-      el.classList.toggle('scene-hidden', !shouldShow)
-      el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
-    })
   }, [centroVisible])
 
   const centerActiveLink = (smooth = true) => {

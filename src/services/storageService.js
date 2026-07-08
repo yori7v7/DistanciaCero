@@ -118,7 +118,8 @@ export async function getFileUrl(fullPath, expiresIn = 3600) {
       .createSignedUrl(path, expiresIn)
 
     return data?.signedUrl || null
-  } catch (_) {
+  } catch (err) {
+    console.warn('[storage] getFileUrl failed:', err.message)
     return null
   }
 }
@@ -137,7 +138,8 @@ export function getPublicUrl(fullPath) {
   try {
     const { data } = client.storage.from(bucket).getPublicUrl(path)
     return data?.publicUrl || null
-  } catch (_) {
+  } catch (err) {
+    console.warn('[storage] getPublicUrl failed:', err.message)
     return null
   }
 }
@@ -185,7 +187,8 @@ export async function listFiles(type = 'images') {
       size: f.metadata?.size || 0,
       createdAt: f.created_at
     }))
-  } catch (_) {
+  } catch (err) {
+    console.warn('[storage] listFiles failed:', err.message)
     return []
   }
 }
