@@ -3943,7 +3943,7 @@ function CentroUniversoSection() {
           </div>
 
           {localTimelinePages.length === 0 ? (
-            <p className="no-items">No hay páginas locales creadas.</p>
+            <p className="no-items">No hay páginas tuyas creadas.</p>
           ) : (
             <div className="reason-items-list">
               {localTimelinePages.map((page) => (
