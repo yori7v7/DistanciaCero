@@ -28,6 +28,7 @@ import './styles/true-3d.css'
 import './styles/space-3d-upgrade.css'
 import './styles/blackhole-gallery.css'
 import './styles/auth-gate.css'
+import './styles/file-uploader.css'
 
 const resetParams = new URLSearchParams(window.location.search)
 
