@@ -617,6 +617,66 @@ input {
   opacity: 1;
 }
 
+/* Video player overlay */
+.video-player-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.92);
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+
+.video-player-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+}
+
+.video-player__close {
+  position: absolute;
+  top: -36px;
+  right: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.video-player__close:hover { opacity: 1; }
+
+.video-player__video {
+  width: 100%;
+  max-height: 80vh;
+  border-radius: 12px;
+}
+
+/* Song delete button */
+.song-delete-btn {
+  color: #fca5a5 !important;
+  border-color: rgba(220, 38, 38, 0.3) !important;
+  padding: 6px 12px !important;
+  font-size: 0.78rem !important;
+}
+
+.song-delete-btn:hover {
+  background: rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Memory thumb for videos */
+.memory-thumb--video {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.memory-thumb--video:hover {
+  transform: scale(1.05);
+}
+
 .secret-card {
   text-align: center;
 }
