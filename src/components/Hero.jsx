@@ -8,6 +8,7 @@ function Hero() {
   const { backgroundPlaying, toggleBackground } = useAudio()
 
   const dailyPhrase = useMemo(() => {
+    if (!randomPhrases.length) return null
     const index = new Date().getDate() % randomPhrases.length
     return randomPhrases[index]
   }, [])
@@ -34,9 +35,11 @@ function Hero() {
           <span>{siteConfig.couple.herName}</span>
         </div>
 
-        <div className="daily-phrase">
-          <strong>Mensaje del día:</strong> {dailyPhrase.text}
-        </div>
+        {dailyPhrase && (
+          <div className="daily-phrase">
+            <strong>Mensaje del día:</strong> {dailyPhrase.text}
+          </div>
+        )}
 
         <div className="hero-actions">
           <a href="#carta" className="main-button">
