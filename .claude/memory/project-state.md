@@ -7,7 +7,27 @@ metadata:
 
 # Estado actual de DistanciaCero
 
-**Última actualización**: 2026-07-14
+**Última actualización**: 2026-07-14 (sesión final — todo funcional)
+
+## Commits de esta sesión
+
+| Commit | Descripción |
+|---|---|
+| `02fdca2` | Plantilla genérica — sanitización completa (~99 archivos) |
+| `4d71f80` | fix: desactivar proposal gate en modo plantilla |
+| `9301b24` | fix: Hero crasheaba con randomPhrases.json vacío |
+| `765564b` | feat: 100 razones genéricas para visualización |
+
+## Bugs corregidos
+
+- ✅ **Login roto**: `VITE_REMOTE_CONTENT_ENABLED=true` → `false`
+- ✅ **Proposal gate bloqueaba todo**: `display:none` en todas las secciones
+- ✅ **Hero crasheaba**: `% 0` = NaN con `randomPhrases.json` vacío
+- ✅ **ThemeSwitcher**: migración automática de temas viejos
+- ✅ **CLAUDE.md**: referencias stale a docs/pages eliminados
+- ✅ **IDENTITY_CONTRACT.md**: IDs actualizados
+- ✅ **final-adjustments.css**: no estaba trackeado en git
+- ✅ **hooks PreCommit**: removido (evento inválido en settings.json)
 
 ## Fase actual: Plantilla vacía (template mode)
 
