@@ -54,13 +54,13 @@ function ProposalSection() {
   const wantsToTalk = parsedAnswer?.value === 'talk'
   const gateLocked = !accepted
 
-  useEffect(() => {
-    document.body.classList.toggle('proposal-gate-active', gateLocked)
-
-    return () => {
-      document.body.classList.remove('proposal-gate-active')
-    }
-  }, [gateLocked])
+  // Gate desactivado en modo plantilla — no bloquea el resto del contenido
+  // useEffect(() => {
+  //   document.body.classList.toggle('proposal-gate-active', gateLocked)
+  //   return () => {
+  //     document.body.classList.remove('proposal-gate-active')
+  //   }
+  // }, [gateLocked])
 
   useEffect(() => {
     const timer = setInterval(() => {
