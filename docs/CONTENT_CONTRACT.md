@@ -469,7 +469,7 @@ La API actual es sync. Supabase sera async. Cambiar las funciones publicas a pro
 
 ### Auth
 
-Sin Auth no hay identidad real de autor. Con Auth se debe definir sesion, perfiles, roles y acceso compartido Ale/Yori.
+Sin Auth no hay identidad real de autor. Con Auth se debe definir sesion, perfiles, roles y acceso compartido entre usuarios.
 
 ### `createdBy` / `updatedBy`
 
@@ -479,7 +479,7 @@ Los nuevos items locales genericos ya registran `createdBy` / `updatedBy` en mod
 
 RLS es el riesgo mas alto. Una policy incorrecta puede exponer cartas, fotos o contenido privado entre universos.
 
-### Conflictos Ale/Yori
+### Conflictos entre usuarios
 
 Si ambos editan el mismo item, se necesita una regla: ultimo write gana, historial/audit log, bloqueo optimista o resolucion manual.
 

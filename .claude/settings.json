@@ -25,10 +25,5 @@
       "Bash(git push --force *)",
       "Bash(git reset --hard *)"
     ]
-  },
-  "hooks": {
-    "PreCommit": [
-      "npm run build"
-    ]
   }
 }

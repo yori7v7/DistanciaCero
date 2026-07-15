@@ -73,7 +73,7 @@ function ProposalSection() {
   const countdownText = useMemo(() => {
     if (timeLeft.expired) return 'Hoy este universo tiene una pregunta importante.'
 
-    return `Faltan ${timeLeft.days} días, ${timeLeft.hours} horas, ${timeLeft.minutes} minutos y ${timeLeft.seconds} segundos para el 17 de mayo.`
+    return `Faltan ${timeLeft.days} días, ${timeLeft.hours} horas, ${timeLeft.minutes} minutos y ${timeLeft.seconds} segundos para el gran día.`
   }, [timeLeft])
 
   const handleYes = () => {
@@ -152,7 +152,7 @@ function ProposalSection() {
             <p>{proposal.yesMessage}</p>
             <div className="proposal-official-badge">
               <Heart size={18} />
-              <span>Ale & Yori oficialmente</span>
+              <span>Oficialmente</span>
             </div>
             <small>{proposal.savedFooter}</small>
           </div>
@@ -171,7 +171,7 @@ function ProposalSection() {
             <div className="proposal-actions">
               <button className="main-button proposal-yes" onClick={handleYes}>
                 <Heart size={18} />
-                Sí, mi Yori
+                Sí, quiero
               </button>
 
               <button className="ghost-button proposal-talk" onClick={resetQuestion}>

@@ -13,7 +13,7 @@ src/data/siteConfig.json
 Aquí cambias:
 
 - nombre del proyecto
-- nombres de Ale y Yori
+- nombres de la pareja
 - apodos
 - fecha de inicio
 - fecha para verse
@@ -207,7 +207,7 @@ Aquí van recuerdos tipo álbum.
 
 Más adelante puedes cambiar los placeholders por imágenes reales.
 
-## 13. Diccionario Ale & Yori
+## 13. Diccionario
 
 Archivo:
 
@@ -276,10 +276,8 @@ Busca:
 ```json
 "secret": {
   "passwords": [
-    "milanesa",
-    "alecita",
-    "ale",
-    "yori"
+    "contraseña1",
+    "contraseña2"
   ]
 }
 ```
@@ -295,7 +293,7 @@ npm run dev
 Abre:
 
 ```txt
-http://localhost:5173/alecitabbcitabblin/
+http://localhost:5173/
 ```
 
 ## 20. Subir a GitHub Pages
@@ -303,7 +301,7 @@ http://localhost:5173/alecitabbcitabblin/
 Primero asegúrate de que en `package.json` esté:
 
 ```json
-"homepage": "https://yori7v7.github.io/alecitabbcitabblin"
+"homepage": "https://TU-USUARIO.github.io/TU-REPO"
 ```
 
 Luego:

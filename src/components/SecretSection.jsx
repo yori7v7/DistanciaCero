@@ -17,7 +17,7 @@ function SecretSection() {
       setError('')
     } else {
       setUnlocked(false)
-      setError(`Mmm casi, Ale. ${siteConfig.secret.hint}`)
+      setError(`Mmm casi. ${siteConfig.secret.hint}`)
     }
   }
 
@@ -25,7 +25,7 @@ function SecretSection() {
     <section className="section" id="secreto">
       <SectionTitle
         eyebrow="Easter egg"
-        title="Una sección secreta para Ale"
+        title="Una sección secreta"
         text="Porque toda historia bonita merece un rinconcito escondido."
       />
 
@@ -38,7 +38,7 @@ function SecretSection() {
 
             <h3>Zona secreta</h3>
             <p>
-              Solo Ale puede abrir esta parte. Bueno, Ale y cualquiera que sepa demasiado sobre nuestras milanesas.
+              Solo quien sepa la contraseña puede abrir esta parte.
             </p>
 
             <div className="secret-form">
@@ -64,7 +64,7 @@ function SecretSection() {
             <h3>{siteConfig.secret.unlockedTitle}</h3>
 
             <p>
-              Sorpresa, mi Ale. Si llegaste hasta aquí, encontraste un pedacito más escondido de mi corazón.
+              Sorpresa. Si llegaste hasta aquí, encontraste un pedacito más escondido de mi corazón.
             </p>
 
             <p>

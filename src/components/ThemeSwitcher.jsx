@@ -8,13 +8,13 @@ const themes = [
     icon: <Sparkles size={15} />
   },
   {
-    id: 'theme-ale',
-    label: 'Modo Ale',
+    id: 'theme-light',
+    label: 'Modo Claro',
     icon: <Heart size={15} />
   },
   {
-    id: 'theme-yori',
-    label: 'Modo Yori',
+    id: 'theme-dark',
+    label: 'Modo Oscuro',
     icon: <Moon size={15} />
   },
   {
@@ -26,13 +26,17 @@ const themes = [
 
 function ThemeSwitcher() {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('distancia-cero-theme') || 'theme-default'
+    const stored = localStorage.getItem('distancia-cero-theme')
+    // Migrate old theme names to new defaults
+    if (stored === 'theme-ale') return 'theme-light'
+    if (stored === 'theme-yori') return 'theme-dark'
+    return stored || 'theme-default'
   })
 
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    document.body.classList.remove('theme-default', 'theme-ale', 'theme-yori', 'theme-hug')
+    document.body.classList.remove('theme-default', 'theme-light', 'theme-dark', 'theme-hug', 'theme-ale', 'theme-yori')
     document.body.classList.add(theme)
     localStorage.setItem('distancia-cero-theme', theme)
   }, [theme])

@@ -1,77 +1,16 @@
-﻿[
+[
   {
-    "id": "marzo-13",
+    "id": "capitulo-1",
     "chapter": "Capítulo I",
-    "date": "13 de marzo",
-    "title": "El día que mi universo te encontró",
-    "subtitle": "Cuando empezó todo sin que yo supiera que iba a significar tanto.",
-    "description": "Ale, este día se quedó marcado en mí porque fue cuando apareciste en mi vida. Tal vez en ese momento no entendía todo lo que ibas a mover dentro de mí, pero ahora miro hacia atrás y pienso que desde ahí empezó a formarse este universo nuestro.",
-    "quote": "No sabía que una persona podía volverse el centro de tantas cosas.",
+    "date": "Próximamente",
+    "title": "El inicio de nuestra historia",
+    "subtitle": "Donde todo empezó.",
+    "description": "Aquí irá el primer capítulo de nuestra historia juntos.",
+    "quote": "Cada historia tiene un comienzo.",
     "details": [
       "El inicio de nuestra historia.",
-      "El día desde donde empiezo a contar los días de conocernos.",
-      "Una fecha que quiero cuidar aunque pasen los años."
+      "Una fecha para recordar."
     ],
     "mood": "Origen"
-  },
-  {
-    "id": "marzo-19",
-    "chapter": "Capítulo II",
-    "date": "19 de marzo",
-    "title": "El primer te amo",
-    "subtitle": "La primera vez que algo tan grande salió de nosotros.",
-    "description": "Ese primer te amo no fue cualquier palabra, Ale. Para mí fue como abrir una puerta que ya no quería cerrar. Desde ese momento entendí que lo que sentía por ti no era una emoción chiquita ni pasajera, sino algo que quería cuidar de verdad.",
-    "quote": "Te amo, y desde ese día esas palabras se quedaron viviendo conmigo.",
-    "details": [
-      "Primera vez que nos dijimos te amo.",
-      "Una fecha que cambió el tamaño de todo.",
-      "El día en que lo que sentíamos empezó a tener nombre."
-    ],
-    "mood": "Te amo"
-  },
-  {
-    "id": "mayo-17",
-    "chapter": "Capítulo III",
-    "date": "17 de mayo de 2026",
-    "title": "¿Puedo ser tu novio?",
-    "subtitle": "La pregunta que convirtió esta página en recuerdo.",
-    "description": "Ese día no solo te hice una pregunta, Ale. Te abrí este universo para decirte que quería estar contigo de una forma más real, más bonita y más nuestra. Y cuando me dijiste que sí, sentí que todo esto ya podía crecer oficialmente contigo dentro.",
-    "quote": "Entonces este universo ya puede crecer oficialmente.",
-    "details": [
-      "Día de la declaración oficial.",
-      "La pregunta principal fue: ¿Puedo ser tu novio?",
-      "Tú dijiste que sí, y yo todavía sigo bien feliz por eso."
-    ],
-    "mood": "Oficial"
-  },
-  {
-    "id": "noviembre-17",
-    "chapter": "Capítulo IV",
-    "date": "17 de noviembre",
-    "title": "El día que espero verte",
-    "subtitle": "Una fecha que todavía brilla desde lejos.",
-    "description": "Hay fechas que todavía no llegan, pero ya pesan bonito en el corazón. Esta la guardo como una coordenada en el mapa de nosotros, Ale, porque pensar en verte me hace sentir que la distancia no gana; solo está contando los días para perder.",
-    "quote": "La distancia se siente menos fuerte cuando tengo una fecha a la cual abrazarme.",
-    "details": [
-      "Fecha marcada para volver a verte.",
-      "Un punto de destino dentro de Distancia Cero.",
-      "Una promesa silenciosa contra la distancia."
-    ],
-    "mood": "Esperanza"
-  },
-  {
-    "id": "futuro",
-    "chapter": "Capítulo V",
-    "date": "Próximamente",
-    "title": "Las páginas que todavía faltan",
-    "subtitle": "Porque contigo esto no se acaba aquí.",
-    "description": "Este diario no está terminado, Ale. Al contrario, apenas está aprendiendo a crecer contigo. Aquí quiero ir guardando más días, más recuerdos, más llamadas, más fotos, más momentos y más razones para seguir diciendo que tú eres mi lugar favorito.",
-    "quote": "Lo más bonito de nuestra historia es que todavía no termina.",
-    "details": [
-      "Espacio para nuevas fechas.",
-      "Recuerdos futuros.",
-      "Todo lo que todavía quiero vivir contigo."
-    ],
-    "mood": "Futuro"
   }
 ]

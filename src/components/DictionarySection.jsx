@@ -6,7 +6,7 @@ function DictionarySection({ entries }) {
     <section className="section" id="diccionario">
       <SectionTitle
         eyebrow="Diccionario"
-        title="Diccionario Ale & Yori"
+        title="Diccionario"
         text="Una colección de palabras, apodos y conceptos que solo ustedes entienden del todo."
       />
 

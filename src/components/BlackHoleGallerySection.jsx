@@ -257,9 +257,9 @@ function BlackHoleCore3D() {
 
       <Html center distanceFactor={8.2} position={[0, 0, 0]}>
         <div className="blackhole-3d-core-label">
-          <span>ALE</span>
+          <span>NOSOTROS</span>
           <strong>&</strong>
-          <span>YORI</span>
+          <span>NOSOTROS</span>
         </div>
       </Html>
     </group>
@@ -460,7 +460,7 @@ function BlackHoleGallerySection({ items = [] }) {
     >
       <SectionTitle
         eyebrow="Galería"
-        title="Ale, aquí guardo todo lo que quiero volver a vivir contigo"
+        title="Aquí guardo todo lo que quiero volver a vivir"
         text="Quise que se sintiera menos como una simple galería y más como algo inmenso, vivo y raro, como si nuestros recuerdos de verdad se hubieran quedado atrapados en su propia gravedad."
       />
 
@@ -474,7 +474,7 @@ function BlackHoleGallerySection({ items = [] }) {
           <h3>Si algo me hace pensar en ti, termina orbitando aquí.</h3>
 
           <p>
-            Ale, este lugar lo imaginé como un agujero negro hecho de nosotros: de lo que hemos vivido, de lo que me haces sentir y de todo eso que quisiera repetir contigo mil veces.
+            Este lugar lo imaginé como un agujero negro hecho de nosotros: de lo que hemos vivido, de lo que me haces sentir y de todo eso que quisiera repetir contigo mil veces.
           </p>
 
           <p className="blackhole-copy-soft">
@@ -483,7 +483,7 @@ function BlackHoleGallerySection({ items = [] }) {
 
           {needsGate && (
             <p className="blackhole-gate-message">
-              Primero entra conmigo al agujero negro, Ale. Después sí te enseño lo que vive ahí dentro.
+              Primero entra conmigo al agujero negro. Después sí te enseño lo que vive ahí dentro.
             </p>
           )}
 
@@ -547,7 +547,7 @@ function BlackHoleGallerySection({ items = [] }) {
 
           <div className="blackhole-transition-text">
             <span>Entrando al agujero negro</span>
-            <h3>Ale, ven conmigo...</h3>
+            <h3>Ven conmigo...</h3>
             <p>Quiero enseñarte todo lo que guardo de nosotros aquí adentro.</p>
           </div>
         </div>
@@ -558,7 +558,7 @@ function BlackHoleGallerySection({ items = [] }) {
           <div className="portal-header">
             <div>
               <span>Dentro del horizonte de sucesos</span>
-              <h3>Ale, estos pedacitos de nosotros se quedaron viviendo en mí.</h3>
+              <h3>Estos pedacitos de nosotros se quedaron viviendo en mí.</h3>
             </div>
 
             <button className="portal-close" type="button" onClick={() => setIsOpen(false)} aria-label="Cerrar galería">
@@ -584,7 +584,7 @@ function BlackHoleGallerySection({ items = [] }) {
               <p>
                 {activeItem?.description ||
                   activeItem?.caption ||
-                  'Aunque este espacio todavía no tenga foto, igual ya existe dentro de mí. Solo está esperando el siguiente momento bonito contigo, Ale.'}
+                  'Aunque este espacio todavía no tenga foto, igual ya existe dentro de mí. Solo está esperando el siguiente momento bonito contigo.'}
               </p>
               {activeItem?.tag && <strong>{activeItem.tag}</strong>}
             </div>

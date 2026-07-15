@@ -10,7 +10,7 @@ La arquitectura actual de contenido sigue siendo:
 Componentes -> src/services/contentService.js -> src/repositories/contentRepository.js -> src/repositories/localContentRepository.js -> src/utils/localContentStore.js -> LocalStorage
 ```
 
-La identidad local fake/dev debe servir para simular quienes son Yori/Diego y Ale/Alecita, sin cambiar todavia el runtime del CRUD.
+La identidad local fake/dev debe servir para simular quienes son Usuario 1 y Usuario 2, sin cambiar todavia el runtime del CRUD.
 
 ## 2. Objetivos
 
@@ -42,16 +42,16 @@ Propuesta futura para `src/constants/localUsers.js`:
 ```js
 export const LOCAL_USERS = [
   {
-    id: 'local-yori',
-    slug: 'yori',
-    displayName: 'Yori Diego',
+    id: 'local-user1',
+    slug: 'user1',
+    displayName: 'Usuario 1',
     role: 'owner',
     avatar: null
   },
   {
-    id: 'local-ale',
-    slug: 'ale',
-    displayName: 'Ale Alecita',
+    id: 'local-user2',
+    slug: 'user2',
+    displayName: 'Usuario 2',
     role: 'partner',
     avatar: null
   }
@@ -60,8 +60,8 @@ export const LOCAL_USERS = [
 
 Reglas:
 
-- `local-yori` identifica a Yori / Diego en modo local.
-- `local-ale` identifica a Ale / Alecita en modo local.
+- `local-user1` identifica al Usuario 1 (owner) en modo local.
+- `local-user2` identifica al Usuario 2 (partner) en modo local.
 - Los ids locales no equivalen a UUIDs de Supabase.
 - Los ids locales no deben asumirse como ids definitivos de Auth.
 - El mapping futuro a Supabase debe ser explicito.
@@ -74,7 +74,7 @@ Propuesta futura:
 export const LOCAL_RELATIONSHIP_SPACE = {
   id: 'distancia-cero-local-space',
   name: 'Distancia Cero',
-  members: ['local-yori', 'local-ale'],
+  members: ['local-user1', 'local-user2'],
   createdAt: '2026-01-01T00:00:00.000Z'
 }
 ```
@@ -98,8 +98,8 @@ Metadata actual para items locales genericos y conceptual para contenido remoto 
 
 ```js
 {
-  createdBy: 'local-yori',
-  updatedBy: 'local-ale',
+  createdBy: 'local-user1',
+  updatedBy: 'local-user2',
   createdAt: '2026-05-17T00:00:00.000Z',
   updatedAt: '2026-05-18T00:00:00.000Z',
   source: 'local-dev',
@@ -339,7 +339,7 @@ Rollback:
 
 - Eliminar archivos nuevos.
 
-### Fase 2.2: selector local Yori/Ale
+### Fase 2.2: selector local de usuarios
 
 Objetivo:
 
@@ -445,7 +445,7 @@ Rollback:
 
 ### IDs fake vs Supabase UUID
 
-Los ids `local-yori` y `local-ale` no son UUIDs de Supabase. Mezclarlos sin mapping puede romper ownership y RLS futura.
+Los ids `local-user1` y `local-user2` no son UUIDs de Supabase. Mezclarlos sin mapping puede romper ownership y RLS futura.
 
 ### Contaminar export/import
 
@@ -459,7 +459,7 @@ Si los componentes empiezan a depender de `createdBy`, items antiguos podrian ro
 
 No se debe inferir autor retroactivo. Un item sin metadata debe permanecer sin autor conocido.
 
-### Conflictos Ale/Yori
+### Conflictos entre usuarios
 
 Cuando exista sincronizacion remota, ambos podrian editar el mismo contenido. La resolucion de conflictos debe definirse antes de realtime.
 

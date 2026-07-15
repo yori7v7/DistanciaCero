@@ -2,7 +2,7 @@
 
 ## ¿Qué es?
 
-**Distancia Cero** es una SPA romántica interactiva para Ale & Yori. Un "universo digital vivo" con cartas, recuerdos, música 3D, misiones y secretos. Desplegado en GitHub Pages.
+**Distancia Cero** es una SPA romántica interactiva (plantilla reusable). Un "universo digital vivo" con cartas, recuerdos, música 3D, misiones y secretos. Desplegado en GitHub Pages.
 
 ## Stack
 
@@ -31,7 +31,6 @@ src/
 │   ├── SecretSection.jsx    # Sección protegida por contraseña
 │   ├── EmergencyButton.jsx  # Botón "Necesito un abrazo"
 │   └── ...                  # Cartas, galería, playlist, misiones, etc.
-├── pages/                   # 9 páginas (Inicio, Cartas, Galería, etc.)
 ├── context/
 │   └── AudioContext.jsx     # Proveedor de música de fondo global
 ├── data/                    # ~25 archivos JSON con TODO el contenido
@@ -41,7 +40,7 @@ src/
 │   └── ...                  # Cartas, canciones, razones, misiones, etc.
 ├── services/                # Lógica de negocio (fachada sync)
 │   ├── contentService.js    # CRUD genérico (API pública estable)
-│   ├── authService.js       # Auth local fake (local-yori / local-ale)
+│   ├── authService.js       # Auth local fake (local-user1 / local-user2)
 │   ├── profileService.js    # Perfiles de usuario
 │   └── contentMetadataService.js
 ├── repositories/            # Acceso a datos
@@ -55,7 +54,7 @@ src/
 │   ├── localContentStore.js # Bajo nivel localStorage
 │   └── localIdentityStore.js
 ├── constants/
-│   └── localUsers.js        # local-yori, local-ale
+│   └── localUsers.js        # local-user1, local-user2
 └── styles/                  # ~20 archivos CSS temáticos
 ```
 
@@ -74,7 +73,7 @@ Componentes → contentService → contentRepository → localContentRepository 
 LocalIdentitySelector → authService → localIdentityStore → localStorage
 ```
 
-Usuarios locales fake: `local-yori` (owner), `local-ale` (partner).
+Usuarios locales fake: `local-user1` (owner), `local-user2` (partner).
 `authService.isAuthenticated()` siempre retorna `true` en modo local.
 
 ## Plan de migración a Supabase (Fase S4)
@@ -97,8 +96,10 @@ El proyecto tiene **~50 documentos** detallando la migración a Supabase. Ya com
 - Activar feature flag y modo híbrido local/remoto
 - Storage para media
 - Migración de contenido real
+- Crear nuevo proyecto Supabase desde cero
+- Aplicar schema, RLS, Auth, Storage
 
-Ver `docs/SUPABASE_READINESS_CHECKLIST.md` — gate actual: **NO-GO** (gates críticos pendientes).
+**Gate actual**: Supabase NO activo — se reiniciará desde cero en fase futura.
 
 ## Comandos
 
@@ -119,7 +120,7 @@ npm run migration:mock   # Verificar scripts de migración mock
 - No activar Supabase, Router y Auth en una misma fase
 - No mezclar cambios de escenas/música con infraestructura remota
 - No borrar localStorage automáticamente
-- No tratar `local-owner_b`/`local-owner_a` como UUIDs reales
+- No tratar `local-user1`/`local-user2` como UUIDs reales
 
 ### Principios
 - Mantener modo local funcional siempre (fallback offline)
@@ -138,8 +139,8 @@ npm run migration:mock   # Verificar scripts de migración mock
 
 ## Notas para Claude Code
 
-- El proyecto está en `C:\Users\dycs1\Downloads\alecitabbcitabblin\`
-- GitHub Pages: `https://yori7v7.github.io/DistanciaCero/`
+- El proyecto está en `C:\Users\dycs1\Downloads\DistanciaCero\`
+- GitHub Pages: ``
 - `siteConfig.json` tiene las contraseñas, nombres, fechas y config de audio
 - La `GUIA_PARA_EDITAR.md` explica cómo editar cada sección sin tocar código
 - Los docs en `docs/` y `docs/supabase/` son la fuente de verdad para el plan de migración

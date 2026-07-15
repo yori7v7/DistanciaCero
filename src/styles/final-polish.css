@@ -281,7 +281,7 @@
   color: white;
 }
 
-.theme-ale {
+.theme-light {
   --bg-main: #120014;
   --bg-card: rgba(45, 8, 45, 0.82);
   --pink: #ff8fd6;
@@ -291,7 +291,7 @@
   --border: rgba(255, 180, 225, 0.32);
 }
 
-.theme-yori {
+.theme-dark {
   --bg-main: #030006;
   --bg-card: rgba(16, 0, 10, 0.86);
   --pink: #ff6db8;

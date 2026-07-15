@@ -15,31 +15,30 @@ function MainLetter() {
           <Heart size={30} />
         </div>
 
-        <h3>Para mi Alecita</h3>
+        <h3>Para ti</h3>
 
         <p>
-          Ale, hice esta página pensando en ti, en nosotros y en todas esas veces en las que la distancia se siente bien pesada,
+          Hice este espacio pensando en nosotros y en todas esas veces en las que la distancia se siente pesada,
           pero aun así seguimos aquí, encontrándonos en mensajes, llamadas, canciones, bromas y en esas formas bien nuestras de querernos.
         </p>
 
         <p>
-          No quería hacerte solo una carta normal. Quería hacerte un lugar. Un lugar donde puedas entrar cuando me extrañes,
-          cuando estés triste, cuando quieras recordar algo bonito o cuando simplemente quieras sentir que tu Yori está contigo.
+          No quería hacer solo una carta normal. Quería hacer un lugar. Un lugar donde puedas entrar cuando me extrañes,
+          cuando estés triste, cuando quieras recordar algo bonito o cuando simplemente quieras sentir que estoy contigo.
         </p>
 
         <p>
-          Esta página va a ir creciendo. Hoy empieza con esto, pero después tendrá más cartas, más canciones, más recuerdos,
-          más tonterías nuestras, más milanesas espirituales y más pedacitos de todo lo que somos.
+          Este espacio va a ir creciendo. Hoy empieza con esto, pero después tendrá más cartas, más canciones, más recuerdos,
+          más tonterías nuestras y más pedacitos de todo lo que somos.
         </p>
 
         <p>
-          Gracias por ser mi Ale, mi alecita bbcita bblin, mi persona bonita. Yo soy tu Yori, tu dieguito bbcito bblin,
-          y aunque la distancia se ponga intensa, aquí voy a seguir dejando señales de amor para ti.
+          Gracias por ser mi persona bonita, y aunque la distancia se ponga intensa, aquí voy a seguir dejando señales de amor para ti.
         </p>
 
         <p className="signature">
           Con amor,<br />
-          Yori
+          Creador
         </p>
       </article>
     </section>

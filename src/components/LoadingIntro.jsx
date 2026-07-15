@@ -3,10 +3,10 @@ import { Heart, Sparkles } from 'lucide-react'
 import siteConfig from '../data/siteConfig.json'
 
 const loadingLines = [
-  'Inicializando universo Ale & Yori...',
+  'Inicializando universo...',
   'Acomodando planetas...',
   'Cargando cartas bonitas...',
-  'Preparando milanesas espirituales...',
+  'Preparando todo para ti...',
   'Activando distancia cero...'
 ]
 

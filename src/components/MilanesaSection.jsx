@@ -15,7 +15,7 @@ function MilanesaSection() {
           <Utensils size={34} />
         </div>
 
-        <h3>Restaurante imaginario Ale & Yori</h3>
+        <h3>Restaurante imaginario</h3>
 
         <p>
           Especialidad de la casa: milanesas hechas con amor, cero distancia y cantidades peligrosas de ternura.

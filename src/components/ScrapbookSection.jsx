@@ -19,7 +19,7 @@ function ScrapbookSection({ items = [] }) {
     },
     {
       id: 3,
-      date: 'Momento Ale & Yori',
+      date: 'Momento especial',
       title: 'Una tontería muy nuestra',
       caption: 'Ideal para bromas internas, stickers, dibujitos o edits.',
       photoLabel: 'Recuerdo pendiente'

@@ -8,11 +8,11 @@ const fallbackPages = [
     id: 'inicio',
     chapter: 'Capítulo I',
     date: 'Nuestro inicio',
-    title: 'Ale, aquí empieza nuestro diario',
+    title: 'Aquí empieza nuestro diario',
     subtitle: 'Un lugar para guardar lo que somos.',
     description: 'Este diario nació para que nuestra historia no se sintiera como una lista fría de fechas, sino como algo vivo, bonito y totalmente nuestro.',
     quote: 'Todo lo que somos merece una página.',
-    details: ['Ale & Yori', 'Distancia Cero', 'Nuestro universo'],
+    details: ['Nosotros', 'Distancia Cero', 'Nuestro universo'],
     mood: 'Inicio'
   }
 ]
@@ -113,7 +113,7 @@ function normalizePage(page, index) {
     date: formatTimelineDateForDisplay(page.date || page.year || 'Fecha importante'),
     title: page.title || 'Un recuerdo nuestro',
     subtitle: page.subtitle || page.description || 'Una página de nuestra historia.',
-    description: page.description || page.text || page.caption || 'Ale, esta página existe para guardar algo bonito de nosotros.',
+    description: page.description || page.text || page.caption || 'Esta página existe para guardar algo bonito de ustedes.',
     quote: page.quote || 'Hay recuerdos que se quedan brillando.',
     details: normalizedDetails,
     mood: page.mood || page.type || 'Recuerdo'
@@ -178,7 +178,7 @@ function StoryTimeline({ timeline = [] }) {
     <section className="section diary-story-section" id="historia">
       <SectionTitle
         eyebrow="Nuestra historia"
-        title="Ale, convertí nuestra historia en un diario"
+        title="Convertí nuestra historia en un diario"
         text="Porque lo nuestro no se siente como una simple línea del tiempo. Se siente como un libro oscuro, bonito, rosita y lleno de páginas que todavía quiero escribir contigo."
       />
 
@@ -189,7 +189,7 @@ function StoryTimeline({ timeline = [] }) {
         <div className="diary-topbar">
           <span>
             <BookOpen size={17} />
-            Diario de un universo llamado Ale & Yori
+            Diario de un universo llamado Distancia Cero
           </span>
 
           <strong>

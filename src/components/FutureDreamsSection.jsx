@@ -6,7 +6,7 @@ import { mergeCollectionWithLocal } from '../services/contentService'
 const placeholderDream = {
   id: 'soon-plan',
   title: 'Próximamente',
-  description: 'Este cuadrito queda listo para alguna otra idea, salida, plan o cosita que quieras vivir con Ale.',
+  description: 'Este cuadrito queda listo para alguna otra idea, salida, plan o cosita que quieras vivir juntos.',
   category: 'Pendiente',
   isPlaceholder: true
 }

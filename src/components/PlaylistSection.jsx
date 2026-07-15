@@ -76,7 +76,7 @@ function PlaylistSection({ playlist = [] }) {
   const items = baseItems.length > 0 ? baseItems : [{
     id: 'soon-playlist',
     title: 'Próximamente',
-    artist: 'Ale & Yori',
+    artist: 'Artista',
     description: 'Sube canciones o agrega links de Spotify.',
     sourceType: 'placeholder',
     tag: 'Pendiente'
@@ -98,7 +98,7 @@ function PlaylistSection({ playlist = [] }) {
       <SectionTitle
         eyebrow="Playlist"
         title="La banda sonora de nuestro universo"
-        text="Sube canciones, usa Wonderwall como ambiente o agrega playlists de Spotify."
+        text="Sube canciones, usa el audio de ambiente o agrega playlists de Spotify."
       />
 
       {canUpload && (

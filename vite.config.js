@@ -12,9 +12,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons.svg'],
       manifest: {
-        name: 'Distancia Cero — Ale & Yori',
+        name: 'Distancia Cero',
         short_name: 'Distancia Cero',
-        description: 'Un universo digital para Ale & Yori',
+        description: 'Un universo digital para dos',
         theme_color: '#050008',
         background_color: '#050008',
         display: 'standalone',

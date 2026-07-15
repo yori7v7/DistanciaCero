@@ -145,7 +145,7 @@ export async function signUpWithEmail(email, password, displayName) {
  */
 export async function signOut() {
   if (!isRemoteAvailable()) {
-    setCurrentUser('local-yori')
+    setCurrentUser('local-user1')
     return
   }
 
@@ -158,7 +158,7 @@ export async function signOut() {
 
   supabaseSession = null
   notifyListeners()
-  setCurrentUser('local-yori')
+  setCurrentUser('local-user1')
 }
 
 /**

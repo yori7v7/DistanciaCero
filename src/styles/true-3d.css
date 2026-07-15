@@ -228,7 +228,7 @@
   }
 }
 
-/* YORI-FIX-PLANETS-REASONS-NO-CUT */
+/* FIX-PLANETS-REASONS-NO-CUT */
 
 .universe-3d-shell {
   height: clamp(760px, 84vh, 980px) !important;

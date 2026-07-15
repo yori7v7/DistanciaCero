@@ -437,7 +437,7 @@ function SceneMusicController() {
 
           <p>
             <Volume2 size={13} />
-            {activeScene?.artist || 'Ale & Yori'}
+            {activeScene?.artist || 'Artista'}
           </p>
 
           {audioError && <small>{audioError}</small>}

@@ -318,7 +318,7 @@ function ReasonsSection({ reasons = [] }) {
     <section className="section reasons-section" id="razones" ref={sectionRef}>
       <SectionTitle
         eyebrow="100 razones"
-        title="Ale, aquí dejé flotando 100 razones por las que te amo"
+        title="Aquí dejé flotando 100 razones por las que te amo"
         text="Las dejé libres, rebotando y chocando entre sí, porque ni mis razones para amarte saben quedarse quietas."
       />
 

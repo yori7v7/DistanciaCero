@@ -1,58 +1,45 @@
 {
   "project": {
     "name": "Distancia Cero",
-    "subtitle": "Un universo digital para Ale & Yori",
-    "repositoryName": "alecitabbcitabblin",
-    "githubUser": "yori7v7"
+    "subtitle": "Una plantilla de universo digital para dos",
+    "repositoryName": "distancia-cero",
+    "githubUser": ""
   },
   "couple": {
-    "herName": "Ale",
-    "herFullName": "Alex Sun de la Cruz Martínez",
-    "yourName": "Yori",
-    "yourFullName": "Diego Yorel Castelán Silva",
-    "mainPairName": "Ale & Yori",
-    "herNicknames": [
-      "Ale",
-      "Alecita",
-      "Alecita bbcita bblin"
-    ],
-    "yourNicknames": [
-      "Yori",
-      "Dieguito bbcito bblin",
-      "Dieguito vevecitovevelin"
-    ]
+    "herName": "",
+    "herFullName": "",
+    "yourName": "",
+    "yourFullName": "",
+    "mainPairName": "Nosotros",
+    "herNicknames": [],
+    "yourNicknames": []
   },
   "dates": {
-    "metDate": "2026-03-13",
-    "relationshipStartDate": "2026-05-17",
-    "proposalDate": "2026-05-17",
-    "nextMeetingDate": "2026-11-17",
+    "metDate": "2024-01-01",
+    "relationshipStartDate": "2024-01-01",
+    "proposalDate": "2024-01-01",
+    "nextMeetingDate": "2024-12-31",
     "metLabel": "Días de conocernos",
     "storyLabel": "Días de historia",
     "nextMeetingLabel": "Días para vernos"
   },
   "audio": {
-    "backgroundTrackPath": "/audio/wonderwall.mp3",
+    "backgroundTrackPath": "/audio/background.mp3",
     "defaultVolume": 0.45,
-    "afterMainPlaylistName": "Playlist 11:11",
-    "afterMainPlaylistLink": "https://open.spotify.com/playlist/53Iki42jhtUsuviE1yRNrh?si=4ef16584fe794ab6"
+    "afterMainPlaylistName": "Playlist compartida",
+    "afterMainPlaylistLink": ""
   },
   "secret": {
-    "passwords": [
-      "milanesa",
-      "alecita",
-      "ale",
-      "yori"
-    ],
-    "hint": "Pista: comida favorita, apodo bonito o nuestros nombres.",
-    "unlockedTitle": "Para mi Alecita bbcita bblin",
-    "unlockedSignature": "Atte: tu Yori, tu dieguito bbcito bblin."
+    "passwords": ["contraseña"],
+    "hint": "Pista: la contraseña por defecto.",
+    "unlockedTitle": "Sección secreta desbloqueada",
+    "unlockedSignature": "Atte: el creador de este universo."
   },
   "hero": {
-    "eyebrow": "Un universo para Ale & Yori",
+    "eyebrow": "Un universo para dos",
     "titlePrefix": "Para ti,",
-    "titleName": "Ale",
-    "description": "Hice este lugar para que, aunque estemos lejos, siempre tengas un pedacito de mí cerquita. Este no es solo un regalo, es nuestro espacio: algo que va a crecer contigo, conmigo y con todo lo que somos.",
-    "primaryButton": "Abrir mi primer regalo para ti"
+    "titleName": "",
+    "description": "Un espacio digital que crece contigo, conmigo y con todo lo que somos.",
+    "primaryButton": "Entrar al universo"
   }
 }

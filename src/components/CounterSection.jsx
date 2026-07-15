@@ -51,14 +51,14 @@ function CounterSection() {
       icon: <Sparkles size={20} />,
       value: differenceInCalendarDays(metDate, today),
       label: siteConfig.dates.metLabel,
-      hint: 'Desde aquel 13 de marzo en que empezó todo.'
+      hint: 'Desde el día en que todo empezó.'
     },
     {
       id: 2,
       icon: <Heart size={20} />,
       value: differenceInDaysInclusive(storyStartDate, today),
       label: siteConfig.dates.storyLabel,
-      hint: 'Desde el 17 de mayo, nuestra fecha oficial.'
+      hint: 'Desde que decidieron ser oficiales.'
     },
     {
       id: 3,
@@ -72,7 +72,7 @@ function CounterSection() {
       icon: <Calendar size={20} />,
       value: differenceInCalendarDays(today, nextMeetingDate),
       label: siteConfig.dates.nextMeetingLabel,
-      hint: 'Para ese 17 de noviembre que ya vive en el calendario.'
+      hint: 'Para ese día especial que ya vive en el calendario.'
     }
   ]
 

@@ -239,7 +239,7 @@ function CenterStar({ center, activeId, onSelect }) {
     onSelect(
       {
         ...center,
-        id: 'ale-yori-core',
+        id: 'center-core',
         isCenter: true,
         colorA: '#ff84c8',
         colorB: '#ff275f',
@@ -273,12 +273,12 @@ function CenterStar({ center, activeId, onSelect }) {
 
       <Html center distanceFactor={11} position={[0, 0, 0]}>
         <button
-          className={`core-3d-label ${activeId === 'ale-yori-core' ? 'core-3d-label-active' : ''}`}
+          className={`core-3d-label ${activeId === 'center-core' ? 'core-3d-label-active' : ''}`}
           type="button"
           onClick={pickCenter}
         >
           <Sparkles size={18} />
-          <strong>Ale & Yori</strong>
+          <strong>Nosotros</strong>
           <span>El centro</span>
         </button>
       </Html>
@@ -382,8 +382,8 @@ function UniverseSection({ universe }) {
   return (
     <section className="section" id="universo">
       <SectionTitle
-        eyebrow="Universo Ale & Yori"
-        title="Ale, este es el sistema solar que imaginé para nosotros"
+        eyebrow="Universo"
+        title="Este es el sistema solar que imaginé para nosotros"
         text="Quise que cada planeta se sintiera más vivo, más bonito y más nuestro, como si realmente existiera allá afuera."
       />
 

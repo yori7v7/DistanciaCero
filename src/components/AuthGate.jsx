@@ -214,7 +214,7 @@ function AuthGate({ children, onReady }) {
             {isLogin ? 'Bienvenida de vuelta' : 'Crea tu cuenta'}
           </h1>
           <p className="auth-gate__subtitle">
-            {isLogin ? 'Nuestro universo te extraña, Alecita 💖' : 'Únete al universo de Ale & Yori'}
+            {isLogin ? 'Bienvenida de vuelta' : 'Únete a este universo'}
           </p>
         </div>
 
@@ -222,7 +222,7 @@ function AuthGate({ children, onReady }) {
           {!isLogin && (
             <div className="auth-gate__field">
               <User className="auth-gate__field-icon" size={18} />
-              <input className="auth-gate__input" type="text" placeholder="Nombre (ej: Ale, Yori)"
+              <input className="auth-gate__input" type="text" placeholder="Tu nombre"
                 value={displayName} onChange={(e) => setDisplayName(e.target.value)}
                 disabled={busy} autoComplete="name" />
             </div>

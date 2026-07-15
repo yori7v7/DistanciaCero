@@ -2423,7 +2423,7 @@ function CentroUniversoSection() {
       <SectionTitle
         eyebrow="Panel de Control"
         title="Centro del Universo"
-        text="Rinconcito de administración local y depuración para Diego & Ale."
+        text="Rinconcito de administración local y depuración."
       />
 
       {isSimUnlocked && (
@@ -4266,7 +4266,7 @@ function CentroUniversoSection() {
               <input
                 id="blackHoleAlt"
                 type="text"
-                placeholder="Ej. Recuerdo bonito de Ale y Yori"
+                placeholder="Ej. Recuerdo bonito"
                 value={blackHoleAlt}
                 onChange={(event) => setBlackHoleAlt(event.target.value)}
               />
@@ -4539,7 +4539,7 @@ function CentroUniversoSection() {
               <input
                 id="playlistTitle"
                 type="text"
-                placeholder="Ej. Cancion para Ale"
+                placeholder="Ej. Canción especial"
                 value={playlistTitle}
                 onChange={(event) => setPlaylistTitle(event.target.value)}
                 required
@@ -4551,7 +4551,7 @@ function CentroUniversoSection() {
               <input
                 id="playlistArtist"
                 type="text"
-                placeholder="Ej. Ale & Yori"
+                placeholder="Ej. Nosotros"
                 value={playlistArtist}
                 onChange={(event) => setPlaylistArtist(event.target.value)}
               />
@@ -4716,7 +4716,7 @@ function CentroUniversoSection() {
               <input
                 id="promiseTag"
                 type="text"
-                placeholder="Ej. Promesa de Yori"
+                placeholder="Ej. Promesa"
                 value={promiseTag}
                 onChange={(event) => setPromiseTag(event.target.value)}
               />

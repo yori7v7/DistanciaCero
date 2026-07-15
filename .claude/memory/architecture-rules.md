@@ -27,12 +27,12 @@ Componentes → contentService → contentRepository → localContentRepository 
 - No activar Supabase, Router y Auth en una misma fase
 - No mezclar cambios de escenas/música con infraestructura remota
 - No borrar localStorage automáticamente
-- No tratar `local-yori`/`local-ale` como UUIDs reales de Supabase
+- No tratar `local-user1`/`local-user2` como UUIDs reales de Supabase
 - No hard delete como comportamiento remoto por defecto
 
 ## Identity
 
-- Local users: `local-yori` (owner), `local-ale` (partner)
+- Local users: `local-user1` (owner), `local-user2` (partner)
 - `authService.isAuthenticated()` always returns `true` in local mode
 - Future: Supabase Auth with real UUIDs
 

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import SectionTitle from "./SectionTitle";
 import { Target, Circle, CheckCircle2 } from "lucide-react";
 
-const STORAGE_KEY = "ale-yori-missions-progress";
+const STORAGE_KEY = "missions-progress";
 
 function MissionsSection({ missions }) {
   const [completed, setCompleted] = useState({});
