@@ -412,15 +412,6 @@ function BlackHoleGallerySection({ items = [] }) {
     sessionStorage.setItem('bh-entered', hasEntered ? 'true' : 'false')
   }, [hasEntered])
 
-  // Force visibility when section is in active state (gate, entering, or entered)
-  useEffect(() => {
-    const el = document.getElementById('galeria-agujero-negro')
-    if (!el) return
-    const shouldBeVisible = needsGate || isEntering || hasEntered
-    el.classList.toggle('scene-visible', shouldBeVisible)
-    el.classList.toggle('scene-hidden', !shouldBeVisible)
-  }, [needsGate, isEntering, hasEntered])
-
   useEffect(() => {
     if (!isEntering) return
 
