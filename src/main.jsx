@@ -28,7 +28,6 @@ import './styles/blackhole-gallery.css'
 import './styles/auth-gate.css'
 import './styles/file-uploader.css'
 import './styles/public-landing.css'
-import './styles/clay-3d.css'
 
 const resetParams = new URLSearchParams(window.location.search)
 

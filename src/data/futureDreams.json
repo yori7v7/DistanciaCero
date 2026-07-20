@@ -1,5 +1,7 @@
 [
   { "id": 1, "category": "Viajes", "title": "Recorrer Japón juntos", "description": "Perdernos en las calles de Tokio, visitar templos antiguos y comer ramen auténtico." },
-  { "id": 2, "category": "Hogar", "title": "Nuestra casa", "description": "Un espacio que sea nuestro. Con cocina grande y un rincón de lectura con vista." },
-  { "id": 3, "category": "Aventuras", "title": "Ver las auroras boreales", "description": "Abrigarnos y mirar al cielo mientras las luces bailan sobre nosotros." }
+  { "id": 2, "category": "Hogar", "title": "Nuestra casa", "description": "Un espacio que sea nuestro. Con una cocina grande para cocinar juntos y un rincón de lectura." },
+  { "id": 3, "category": "Aventuras", "title": "Ver las auroras boreales", "description": "Abrigarnos y mirar al cielo mientras las luces bailan sobre nosotros." },
+  { "id": 4, "category": "Vida", "title": "Adoptar una mascota", "description": "Un compañero peludo que sea testigo de nuestra historia." },
+  { "id": 5, "category": "Sueños", "title": "Ver amanecer en la playa", "description": "Despertar juntos con el sonido de las olas y el sol pintando el horizonte." }
 ]

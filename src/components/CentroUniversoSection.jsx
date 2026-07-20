@@ -5,7 +5,7 @@ import LocalContentMeta from './LocalContentMeta'
 import CrudStatButton from './centro-universo/CrudStatButton'
 import useCrudCollection from './centro-universo/useCrudCollection'
 import CrudEditorPanel from './centro-universo/CrudEditorPanel'
-import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload, Mail, MailOpen, Heart, Star, Calendar, Sparkles, Camera, Music } from 'lucide-react'
+import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
 import reasonsData from '../data/reasons.json'
@@ -175,20 +175,20 @@ function CentroUniversoSection() {
   })
 
   const crudModules = [
-    { id: 'monthlyLetters', label: 'Cartas', icon: Mail },
-    { id: 'openWhenLetters', label: 'Abrir cuando', icon: BookOpen },
-    { id: 'reasons', label: 'Razones', icon: Heart },
-    { id: 'promises', label: 'Promesas', icon: Star },
-    { id: 'importantDates', label: 'Fechas', icon: Calendar },
-    { id: 'futureDreams', label: 'Sueños', icon: Sparkles },
-    { id: 'timeline', label: 'Historia', icon: BookOpen },
-    { id: 'blackHoleGallery', label: 'Galería', icon: Camera },
-    { id: 'playlist', label: 'Música', icon: Music }
+    { id: 'monthlyLetters', label: 'Cartas mensuales' },
+    { id: 'openWhenLetters', label: 'Abrir cuando' },
+    { id: 'reasons', label: 'Razones' },
+    { id: 'promises', label: 'Promesas' },
+    { id: 'importantDates', label: 'Fechas importantes' },
+    { id: 'futureDreams', label: 'Wishlist' },
+    { id: 'timeline', label: 'Nuestra historia' },
+    { id: 'blackHoleGallery', label: 'Agujero negro / Galería' },
+    { id: 'playlist', label: 'Playlist' }
   ]
-  // Simplified: only 2 actions — originals or yours (create is inside "yours" tab)
   const crudActions = [
-    { id: 'originals', label: 'Originales', icon: BookOpen },
-    { id: 'local', label: 'Tus creaciones', icon: Edit2 }
+    { id: 'originals', label: 'Ver / editar originales' },
+    { id: 'local', label: 'Ver creados por ti' },
+    { id: 'create', label: 'Crear nuevo' }
   ]
   useEffect(() => {
     setIsSimUnlocked(getSimulationUnlocked())
@@ -1691,7 +1691,13 @@ function CentroUniversoSection() {
   const handleCrudActionChange = (actionId) => {
     resetCrudEditingState()
     setActiveCrudAction(actionId)
-    setActiveCrudFilter(actionId === 'local' ? 'local' : 'all')
+    if (actionId === 'create') {
+      setActiveCrudFilter('all')
+    } else if (actionId === 'local') {
+      setActiveCrudFilter('local')
+    } else if (activeCrudFilter === 'local') {
+      setActiveCrudFilter('all')
+    }
   }
 
   const handleCrudFilterClick = (filter) => {
@@ -1831,38 +1837,32 @@ function CentroUniversoSection() {
         <div className="crud-selector-block">
           <h3>¿Qué quieres editar?</h3>
           <div className="crud-selector-grid">
-            {crudModules.map((module) => {
-              const Icon = module.icon
-              return (
+            {crudModules.map((module) => (
               <button
                 className={`crud-selector-btn ${activeCrudModule === module.id ? 'active' : ''}`}
                 key={module.id}
                 onClick={() => handleCrudModuleChange(module.id)}
                 type="button"
               >
-                <Icon size={18} />
-                <span>{module.label}</span>
+                {module.label}
               </button>
-            )})}
+            ))}
           </div>
         </div>
 
         <div className="crud-selector-block">
           <h3>¿Qué quieres hacer?</h3>
           <div className="crud-selector-grid compact">
-            {crudActions.map((action) => {
-              const ActionIcon = action.icon
-              return (
+            {crudActions.map((action) => (
               <button
                 className={`crud-selector-btn ${activeCrudAction === action.id ? 'active' : ''}`}
                 key={action.id}
                 onClick={() => handleCrudActionChange(action.id)}
                 type="button"
               >
-                <ActionIcon size={16} />
-                <span>{action.label}</span>
+                {action.label}
               </button>
-            )})}
+            ))}
           </div>
         </div>
       </div>

@@ -23,8 +23,9 @@ export default function CrudEditorPanel({
   baseEditorPanelId
 }) {
   const isActive = activeCrudModule === collectionName
-  const showLocal = isActive && activeCrudAction === 'local'
+  const showLocal = isActive && ['local', 'create'].includes(activeCrudAction)
   const showBase = isActive && activeCrudAction === 'originals'
+  const showLocalForm = isActive && activeCrudAction === 'create'
 
   const filterBaseItems = (items) => {
     if (activeCrudFilter === 'all') return items
@@ -51,53 +52,55 @@ export default function CrudEditorPanel({
             <span><strong>Aviso</strong>: Estos elementos son tuyos; los originales no se modifican.</span>
           </div>
 
-          <form className="editor-form" onSubmit={(e) => { crud.handleSubmit(e); onEdit?.(null) }}>
-            {fields.map((field) => (
-              <div className="editor-field" key={field.name}>
-                <label htmlFor={`${collectionName}-${field.name}`}>{field.label}{field.required ? ' *' : ''}</label>
-                {field.type === 'textarea' ? (
-                  <textarea
-                    id={`${collectionName}-${field.name}`}
-                    rows={field.rows || 4}
-                    placeholder={field.placeholder || ''}
-                    value={crud.getFormValue(field.name)}
-                    onChange={(e) => crud.setFormValue(field.name, e.target.value)}
-                    required={field.required}
-                  />
-                ) : field.type === 'select' ? (
-                  <select
-                    id={`${collectionName}-${field.name}`}
-                    value={crud.getFormValue(field.name)}
-                    onChange={(e) => crud.setFormValue(field.name, e.target.value)}
-                  >
-                    {(field.options || []).map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    id={`${collectionName}-${field.name}`}
-                    type={field.type || 'text'}
-                    placeholder={field.placeholder || ''}
-                    value={crud.getFormValue(field.name)}
-                    onChange={(e) => crud.setFormValue(field.name, e.target.value)}
-                    required={field.required}
-                  />
-                )}
-              </div>
-            ))}
+          {showLocalForm && (
+            <form className="editor-form" onSubmit={(e) => { crud.handleSubmit(e); onEdit?.(null) }}>
+              {fields.map((field) => (
+                <div className="editor-field" key={field.name}>
+                  <label htmlFor={`${collectionName}-${field.name}`}>{field.label}{field.required ? ' *' : ''}</label>
+                  {field.type === 'textarea' ? (
+                    <textarea
+                      id={`${collectionName}-${field.name}`}
+                      rows={field.rows || 4}
+                      placeholder={field.placeholder || ''}
+                      value={crud.getFormValue(field.name)}
+                      onChange={(e) => crud.setFormValue(field.name, e.target.value)}
+                      required={field.required}
+                    />
+                  ) : field.type === 'select' ? (
+                    <select
+                      id={`${collectionName}-${field.name}`}
+                      value={crud.getFormValue(field.name)}
+                      onChange={(e) => crud.setFormValue(field.name, e.target.value)}
+                    >
+                      {(field.options || []).map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      id={`${collectionName}-${field.name}`}
+                      type={field.type || 'text'}
+                      placeholder={field.placeholder || ''}
+                      value={crud.getFormValue(field.name)}
+                      onChange={(e) => crud.setFormValue(field.name, e.target.value)}
+                      required={field.required}
+                    />
+                  )}
+                </div>
+              ))}
 
-            <div className="form-actions">
-              {crud.editingId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={crud.resetForm}>
-                  Cancelar
+              <div className="form-actions">
+                {crud.editingId && (
+                  <button type="button" className="ghost-button cancel-btn" onClick={crud.resetForm}>
+                    Cancelar
+                  </button>
+                )}
+                <button type="submit" className="control-btn submit-btn">
+                  {crud.editingId ? 'Actualizar' : 'Guardar'}
                 </button>
-              )}
-              <button type="submit" className="control-btn submit-btn">
-                {crud.editingId ? 'Actualizar' : 'Guardar'}
-              </button>
-            </div>
-          </form>
+              </div>
+            </form>
+          )}
         </div>
 
         <div className="reasons-list-card">

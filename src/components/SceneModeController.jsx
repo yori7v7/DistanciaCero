@@ -51,11 +51,6 @@ function SceneModeController() {
   const firstRunRef = useRef(true)
   const linkRefs = useRef({})
   const settingsRef = useRef(null)
-  // Refs to avoid stale closures in MutationObserver
-  const activeSceneRef = useRef(activeScene)
-  const centroVisibleRef = useRef(centroVisible)
-  activeSceneRef.current = activeScene
-  centroVisibleRef.current = centroVisible
 
   const remoteEnabled = isRemoteContentEnabled()
   const isLoggedIn = remoteEnabled && isSupabaseAuthenticated()
@@ -80,27 +75,7 @@ function SceneModeController() {
   // Scene mode init
   useEffect(() => {
     document.body.classList.add('scene-mode-enabled')
-
-    // Watch for lazy-loaded sections appearing in DOM
-    const observer = new MutationObserver(() => {
-      const scene = activeSceneRef.current
-      const visible = centroVisibleRef.current
-      if (!scene) return
-      const activeIds = new Set(scene.sectionIds || [])
-      if (visible && centroScene) {
-        centroScene.sectionIds?.forEach((id) => activeIds.add(id))
-      }
-      getSectionElements().forEach((el) => {
-        const show = activeIds.has(el.id)
-        el.classList.toggle('scene-visible', show)
-        el.classList.toggle('scene-hidden', !show)
-        el.setAttribute('aria-hidden', show ? 'false' : 'true')
-      })
-    })
-    observer.observe(document.body, { childList: true, subtree: true })
-
     return () => {
-      observer.disconnect()
       document.body.classList.remove('scene-mode-enabled')
       getSectionElements().forEach((el) => {
         el.classList.remove('scene-hidden', 'scene-visible')

@@ -1,5 +1,6 @@
 [
   { "id": 1, "date": "2026-01-15", "title": "El día que nos conocimos", "description": "El universo conspiró para cruzar nuestros caminos.", "tag": "aniversario" },
   { "id": 2, "date": "2026-02-14", "title": "Primer San Valentín", "description": "Nuestro primer 14 de febrero. La distancia no impidió que fuera especial.", "tag": "especial" },
-  { "id": 3, "date": "2026-06-01", "title": "Nuestro primer viaje juntos", "description": "El día que los kilómetros se rindieron ante nosotros.", "tag": "viaje" }
+  { "id": 3, "date": "2026-06-01", "title": "Nuestro primer viaje juntos", "description": "El día que los kilómetros se rindieron ante nosotros.", "tag": "viaje" },
+  { "id": 4, "date": "2026-12-25", "title": "Primera Navidad", "description": "Las luces brillaron más fuerte porque estábamos juntos.", "tag": "festividad" }
 ]

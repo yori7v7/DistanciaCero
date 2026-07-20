@@ -1,66 +1,20 @@
 :root {
-  /* Glassmorphism + Space UI palette */
-  --bg-main: #060010;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --bg-card-hover: rgba(255, 255, 255, 0.07);
-  --bg-glass: rgba(12, 2, 20, 0.65);
-  --bg-glass-strong: rgba(18, 4, 28, 0.82);
-  --pink: #ff8ad4;
-  --pink-soft: #ffc4e8;
-  --pink-glow: rgba(255, 138, 212, 0.25);
-  --red: #ff2d55;
-  --red-dark: #b30030;
-  --white: #fff5fa;
-  --muted: #d4b8c8;
-  --border: rgba(255, 255, 255, 0.1);
-  --border-glow: rgba(255, 138, 212, 0.28);
-  /* Shadows — fewer, purposeful */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 40px var(--pink-glow);
-  --shadow-glow-soft: 0 0 20px rgba(255, 122, 200, 0.12);
-  /* Spacing scale — consistent 4px steps */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  /* Radii */
-  --radius-sm: 12px;
-  --radius-md: 20px;
-  --radius-lg: 28px;
-  --radius-xl: 36px;
-  --radius-full: 999px;
-  /* Z-index scale */
-  --z-base: 1;
-  --z-dropdown: 10;
-  --z-sticky: 50;
-  --z-modal-backdrop: 100;
-  --z-modal: 110;
-  --z-toast: 200;
-  --z-tooltip: 300;
-  /* Layout */
+  --bg-main: #050008;
+  --bg-card: rgba(18, 5, 22, 0.82);
+  --bg-card-soft: rgba(255, 255, 255, 0.06);
+  --pink: #ff7ac8;
+  --pink-soft: #ffb3dd;
+  --red: #ff1744;
+  --red-dark: #9b001d;
+  --white: #fff7fc;
+  --muted: #d8b8cd;
+  --border: rgba(255, 122, 200, 0.28);
+  --shadow-pink: 0 0 35px rgba(255, 122, 200, 0.25);
+  --shadow-red: 0 0 35px rgba(255, 23, 68, 0.22);
+  --radius-big: 30px;
+  --radius-medium: 22px;
   --max-width: 1120px;
-  /* Backward-compat aliases */
-  --bg-card-soft: rgba(255, 255, 255, 0.04);
-  --radius-big: var(--radius-lg);
-  --radius-medium: var(--radius-md);
-  --shadow-pink: var(--shadow-glow-soft);
-  --shadow-red: 0 0 35px rgba(255, 23, 68, 0.15);
-  /* Claymorphism 3D tokens */
-  --clay-bg: rgba(255, 255, 255, 0.04);
-  --clay-shadow-3d: 0 6px 0 rgba(160, 20, 60, 0.25), 0 10px 20px rgba(0, 0, 0, 0.35);
-  --clay-shadow-sm: 0 3px 0 rgba(160, 20, 50, 0.2), 0 6px 12px rgba(0, 0, 0, 0.3);
-  --clay-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  --clay-pressed: 0 2px 0 rgba(160, 20, 60, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
-  /* Typography — sans-serif body + serif display for contrast (Impeccable rule) */
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  font-family: var(--font-body);
-  font-feature-settings: 'cv11', 'ss01';
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 * {
@@ -71,9 +25,8 @@
 body {
   margin: 0;
   background:
-    radial-gradient(ellipse at 20% 0%, rgba(255, 138, 212, 0.15), transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(255, 45, 85, 0.12), transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(140, 80, 200, 0.08), transparent 60%),
+    radial-gradient(circle at top left, rgba(255, 122, 200, 0.16), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(255, 23, 68, 0.15), transparent 38%),
     var(--bg-main);
   color: var(--white);
   overflow-x: hidden;
@@ -236,17 +189,16 @@ input {
 
 .hero h1 {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 5.5rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  font-weight: 900;
+  font-size: clamp(3.2rem, 9vw, 7.4rem);
+  line-height: 0.95;
+  letter-spacing: -4px;
 }
 
 .hero h1 span {
   background: linear-gradient(135deg, var(--pink), #fff, var(--red));
   -webkit-background-clip: text;
   color: transparent;
+  text-shadow: 0 0 45px rgba(255, 122, 200, 0.22);
 }
 
 .hero-subtitle {
@@ -279,32 +231,21 @@ input {
   border: 0;
   cursor: pointer;
   border-radius: 999px;
-  padding: 14px 28px;
+  padding: 13px 22px;
   font-weight: 800;
-  font-size: 0.95rem;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: 0.25s ease;
 }
 
 .main-button {
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
   background: linear-gradient(135deg, var(--pink), var(--red));
   color: white;
-  border-radius: 20px;
-  box-shadow: var(--clay-shadow-3d), var(--clay-highlight);
-  position: relative;
-  top: 0;
+  box-shadow: 0 0 32px rgba(255, 23, 68, 0.35);
 }
 
 .main-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 0 rgba(160, 20, 60, 0.2), 0 14px 28px rgba(0, 0, 0, 0.4), var(--clay-highlight);
-}
-
-.main-button:active {
-  transform: translateY(3px);
-  box-shadow: var(--clay-pressed);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 45px rgba(255, 122, 200, 0.45);
 }
 
 .section-title {
@@ -323,11 +264,9 @@ input {
 
 .section-title h2 {
   margin: 10px 0;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -2px;
 }
 
 .section-title p {
@@ -342,26 +281,25 @@ input {
   max-width: 860px;
   margin: 0 auto;
   padding: clamp(24px, 5vw, 46px);
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(18, 4, 28, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 8px 0 rgba(80, 10, 40, 0.2), 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-big);
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(145deg, rgba(255, 122, 200, 0.12), rgba(255, 23, 68, 0.08)),
+    var(--bg-card);
+  box-shadow: var(--shadow-pink), inset 0 0 60px rgba(255, 255, 255, 0.03);
   position: relative;
   overflow: hidden;
 }
 
-/* Subtle top light reflection — clay + glass */
-.letter-card::after,
-.secret-card::after,
-.milanesa-card::after {
+.letter-card::before,
+.secret-card::before,
+.milanesa-card::before {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-  pointer-events: none;
+  inset: -2px;
+  background: linear-gradient(120deg, transparent, rgba(255, 122, 200, 0.2), transparent);
+  transform: translateX(-100%);
+  animation: shine 6s infinite;
 }
 
 .letter-seal,
