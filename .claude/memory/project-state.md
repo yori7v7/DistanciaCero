@@ -33,6 +33,7 @@ metadata:
 | `beb63e4` | refactor: remove dead rules from relationship-refactor.css |
 | `eea8edc` | refactor: integrate useCrudCollection hooks for 5 collections, replace reasons JSX |
 | `3ee9938` | chore: remove temp migration scripts |
+| `d47bccc` | refactor: migrate 4 collections to CrudEditorPanel (CentroUniverso: 5,092 → 3,947 lines) |
 
 ## Bugs corregidos
 
@@ -96,7 +97,7 @@ El proyecto fue sanitizado completamente. Todo el contenido personal fue removid
 - Activar VITE_REMOTE_CONTENT_ENABLED=true
 
 ### Mejoras futuras
-- CentroUniversoSection: Step 1 + 2 completados. 5 hooks registrados (reasons, promises, importantDates, futureDreams, playlist). Reasons JSX migrado a CrudEditorPanel. Paso 3: migrar JSX de las 4 colecciones restantes y eliminar ~68 handlers legacy (~1,500 líneas pendientes de eliminar)
+- CentroUniversoSection: Refactor completado. 5,092 → 3,947 líneas (-22%). 5 hooks registrados. 5/5 paneles migrados a CrudEditorPanel. JS bundle: 1,592 → 1,558 kB. Paso 3 (futuro): eliminar ~68 handlers legacy ya no usados (~1,500 líneas)
 - CSS: limpieza mayor completada (z-final-fixes.css eliminado, fix/polish podados, chaotic-reasons mergeado). Quedan ~150 !important en final-adjustments.css y relationship-refactor.css
 - 0 tests en el proyecto
 
