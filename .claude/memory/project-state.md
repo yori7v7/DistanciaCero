@@ -7,7 +7,7 @@ metadata:
 
 # Estado actual de DistanciaCero
 
-**Última actualización**: 2026-07-20 (limpieza post-análisis — 109 archivos eliminados)
+**Última actualización**: 2026-07-20 (limpieza + CSS cleanup + inicio refactor CentroUniverso)
 
 ## Commits de la sesión anterior (Julio 14)
 
@@ -27,7 +27,9 @@ metadata:
 | `91e53e5` | chore: remove counter-final.css (overridden by final-adjustments.css) |
 | `fd11fd5` | chore: remove 16 orphan components + 11 empty JSONs (1,114 lines) |
 | `80d042c` | chore: remove backups/ directory (73 files, 23,309 lines) |
-| *(próximo)* | docs: update Claude memory files after cleanup |
+| `1448d33` | docs: update Claude memory files after cleanup |
+| `51ee625` | refactor: CSS cleanup — remove dead fix/polish, merge chaotic-reasons |
+| `aa67ed7` | refactor: extract CrudStatButton, create useCrudCollection hook + CrudEditorPanel |
 
 ## Bugs corregidos
 
@@ -91,9 +93,8 @@ El proyecto fue sanitizado completamente. Todo el contenido personal fue removid
 - Activar VITE_REMOTE_CONTENT_ENABLED=true
 
 ### Mejoras futuras
-- CentroUniversoSection tiene 5,092 líneas (~68 handlers, 9 módulos CRUD) — candidato urgente a refactor
-- SceneMusicController necesita audio real en public/audio/
-- 277 `!important` en CSS (especialmente z-final-fixes.css con 106) — requiere refactor de estilos
+- CentroUniversoSection: Step 1 completado (CrudStatButton extraído, useCrudCollection hook + CrudEditorPanel creados). Paso 2: migrar colecciones una por una al hook genérico (~2,000 líneas a eliminar)
+- CSS: limpieza mayor completada (z-final-fixes.css eliminado, fix/polish podados, chaotic-reasons mergeado). Quedan ~150 !important en final-adjustments.css y relationship-refactor.css
 - 0 tests en el proyecto
 
 ## Para personalizar (cuando haya destinataria)
