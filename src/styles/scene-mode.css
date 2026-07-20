@@ -19,13 +19,6 @@ body.scene-mode-enabled section.section,
 body.scene-mode-enabled section.hero {
   display: none;
 }
-/* BlackHole gallery: override default hide during all states (gate + entering + entered) */
-body.scene-mode-enabled section.blackhole-section.blackhole-entering,
-body.scene-mode-enabled section.blackhole-section.blackhole-needs-gate,
-body.scene-mode-enabled section.blackhole-section.blackhole-entered {
-  display: block !important;
-}
-
 .scene-hidden {
   display: none !important;
 }
