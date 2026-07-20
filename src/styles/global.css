@@ -1,20 +1,58 @@
 :root {
-  --bg-main: #050008;
-  --bg-card: rgba(18, 5, 22, 0.82);
-  --bg-card-soft: rgba(255, 255, 255, 0.06);
+  /* Glassmorphism + Space UI palette */
+  --bg-main: #060010;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.07);
+  --bg-glass: rgba(12, 2, 20, 0.65);
+  --bg-glass-strong: rgba(18, 4, 28, 0.82);
   --pink: #ff7ac8;
   --pink-soft: #ffb3dd;
+  --pink-glow: rgba(255, 122, 200, 0.18);
   --red: #ff1744;
   --red-dark: #9b001d;
-  --white: #fff7fc;
-  --muted: #d8b8cd;
-  --border: rgba(255, 122, 200, 0.28);
-  --shadow-pink: 0 0 35px rgba(255, 122, 200, 0.25);
-  --shadow-red: 0 0 35px rgba(255, 23, 68, 0.22);
-  --radius-big: 30px;
-  --radius-medium: 22px;
+  --white: #faf5f9;
+  --muted: #c4a8b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(255, 122, 200, 0.2);
+  /* Shadows — fewer, purposeful */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 40px var(--pink-glow);
+  --shadow-glow-soft: 0 0 20px rgba(255, 122, 200, 0.12);
+  /* Spacing scale — consistent 4px steps */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  /* Radii */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --radius-full: 999px;
+  /* Z-index scale */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 50;
+  --z-modal-backdrop: 100;
+  --z-modal: 110;
+  --z-toast: 200;
+  --z-tooltip: 300;
+  /* Layout */
   --max-width: 1120px;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Backward-compat aliases */
+  --bg-card-soft: rgba(255, 255, 255, 0.04);
+  --radius-big: var(--radius-lg);
+  --radius-medium: var(--radius-md);
+  --shadow-pink: var(--shadow-glow-soft);
+  --shadow-red: 0 0 35px rgba(255, 23, 68, 0.15);
+  /* Typography */
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
 }
 
 * {
@@ -25,8 +63,9 @@
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(255, 122, 200, 0.16), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(255, 23, 68, 0.15), transparent 38%),
+    radial-gradient(ellipse at 20% 0%, rgba(255, 122, 200, 0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(255, 23, 68, 0.06), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(120, 80, 180, 0.04), transparent 70%),
     var(--bg-main);
   color: var(--white);
   overflow-x: hidden;
@@ -291,15 +330,16 @@ input {
   overflow: hidden;
 }
 
-.letter-card::before,
-.secret-card::before,
-.milanesa-card::before {
+/* Glassmorphism card: no AI shine sweep */
+.letter-card::after,
+.secret-card::after,
+.milanesa-card::after {
   content: "";
   position: absolute;
-  inset: -2px;
-  background: linear-gradient(120deg, transparent, rgba(255, 122, 200, 0.2), transparent);
-  transform: translateX(-100%);
-  animation: shine 6s infinite;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 40%, rgba(255,122,200,0.06));
+  pointer-events: none;
 }
 
 .letter-seal,
