@@ -1,5 +1,6 @@
 [
   { "id": 1, "title": "Siempre decirte la verdad", "text": "Prometo ser honesto siempre, incluso cuando sea difícil.", "tag": "eterna" },
   { "id": 2, "title": "Cuidarte en la distancia", "text": "Prometo encontrar formas de estar presente aunque estemos lejos.", "tag": "diaria" },
-  { "id": 3, "title": "Nunca dormir enojados", "text": "Prometo resolver nuestras diferencias antes de que termine el día.", "tag": "diaria" }
+  { "id": 3, "title": "Nunca dormir enojados", "text": "Prometo resolver nuestras diferencias antes de que termine el día.", "tag": "diaria" },
+  { "id": 99, "title": "Proximamente", "text": "Más promesas por escribir...", "tag": "futuro", "isPlaceholder": true }
 ]

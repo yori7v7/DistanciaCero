@@ -253,6 +253,11 @@
   animation: gateMessagePulse 1.1s ease-in-out both;
 }
 
+/* Fix: prevent section collapse during gate → entering transition */
+.blackhole-section {
+  min-height: 100vh;
+}
+
 .blackhole-transition {
   position: fixed;
   inset: 0;
