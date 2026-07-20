@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "id": "month-1",
+    "month": "Enero",
+    "title": "El comienzo de todo",
+    "preview": "Donde nuestra historia empezó a escribirse...",
+    "content": [
+      "Querida tú,",
+      "Este es el primer mes de nuestra historia juntos. Recuerdo cada mensaje, cada llamada, cada sonrisa que me robaste sin siquiera estar presente.",
+      "La distancia no nos define. Nos define lo que construimos a pesar de ella. Y este mes fue la prueba de que lo nuestro es real.",
+      "Te quiero.",
+      "Siempre tuyo."
+    ],
+    "locked": false
+  },
+  {
+    "id": "month-2",
+    "month": "Febrero",
+    "title": "Nuestro primer San Valentín",
+    "preview": "El amor no entiende de kilómetros...",
+    "content": [
+      "Mi amor,",
+      "Dicen que el primer San Valentín es especial. El nuestro lo fue, aunque una pantalla nos separara. Porque el amor no se mide en kilómetros, se mide en latidos.",
+      "Hicimos videollamada hasta que el sol salió. Pedimos la misma comida. Vimos la misma película. Y de alguna forma, fue perfecto.",
+      "Porque perfecto no es estar juntos. Perfecto es quererse como nosotros.",
+      "Feliz San Valentín."
+    ],
+    "locked": false
+  },
+  {
+    "id": "month-3",
+    "month": "Marzo",
+    "title": "Cuando supe que eras tú",
+    "preview": "No fue un momento, fueron todos...",
+    "content": [
+      "Para la persona que cambió mi mundo:",
+      "No hubo un momento exacto. Fue la acumulación de pequeños instantes. Tu risa en una nota de voz. La forma en que dices mi nombre. Cómo te emocionas con las cosas pequeñas.",
+      "Un día cualquiera, haciendo nada especial, me di cuenta: es ella. Es ella y siempre será ella.",
+      "Marzo me trajo certeza. Y la certeza más hermosa del mundo.",
+      "Eres tú."
+    ],
+    "locked": false
+  }
+]
