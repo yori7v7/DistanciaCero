@@ -25,10 +25,10 @@ src/
 ├── App.jsx                  # Componente raíz, renderiza ~22 secciones en orden
 ├── main.jsx                 # Entry point, AudioProvider + StrictMode
 ├── components/              # ~27 componentes React
-│   ├── centro-universo/     # Subcomponentes del CMS (refactor en progreso)
-│   │   ├── CrudStatButton.jsx
-│   │   ├── CrudEditorPanel.jsx
-│   │   └── useCrudCollection.js  # Hook genérico CRUD
+│   ├── centro-universo/     # Subcomponentes del CMS (refactor completado)
+│   │   ├── CrudStatButton.jsx    # Botón de filtro de stats
+│   │   ├── CrudEditorPanel.jsx   # Panel editor genérico (base + local)
+│   │   └── useCrudCollection.js  # Hook CRUD genérico (8 handlers/colección)
 │   ├── LoadingIntro.jsx     # Pantalla de carga
 │   ├── Hero.jsx             # Portada principal
 │   ├── UniverseSection.jsx  # Universo 3D interactivo (Three.js)
