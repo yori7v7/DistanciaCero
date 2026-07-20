@@ -51,6 +51,7 @@ function SceneModeController() {
   const firstRunRef = useRef(true)
   const linkRefs = useRef({})
   const settingsRef = useRef(null)
+  // Refs to avoid stale closures in MutationObserver
   const activeSceneRef = useRef(activeScene)
   const centroVisibleRef = useRef(centroVisible)
   activeSceneRef.current = activeScene
@@ -80,22 +81,23 @@ function SceneModeController() {
   useEffect(() => {
     document.body.classList.add('scene-mode-enabled')
 
-    // MutationObserver: watch for lazy-loaded sections and apply visibility
+    // Watch for lazy-loaded sections appearing in DOM
     const observer = new MutationObserver(() => {
       const scene = activeSceneRef.current
+      const visible = centroVisibleRef.current
       if (!scene) return
       const activeIds = new Set(scene.sectionIds || [])
-      if (centroVisibleRef.current && centroScene) {
+      if (visible && centroScene) {
         centroScene.sectionIds?.forEach((id) => activeIds.add(id))
       }
       getSectionElements().forEach((el) => {
-        const shouldShow = activeIds.has(el.id)
-        el.classList.toggle('scene-visible', shouldShow)
-        el.classList.toggle('scene-hidden', !shouldShow)
-        el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+        const show = activeIds.has(el.id)
+        el.classList.toggle('scene-visible', show)
+        el.classList.toggle('scene-hidden', !show)
+        el.setAttribute('aria-hidden', show ? 'false' : 'true')
       })
     })
-    observer.observe(document.getElementById('root') || document.body, { childList: true, subtree: true })
+    observer.observe(document.body, { childList: true, subtree: true })
 
     return () => {
       observer.disconnect()
@@ -118,9 +120,10 @@ function SceneModeController() {
     return () => window.removeEventListener('hashchange', handleHashChange)
   }, [navScenes])
 
-  // Scene visibility logic — reusable for MutationObserver
-  const applySceneVisibility = () => {
+  // Scene change effect
+  useEffect(() => {
     if (!activeScene) return
+    // Include centro sections if visible
     const activeIds = new Set(activeScene.sectionIds || [])
     if (centroVisible && centroScene) {
       centroScene.sectionIds?.forEach((id) => activeIds.add(id))
@@ -143,18 +146,6 @@ function SceneModeController() {
       detail: { sceneId: activeScene.musicSectionId || activeScene.id, appSceneId: activeScene.id }
     }))
 
-    return allSections
-  }
-
-  // Scene change effect
-  useEffect(() => {
-    const allSections = applySceneVisibility()
-    if (!allSections) return
-
-    const activeIds = new Set(activeScene.sectionIds || [])
-    if (centroVisible && centroScene) {
-      centroScene.sectionIds?.forEach((id) => activeIds.add(id))
-    }
     const firstVisible = allSections.find((el) => activeIds.has(el.id))
     setTimeout(() => {
       centerActiveLink(!firstRunRef.current)
