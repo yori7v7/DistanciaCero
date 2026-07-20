@@ -49,27 +49,6 @@ function CentroUniversoSection() {
   const [backupStatus, setBackupStatus] = useState(null)
   const [crudNotice, setCrudNotice] = useState(null)
   const [, setLetterProgressVersion] = useState(0)
-  const [localReasons, setLocalReasons] = useState([])
-  const [reasonTitle, setReasonTitle] = useState('')
-  const [reasonText, setReasonText] = useState('')
-  const [editingReasonId, setEditingReasonId] = useState(null)
-  const [reasonOverrides, setReasonOverrides] = useState({})
-  const [hiddenReasonIds, setHiddenReasonIds] = useState([])
-  const [baseReasonQuery, setBaseReasonQuery] = useState('')
-  const [baseReasonTitle, setBaseReasonTitle] = useState('')
-  const [baseReasonText, setBaseReasonText] = useState('')
-  const [editingBaseReasonId, setEditingBaseReasonId] = useState(null)
-  const [localPromises, setLocalPromises] = useState([])
-  const [promiseOverrides, setPromiseOverrides] = useState({})
-  const [hiddenPromiseIds, setHiddenPromiseIds] = useState([])
-  const [promiseTitle, setPromiseTitle] = useState('')
-  const [promiseText, setPromiseText] = useState('')
-  const [promiseTag, setPromiseTag] = useState('')
-  const [editingPromiseId, setEditingPromiseId] = useState(null)
-  const [basePromiseTitle, setBasePromiseTitle] = useState('')
-  const [basePromiseText, setBasePromiseText] = useState('')
-  const [basePromiseTag, setBasePromiseTag] = useState('')
-  const [editingBasePromiseId, setEditingBasePromiseId] = useState(null)
   const [monthlyOverrides, setMonthlyOverrides] = useState({})
   const [hiddenMonthlyIds, setHiddenMonthlyIds] = useState([])
   const [baseMonthlyMonth, setBaseMonthlyMonth] = useState('')
@@ -86,31 +65,6 @@ function CentroUniversoSection() {
   const [baseOpenWhenContent, setBaseOpenWhenContent] = useState('')
   const [baseOpenWhenLocked, setBaseOpenWhenLocked] = useState(false)
   const [editingBaseOpenWhenId, setEditingBaseOpenWhenId] = useState(null)
-  const [localImportantDates, setLocalImportantDates] = useState([])
-  const [importantDateOverrides, setImportantDateOverrides] = useState({})
-  const [hiddenImportantDateIds, setHiddenImportantDateIds] = useState([])
-  const [importantDateDate, setImportantDateDate] = useState('')
-  const [importantDateLegacyDateHint, setImportantDateLegacyDateHint] = useState('')
-  const [importantDateTitle, setImportantDateTitle] = useState('')
-  const [importantDateDescription, setImportantDateDescription] = useState('')
-  const [importantDateTag, setImportantDateTag] = useState('')
-  const [editingImportantDateId, setEditingImportantDateId] = useState(null)
-  const [baseImportantDateDate, setBaseImportantDateDate] = useState('')
-  const [baseImportantDateTitle, setBaseImportantDateTitle] = useState('')
-  const [baseImportantDateDescription, setBaseImportantDateDescription] = useState('')
-  const [baseImportantDateTag, setBaseImportantDateTag] = useState('')
-  const [editingBaseImportantDateId, setEditingBaseImportantDateId] = useState(null)
-  const [localFutureDreams, setLocalFutureDreams] = useState([])
-  const [futureDreamOverrides, setFutureDreamOverrides] = useState({})
-  const [hiddenFutureDreamIds, setHiddenFutureDreamIds] = useState([])
-  const [futureDreamCategory, setFutureDreamCategory] = useState('')
-  const [futureDreamTitle, setFutureDreamTitle] = useState('')
-  const [futureDreamDescription, setFutureDreamDescription] = useState('')
-  const [editingFutureDreamId, setEditingFutureDreamId] = useState(null)
-  const [baseFutureDreamCategory, setBaseFutureDreamCategory] = useState('')
-  const [baseFutureDreamTitle, setBaseFutureDreamTitle] = useState('')
-  const [baseFutureDreamDescription, setBaseFutureDreamDescription] = useState('')
-  const [editingBaseFutureDreamId, setEditingBaseFutureDreamId] = useState(null)
   const [localTimelinePages, setLocalTimelinePages] = useState([])
   const [timelineOverrides, setTimelineOverrides] = useState({})
   const [hiddenTimelineIds, setHiddenTimelineIds] = useState([])
@@ -153,26 +107,6 @@ function CentroUniversoSection() {
   const [baseBlackHoleVideoUrl, setBaseBlackHoleVideoUrl] = useState('')
   const [baseBlackHoleImageStatus, setBaseBlackHoleImageStatus] = useState('')
   const [editingBaseBlackHoleId, setEditingBaseBlackHoleId] = useState(null)
-  const [localPlaylist, setLocalPlaylist] = useState([])
-  const [playlistOverrides, setPlaylistOverrides] = useState({})
-  const [hiddenPlaylistIds, setHiddenPlaylistIds] = useState([])
-  const [playlistTitle, setPlaylistTitle] = useState('')
-  const [playlistArtist, setPlaylistArtist] = useState('')
-  const [playlistDescription, setPlaylistDescription] = useState('')
-  const [playlistSourceType, setPlaylistSourceType] = useState('local')
-  const [playlistSrc, setPlaylistSrc] = useState('')
-  const [playlistLink, setPlaylistLink] = useState('')
-  const [playlistTag, setPlaylistTag] = useState('')
-  const [editingPlaylistId, setEditingPlaylistId] = useState(null)
-  const [basePlaylistTitle, setBasePlaylistTitle] = useState('')
-  const [basePlaylistArtist, setBasePlaylistArtist] = useState('')
-  const [basePlaylistDescription, setBasePlaylistDescription] = useState('')
-  const [basePlaylistSourceType, setBasePlaylistSourceType] = useState('local')
-  const [basePlaylistSrc, setBasePlaylistSrc] = useState('')
-  const [basePlaylistLink, setBasePlaylistLink] = useState('')
-  const [basePlaylistTag, setBasePlaylistTag] = useState('')
-  const [editingBasePlaylistId, setEditingBasePlaylistId] = useState(null)
-
   // Form states
   const [title, setTitle] = useState('')
   const [preview, setPreview] = useState('')
@@ -870,31 +804,13 @@ function CentroUniversoSection() {
     })
   }
 
-  const resetReasonForm = () => {
-    setReasonTitle('')
-    setReasonText('')
-    setEditingReasonId(null)
-  }
 
-  const resetBaseReasonForm = () => {
-    setBaseReasonTitle('')
-    setBaseReasonText('')
-    setEditingBaseReasonId(null)
-  }
 
-  const resetPromiseForm = () => {
-    setPromiseTitle('')
-    setPromiseText('')
-    setPromiseTag('')
-    setEditingPromiseId(null)
-  }
 
-  const resetBasePromiseForm = () => {
-    setBasePromiseTitle('')
-    setBasePromiseText('')
-    setBasePromiseTag('')
-    setEditingBasePromiseId(null)
-  }
+
+
+
+
 
   const resetBaseMonthlyForm = () => {
     setBaseMonthlyMonth('')
@@ -914,36 +830,13 @@ function CentroUniversoSection() {
     setEditingBaseOpenWhenId(null)
   }
 
-  const resetImportantDateForm = () => {
-    setImportantDateDate('')
-    setImportantDateLegacyDateHint('')
-    setImportantDateTitle('')
-    setImportantDateDescription('')
-    setImportantDateTag('')
-    setEditingImportantDateId(null)
-  }
 
-  const resetBaseImportantDateForm = () => {
-    setBaseImportantDateDate('')
-    setBaseImportantDateTitle('')
-    setBaseImportantDateDescription('')
-    setBaseImportantDateTag('')
-    setEditingBaseImportantDateId(null)
-  }
 
-  const resetFutureDreamForm = () => {
-    setFutureDreamCategory('')
-    setFutureDreamTitle('')
-    setFutureDreamDescription('')
-    setEditingFutureDreamId(null)
-  }
 
-  const resetBaseFutureDreamForm = () => {
-    setBaseFutureDreamCategory('')
-    setBaseFutureDreamTitle('')
-    setBaseFutureDreamDescription('')
-    setEditingBaseFutureDreamId(null)
-  }
+
+
+
+
 
   const detailsToText = (details) => {
     return Array.isArray(details) ? details.join('\n') : ''
@@ -1101,27 +994,9 @@ function CentroUniversoSection() {
     setEditingBaseBlackHoleId(null)
   }
 
-  const resetPlaylistForm = () => {
-    setPlaylistTitle('')
-    setPlaylistArtist('')
-    setPlaylistDescription('')
-    setPlaylistSourceType('local')
-    setPlaylistSrc('')
-    setPlaylistLink('')
-    setPlaylistTag('')
-    setEditingPlaylistId(null)
-  }
 
-  const resetBasePlaylistForm = () => {
-    setBasePlaylistTitle('')
-    setBasePlaylistArtist('')
-    setBasePlaylistDescription('')
-    setBasePlaylistSourceType('local')
-    setBasePlaylistSrc('')
-    setBasePlaylistLink('')
-    setBasePlaylistTag('')
-    setEditingBasePlaylistId(null)
-  }
+
+
 
   const handleBlackHoleImageFile = (event, target = 'local') => {
     const file = event.target.files?.[0]
@@ -1173,253 +1048,37 @@ function CentroUniversoSection() {
     if (fileInput) fileInput.value = ''
   }
 
-  const handleReasonSubmit = (event) => {
-    event.preventDefault()
 
-    if (!reasonTitle.trim() || !reasonText.trim()) {
-      alert('Por favor, completa el titulo y el texto de la razon.')
-      return
-    }
 
-    const now = new Date().toISOString()
-    let updatedReasons
 
-    if (editingReasonId) {
-      updatedReasons = updateLocalItem('reasons', editingReasonId, {
-        title: reasonTitle.trim(),
-        text: reasonText.trim(),
-        updatedAt: now
-      })
-    } else {
-      updatedReasons = addLocalItem('reasons', {
-        id: `local-reason-${Date.now()}`,
-        title: reasonTitle.trim(),
-        text: reasonText.trim(),
-        createdAt: now
-      })
-    }
 
-    setLocalReasons(updatedReasons)
-    showCrudNotice(editingReasonId ? 'Se editó una razón correctamente.' : 'Se agregó una razón correctamente.')
-    resetReasonForm()
-    dispatchContentUpdate('reasons')
-  }
 
-  const handleReasonEdit = (reason) => {
-    if (!reason.isLocal) return
-    setActiveCrudAction('create')
-    setEditingReasonId(reason.id)
-    setReasonTitle(reason.title || '')
-    setReasonText(reason.text || '')
 
-    const formElement = document.getElementById('local-reasons-editor')
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
 
-  const handleReasonDelete = (reason) => {
-    if (!reason.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta razon tuya?')) {
-      const updatedReasons = deleteLocalItem('reasons', reason.id)
-      setLocalReasons(updatedReasons)
 
-      if (editingReasonId === reason.id) {
-        resetReasonForm()
-      }
 
-      dispatchContentUpdate('reasons')
-      showCrudNotice('Se eliminó una razón correctamente.')
-    }
-  }
 
-  const handleBaseReasonEdit = (reason) => {
-    setEditingBaseReasonId(reason.id)
-    setBaseReasonTitle(reason.title || '')
-    setBaseReasonText(reason.text || '')
 
-    const formElement = document.getElementById('base-reasons-editor')
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
 
-  const handleBaseReasonSubmit = (event) => {
-    event.preventDefault()
 
-    if (!editingBaseReasonId || !baseReasonTitle.trim() || !baseReasonText.trim()) {
-      alert('Selecciona una razon original y completa titulo y texto.')
-      return
-    }
 
-    const updatedOverrides = setLocalOverride('reasons', editingBaseReasonId, {
-      title: baseReasonTitle.trim(),
-      text: baseReasonText.trim(),
-      updatedAt: new Date().toISOString()
-    })
 
-    setReasonOverrides(updatedOverrides)
-    resetBaseReasonForm()
-    dispatchContentUpdate('reasons')
-    showCrudNotice('Se editó una razón correctamente.')
-  }
 
-  const handleBaseReasonRestore = (reasonId) => {
-    const updatedOverrides = deleteLocalOverride('reasons', reasonId)
-    setReasonOverrides(updatedOverrides)
 
-    if (String(editingBaseReasonId) === String(reasonId)) {
-      resetBaseReasonForm()
-    }
 
-    dispatchContentUpdate('reasons')
-    showCrudNotice('Se restauró una razón correctamente.')
-  }
 
-  const handleBaseReasonHide = (reason) => {
-    if (
-      window.confirm(
-        '¿Seguro que quieres ocultar esta razon original? No se modificara el JSON y podrás restaurarla después.'
-      )
-    ) {
-      const updatedHiddenIds = hideDefaultItem('reasons', reason.id)
-      setHiddenReasonIds(updatedHiddenIds)
 
-      if (String(editingBaseReasonId) === String(reason.id)) {
-        resetBaseReasonForm()
-      }
 
-      dispatchContentUpdate('reasons')
-      showCrudNotice('Se ocultó una razón correctamente.')
-    }
-  }
 
-  const handleBaseReasonUnhide = (reasonId) => {
-    const updatedHiddenIds = restoreHiddenItem('reasons', reasonId)
-    setHiddenReasonIds(updatedHiddenIds)
-    dispatchContentUpdate('reasons')
-    showCrudNotice('Se restauró una razón correctamente.')
-  }
 
-  const handlePromiseSubmit = (event) => {
-    event.preventDefault()
 
-    if (!promiseTitle.trim() || !promiseText.trim()) {
-      alert('Por favor, completa titulo y texto de la promesa.')
-      return
-    }
 
-    const patch = {
-      title: promiseTitle.trim(),
-      text: promiseText.trim(),
-      description: promiseText.trim(),
-      tag: promiseTag.trim() || 'Promesa',
-      footer: promiseTag.trim() || 'Promesa',
-      updatedAt: new Date().toISOString()
-    }
 
-    const updatedPromises = editingPromiseId
-      ? updateLocalItem('promises', editingPromiseId, patch)
-      : addLocalItem('promises', {
-          id: `local-promise-${Date.now()}`,
-          ...patch,
-          createdAt: new Date().toISOString()
-        })
 
-    setLocalPromises(updatedPromises)
-    showCrudNotice(editingPromiseId ? 'Se editó una promesa correctamente.' : 'Se agregó una promesa correctamente.')
-    resetPromiseForm()
-    dispatchContentUpdate('promises')
-  }
 
-  const handlePromiseEdit = (promise) => {
-    if (!promise.isLocal) return
-    setActiveCrudAction('create')
-    setEditingPromiseId(promise.id)
-    setPromiseTitle(promise.title || '')
-    setPromiseText(promise.text || promise.description || '')
-    setPromiseTag(promise.tag || promise.footer || '')
-  }
 
-  const handlePromiseDelete = (promise) => {
-    if (!promise.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta promesa tuya?')) {
-      const updatedPromises = deleteLocalItem('promises', promise.id)
-      setLocalPromises(updatedPromises)
-
-      if (editingPromiseId === promise.id) {
-        resetPromiseForm()
-      }
-
-      dispatchContentUpdate('promises')
-      showCrudNotice('Se eliminó una promesa correctamente.')
-    }
-  }
-
-  const handleBasePromiseEdit = (promise) => {
-    setEditingBasePromiseId(promise.id)
-    setBasePromiseTitle(promise.title || '')
-    setBasePromiseText(promise.text || promise.description || '')
-    setBasePromiseTag(promise.tag || promise.footer || '')
-  }
-
-  const handleBasePromiseSubmit = (event) => {
-    event.preventDefault()
-
-    if (!editingBasePromiseId || !basePromiseTitle.trim() || !basePromiseText.trim()) {
-      alert('Selecciona una promesa base y completa titulo y texto.')
-      return
-    }
-
-    const updatedOverrides = setLocalOverride('promises', editingBasePromiseId, {
-      title: basePromiseTitle.trim(),
-      text: basePromiseText.trim(),
-      description: basePromiseText.trim(),
-      tag: basePromiseTag.trim() || 'Promesa',
-      footer: basePromiseTag.trim() || 'Promesa',
-      updatedAt: new Date().toISOString()
-    })
-
-    setPromiseOverrides(updatedOverrides)
-    resetBasePromiseForm()
-    dispatchContentUpdate('promises')
-    showCrudNotice('Se editó una promesa correctamente.')
-  }
-
-  const handleBasePromiseRestore = (promiseId) => {
-    const updatedOverrides = deleteLocalOverride('promises', promiseId)
-    setPromiseOverrides(updatedOverrides)
-
-    if (String(editingBasePromiseId) === String(promiseId)) {
-      resetBasePromiseForm()
-    }
-
-    dispatchContentUpdate('promises')
-    showCrudNotice('Se restauró una promesa correctamente.')
-  }
-
-  const handleBasePromiseHide = (promise) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta promesa base? Podrás restaurarla después.')) {
-      const updatedHiddenIds = hideDefaultItem('promises', promise.id)
-      setHiddenPromiseIds(updatedHiddenIds)
-
-      if (String(editingBasePromiseId) === String(promise.id)) {
-        resetBasePromiseForm()
-      }
-
-      dispatchContentUpdate('promises')
-      showCrudNotice('Se ocultó una promesa correctamente.')
-    }
-  }
-
-  const handleBasePromiseUnhide = (promiseId) => {
-    const updatedHiddenIds = restoreHiddenItem('promises', promiseId)
-    setHiddenPromiseIds(updatedHiddenIds)
-    dispatchContentUpdate('promises')
-    showCrudNotice('Se restauró una promesa correctamente.')
-  }
 
   const handleBaseMonthlyEdit = (letter) => {
     setEditingBaseMonthlyId(letter.id)
@@ -1571,242 +1230,37 @@ function CentroUniversoSection() {
     showCrudNotice('Se restauró una carta Abrir cuando correctamente.')
   }
 
-  const handleImportantDateSubmit = (event) => {
-    event.preventDefault()
 
-    const stableDate = normalizeImportantDateForStorage(importantDateDate)
-    if (!stableDate || !importantDateTitle.trim() || !importantDateDescription.trim()) {
-      alert('Por favor, completa fecha, titulo y descripcion.')
-      return
-    }
 
-    const patch = {
-      date: stableDate,
-      title: importantDateTitle.trim(),
-      description: importantDateDescription.trim(),
-      tag: importantDateTag.trim() || 'Fecha importante',
-      updatedAt: new Date().toISOString()
-    }
 
-    const updatedDates = editingImportantDateId
-      ? updateLocalItem('importantDates', editingImportantDateId, patch)
-      : addLocalItem('importantDates', {
-          id: `local-date-${Date.now()}`,
-          ...patch,
-          createdAt: new Date().toISOString()
-        })
 
-    setLocalImportantDates(updatedDates)
-    showCrudNotice(editingImportantDateId ? 'Se editó una fecha importante correctamente.' : 'Se agregó una fecha importante correctamente.')
-    resetImportantDateForm()
-    dispatchContentUpdate('importantDates')
-  }
 
-  const handleImportantDateEdit = (dateItem) => {
-    if (!dateItem.isLocal) return
-    setActiveCrudAction('create')
-    setEditingImportantDateId(dateItem.id)
-    const stableDate = parseImportantDateForInput(dateItem.date)
-    setImportantDateDate(stableDate)
-    setImportantDateLegacyDateHint(stableDate ? '' : String(dateItem.date || '').trim())
-    setImportantDateTitle(dateItem.title || '')
-    setImportantDateDescription(dateItem.description || '')
-    setImportantDateTag(dateItem.tag || '')
-  }
 
-  const handleImportantDateDelete = (dateItem) => {
-    if (!dateItem.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta fecha tuya?')) {
-      const updatedDates = deleteLocalItem('importantDates', dateItem.id)
-      setLocalImportantDates(updatedDates)
 
-      if (editingImportantDateId === dateItem.id) {
-        resetImportantDateForm()
-      }
 
-      dispatchContentUpdate('importantDates')
-      showCrudNotice('Se eliminó una fecha importante correctamente.')
-    }
-  }
 
-  const handleBaseImportantDateEdit = (dateItem) => {
-    setEditingBaseImportantDateId(dateItem.id)
-    setBaseImportantDateDate(dateItem.date || '')
-    setBaseImportantDateTitle(dateItem.title || '')
-    setBaseImportantDateDescription(dateItem.description || '')
-    setBaseImportantDateTag(dateItem.tag || '')
-  }
 
-  const handleBaseImportantDateSubmit = (event) => {
-    event.preventDefault()
 
-    if (!editingBaseImportantDateId || !baseImportantDateDate.trim() || !baseImportantDateTitle.trim() || !baseImportantDateDescription.trim()) {
-      alert('Selecciona una fecha base y completa fecha, titulo y descripcion.')
-      return
-    }
 
-    const updatedOverrides = setLocalOverride('importantDates', editingBaseImportantDateId, {
-      date: baseImportantDateDate.trim(),
-      title: baseImportantDateTitle.trim(),
-      description: baseImportantDateDescription.trim(),
-      tag: baseImportantDateTag.trim() || 'Fecha importante',
-      updatedAt: new Date().toISOString()
-    })
 
-    setImportantDateOverrides(updatedOverrides)
-    resetBaseImportantDateForm()
-    dispatchContentUpdate('importantDates')
-    showCrudNotice('Se editó una fecha importante correctamente.')
-  }
 
-  const handleBaseImportantDateRestore = (dateId) => {
-    const updatedOverrides = deleteLocalOverride('importantDates', dateId)
-    setImportantDateOverrides(updatedOverrides)
 
-    if (String(editingBaseImportantDateId) === String(dateId)) {
-      resetBaseImportantDateForm()
-    }
 
-    dispatchContentUpdate('importantDates')
-    showCrudNotice('Se restauró una fecha importante correctamente.')
-  }
 
-  const handleBaseImportantDateHide = (dateItem) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta fecha base? Podrás restaurarla después.')) {
-      const updatedHiddenIds = hideDefaultItem('importantDates', dateItem.id)
-      setHiddenImportantDateIds(updatedHiddenIds)
 
-      if (String(editingBaseImportantDateId) === String(dateItem.id)) {
-        resetBaseImportantDateForm()
-      }
 
-      dispatchContentUpdate('importantDates')
-      showCrudNotice('Se ocultó una fecha importante correctamente.')
-    }
-  }
 
-  const handleBaseImportantDateUnhide = (dateId) => {
-    const updatedHiddenIds = restoreHiddenItem('importantDates', dateId)
-    setHiddenImportantDateIds(updatedHiddenIds)
-    dispatchContentUpdate('importantDates')
-    showCrudNotice('Se restauró una fecha importante correctamente.')
-  }
 
-  const handleFutureDreamSubmit = (event) => {
-    event.preventDefault()
 
-    if (!futureDreamCategory.trim() || !futureDreamTitle.trim() || !futureDreamDescription.trim()) {
-      alert('Por favor, completa categoria, titulo y descripcion.')
-      return
-    }
 
-    const patch = {
-      category: futureDreamCategory.trim(),
-      title: futureDreamTitle.trim(),
-      description: futureDreamDescription.trim(),
-      updatedAt: new Date().toISOString()
-    }
 
-    const updatedDreams = editingFutureDreamId
-      ? updateLocalItem('futureDreams', editingFutureDreamId, patch)
-      : addLocalItem('futureDreams', {
-          id: `local-dream-${Date.now()}`,
-          ...patch,
-          createdAt: new Date().toISOString()
-        })
 
-    setLocalFutureDreams(updatedDreams)
-    showCrudNotice(editingFutureDreamId ? 'Se editó un plan correctamente.' : 'Se agregó un plan correctamente.')
-    resetFutureDreamForm()
-    dispatchContentUpdate('futureDreams')
-  }
 
-  const handleFutureDreamEdit = (dream) => {
-    if (!dream.isLocal) return
-    setActiveCrudAction('create')
-    setEditingFutureDreamId(dream.id)
-    setFutureDreamCategory(dream.category || dream.tag || '')
-    setFutureDreamTitle(dream.title || '')
-    setFutureDreamDescription(dream.description || dream.text || '')
-  }
 
-  const handleFutureDreamDelete = (dream) => {
-    if (!dream.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar este plan tuyo?')) {
-      const updatedDreams = deleteLocalItem('futureDreams', dream.id)
-      setLocalFutureDreams(updatedDreams)
 
-      if (editingFutureDreamId === dream.id) {
-        resetFutureDreamForm()
-      }
 
-      dispatchContentUpdate('futureDreams')
-      showCrudNotice('Se eliminó un plan correctamente.')
-    }
-  }
-
-  const handleBaseFutureDreamEdit = (dream) => {
-    setEditingBaseFutureDreamId(dream.id)
-    setBaseFutureDreamCategory(dream.category || dream.tag || '')
-    setBaseFutureDreamTitle(dream.title || '')
-    setBaseFutureDreamDescription(dream.description || dream.text || '')
-  }
-
-  const handleBaseFutureDreamSubmit = (event) => {
-    event.preventDefault()
-
-    if (!editingBaseFutureDreamId || !baseFutureDreamCategory.trim() || !baseFutureDreamTitle.trim() || !baseFutureDreamDescription.trim()) {
-      alert('Selecciona un plan base y completa categoria, titulo y descripcion.')
-      return
-    }
-
-    const updatedOverrides = setLocalOverride('futureDreams', editingBaseFutureDreamId, {
-      category: baseFutureDreamCategory.trim(),
-      title: baseFutureDreamTitle.trim(),
-      description: baseFutureDreamDescription.trim(),
-      updatedAt: new Date().toISOString()
-    })
-
-    setFutureDreamOverrides(updatedOverrides)
-    resetBaseFutureDreamForm()
-    dispatchContentUpdate('futureDreams')
-    showCrudNotice('Se editó un plan correctamente.')
-  }
-
-  const handleBaseFutureDreamRestore = (dreamId) => {
-    const updatedOverrides = deleteLocalOverride('futureDreams', dreamId)
-    setFutureDreamOverrides(updatedOverrides)
-
-    if (String(editingBaseFutureDreamId) === String(dreamId)) {
-      resetBaseFutureDreamForm()
-    }
-
-    dispatchContentUpdate('futureDreams')
-    showCrudNotice('Se restauró un plan correctamente.')
-  }
-
-  const handleBaseFutureDreamHide = (dream) => {
-    if (window.confirm('¿Seguro que quieres ocultar este plan base? Podrás restaurarlo después.')) {
-      const updatedHiddenIds = hideDefaultItem('futureDreams', dream.id)
-      setHiddenFutureDreamIds(updatedHiddenIds)
-
-      if (String(editingBaseFutureDreamId) === String(dream.id)) {
-        resetBaseFutureDreamForm()
-      }
-
-      dispatchContentUpdate('futureDreams')
-      showCrudNotice('Se ocultó un plan correctamente.')
-    }
-  }
-
-  const handleBaseFutureDreamUnhide = (dreamId) => {
-    const updatedHiddenIds = restoreHiddenItem('futureDreams', dreamId)
-    setHiddenFutureDreamIds(updatedHiddenIds)
-    dispatchContentUpdate('futureDreams')
-    showCrudNotice('Se restauró un plan correctamente.')
-  }
 
   const buildTimelinePatch = ({
     chapter,
@@ -2138,146 +1592,21 @@ function CentroUniversoSection() {
     return false
   }
 
-  const handlePlaylistSubmit = (event) => {
-    event.preventDefault()
 
-    if (!isPlaylistFormValid({
-      title: playlistTitle,
-      description: playlistDescription,
-      sourceType: playlistSourceType,
-      src: playlistSrc,
-      link: playlistLink
-    })) {
-      alert('Completa titulo, descripcion y la ruta/enlace segun el tipo de canción.')
-      return
-    }
 
-    const patch = buildPlaylistPatch({
-      title: playlistTitle,
-      artist: playlistArtist,
-      description: playlistDescription,
-      sourceType: playlistSourceType,
-      src: playlistSrc,
-      link: playlistLink,
-      tag: playlistTag
-    })
 
-    const updatedItems = editingPlaylistId
-      ? updateLocalItem('playlist', editingPlaylistId, patch)
-      : addLocalItem('playlist', {
-          id: `local-playlist-${Date.now()}`,
-          ...patch,
-          createdAt: new Date().toISOString()
-        })
 
-    setLocalPlaylist(updatedItems)
-    resetPlaylistForm()
-    dispatchContentUpdate('playlist')
-    showCrudNotice(editingPlaylistId ? 'Se editó una canción correctamente.' : 'Se agregó una canción correctamente.')
-  }
 
-  const handlePlaylistEdit = (item) => {
-    if (!item.isLocal) return
-    setActiveCrudAction('create')
-    setEditingPlaylistId(item.id)
-    setPlaylistTitle(item.title || '')
-    setPlaylistArtist(item.artist || '')
-    setPlaylistDescription(item.description || '')
-    setPlaylistSourceType(item.sourceType === 'external' ? 'external' : 'local')
-    setPlaylistSrc(item.src || '')
-    setPlaylistLink(item.link || '')
-    setPlaylistTag(item.tag || '')
-  }
 
-  const handlePlaylistDelete = (item) => {
-    if (!item.isLocal) return
 
-    if (window.confirm('¿Seguro que quieres eliminar esta canción local?')) {
-      const updatedItems = deleteLocalItem('playlist', item.id)
-      setLocalPlaylist(updatedItems)
 
-      if (editingPlaylistId === item.id) {
-        resetPlaylistForm()
-      }
 
-      dispatchContentUpdate('playlist')
-      showCrudNotice('Se eliminó una canción correctamente.')
-    }
-  }
 
-  const handleBasePlaylistEdit = (item) => {
-    setEditingBasePlaylistId(item.id)
-    setBasePlaylistTitle(item.title || '')
-    setBasePlaylistArtist(item.artist || '')
-    setBasePlaylistDescription(item.description || '')
-    setBasePlaylistSourceType(item.sourceType === 'external' ? 'external' : 'local')
-    setBasePlaylistSrc(item.src || '')
-    setBasePlaylistLink(item.link || '')
-    setBasePlaylistTag(item.tag || '')
-  }
 
-  const handleBasePlaylistSubmit = (event) => {
-    event.preventDefault()
 
-    if (!editingBasePlaylistId || !isPlaylistFormValid({
-      title: basePlaylistTitle,
-      description: basePlaylistDescription,
-      sourceType: basePlaylistSourceType,
-      src: basePlaylistSrc,
-      link: basePlaylistLink
-    })) {
-      alert('Selecciona una canción base y completa titulo, descripcion y ruta/enlace segun el tipo.')
-      return
-    }
 
-    const updatedOverrides = setLocalOverride('playlist', editingBasePlaylistId, buildPlaylistPatch({
-      title: basePlaylistTitle,
-      artist: basePlaylistArtist,
-      description: basePlaylistDescription,
-      sourceType: basePlaylistSourceType,
-      src: basePlaylistSrc,
-      link: basePlaylistLink,
-      tag: basePlaylistTag
-    }))
 
-    setPlaylistOverrides(updatedOverrides)
-    resetBasePlaylistForm()
-    dispatchContentUpdate('playlist')
-    showCrudNotice('Se editó una canción correctamente.')
-  }
 
-  const handleBasePlaylistRestore = (itemId) => {
-    const updatedOverrides = deleteLocalOverride('playlist', itemId)
-    setPlaylistOverrides(updatedOverrides)
-
-    if (String(editingBasePlaylistId) === String(itemId)) {
-      resetBasePlaylistForm()
-    }
-
-    dispatchContentUpdate('playlist')
-    showCrudNotice('Se restauró una canción correctamente.')
-  }
-
-  const handleBasePlaylistHide = (item) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta canción base? Podrás restaurarla después.')) {
-      const updatedHiddenIds = hideDefaultItem('playlist', item.id)
-      setHiddenPlaylistIds(updatedHiddenIds)
-
-      if (String(editingBasePlaylistId) === String(item.id)) {
-        resetBasePlaylistForm()
-      }
-
-      dispatchContentUpdate('playlist')
-      showCrudNotice('Se ocultó una canción correctamente.')
-    }
-  }
-
-  const handleBasePlaylistUnhide = (itemId) => {
-    const updatedHiddenIds = restoreHiddenItem('playlist', itemId)
-    setHiddenPlaylistIds(updatedHiddenIds)
-    dispatchContentUpdate('playlist')
-    showCrudNotice('Se restauró una canción correctamente.')
-  }
 
   const handleReset = () => {
     if (
