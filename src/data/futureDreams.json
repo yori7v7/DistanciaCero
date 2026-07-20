@@ -1,7 +1,12 @@
 [
-  { "id": 1, "category": "Viajes", "title": "Recorrer Japón juntos", "description": "Perdernos en las calles de Tokio, visitar templos antiguos y comer ramen auténtico." },
-  { "id": 2, "category": "Hogar", "title": "Nuestra casa", "description": "Un espacio que sea nuestro. Con una cocina grande para cocinar juntos y un rincón de lectura." },
-  { "id": 3, "category": "Aventuras", "title": "Ver las auroras boreales", "description": "Abrigarnos y mirar al cielo mientras las luces bailan sobre nosotros." },
-  { "id": 4, "category": "Vida", "title": "Adoptar una mascota", "description": "Un compañero peludo que sea testigo de nuestra historia." },
-  { "id": 5, "category": "Sueños", "title": "Ver amanecer en la playa", "description": "Despertar juntos con el sonido de las olas y el sol pintando el horizonte." }
+  { "id": 1, "category": "Viajes", "title": "Recorrer Japón juntos", "description": "Perdernos en las calles de Tokio, visitar templos antiguos y comer ramen auténtico en un callejón escondido." },
+  { "id": 2, "category": "Viajes", "title": "Ver las auroras boreales", "description": "Abrigarnos hasta las cejas y mirar al cielo mientras las luces verdes y violetas bailan sobre nosotros." },
+  { "id": 3, "category": "Viajes", "title": "Roadtrip por la costa", "description": "Ventanas abajo, nuestra playlist sonando, y el mar como testigo. Sin prisa, sin mapa fijo." },
+  { "id": 4, "category": "Hogar", "title": "Nuestra casa", "description": "Un espacio que sea nuestro. Con cocina grande para experimentos culinarios y un rincón de lectura con vista." },
+  { "id": 5, "category": "Hogar", "title": "Adoptar una mascota", "description": "Un compañero peludo que sea testigo de nuestra historia y nos reciba con alegría cada día." },
+  { "id": 6, "category": "Hogar", "title": "Un jardín para los dos", "description": "Plantar flores, hierbas y quizás un árbol. Verlo crecer como crece nuestro amor." },
+  { "id": 7, "category": "Aventuras", "title": "Acampar bajo las estrellas", "description": "Sin señal, sin reloj. Solo nosotros, una fogata y el universo entero sobre nuestras cabezas." },
+  { "id": 8, "category": "Aventuras", "title": "Bucear en el Caribe", "description": "Descubrir juntos un mundo submarino de colores que ni en sueños habíamos imaginado." },
+  { "id": 9, "category": "Sueños", "title": "Ver amanecer en la playa", "description": "Despertar con el sonido de las olas y el sol pintando el horizonte de naranja y rosa." },
+  { "id": 10, "category": "Sueños", "title": "Aprender algo nuevo juntos", "description": "Baile, cerámica, un idioma... lo que sea. Lo importante es ser principiantes juntos y reírnos de nuestros errores." }
 ]

@@ -1,8 +1,12 @@
 [
-  { "id": 1, "title": "Siempre decirte la verdad", "text": "Prometo ser honesto siempre, incluso cuando sea difícil.", "tag": "eterna" },
-  { "id": 2, "title": "Cuidarte en la distancia", "text": "Prometo encontrar formas de estar presente aunque estemos lejos.", "tag": "diaria" },
-  { "id": 3, "title": "Celebrar cada logro tuyo", "text": "Grande o pequeño, cada paso que des será celebrado por los dos.", "tag": "eterna" },
-  { "id": 4, "title": "Viajar juntos", "text": "Prometo llenar nuestro mapa de recuerdos y aventuras compartidas.", "tag": "viaje" },
-  { "id": 5, "title": "Nunca dormir enojados", "text": "Prometo resolver nuestras diferencias antes de que termine el día.", "tag": "diaria" },
-  { "id": 6, "title": "Ser tu lugar seguro", "text": "Prometo ser el espacio donde siempre puedas ser tú, sin filtros ni máscaras.", "tag": "eterna" }
+  { "id": 1, "title": "Siempre decirte la verdad", "text": "Prometo ser honesto siempre, incluso cuando sea difícil. Sin filtros, sin máscaras.", "tag": "eterna" },
+  { "id": 2, "title": "Cuidarte en la distancia", "text": "Prometo encontrar formas de estar presente aunque estemos lejos. Un mensaje, una llamada, un detalle.", "tag": "diaria" },
+  { "id": 3, "title": "Celebrar cada logro tuyo", "text": "Grande o pequeño, cada paso que des será celebrado por los dos como un triunfo compartido.", "tag": "eterna" },
+  { "id": 4, "title": "Viajar juntos", "text": "Prometo llenar nuestro mapa de recuerdos y aventuras. Cada destino, una historia nueva.", "tag": "viaje" },
+  { "id": 5, "title": "Nunca dormir enojados", "text": "Prometo resolver nuestras diferencias antes de que termine el día. Un abrazo siempre gana.", "tag": "diaria" },
+  { "id": 6, "title": "Ser tu lugar seguro", "text": "Prometo ser el espacio donde siempre puedas ser tú, sin filtros ni máscaras. Tu refugio.", "tag": "eterna" },
+  { "id": 7, "title": "Aprender tu lenguaje de amor", "text": "Y hablarlo todos los días, en cada gesto, en cada palabra, en cada silencio compartido.", "tag": "diaria" },
+  { "id": 8, "title": "Cocinarte tu comida favorita", "text": "Aunque me quede lejos, prometo aprender a cocinar ese plato que tanto te gusta.", "tag": "especial" },
+  { "id": 9, "title": "Bailar bajo la lluvia", "text": "Porque la vida también es mojarse juntos y reírse de los planes que salen mal.", "tag": "aventura" },
+  { "id": 10, "title": "Envejecer a tu lado", "text": "Prometo estar ahí cuando el tiempo nos regale arrugas y canas. Cada una será un recuerdo.", "tag": "eterna" }
 ]
