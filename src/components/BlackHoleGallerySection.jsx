@@ -376,8 +376,8 @@ function BlackHoleGallerySection({ items = [] }) {
   }, [items, localVersion])
   const [isOpen, setIsOpen] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
-  const [hasEntered, setHasEntered] = useState(() => sessionStorage.getItem('bh-entered') === 'true')
-  const [needsGate, setNeedsGate] = useState(() => sessionStorage.getItem('bh-entered') !== 'true')
+  const [hasEntered, setHasEntered] = useState(false)
+  const [needsGate, setNeedsGate] = useState(true)
   const [activeItem, setActiveItem] = useState(visibleItems[0] || null)
   const portalRef = useRef(null)
 
@@ -406,11 +406,6 @@ function BlackHoleGallerySection({ items = [] }) {
     window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
     return () => window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
   }, [])
-
-  // Persist hasEntered so gallery survives page refresh
-  useEffect(() => {
-    sessionStorage.setItem('bh-entered', hasEntered ? 'true' : 'false')
-  }, [hasEntered])
 
   useEffect(() => {
     if (!isEntering) return
