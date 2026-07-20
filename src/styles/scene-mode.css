@@ -19,6 +19,11 @@ body.scene-mode-enabled section.section,
 body.scene-mode-enabled section.hero {
   display: none;
 }
+/* BlackHole gate transition needs to override default hide */
+body.scene-mode-enabled section.blackhole-section.blackhole-entering,
+body.scene-mode-enabled section.blackhole-section.blackhole-needs-gate {
+  display: block !important;
+}
 
 .scene-hidden {
   display: none !important;
