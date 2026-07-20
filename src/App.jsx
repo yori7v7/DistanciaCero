@@ -2,7 +2,6 @@ import AuthGate from './components/AuthGate'
 import LoadingIntro from './components/LoadingIntro'
 import Hero from './components/Hero'
 import ProposalSection from './components/ProposalSection'
-import QuickIndex from './components/QuickIndex'
 import CounterSection from './components/CounterSection'
 import MainLetter from './components/MainLetter'
 import StoryTimeline from './components/StoryTimeline'
@@ -51,7 +50,6 @@ function App() {
       <main>
         <Hero />
         <ProposalSection />
-        <QuickIndex />
         <CounterSection />
         <MainLetter />
         <StoryTimeline timeline={timeline} />
