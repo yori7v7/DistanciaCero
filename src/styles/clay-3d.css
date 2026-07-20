@@ -1,198 +1,310 @@
 /* ============================================================
-   CLAY-3D SYSTEM — Flutter Dashboard Style
-   Every interactive element gets deep 3D extrusion
+   CLAY-3D SYSTEM v2 — Vibrant Flutter Dashboard Style
+   Every rectangle has colored border + 3D extrusion + glow
    ============================================================ */
 
-/* ---- Global 3D base for all interactive elements ---- */
-button, a.button, [role="button"] {
-  position: relative;
-  top: 0;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+/* ---- GLOBAL: vibrant pink identity ---- */
+:root {
+  --3d-extrude: 0 5px 0;
+  --3d-glow: 0 0 25px;
 }
 
-button:active, a.button:active {
-  transform: translateY(3px) !important;
-}
-
-/* ---- 3D NAVIGATION BAR ---- */
+/* ================================================
+   NAVIGATION BAR — scene-portal
+   ================================================ */
 .scene-portal {
-  background: rgba(10, 2, 18, 0.85) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  border-radius: 24px !important;
+  background: rgba(12, 2, 22, 0.9) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.15) !important;
+  border-radius: 20px !important;
   box-shadow:
-    0 8px 0 rgba(8, 1, 14, 0.4),
-    0 12px 30px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-  padding: 8px 16px !important;
+    0 6px 0 rgba(100, 10, 50, 0.3),
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  padding: 6px 14px !important;
 }
 
-/* ---- 3D NAV ITEMS (scene links) ---- */
-.scene-link {
-  border-radius: 16px !important;
-  padding: 10px 14px !important;
-  font-weight: 700 !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  color: var(--muted) !important;
+/* Logo */
+.scene-portal-logo {
+  background: linear-gradient(135deg, rgba(255,122,200,0.15), rgba(255,23,68,0.1)) !important;
+  border: 1.5px solid rgba(255,122,200,0.25) !important;
+  border-radius: 14px !important;
+  padding: 6px 14px !important;
   box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.2),
-    0 6px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-.scene-link:hover {
-  background: rgba(255, 122, 200, 0.12) !important;
-  border-color: rgba(255, 122, 200, 0.25) !important;
-  color: var(--pink-soft) !important;
-  transform: translateY(-2px) !important;
-  box-shadow:
-    0 6px 0 rgba(100, 12, 40, 0.25),
-    0 10px 20px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255,255,255,0.06) !important;
-}
-.scene-link:active,
-.scene-current .scene-link {
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.2), rgba(255, 23, 68, 0.15)) !important;
-  color: white !important;
-  border-color: rgba(255, 122, 200, 0.35) !important;
-  transform: translateY(2px) !important;
-  box-shadow:
-    0 2px 0 rgba(80, 8, 30, 0.3),
-    0 3px 6px rgba(0, 0, 0, 0.3),
+    0 3px 0 rgba(120,15,50,0.25),
+    0 6px 14px rgba(0,0,0,0.3),
     inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
 
-/* ---- 3D NAV ARROWS + SETTINGS ---- */
-.scene-nav-arrow,
-.scene-settings-gear {
-  width: 42px !important;
-  height: 42px !important;
+.scene-portal-logo svg {
+  filter: drop-shadow(0 0 6px rgba(255,122,200,0.5)) !important;
+}
+
+/* Each scene link — vibrant 3D pill */
+.scene-link {
   border-radius: 14px !important;
+  padding: 8px 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.06) !important;
+  color: #c4a8b8 !important;
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 6px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  top: 0;
+}
+
+.scene-link:hover {
+  background: rgba(255, 122, 200, 0.15) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
+  color: #ffb3dd !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 6px 0 rgba(120, 15, 50, 0.3),
+    0 10px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(255, 122, 200, 0.15) !important;
+}
+
+.scene-link.active {
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 23, 68, 0.18)) !important;
+  border-color: rgba(255, 122, 200, 0.4) !important;
+  color: #fff !important;
+  box-shadow:
+    0 4px 0 rgba(120, 15, 50, 0.35),
+    0 8px 18px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 22px rgba(255, 122, 200, 0.2) !important;
+}
+
+/* Nav arrows */
+.scene-nav-arrow {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
   background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: var(--pink-soft) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffb3dd !important;
   display: grid !important;
   place-items: center !important;
   cursor: pointer !important;
   box-shadow:
     0 4px 0 rgba(0, 0, 0, 0.25),
     0 6px 14px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-.scene-nav-arrow:hover,
-.scene-settings-gear:hover {
-  background: rgba(255, 122, 200, 0.15) !important;
-  border-color: rgba(255, 122, 200, 0.3) !important;
+
+.scene-nav-arrow:hover {
+  background: rgba(255, 122, 200, 0.18) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
+  color: #fff !important;
   transform: translateY(-2px) !important;
   box-shadow:
-    0 6px 0 rgba(100, 12, 40, 0.3),
-    0 10px 20px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255,255,255,0.08) !important;
-}
-.scene-nav-arrow:active,
-.scene-settings-gear:active {
-  transform: translateY(2px) !important;
-  box-shadow:
-    0 2px 0 rgba(80, 8, 30, 0.3),
-    0 3px 6px rgba(0,0,0,0.3) !important;
+    0 6px 0 rgba(120, 15, 50, 0.3),
+    0 10px 20px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(255, 122, 200, 0.18) !important;
 }
 
-/* ---- 3D SETTINGS DROPDOWN ---- */
-.scene-settings-dropdown {
-  background: rgba(10, 2, 18, 0.94) !important;
-  backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(255,255,255,0.06) !important;
-  border-radius: 20px !important;
-  box-shadow:
-    0 8px 0 rgba(8, 1, 14, 0.35),
-    0 16px 40px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
-  overflow: hidden !important;
+.scene-nav-arrow:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 2px 0 rgba(80,10,40,0.25), 0 3px 6px rgba(0,0,0,0.3) !important;
 }
-.scene-settings-item {
-  background: transparent !important;
+
+/* Settings gear */
+.scene-settings-gear {
+  width: 38px !important;
+  height: 38px !important;
   border-radius: 12px !important;
-  margin: 4px 6px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffb3dd !important;
+  display: grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 6px 14px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.scene-settings-gear:hover,
+.scene-settings-gear.active {
+  background: rgba(255, 122, 200, 0.18) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
+  color: #fff !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 6px 0 rgba(120, 15, 50, 0.3),
+    0 10px 20px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(255, 122, 200, 0.18) !important;
+}
+
+/* Settings dropdown */
+.scene-settings-dropdown {
+  background: rgba(12, 2, 22, 0.96) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.18) !important;
+  border-radius: 18px !important;
+  padding: 6px !important;
+  box-shadow:
+    0 8px 0 rgba(100, 10, 50, 0.25),
+    0 20px 50px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+.scene-settings-item {
+  border-radius: 12px !important;
   padding: 10px 14px !important;
-  color: var(--muted) !important;
   font-weight: 700 !important;
   cursor: pointer !important;
-  transition: all 0.15s ease !important;
-}
-.scene-settings-item:hover {
-  background: rgba(255, 122, 200, 0.12) !important;
-  color: var(--pink-soft) !important;
+  transition: all 0.12s ease !important;
 }
 
-/* ---- 3D MAIN BUTTONS (CTA, Action) ---- */
+.scene-settings-item:hover {
+  background: rgba(255, 122, 200, 0.12) !important;
+}
+
+/* ================================================
+   MAIN BUTTONS — CTA, Submit, Control
+   ================================================ */
 .main-button,
 .control-btn.submit-btn,
+.editor-form button.submit-btn,
 button.submit-btn {
-  border-radius: 18px !important;
-  padding: 16px 32px !important;
+  border-radius: 16px !important;
+  padding: 14px 28px !important;
   font-weight: 800 !important;
   font-size: 1rem !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.35), rgba(255, 23, 68, 0.25)) !important;
-  color: white !important;
-  box-shadow:
-    0 6px 0 rgba(160, 20, 60, 0.3),
-    0 10px 24px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255,255,255,0.2) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 23, 68, 0.18)) !important;
+  color: #fff !important;
   cursor: pointer !important;
-}
-.main-button:hover,
-.control-btn.submit-btn:hover {
-  transform: translateY(-2px) !important;
   box-shadow:
-    0 8px 0 rgba(160, 20, 60, 0.25),
-    0 14px 32px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255,255,255,0.25) !important;
+    0 5px 0 rgba(160, 20, 60, 0.3),
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  top: 0;
 }
-.main-button:active {
+
+.main-button:hover,
+.control-btn.submit-btn:hover,
+button.submit-btn:hover {
+  transform: translateY(-2px) !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.35), rgba(255, 23, 68, 0.25)) !important;
+  border-color: rgba(255, 122, 200, 0.4) !important;
+  box-shadow:
+    0 7px 0 rgba(160, 20, 60, 0.25),
+    0 14px 32px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(255, 122, 200, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.main-button:active,
+button.submit-btn:active {
   transform: translateY(3px) !important;
   box-shadow:
     0 2px 0 rgba(160, 20, 60, 0.2),
-    0 4px 8px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.15) !important;
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-/* ---- 3D GHOST / SECONDARY BUTTONS ---- */
-.ghost-button,
-.control-btn:not(.submit-btn):not(.active-sim):not(.inactive-sim):not(.reset-btn) {
-  border-radius: 14px !important;
-  padding: 12px 24px !important;
-  font-weight: 700 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  color: var(--pink-soft) !important;
+/* Hero CTA — bigger */
+.hero-actions .main-button {
+  border-radius: 20px !important;
+  padding: 16px 36px !important;
+  font-size: 1.05rem !important;
   box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.2),
-    0 6px 14px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
-  cursor: pointer !important;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    0 6px 0 rgba(160, 20, 60, 0.35),
+    0 14px 32px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(255, 122, 200, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.18) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.25) !important;
 }
-.ghost-button:hover {
-  background: rgba(255, 122, 200, 0.1) !important;
-  border-color: rgba(255, 122, 200, 0.25) !important;
+
+.hero-actions .main-button:hover {
   transform: translateY(-2px) !important;
   box-shadow:
-    0 6px 0 rgba(100, 12, 40, 0.2),
-    0 10px 20px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255,255,255,0.06) !important;
-}
-.ghost-button:active {
-  transform: translateY(2px) !important;
-  box-shadow:
-    0 2px 0 rgba(80, 8, 30, 0.2),
-    0 3px 6px rgba(0,0,0,0.3) !important;
+    0 8px 0 rgba(160, 20, 60, 0.3),
+    0 18px 40px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(255, 122, 200, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.25) !important;
 }
 
-/* ---- 3D CARDS (all section cards) ---- */
+/* Music toggle button */
+.hero-music-toggle {
+  border-radius: 14px !important;
+  padding: 8px 16px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffb3dd !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 6px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hero-music-toggle:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 122, 200, 0.12) !important;
+  border-color: rgba(255, 122, 200, 0.3) !important;
+  box-shadow:
+    0 6px 0 rgba(120, 15, 50, 0.25),
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(255, 122, 200, 0.12) !important;
+}
+
+/* ================================================
+   SECONDARY / GHOST BUTTONS
+   ================================================ */
+.ghost-button {
+  border-radius: 12px !important;
+  padding: 10px 20px !important;
+  font-weight: 700 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: #ffb3dd !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.2),
+    0 5px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  top: 0;
+}
+
+.ghost-button:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 122, 200, 0.12) !important;
+  border-color: rgba(255, 122, 200, 0.3) !important;
+  color: #fff !important;
+  box-shadow:
+    0 5px 0 rgba(120, 15, 50, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(255, 122, 200, 0.1) !important;
+}
+
+.ghost-button:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ================================================
+   ALL CARDS — colored borders + 3D
+   ================================================ */
 .counter-card,
 .control-card,
 .letter-card,
@@ -209,171 +321,329 @@ button.submit-btn {
 .promise-note,
 .playlist-row,
 .universe-card,
-.capsule-card {
-  border-radius: 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  background: rgba(18, 4, 28, 0.7) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+.capsule-card,
+.festivity-card,
+.video-card {
+  border-radius: 22px !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.1) !important;
+  background: rgba(18, 4, 30, 0.72) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
   box-shadow:
-    0 6px 0 rgba(8, 1, 14, 0.3),
-    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 5px 0 rgba(80, 10, 40, 0.2),
+    0 14px 36px rgba(0, 0, 0, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   position: relative;
   top: 0;
 }
+
 .counter-card:hover,
 .mini-card:hover,
 .song-card:hover,
-.gallery-card:hover,
-.message-box:hover,
 .date-card:hover,
 .dream-step:hover,
 .promise-note:hover {
   transform: translateY(-3px) !important;
+  border-color: rgba(255, 122, 200, 0.25) !important;
   box-shadow:
-    0 9px 0 rgba(8, 1, 14, 0.25),
-    0 22px 50px rgba(0, 0, 0, 0.4),
+    0 8px 0 rgba(80, 10, 40, 0.18),
+    0 20px 46px rgba(0, 0, 0, 0.45),
+    0 0 22px rgba(255, 122, 200, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 122, 200, 0.2) !important;
 }
 
-/* ---- 3D COUNTER CARDS (special colored borders) ---- */
+/* Counter cards — pink accent border */
 .counter-card {
-  border: 1.5px solid rgba(255, 122, 200, 0.15) !important;
-  background: linear-gradient(180deg, rgba(255,122,200,0.06), rgba(255,23,68,0.03), rgba(18,4,28,0.7)) !important;
-  box-shadow:
-    0 6px 0 rgba(160, 20, 60, 0.2),
-    0 14px 30px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    0 0 40px rgba(255,122,200,0.06) !important;
+  border-width: 2px !important;
+  border-color: rgba(255, 122, 200, 0.2) !important;
+  background: linear-gradient(175deg, rgba(255, 122, 200, 0.06), rgba(255, 23, 68, 0.03), rgba(18, 4, 30, 0.72)) !important;
 }
 
-/* ---- 3D FLOATING MUSIC DOCK ---- */
-.floating-music-dock {
-  border-radius: 20px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(10, 2, 18, 0.88) !important;
-  backdrop-filter: blur(20px) !important;
-  box-shadow:
-    0 6px 0 rgba(8, 1, 14, 0.4),
-    0 14px 35px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255,255,255,0.05) !important;
-}
-.music-dock-title,
-.dock-button {
-  border-radius: 14px !important;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-.dock-button {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  box-shadow:
-    0 3px 0 rgba(0,0,0,0.2),
-    0 5px 10px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
-}
-.dock-button:hover {
-  background: rgba(255, 122, 200, 0.15) !important;
-  transform: translateY(-2px) !important;
-  box-shadow:
-    0 5px 0 rgba(100, 12, 40, 0.25),
-    0 8px 18px rgba(0,0,0,0.35) !important;
-}
-.dock-button:active {
-  transform: translateY(2px) !important;
-  box-shadow: 0 1px 0 rgba(80,8,30,0.2), 0 2px 4px rgba(0,0,0,0.3) !important;
+/* Control cards (Centro del Universo stats) */
+.control-card {
+  border-color: rgba(255, 122, 200, 0.15) !important;
 }
 
-/* ---- 3D HERO CTA ---- */
-.hero-actions .main-button {
-  border-radius: 22px !important;
-  padding: 18px 40px !important;
-  font-size: 1.1rem !important;
+/* ================================================
+   SECTION TITLE TAGS (las etiquetas / pills)
+   ================================================ */
+.section-title span,
+.small-pill {
+  display: inline-block !important;
+  border-radius: 10px !important;
+  padding: 5px 14px !important;
+  font-weight: 800 !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  background: rgba(255, 122, 200, 0.1) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  color: #ffb3dd !important;
   box-shadow:
-    0 8px 0 rgba(160, 20, 60, 0.35),
-    0 16px 36px rgba(0, 0, 0, 0.5),
-    inset 0 2px 0 rgba(255,255,255,0.2) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    0 3px 0 rgba(120, 15, 50, 0.2),
+    0 5px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
-/* ---- 3D MUSIC TOGGLE ---- */
-.hero-music-toggle {
-  border-radius: 14px !important;
-  padding: 10px 18px !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+/* ================================================
+   HERO — 3D container
+   ================================================ */
+.hero-content {
+  border-radius: 28px !important;
+  padding: 48px clamp(20px, 5vw, 48px) !important;
+  background: rgba(18, 4, 30, 0.55) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.12) !important;
   box-shadow:
-    0 3px 0 rgba(0,0,0,0.2),
-    0 5px 12px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.04) !important;
-  cursor: pointer !important;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-.hero-music-toggle:hover {
-  transform: translateY(-2px) !important;
-  box-shadow:
-    0 5px 0 rgba(100, 12, 40, 0.2),
-    0 8px 18px rgba(0,0,0,0.35) !important;
-}
-.hero-music-toggle:active {
-  transform: translateY(2px) !important;
-  box-shadow: 0 1px 0 rgba(80,8,30,0.2), 0 2px 4px rgba(0,0,0,0.3) !important;
+    0 6px 0 rgba(80, 10, 40, 0.2),
+    0 18px 44px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
 }
 
-/* ---- 3D EMERGENCY BUTTON ---- */
-.floating-emergency-button {
-  border-radius: 50% !important;
-  width: 60px !important;
-  height: 60px !important;
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.3), rgba(255, 23, 68, 0.2)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow:
-    0 6px 0 rgba(160, 20, 60, 0.3),
-    0 10px 24px rgba(0, 0, 0, 0.4),
-    inset 0 2px 0 rgba(255,255,255,0.2) !important;
-}
-.floating-emergency-button:active {
-  transform: translateY(3px) scale(0.95) !important;
-  box-shadow: 0 2px 0 rgba(160,20,60,0.2), 0 4px 8px rgba(0,0,0,0.3) !important;
-}
-
-/* ---- 3D BACK TO TOP ---- */
-.back-to-top {
-  width: 48px !important;
-  height: 48px !important;
+/* Hero names heart — 3D */
+.hero-names {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
   border-radius: 16px !important;
-  background: rgba(10, 2, 18, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 6px 16px !important;
+  background: rgba(255, 122, 200, 0.08) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.18) !important;
   box-shadow:
-    0 4px 0 rgba(0,0,0,0.3),
-    0 8px 20px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.05) !important;
+    0 3px 0 rgba(120, 15, 50, 0.2),
+    0 6px 14px rgba(0, 0, 0, 0.25) !important;
 }
+
+/* ================================================
+   DISTANCE MAP — 3D portraits + circles
+   ================================================ */
+.portrait-placeholder {
+  border-radius: 50% !important;
+  width: 70px !important;
+  height: 70px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 23, 68, 0.2)) !important;
+  border: 2px solid rgba(255, 122, 200, 0.35) !important;
+  box-shadow:
+    0 4px 0 rgba(120, 15, 50, 0.25),
+    0 10px 24px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  animation: pulseHeart 2.5s ease-in-out infinite;
+}
+
+.portrait-placeholder span {
+  color: #fff !important;
+  font-size: 1.5rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* KM counter — 3D pill */
+.km-counter {
+  border-radius: 18px !important;
+  padding: 14px 24px !important;
+  background: rgba(255, 122, 200, 0.08) !important;
+  border: 2px solid rgba(255, 122, 200, 0.2) !important;
+  box-shadow:
+    0 4px 0 rgba(120, 15, 50, 0.2),
+    0 10px 24px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(255, 122, 200, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ================================================
+   SCENE MUSIC CONTROLLER — 3D player
+   ================================================ */
+.scene-music-controller {
+  border-radius: 18px !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.15) !important;
+  background: rgba(12, 2, 22, 0.9) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow:
+    0 6px 0 rgba(100, 10, 50, 0.3),
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.scene-music-orb {
+  border: 2px solid rgba(255, 122, 200, 0.3) !important;
+  box-shadow:
+    0 3px 0 rgba(120, 15, 50, 0.2),
+    0 8px 18px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 122, 200, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.scene-music-button {
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffb3dd !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.25),
+    0 5px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.scene-music-button:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 122, 200, 0.15) !important;
+  border-color: rgba(255, 122, 200, 0.3) !important;
+  box-shadow:
+    0 5px 0 rgba(120, 15, 50, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(255, 122, 200, 0.1) !important;
+}
+
+.scene-music-button:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Volume button */
+.scene-volume-icon {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffb3dd !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.25),
+    0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.12s ease !important;
+}
+
+/* ================================================
+   BACK TO TOP
+   ================================================ */
+.back-to-top {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(12, 2, 22, 0.88) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.18) !important;
+  box-shadow:
+    0 4px 0 rgba(100, 10, 50, 0.25),
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
 .back-to-top:hover {
   transform: translateY(-2px) !important;
-  box-shadow:
-    0 6px 0 rgba(100,12,40,0.25),
-    0 12px 28px rgba(0,0,0,0.45) !important;
-}
-
-/* ---- Global: all inputs get 3D inset look ---- */
-input, textarea, select {
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(0, 0, 0, 0.3) !important;
-  color: var(--white) !important;
-  padding: 12px 16px !important;
-  box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255,255,255,0.03) !important;
-  transition: all 0.2s ease !important;
-}
-input:focus, textarea:focus, select:focus {
   border-color: rgba(255, 122, 200, 0.35) !important;
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.4),
-    0 0 0 3px rgba(255, 122, 200, 0.1) !important;
+    0 6px 0 rgba(120, 15, 50, 0.3),
+    0 14px 32px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(255, 122, 200, 0.12) !important;
+}
+
+/* ================================================
+   INPUTS — 3D inset
+   ================================================ */
+input, textarea, select {
+  border-radius: 10px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  color: #faf5f9 !important;
+  padding: 10px 14px !important;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.2s ease !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: rgba(255, 122, 200, 0.4) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    0 0 0 3px rgba(255, 122, 200, 0.12) !important;
   outline: none !important;
+}
+
+/* ================================================
+   SONG / PLAYLIST ROWS — 3D
+   ================================================ */
+.playlist-row,
+.song-card,
+.playlist-button-row {
+  border-radius: 16px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.06) !important;
+  background: rgba(18, 4, 30, 0.65) !important;
+  box-shadow:
+    0 3px 0 rgba(80, 10, 40, 0.18),
+    0 8px 18px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+}
+
+.playlist-row:hover,
+.song-card:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 122, 200, 0.06) !important;
+  border-color: rgba(255, 122, 200, 0.2) !important;
+  box-shadow:
+    0 5px 0 rgba(80, 10, 40, 0.15),
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 14px rgba(255, 122, 200, 0.06) !important;
+}
+
+/* ================================================
+   CRUD SELECTOR BUTTONS — Centro del Universo
+   ================================================ */
+.crud-selector-btn {
+  border-radius: 14px !important;
+  padding: 10px 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.06) !important;
+  color: #c4a8b8 !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.2),
+    0 5px 10px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: relative;
+  top: 0;
+}
+
+.crud-selector-btn:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 122, 200, 0.1) !important;
+  border-color: rgba(255, 122, 200, 0.25) !important;
+  color: #ffb3dd !important;
+  box-shadow:
+    0 5px 0 rgba(120, 15, 50, 0.22),
+    0 8px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+.crud-selector-btn.active {
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.22), rgba(255, 23, 68, 0.15)) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
+  color: #fff !important;
+  box-shadow:
+    0 4px 0 rgba(120, 15, 50, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.35),
+    0 0 16px rgba(255, 122, 200, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.crud-selector-btn:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
 }
