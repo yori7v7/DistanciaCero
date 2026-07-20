@@ -1,1 +1,5 @@
-[]
+[
+  { "id": 1, "date": "2026-01-15", "title": "Nuestra primera foto juntos", "description": "Ese día en que el tiempo se detuvo.", "image": "", "alt": "Foto de nosotros juntos", "tag": "recuerdo" },
+  { "id": 2, "date": "2026-03-20", "title": "Captura de pantalla de esa videollamada", "description": "Tres horas de llamada que se sintieron como tres minutos.", "image": "", "alt": "Captura de videollamada", "tag": "distancia" },
+  { "id": 3, "date": "2026-06-01", "title": "Atardecer en nuestro viaje", "description": "El cielo se pintó de rosa para nosotros.", "image": "", "alt": "Foto de atardecer", "tag": "viaje" }
+]

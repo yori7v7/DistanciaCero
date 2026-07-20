@@ -1,1 +1,8 @@
-[]
+[
+  { "id": 1, "title": "Siempre decirte la verdad", "text": "Prometo ser honesto siempre, incluso cuando sea difícil.", "tag": "eterna" },
+  { "id": 2, "title": "Cuidarte en la distancia", "text": "Prometo encontrar formas de estar presente aunque estemos lejos.", "tag": "diaria" },
+  { "id": 3, "title": "Celebrar cada logro tuyo", "text": "Grande o pequeño, cada paso que des será celebrado por los dos.", "tag": "eterna" },
+  { "id": 4, "title": "Viajar juntos", "text": "Prometo llenar nuestro mapa de recuerdos y aventuras compartidas.", "tag": "viaje" },
+  { "id": 5, "title": "Nunca dormir enojados", "text": "Prometo resolver nuestras diferencias antes de que termine el día.", "tag": "diaria" },
+  { "id": 6, "title": "Ser tu lugar seguro", "text": "Prometo ser el espacio donde siempre puedas ser tú, sin filtros ni máscaras.", "tag": "eterna" }
+]

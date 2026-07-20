@@ -2,15 +2,34 @@
   {
     "id": "capitulo-1",
     "chapter": "Capítulo I",
-    "date": "Próximamente",
+    "date": "2026-01-15",
     "title": "El inicio de nuestra historia",
-    "subtitle": "Donde todo empezó.",
-    "description": "Aquí irá el primer capítulo de nuestra historia juntos.",
-    "quote": "Cada historia tiene un comienzo.",
-    "details": [
-      "El inicio de nuestra historia.",
-      "Una fecha para recordar."
-    ],
+    "subtitle": "Donde todo comenzó",
+    "description": "El día que nuestros caminos se cruzaron. Un encuentro que cambió nuestras vidas para siempre.",
+    "quote": "A veces la distancia más corta entre dos personas es una sonrisa.",
+    "details": ["Primer mensaje", "Primera llamada", "Horas hablando sin parar"],
     "mood": "Origen"
+  },
+  {
+    "id": "capitulo-2",
+    "chapter": "Capítulo II",
+    "date": "2026-03-20",
+    "title": "Cuando supe que eras tú",
+    "subtitle": "El momento de certeza",
+    "description": "No fue un solo momento, fueron miles de pequeños instantes que me hicieron darme cuenta.",
+    "quote": "No es amor si no se siente como volver a casa.",
+    "details": ["Nuestra canción sonó en el momento justo", "Esa mirada que lo dijo todo"],
+    "mood": "Certeza"
+  },
+  {
+    "id": "capitulo-3",
+    "chapter": "Capítulo III",
+    "date": "2026-06-01",
+    "title": "Nuestra primera aventura",
+    "subtitle": "Kilómetros que nos unieron",
+    "description": "Viajar para verte fue la mejor decisión. Cada kilómetro valió la pena por cada segundo a tu lado.",
+    "quote": "La distancia es solo una prueba de cuánto puede viajar el amor.",
+    "details": ["Maleta preparada con ilusión", "El aeropuerto nunca fue tan emocionante", "Nuestro primer abrazo sin pantalla"],
+    "mood": "Aventura"
   }
 ]

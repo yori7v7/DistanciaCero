@@ -1,1 +1,7 @@
-[]
+[
+  { "id": "song-1", "title": "Nuestra canción", "artist": "Artista especial", "description": "La canción que define nuestro amor.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "romántica" },
+  { "id": "song-2", "title": "La que bailamos juntos", "artist": "Banda favorita", "description": "Esa noche que bailamos hasta el amanecer.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "bailable" },
+  { "id": "song-3", "title": "Para cuando me extrañes", "artist": "Cantautor", "description": "Para esos días en que la distancia pesa.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "nostalgia" },
+  { "id": "song-4", "title": "Nuestra canción de buenos días", "artist": "Grupo indie", "description": "El primer mensaje de cada mañana tiene esta canción de fondo.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "feliz" },
+  { "id": "song-5", "title": "La del futuro", "artist": "Por descubrir", "description": "Esta canción aún no la hemos vivido... pero la bailaremos juntos.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "futuro" }
+]
