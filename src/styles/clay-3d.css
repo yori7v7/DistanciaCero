@@ -297,6 +297,11 @@ button.submit-btn:active {
   box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
 }
 
+/* BlackHole section needs overflow visible for wormhole animation */
+section.blackhole-section {
+  overflow: visible !important;
+}
+
 /* ================================================
    ALL CARDS — vibrant pink borders + inner glow
    ================================================ */
