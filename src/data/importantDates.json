@@ -1,10 +1,5 @@
 [
-  { "id": 1, "date": "2026-01-15", "title": "El día que nos conocimos", "description": "El universo conspiró para cruzar nuestros caminos. Nunca creí en el destino hasta ese día.", "tag": "aniversario" },
-  { "id": 2, "date": "2026-02-14", "title": "Primer San Valentín", "description": "Nuestro primer 14 de febrero. La distancia no impidió que fuera el más especial de todos.", "tag": "especial" },
-  { "id": 3, "date": "2026-03-20", "title": "La primera vez que dije 'te quiero'", "description": "Las palabras se quedaron cortas, pero el corazón lo entendió todo.", "tag": "importante" },
-  { "id": 4, "date": "2026-06-01", "title": "Nuestro primer viaje juntos", "description": "El día que los kilómetros se rindieron ante nosotros. Valió cada minuto de espera.", "tag": "viaje" },
-  { "id": 5, "date": "2026-08-10", "title": "Aniversario de 6 meses", "description": "Medio año de risas, llamadas infinitas y un amor que solo crece con la distancia.", "tag": "aniversario" },
-  { "id": 6, "date": "2026-10-31", "title": "Halloween juntos por videollamada", "description": "Disfraces improvisados, risas y una conexión que ni la pantalla pudo contener.", "tag": "divertido" },
-  { "id": 7, "date": "2026-12-25", "title": "Primera Navidad", "description": "Las luces brillaron más fuerte porque estábamos juntos, aunque fuera a través de una pantalla.", "tag": "festividad" },
-  { "id": 8, "date": "2027-01-01", "title": "Año nuevo, mismo amor", "description": "Brindamos por todo lo vivido y por todo lo que está por venir. Este año es nuestro.", "tag": "festividad" }
+  { "id": 1, "date": "2026-01-15", "title": "El día que nos conocimos", "description": "El universo conspiró para cruzar nuestros caminos.", "tag": "aniversario" },
+  { "id": 2, "date": "2026-02-14", "title": "Primer San Valentín", "description": "Nuestro primer 14 de febrero. La distancia no impidió que fuera especial.", "tag": "especial" },
+  { "id": 3, "date": "2026-06-01", "title": "Nuestro primer viaje juntos", "description": "El día que los kilómetros se rindieron ante nosotros.", "tag": "viaje" }
 ]
