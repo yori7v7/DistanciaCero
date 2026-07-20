@@ -1,15 +1,5 @@
 /* Limpieza del nuevo enfoque */
 
-.system-core-button {
-  border: none;
-  cursor: pointer;
-  color: white;
-}
-
-.system-core-button:hover {
-  filter: brightness(1.08);
-}
-
 .zoom-sun .planet-surface {
   box-shadow:
     0 0 70px rgba(255, 122, 200, 0.55),
@@ -63,32 +53,6 @@
 
 .reasons-section {
   overflow: hidden;
-}
-
-.reasons-heart-stage {
-  min-height: 760px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at center, rgba(255, 122, 200, 0.16), transparent 30%),
-    rgba(10, 0, 16, 0.62);
-  box-shadow: var(--shadow-pink);
-  overflow: hidden;
-}
-
-.big-reason-heart {
-  width: min(92vw, 740px);
-  min-height: 640px;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  align-content: center;
-  padding: 38px;
-  clip-path: path("M 370 620 C 90 430 20 250 90 125 C 150 20 300 35 370 155 C 440 35 590 20 650 125 C 720 250 650 430 370 620 Z");
 }
 
 .reason-heart {
