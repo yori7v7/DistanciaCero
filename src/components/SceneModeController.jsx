@@ -155,6 +155,7 @@ function SceneModeController() {
     if (centroVisible && centroScene) {
       centroScene.sectionIds?.forEach((id) => activeIds.add(id))
     }
+    const firstVisible = allSections.find((el) => activeIds.has(el.id))
     setTimeout(() => {
       centerActiveLink(!firstRunRef.current)
       if (firstVisible) {
