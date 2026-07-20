@@ -299,68 +299,6 @@ function CentroUniversoSection() {
   ).length
   const unlockedOpenWhen = activeBaseOpenWhen.filter((c) => !c.locked).length + localOpenWhen.filter((c) => !c.locked).length
   const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
-  const editedBaseReasonsCount = Object.keys(reasonOverrides).length
-  const hiddenBaseReasonsCount = hiddenReasonIds.length
-  const visibleBaseReasons = reasonsData.map((reason) => {
-    const override = reasonOverrides[String(reason.id)]
-    return {
-      ...reason,
-      ...(override || {}),
-      id: reason.id,
-      isOverridden: Boolean(override),
-      isHidden: hiddenReasonIds.includes(String(reason.id))
-    }
-  })
-  const filteredBaseReasons = visibleBaseReasons.filter((reason) => {
-    const query = baseReasonQuery.trim().toLowerCase()
-    if (!query) return true
-
-    return (
-      String(reason.id).includes(query) ||
-      (reason.title || '').toLowerCase().includes(query) ||
-      (reason.text || '').toLowerCase().includes(query)
-    )
-  })
-  const editedBasePromisesCount = Object.keys(promiseOverrides).length
-  const hiddenBasePromisesCount = hiddenPromiseIds.length
-  const visibleBasePromises = promisesData.map((promise) => {
-    const override = promiseOverrides[String(promise.id)]
-    return {
-      ...promise,
-      ...(override || {}),
-      id: promise.id,
-      text: override?.text || override?.description || promise.text || promise.description || '',
-      tag: override?.tag || override?.footer || promise.tag || promise.footer || 'Promesa',
-      isOverridden: Boolean(override),
-      isHidden: hiddenPromiseIds.includes(String(promise.id))
-    }
-  })
-  const editedBaseImportantDatesCount = Object.keys(importantDateOverrides).length
-  const hiddenBaseImportantDatesCount = hiddenImportantDateIds.length
-  const visibleBaseImportantDates = importantDatesData.map((dateItem) => {
-    const override = importantDateOverrides[String(dateItem.id)]
-    return {
-      ...dateItem,
-      ...(override || {}),
-      id: dateItem.id,
-      isOverridden: Boolean(override),
-      isHidden: hiddenImportantDateIds.includes(String(dateItem.id))
-    }
-  })
-  const editedBaseFutureDreamsCount = Object.keys(futureDreamOverrides).length
-  const hiddenBaseFutureDreamsCount = hiddenFutureDreamIds.length
-  const visibleBaseFutureDreams = futureDreamsData.map((dream) => {
-    const override = futureDreamOverrides[String(dream.id)]
-    return {
-      ...dream,
-      ...(override || {}),
-      id: dream.id,
-      description: override?.description || override?.text || dream.description || dream.text || '',
-      category: override?.category || override?.tag || dream.category || dream.tag || 'Por vivir',
-      isOverridden: Boolean(override),
-      isHidden: hiddenFutureDreamIds.includes(String(dream.id))
-    }
-  })
   const editedBaseTimelineCount = Object.keys(timelineOverrides).length
   const hiddenBaseTimelineCount = hiddenTimelineIds.length
   const visibleBaseTimelinePages = timelineData.map((page) => {
@@ -386,18 +324,6 @@ function CentroUniversoSection() {
       isHidden: hiddenBlackHoleGalleryIds.includes(String(item.id))
     }
   })
-  const editedBasePlaylistCount = Object.keys(playlistOverrides).length
-  const hiddenBasePlaylistCount = hiddenPlaylistIds.length
-  const visibleBasePlaylist = playlistData.map((item) => {
-    const override = playlistOverrides[String(item.id)]
-    return {
-      ...item,
-      ...(override || {}),
-      id: item.id,
-      isOverridden: Boolean(override),
-      isHidden: hiddenPlaylistIds.includes(String(item.id))
-    }
-  })
   const filterBaseItemsByCrudFilter = (items) => {
     if (activeCrudFilter === 'base') return items.filter((item) => !item.isHidden && !item.isOverridden)
     if (activeCrudFilter === 'edited') return items.filter((item) => item.isOverridden)
@@ -407,13 +333,8 @@ function CentroUniversoSection() {
   const getNormalBaseCount = (items) => items.filter((item) => !item.isHidden && !item.isOverridden).length
   const filteredBaseMonthly = filterBaseItemsByCrudFilter(visibleBaseMonthly)
   const filteredBaseOpenWhen = filterBaseItemsByCrudFilter(visibleBaseOpenWhen)
-  const filteredVisibleBaseReasons = filterBaseItemsByCrudFilter(filteredBaseReasons)
-  const filteredBasePromises = filterBaseItemsByCrudFilter(visibleBasePromises)
-  const filteredBaseImportantDates = filterBaseItemsByCrudFilter(visibleBaseImportantDates)
-  const filteredBaseFutureDreams = filterBaseItemsByCrudFilter(visibleBaseFutureDreams)
   const filteredBaseTimelinePages = filterBaseItemsByCrudFilter(visibleBaseTimelinePages)
   const filteredBaseBlackHoleGallery = filterBaseItemsByCrudFilter(visibleBaseBlackHoleGallery)
-  const filteredBasePlaylist = filterBaseItemsByCrudFilter(visibleBasePlaylist)
 
   const toggleSimulation = () => {
     if (isSimUnlocked) {
