@@ -50,8 +50,10 @@
   --radius-medium: var(--radius-md);
   --shadow-pink: var(--shadow-glow-soft);
   --shadow-red: 0 0 35px rgba(255, 23, 68, 0.15);
-  /* Typography */
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  /* Typography — sans-serif body + serif display for contrast (Impeccable rule) */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-body);
   font-feature-settings: 'cv11', 'ss01';
 }
 
@@ -228,16 +230,17 @@ input {
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(3.2rem, 9vw, 7.4rem);
-  line-height: 0.95;
-  letter-spacing: -4px;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 900;
 }
 
 .hero h1 span {
   background: linear-gradient(135deg, var(--pink), #fff, var(--red));
   -webkit-background-clip: text;
   color: transparent;
-  text-shadow: 0 0 45px rgba(255, 122, 200, 0.22);
 }
 
 .hero-subtitle {
@@ -303,9 +306,11 @@ input {
 
 .section-title h2 {
   margin: 10px 0;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  line-height: 1.05;
-  letter-spacing: -2px;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
 }
 
 .section-title p {
