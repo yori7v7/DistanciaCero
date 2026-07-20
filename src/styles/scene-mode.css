@@ -12,6 +12,14 @@
   scroll-margin-top: 90px;
 }
 
+/* Default: hide all sections when scene mode is active.
+   SceneModeController adds .scene-visible to active sections.
+   This prevents lazy-loaded sections from flashing visible. */
+body.scene-mode-enabled section.section,
+body.scene-mode-enabled section.hero {
+  display: none;
+}
+
 .scene-hidden {
   display: none !important;
 }
