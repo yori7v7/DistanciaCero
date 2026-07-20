@@ -1,1 +1,5 @@
-[]
+[
+  { "id": "ow1", "mood": "Abrir cuando me extrañes mucho", "title": "Respira, aquí estoy", "preview": "Para esos días en que la distancia pesa más de lo normal...", "content": ["Hola, amor.", "Si estás leyendo esto es porque hoy la distancia se siente más grande. Quiero que sepas algo: yo también te extraño."], "locked": false },
+  { "id": "ow2", "mood": "Abrir cuando estés feliz", "title": "Tu felicidad es la mía", "preview": "Celebremos juntos, aunque sea desde lejos...", "content": ["¡Estoy tan feliz de que estés feliz!", "Cuéntame todo. Tu felicidad viaja más rápido que cualquier mensaje. La siento aquí."], "locked": false },
+  { "id": "ow3", "mood": "Abrir cuando cumplamos un mes más", "title": "Un mes más cerca", "preview": "Cada mes es un paso menos que nos separa...", "content": ["¡Felicidades, mi amor!", "Un mes más. Parece poco, pero para nosotros es un triunfo. Cada mes es una colección de buenos días por mensaje."], "locked": false }
+]

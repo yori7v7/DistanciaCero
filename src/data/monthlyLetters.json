@@ -1,1 +1,5 @@
-[]
+[
+  { "id": "m1", "month": "Enero", "title": "El comienzo de todo", "preview": "Donde nuestra historia empezó a escribirse...", "content": ["Querida tú,", "Este es nuestro primer mes. Recuerdo cada mensaje, cada llamada, cada sonrisa que me robaste."], "locked": false },
+  { "id": "m2", "month": "Febrero", "title": "Nuestro primer San Valentín", "preview": "El amor no entiende de kilómetros...", "content": ["Mi amor,", "Dicen que el primer San Valentín es especial. El nuestro lo fue, aunque una pantalla nos separara."], "locked": false },
+  { "id": "m3", "month": "Marzo", "title": "Cuando supe que eras tú", "preview": "No fue un momento, fueron todos...", "content": ["Para la persona que cambió mi mundo:", "No hubo un momento exacto. Fue la acumulación de pequeños instantes. Tu risa, tu voz, cómo dices mi nombre."], "locked": false }
+]

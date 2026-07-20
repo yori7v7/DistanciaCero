@@ -12,7 +12,7 @@ import OpenWhenSection from './components/OpenWhenSection'
 import PlaylistSection from './components/PlaylistSection'
 import ReasonsSection from './components/ReasonsSection'
 import ImportantDatesSection from './components/ImportantDatesSection'
-const BlackHoleGallerySection = lazy(() => import('./components/BlackHoleGallerySection'))
+import BlackHoleGallerySection from './components/BlackHoleGallerySection'
 import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
@@ -62,9 +62,7 @@ function App() {
         <PlaylistSection playlist={playlist} />
         <ReasonsSection reasons={reasons} />
         <ImportantDatesSection dates={importantDates} />
-        <Suspense fallback={<div className="section" />}>
-          <BlackHoleGallerySection items={blackHoleGallery} />
-        </Suspense>
+        <BlackHoleGallerySection items={blackHoleGallery} />
         <FutureDreamsSection dreams={futureDreams} />
         <PromisesSection promises={promises} />
         <DistanceMapSection />
