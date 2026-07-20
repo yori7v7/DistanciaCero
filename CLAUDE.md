@@ -14,7 +14,7 @@
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
 | Backend | Supabase (preparado, **NO activado** aún) |
 | Datos locales | JSON (`src/data/`) + localStorage |
-| Estilos | CSS puro (~20 archivos en `src/styles/`) |
+| Estilos | CSS puro (~25 archivos en `src/styles/`) |
 | Deploy | GitHub Pages (`gh-pages -d dist`) |
 | Iconos | lucide-react |
 
@@ -22,18 +22,16 @@
 
 ```
 src/
-├── App.jsx                  # Componente raíz, renderiza ~24 secciones en orden
+├── App.jsx                  # Componente raíz, renderiza ~22 secciones en orden
 ├── main.jsx                 # Entry point, AudioProvider + StrictMode
-├── components/              # ~40 componentes React
+├── components/              # ~27 componentes React
 │   ├── LoadingIntro.jsx     # Pantalla de carga
 │   ├── Hero.jsx             # Portada principal
 │   ├── UniverseSection.jsx  # Universo 3D interactivo (Three.js)
-│   ├── SecretSection.jsx    # Sección protegida por contraseña
-│   ├── EmergencyButton.jsx  # Botón "Necesito un abrazo"
-│   └── ...                  # Cartas, galería, playlist, misiones, etc.
+│   └── ...                  # Cartas, galería, playlist, CMS, etc.
 ├── context/
 │   └── AudioContext.jsx     # Proveedor de música de fondo global
-├── data/                    # ~25 archivos JSON con TODO el contenido
+├── data/                    # ~15 archivos JSON con TODO el contenido
 │   ├── siteConfig.json      # Config principal (nombres, fechas, contraseñas, audio)
 │   ├── universe.json        # Planetas del universo 3D
 │   ├── timeline.json        # Línea de tiempo de la relación

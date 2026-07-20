@@ -7,9 +7,9 @@ metadata:
 
 # Estado actual de DistanciaCero
 
-**Última actualización**: 2026-07-14 (sesión final — todo funcional)
+**Última actualización**: 2026-07-20 (limpieza post-análisis — 109 archivos eliminados)
 
-## Commits de esta sesión
+## Commits de la sesión anterior (Julio 14)
 
 | Commit | Descripción |
 |---|---|
@@ -17,6 +17,17 @@ metadata:
 | `4d71f80` | fix: desactivar proposal gate en modo plantilla |
 | `9301b24` | fix: Hero crasheaba con randomPhrases.json vacío |
 | `765564b` | feat: 100 razones genéricas para visualización |
+
+## Commits de limpieza (Julio 20)
+
+| Commit | Descripción |
+|---|---|
+| `ca14a99` | chore: remove dead space-3d-upgrade.css |
+| `359a693` | chore: remove QuickIndex placeholder (returns null) |
+| `91e53e5` | chore: remove counter-final.css (overridden by final-adjustments.css) |
+| `fd11fd5` | chore: remove 16 orphan components + 11 empty JSONs (1,114 lines) |
+| `80d042c` | chore: remove backups/ directory (73 files, 23,309 lines) |
+| *(próximo)* | docs: update Claude memory files after cleanup |
 
 ## Bugs corregidos
 
@@ -64,6 +75,12 @@ El proyecto fue sanitizado completamente. Todo el contenido personal fue removid
 ### Limpieza adicional
 - ✅ backups/ eliminado (~72 archivos con datos personales)
 - ✅ docs/SUPABASE_*.md eliminados (4 archivos — se empezará de cero)
+- ✅ space-3d-upgrade.css eliminado (archivo muerto, 1 línea de comentario)
+- ✅ QuickIndex.jsx eliminado (placeholder que retornaba null)
+- ✅ counter-final.css eliminado (pisado por final-adjustments.css con !important)
+- ✅ 16 componentes huérfanos eliminados (0 referencias entrantes desde código activo)
+- ✅ 11 JSONs de datos vacíos eliminados (asociados a componentes huérfanos)
+- ✅ CLAUDE.md actualizado con conteos post-limpieza
 
 ## Lo que queda pendiente
 
@@ -74,10 +91,10 @@ El proyecto fue sanitizado completamente. Todo el contenido personal fue removid
 - Activar VITE_REMOTE_CONTENT_ENABLED=true
 
 ### Mejoras futuras
-- 15 componentes no renderizados en App.jsx (posiblemente útiles: Navbar, MusicDock, GallerySection, etc.)
-- CentroUniversoSection tiene 5000+ líneas — candidato a refactor
-- 6 componentes usan localStorage directamente (violación arquitectura pero funcional)
+- CentroUniversoSection tiene 5,092 líneas (~68 handlers, 9 módulos CRUD) — candidato urgente a refactor
 - SceneMusicController necesita audio real en public/audio/
+- 277 `!important` en CSS (especialmente z-final-fixes.css con 106) — requiere refactor de estilos
+- 0 tests en el proyecto
 
 ## Para personalizar (cuando haya destinataria)
 
