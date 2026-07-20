@@ -80,11 +80,32 @@
   cursor: default;
 }
 
-@media (max-width: 820px) {
-  .reasons-chaos-box {
-    min-height: 920px;
-  }
+/* Fix: corazones cliqueables y estables (merged from chaotic-reasons-fix.css) */
+.chaotic-heart.hyper-chaotic-heart,
+.chaotic-heart.hyper-chaotic-heart:hover,
+.chaotic-heart.hyper-chaotic-heart:focus,
+.chaotic-heart.hyper-chaotic-heart:active {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
 
+.chaotic-heart.hyper-chaotic-heart:hover {
+  animation-play-state: paused !important;
+  filter: brightness(1.14) saturate(1.12);
+  box-shadow: 0 0 45px rgba(255, 122, 200, 0.72) !important;
+}
+
+/* Critical: prevent CSS translate from breaking JS positioning on hover */
+.chaotic-heart.hyper-chaotic-heart:hover,
+.chaotic-heart.hyper-chaotic-heart:active {
+  translate: none !important;
+}
+
+.chaotic-heart.hyper-chaotic-heart::after {
+  inset: -12px; /* expanded touch area from -8px */
+}
+
+@media (max-width: 820px) {
   .chaotic-heart.hyper-chaotic-heart {
     width: 54px !important;
     height: 54px !important;
