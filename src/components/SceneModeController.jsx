@@ -51,6 +51,10 @@ function SceneModeController() {
   const firstRunRef = useRef(true)
   const linkRefs = useRef({})
   const settingsRef = useRef(null)
+  const activeSceneRef = useRef(activeScene)
+  const centroVisibleRef = useRef(centroVisible)
+  activeSceneRef.current = activeScene
+  centroVisibleRef.current = centroVisible
 
   const remoteEnabled = isRemoteContentEnabled()
   const isLoggedIn = remoteEnabled && isSupabaseAuthenticated()
@@ -75,7 +79,26 @@ function SceneModeController() {
   // Scene mode init
   useEffect(() => {
     document.body.classList.add('scene-mode-enabled')
+
+    // MutationObserver: watch for lazy-loaded sections and apply visibility
+    const observer = new MutationObserver(() => {
+      const scene = activeSceneRef.current
+      if (!scene) return
+      const activeIds = new Set(scene.sectionIds || [])
+      if (centroVisibleRef.current && centroScene) {
+        centroScene.sectionIds?.forEach((id) => activeIds.add(id))
+      }
+      getSectionElements().forEach((el) => {
+        const shouldShow = activeIds.has(el.id)
+        el.classList.toggle('scene-visible', shouldShow)
+        el.classList.toggle('scene-hidden', !shouldShow)
+        el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+      })
+    })
+    observer.observe(document.getElementById('root') || document.body, { childList: true, subtree: true })
+
     return () => {
+      observer.disconnect()
       document.body.classList.remove('scene-mode-enabled')
       getSectionElements().forEach((el) => {
         el.classList.remove('scene-hidden', 'scene-visible')
@@ -95,10 +118,9 @@ function SceneModeController() {
     return () => window.removeEventListener('hashchange', handleHashChange)
   }, [navScenes])
 
-  // Scene change effect
-  useEffect(() => {
+  // Scene visibility logic — reusable for MutationObserver
+  const applySceneVisibility = () => {
     if (!activeScene) return
-    // Include centro sections if visible
     const activeIds = new Set(activeScene.sectionIds || [])
     if (centroVisible && centroScene) {
       centroScene.sectionIds?.forEach((id) => activeIds.add(id))
@@ -121,7 +143,18 @@ function SceneModeController() {
       detail: { sceneId: activeScene.musicSectionId || activeScene.id, appSceneId: activeScene.id }
     }))
 
-    const firstVisible = allSections.find((el) => activeIds.has(el.id))
+    return allSections
+  }
+
+  // Scene change effect
+  useEffect(() => {
+    const allSections = applySceneVisibility()
+    if (!allSections) return
+
+    const activeIds = new Set(activeScene.sectionIds || [])
+    if (centroVisible && centroScene) {
+      centroScene.sectionIds?.forEach((id) => activeIds.add(id))
+    }
     setTimeout(() => {
       centerActiveLink(!firstRunRef.current)
       if (firstVisible) {

@@ -1,59 +1,53 @@
 /* ============================================================
-   CLAY-3D SYSTEM v2 — Vibrant Flutter Dashboard Style
-   Every rectangle has colored border + 3D extrusion + glow
+   CLAY-3D v3 — ProposalSection-quality brilliance everywhere
+   High-opacity pink borders + inner glow + 3D extrusion
    ============================================================ */
 
-/* ---- GLOBAL: vibrant pink identity ---- */
-:root {
-  --3d-extrude: 0 5px 0;
-  --3d-glow: 0 0 25px;
-}
-
-/* ================================================
-   NAVIGATION BAR — scene-portal
-   ================================================ */
+/* ---- 3D NAVIGATION BAR ---- */
 .scene-portal {
-  background: rgba(12, 2, 22, 0.9) !important;
+  background: rgba(12, 2, 20, 0.9) !important;
   backdrop-filter: blur(28px) !important;
   -webkit-backdrop-filter: blur(28px) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.15) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.3) !important;
   border-radius: 20px !important;
   box-shadow:
-    0 6px 0 rgba(100, 10, 50, 0.3),
+    0 6px 0 rgba(100, 10, 50, 0.35),
     0 16px 40px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(255, 122, 200, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
   padding: 6px 14px !important;
 }
 
 /* Logo */
 .scene-portal-logo {
-  background: linear-gradient(135deg, rgba(255,122,200,0.15), rgba(255,23,68,0.1)) !important;
-  border: 1.5px solid rgba(255,122,200,0.25) !important;
+  background: linear-gradient(135deg, rgba(255,122,200,0.18), rgba(255,23,68,0.12)) !important;
+  border: 1.5px solid rgba(255,122,200,0.3) !important;
   border-radius: 14px !important;
   padding: 6px 14px !important;
   box-shadow:
-    0 3px 0 rgba(120,15,50,0.25),
-    0 6px 14px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    0 4px 0 rgba(120,15,50,0.3),
+    0 8px 20px rgba(0,0,0,0.4),
+    0 0 20px rgba(255,122,200,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.1) !important;
 }
 
 .scene-portal-logo svg {
-  filter: drop-shadow(0 0 6px rgba(255,122,200,0.5)) !important;
+  filter: drop-shadow(0 0 8px rgba(255,122,200,0.6)) !important;
 }
 
-/* Each scene link — vibrant 3D pill */
+/* Each nav link — vibrant 3D pill */
 .scene-link {
   border-radius: 14px !important;
   padding: 8px 14px !important;
   font-weight: 700 !important;
   font-size: 0.85rem !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.06) !important;
-  color: #c4a8b8 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #d4b8c8 !important;
   box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.25),
-    0 6px 12px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+    0 4px 0 rgba(0, 0, 0, 0.3),
+    0 6px 14px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
   position: relative;
   top: 0;
@@ -62,103 +56,72 @@
 .scene-link:hover {
   background: rgba(255, 122, 200, 0.15) !important;
   border-color: rgba(255, 122, 200, 0.35) !important;
-  color: #ffb3dd !important;
+  color: #fff !important;
   transform: translateY(-2px) !important;
   box-shadow:
-    0 6px 0 rgba(120, 15, 50, 0.3),
-    0 10px 20px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 20px rgba(255, 122, 200, 0.15) !important;
+    0 6px 0 rgba(120, 15, 50, 0.35),
+    0 10px 20px rgba(0, 0, 0, 0.45),
+    0 0 25px rgba(255, 122, 200, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 .scene-link.active {
   background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 23, 68, 0.18)) !important;
-  border-color: rgba(255, 122, 200, 0.4) !important;
+  border-color: rgba(255, 122, 200, 0.45) !important;
   color: #fff !important;
   box-shadow:
-    0 4px 0 rgba(120, 15, 50, 0.35),
-    0 8px 18px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 22px rgba(255, 122, 200, 0.2) !important;
+    0 4px 0 rgba(120, 15, 50, 0.4),
+    0 8px 18px rgba(0, 0, 0, 0.45),
+    0 0 30px rgba(255, 122, 200, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 
-/* Nav arrows */
-.scene-nav-arrow {
-  width: 38px !important;
-  height: 38px !important;
-  border-radius: 12px !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-  color: #ffb3dd !important;
-  display: grid !important;
-  place-items: center !important;
-  cursor: pointer !important;
-  box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.25),
-    0 6px 14px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-.scene-nav-arrow:hover {
-  background: rgba(255, 122, 200, 0.18) !important;
-  border-color: rgba(255, 122, 200, 0.35) !important;
-  color: #fff !important;
-  transform: translateY(-2px) !important;
-  box-shadow:
-    0 6px 0 rgba(120, 15, 50, 0.3),
-    0 10px 20px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 18px rgba(255, 122, 200, 0.18) !important;
-}
-
-.scene-nav-arrow:active {
-  transform: translateY(2px) !important;
-  box-shadow: 0 2px 0 rgba(80,10,40,0.25), 0 3px 6px rgba(0,0,0,0.3) !important;
-}
-
-/* Settings gear */
+/* Nav arrows + settings gear */
+.scene-nav-arrow,
 .scene-settings-gear {
   width: 38px !important;
   height: 38px !important;
   border-radius: 12px !important;
   background: rgba(255, 255, 255, 0.04) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-  color: #ffb3dd !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  color: #ffc4e8 !important;
   display: grid !important;
   place-items: center !important;
   cursor: pointer !important;
   box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.25),
-    0 6px 14px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    0 4px 0 rgba(100, 10, 50, 0.3),
+    0 8px 18px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(255, 122, 200, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+.scene-nav-arrow:hover,
 .scene-settings-gear:hover,
 .scene-settings-gear.active {
   background: rgba(255, 122, 200, 0.18) !important;
-  border-color: rgba(255, 122, 200, 0.35) !important;
+  border-color: rgba(255, 122, 200, 0.4) !important;
   color: #fff !important;
   transform: translateY(-2px) !important;
   box-shadow:
-    0 6px 0 rgba(120, 15, 50, 0.3),
-    0 10px 20px rgba(0, 0, 0, 0.45),
-    0 0 18px rgba(255, 122, 200, 0.18) !important;
+    0 6px 0 rgba(120, 15, 50, 0.4),
+    0 12px 24px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(255, 122, 200, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Settings dropdown */
 .scene-settings-dropdown {
-  background: rgba(12, 2, 22, 0.96) !important;
+  background: rgba(12, 2, 20, 0.96) !important;
   backdrop-filter: blur(28px) !important;
-  -webkit-backdrop-filter: blur(28px) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.18) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.3) !important;
   border-radius: 18px !important;
   padding: 6px !important;
   box-shadow:
-    0 8px 0 rgba(100, 10, 50, 0.25),
-    0 20px 50px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    0 8px 0 rgba(100, 10, 50, 0.3),
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
 }
 
 .scene-settings-item {
@@ -168,142 +131,174 @@
   cursor: pointer !important;
   transition: all 0.12s ease !important;
 }
-
 .scene-settings-item:hover {
   background: rgba(255, 122, 200, 0.12) !important;
 }
 
 /* ================================================
-   MAIN BUTTONS — CTA, Submit, Control
+   MAIN BUTTONS — bright glossy CTA
    ================================================ */
 .main-button,
 .control-btn.submit-btn,
-.editor-form button.submit-btn,
 button.submit-btn {
   border-radius: 16px !important;
   padding: 14px 28px !important;
   font-weight: 800 !important;
   font-size: 1rem !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 23, 68, 0.18)) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.4) !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.3), rgba(255, 45, 85, 0.22)) !important;
   color: #fff !important;
   cursor: pointer !important;
   box-shadow:
-    0 5px 0 rgba(160, 20, 60, 0.3),
-    0 10px 24px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    0 5px 0 rgba(160, 20, 60, 0.35),
+    0 10px 28px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(255, 122, 200, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
   position: relative;
   top: 0;
 }
-
 .main-button:hover,
-.control-btn.submit-btn:hover,
 button.submit-btn:hover {
   transform: translateY(-2px) !important;
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.35), rgba(255, 23, 68, 0.25)) !important;
-  border-color: rgba(255, 122, 200, 0.4) !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.4), rgba(255, 45, 85, 0.3)) !important;
+  border-color: rgba(255, 122, 200, 0.55) !important;
   box-shadow:
-    0 7px 0 rgba(160, 20, 60, 0.25),
-    0 14px 32px rgba(0, 0, 0, 0.5),
-    0 0 28px rgba(255, 122, 200, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    0 7px 0 rgba(160, 20, 60, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.55),
+    0 0 45px rgba(255, 122, 200, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
 }
-
 .main-button:active,
 button.submit-btn:active {
   transform: translateY(3px) !important;
   box-shadow:
-    0 2px 0 rgba(160, 20, 60, 0.2),
+    0 2px 0 rgba(160, 20, 60, 0.25),
     0 4px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Hero CTA — bigger */
+/* Hero CTA — bigger, brighter */
 .hero-actions .main-button {
   border-radius: 20px !important;
-  padding: 16px 36px !important;
-  font-size: 1.05rem !important;
+  padding: 18px 40px !important;
+  font-size: 1.1rem !important;
   box-shadow:
-    0 6px 0 rgba(160, 20, 60, 0.35),
-    0 14px 32px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(255, 122, 200, 0.15),
-    inset 0 2px 0 rgba(255, 255, 255, 0.18) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.25) !important;
+    0 8px 0 rgba(160, 20, 60, 0.4),
+    0 18px 44px rgba(0, 0, 0, 0.6),
+    0 0 50px rgba(255, 122, 200, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 122, 200, 0.4) !important;
 }
-
 .hero-actions .main-button:hover {
-  transform: translateY(-2px) !important;
   box-shadow:
-    0 8px 0 rgba(160, 20, 60, 0.3),
-    0 18px 40px rgba(0, 0, 0, 0.55),
-    0 0 40px rgba(255, 122, 200, 0.25),
-    inset 0 2px 0 rgba(255, 255, 255, 0.25) !important;
-}
-
-/* Music toggle button */
-.hero-music-toggle {
-  border-radius: 14px !important;
-  padding: 8px 16px !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-  color: #ffb3dd !important;
-  cursor: pointer !important;
-  box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.25),
-    0 6px 14px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-.hero-music-toggle:hover {
-  transform: translateY(-2px) !important;
-  background: rgba(255, 122, 200, 0.12) !important;
-  border-color: rgba(255, 122, 200, 0.3) !important;
-  box-shadow:
-    0 6px 0 rgba(120, 15, 50, 0.25),
-    0 10px 22px rgba(0, 0, 0, 0.45),
-    0 0 18px rgba(255, 122, 200, 0.12) !important;
+    0 10px 0 rgba(160, 20, 60, 0.35),
+    0 24px 52px rgba(0, 0, 0, 0.65),
+    0 0 65px rgba(255, 122, 200, 0.45),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3) !important;
 }
 
 /* ================================================
-   SECONDARY / GHOST BUTTONS
+   HERO — glossy 3D container
+   ================================================ */
+.hero-content {
+  border-radius: 34px !important;
+  padding: 48px clamp(20px, 5vw, 48px) !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 122, 200, 0.15), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255, 45, 85, 0.1), transparent 40%),
+    rgba(14, 2, 24, 0.6) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.25) !important;
+  box-shadow:
+    0 8px 0 rgba(80, 10, 40, 0.25),
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  position: relative;
+  overflow: hidden;
+}
+/* Hero inner glow */
+.hero-content::after {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  left: 50%; top: 40%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 122, 200, 0.12);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hero names */
+.hero-names {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-radius: 16px !important;
+  padding: 6px 16px !important;
+  background: rgba(255, 122, 200, 0.12) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.3) !important;
+  box-shadow:
+    0 4px 0 rgba(120, 15, 50, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 122, 200, 0.12) !important;
+}
+
+/* Hero daily phrase pill */
+.hero .daily-phrase {
+  display: inline-block !important;
+  border-radius: 14px !important;
+  padding: 4px 14px !important;
+  background: rgba(255, 122, 200, 0.08) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  color: #ffc4e8 !important;
+  font-size: 0.85rem !important;
+  box-shadow:
+    0 3px 0 rgba(120, 15, 50, 0.18),
+    0 5px 10px rgba(0, 0, 0, 0.25),
+    0 0 12px rgba(255, 122, 200, 0.08) !important;
+}
+
+/* ================================================
+   SECONDARY BUTTONS
    ================================================ */
 .ghost-button {
   border-radius: 12px !important;
   padding: 10px 20px !important;
   font-weight: 700 !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
   background: rgba(255, 255, 255, 0.03) !important;
-  color: #ffb3dd !important;
+  color: #ffc4e8 !important;
   cursor: pointer !important;
   box-shadow:
-    0 3px 0 rgba(0, 0, 0, 0.2),
-    0 5px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+    0 3px 0 rgba(80, 10, 40, 0.25),
+    0 6px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
   position: relative;
   top: 0;
 }
-
 .ghost-button:hover {
   transform: translateY(-2px) !important;
   background: rgba(255, 122, 200, 0.12) !important;
-  border-color: rgba(255, 122, 200, 0.3) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
   color: #fff !important;
   box-shadow:
-    0 5px 0 rgba(120, 15, 50, 0.25),
-    0 8px 18px rgba(0, 0, 0, 0.4),
-    0 0 16px rgba(255, 122, 200, 0.1) !important;
+    0 5px 0 rgba(120, 15, 50, 0.3),
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    0 0 22px rgba(255, 122, 200, 0.15) !important;
 }
-
 .ghost-button:active {
   transform: translateY(2px) !important;
   box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* ================================================
-   ALL CARDS — colored borders + 3D
+   ALL CARDS — vibrant pink borders + inner glow
    ================================================ */
 .counter-card,
 .control-card,
@@ -320,22 +315,26 @@ button.submit-btn:active {
 .dream-step,
 .promise-note,
 .playlist-row,
-.universe-card,
 .capsule-card,
 .festivity-card,
 .video-card {
-  border-radius: 22px !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.1) !important;
-  background: rgba(18, 4, 30, 0.72) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
+  border-radius: 24px !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 122, 200, 0.08), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255, 45, 85, 0.05), transparent 35%),
+    rgba(16, 3, 26, 0.72) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   box-shadow:
-    0 5px 0 rgba(80, 10, 40, 0.2),
-    0 14px 36px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    0 5px 0 rgba(80, 10, 40, 0.22),
+    0 14px 38px rgba(0, 0, 0, 0.42),
+    0 0 25px rgba(255, 122, 200, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   position: relative;
   top: 0;
+  overflow: hidden;
 }
 
 .counter-card:hover,
@@ -345,28 +344,31 @@ button.submit-btn:active {
 .dream-step:hover,
 .promise-note:hover {
   transform: translateY(-3px) !important;
-  border-color: rgba(255, 122, 200, 0.25) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
   box-shadow:
-    0 8px 0 rgba(80, 10, 40, 0.18),
-    0 20px 46px rgba(0, 0, 0, 0.45),
-    0 0 22px rgba(255, 122, 200, 0.08),
+    0 8px 0 rgba(80, 10, 40, 0.2),
+    0 22px 50px rgba(0, 0, 0, 0.5),
+    0 0 35px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+}
+
+/* Counter cards — extra pink accent */
+.counter-card {
+  border-width: 2px !important;
+  border-color: rgba(255, 122, 200, 0.28) !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 122, 200, 0.12), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255, 45, 85, 0.08), transparent 35%),
+    rgba(16, 3, 26, 0.72) !important;
+  box-shadow:
+    0 6px 0 rgba(120, 15, 50, 0.25),
+    0 14px 32px rgba(0, 0, 0, 0.45),
+    0 0 35px rgba(255, 122, 200, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Counter cards — pink accent border */
-.counter-card {
-  border-width: 2px !important;
-  border-color: rgba(255, 122, 200, 0.2) !important;
-  background: linear-gradient(175deg, rgba(255, 122, 200, 0.06), rgba(255, 23, 68, 0.03), rgba(18, 4, 30, 0.72)) !important;
-}
-
-/* Control cards (Centro del Universo stats) */
-.control-card {
-  border-color: rgba(255, 122, 200, 0.15) !important;
-}
-
 /* ================================================
-   SECTION TITLE TAGS (las etiquetas / pills)
+   SECTION TITLE TAGS (pills)
    ================================================ */
 .section-title span,
 .small-pill {
@@ -377,149 +379,119 @@ button.submit-btn:active {
   font-size: 0.75rem !important;
   letter-spacing: 1.5px !important;
   text-transform: uppercase !important;
-  background: rgba(255, 122, 200, 0.1) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
-  color: #ffb3dd !important;
+  background: rgba(255, 122, 200, 0.12) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.28) !important;
+  color: #ffc4e8 !important;
   box-shadow:
-    0 3px 0 rgba(120, 15, 50, 0.2),
-    0 5px 12px rgba(0, 0, 0, 0.25),
+    0 3px 0 rgba(120, 15, 50, 0.25),
+    0 6px 14px rgba(0, 0, 0, 0.3),
+    0 0 16px rgba(255, 122, 200, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 /* ================================================
-   HERO — 3D container
-   ================================================ */
-.hero-content {
-  border-radius: 28px !important;
-  padding: 48px clamp(20px, 5vw, 48px) !important;
-  background: rgba(18, 4, 30, 0.55) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.12) !important;
-  box-shadow:
-    0 6px 0 rgba(80, 10, 40, 0.2),
-    0 18px 44px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
-}
-
-/* Hero names heart — 3D */
-.hero-names {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  border-radius: 16px !important;
-  padding: 6px 16px !important;
-  background: rgba(255, 122, 200, 0.08) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.18) !important;
-  box-shadow:
-    0 3px 0 rgba(120, 15, 50, 0.2),
-    0 6px 14px rgba(0, 0, 0, 0.25) !important;
-}
-
-/* ================================================
-   DISTANCE MAP — 3D portraits + circles
+   DISTANCE MAP
    ================================================ */
 .portrait-placeholder {
   border-radius: 50% !important;
-  width: 70px !important;
-  height: 70px !important;
+  width: 72px !important;
+  height: 72px !important;
   display: grid !important;
   place-items: center !important;
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 23, 68, 0.2)) !important;
-  border: 2px solid rgba(255, 122, 200, 0.35) !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.3), rgba(255, 45, 85, 0.25)) !important;
+  border: 2px solid rgba(255, 122, 200, 0.4) !important;
   box-shadow:
-    0 4px 0 rgba(120, 15, 50, 0.25),
-    0 10px 24px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(255, 122, 200, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    0 5px 0 rgba(120, 15, 50, 0.3),
+    0 12px 28px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(255, 122, 200, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
   animation: pulseHeart 2.5s ease-in-out infinite;
 }
-
 .portrait-placeholder span {
   color: #fff !important;
-  font-size: 1.5rem !important;
+  font-size: 1.6rem !important;
   font-weight: 900 !important;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5) !important;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5) !important;
 }
 
-/* KM counter — 3D pill */
 .km-counter {
   border-radius: 18px !important;
   padding: 14px 24px !important;
-  background: rgba(255, 122, 200, 0.08) !important;
-  border: 2px solid rgba(255, 122, 200, 0.2) !important;
+  background: rgba(255, 122, 200, 0.1) !important;
+  border: 2px solid rgba(255, 122, 200, 0.3) !important;
   box-shadow:
-    0 4px 0 rgba(120, 15, 50, 0.2),
-    0 10px 24px rgba(0, 0, 0, 0.35),
-    0 0 20px rgba(255, 122, 200, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    0 4px 0 rgba(120, 15, 50, 0.25),
+    0 10px 26px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 /* ================================================
-   SCENE MUSIC CONTROLLER — 3D player
+   SCENE MUSIC CONTROLLER
    ================================================ */
 .scene-music-controller {
   border-radius: 18px !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.15) !important;
-  background: rgba(12, 2, 22, 0.9) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.3) !important;
+  background: rgba(12, 2, 20, 0.92) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
   box-shadow:
-    0 6px 0 rgba(100, 10, 50, 0.3),
-    0 16px 40px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    0 6px 0 rgba(100, 10, 50, 0.35),
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 .scene-music-orb {
-  border: 2px solid rgba(255, 122, 200, 0.3) !important;
+  border: 2px solid rgba(255, 122, 200, 0.4) !important;
   box-shadow:
-    0 3px 0 rgba(120, 15, 50, 0.2),
-    0 8px 18px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(255, 122, 200, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    0 4px 0 rgba(120, 15, 50, 0.25),
+    0 10px 22px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 122, 200, 0.2) !important;
 }
 
 .scene-music-button {
   border-radius: 10px !important;
   background: rgba(255, 255, 255, 0.04) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-  color: #ffb3dd !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  color: #ffc4e8 !important;
   cursor: pointer !important;
   box-shadow:
-    0 3px 0 rgba(0, 0, 0, 0.25),
+    0 3px 0 rgba(100, 10, 50, 0.25),
     0 5px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    0 0 12px rgba(255, 122, 200, 0.1) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-
 .scene-music-button:hover {
   transform: translateY(-2px) !important;
   background: rgba(255, 122, 200, 0.15) !important;
-  border-color: rgba(255, 122, 200, 0.3) !important;
+  border-color: rgba(255, 122, 200, 0.4) !important;
   box-shadow:
-    0 5px 0 rgba(120, 15, 50, 0.25),
-    0 8px 18px rgba(0, 0, 0, 0.4),
-    0 0 16px rgba(255, 122, 200, 0.1) !important;
+    0 5px 0 rgba(120, 15, 50, 0.3),
+    0 8px 18px rgba(0, 0, 0, 0.45),
+    0 0 22px rgba(255, 122, 200, 0.2) !important;
 }
 
-.scene-music-button:active {
-  transform: translateY(2px) !important;
-  box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
-}
-
-/* Volume button */
-.scene-volume-icon {
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 8px !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-  color: #ffb3dd !important;
-  cursor: pointer !important;
+/* ================================================
+   INPUTS — 3D inset
+   ================================================ */
+input, textarea, select {
+  border-radius: 10px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  color: #fff5fa !important;
+  padding: 10px 14px !important;
   box-shadow:
-    0 3px 0 rgba(0, 0, 0, 0.25),
-    0 4px 8px rgba(0, 0, 0, 0.3) !important;
-  transition: all 0.12s ease !important;
+    inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.2s ease !important;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: rgba(255, 122, 200, 0.5) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    0 0 0 3px rgba(255, 122, 200, 0.15) !important;
+  outline: none !important;
 }
 
 /* ================================================
@@ -529,77 +501,52 @@ button.submit-btn:active {
   width: 44px !important;
   height: 44px !important;
   border-radius: 14px !important;
-  background: rgba(12, 2, 22, 0.88) !important;
-  border: 1.5px solid rgba(255, 122, 200, 0.18) !important;
+  background: rgba(12, 2, 20, 0.9) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.25) !important;
   box-shadow:
-    0 4px 0 rgba(100, 10, 50, 0.25),
-    0 10px 24px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    0 4px 0 rgba(100, 10, 50, 0.3),
+    0 10px 26px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(255, 122, 200, 0.12) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-
 .back-to-top:hover {
   transform: translateY(-2px) !important;
-  border-color: rgba(255, 122, 200, 0.35) !important;
-  box-shadow:
-    0 6px 0 rgba(120, 15, 50, 0.3),
-    0 14px 32px rgba(0, 0, 0, 0.55),
-    0 0 20px rgba(255, 122, 200, 0.12) !important;
-}
-
-/* ================================================
-   INPUTS — 3D inset
-   ================================================ */
-input, textarea, select {
-  border-radius: 10px !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(0, 0, 0, 0.35) !important;
-  color: #faf5f9 !important;
-  padding: 10px 14px !important;
-  box-shadow:
-    inset 0 2px 5px rgba(0, 0, 0, 0.5),
-    0 1px 0 rgba(255, 255, 255, 0.03) !important;
-  transition: all 0.2s ease !important;
-}
-
-input:focus, textarea:focus, select:focus {
   border-color: rgba(255, 122, 200, 0.4) !important;
   box-shadow:
-    inset 0 2px 5px rgba(0, 0, 0, 0.5),
-    0 0 0 3px rgba(255, 122, 200, 0.12) !important;
-  outline: none !important;
+    0 6px 0 rgba(120, 15, 50, 0.35),
+    0 14px 34px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(255, 122, 200, 0.2) !important;
 }
 
 /* ================================================
-   SONG / PLAYLIST ROWS — 3D
+   PLAYLIST / SONG ROWS
    ================================================ */
 .playlist-row,
 .song-card,
 .playlist-button-row {
   border-radius: 16px !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.06) !important;
-  background: rgba(18, 4, 30, 0.65) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.15) !important;
+  background: rgba(18, 4, 28, 0.68) !important;
   box-shadow:
-    0 3px 0 rgba(80, 10, 40, 0.18),
-    0 8px 18px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+    0 3px 0 rgba(80, 10, 40, 0.2),
+    0 8px 18px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
   cursor: pointer !important;
 }
-
 .playlist-row:hover,
 .song-card:hover {
   transform: translateY(-2px) !important;
   background: rgba(255, 122, 200, 0.06) !important;
-  border-color: rgba(255, 122, 200, 0.2) !important;
+  border-color: rgba(255, 122, 200, 0.3) !important;
   box-shadow:
-    0 5px 0 rgba(80, 10, 40, 0.15),
-    0 12px 28px rgba(0, 0, 0, 0.4),
-    0 0 14px rgba(255, 122, 200, 0.06) !important;
+    0 5px 0 rgba(80, 10, 40, 0.18),
+    0 12px 28px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(255, 122, 200, 0.1) !important;
 }
 
 /* ================================================
-   CRUD SELECTOR BUTTONS — Centro del Universo
+   CRUD SELECTOR BUTTONS
    ================================================ */
 .crud-selector-btn {
   border-radius: 14px !important;
@@ -607,12 +554,12 @@ input:focus, textarea:focus, select:focus {
   font-weight: 700 !important;
   font-size: 0.85rem !important;
   background: rgba(255, 255, 255, 0.03) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.06) !important;
-  color: #c4a8b8 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  color: #d4b8c8 !important;
   cursor: pointer !important;
   box-shadow:
-    0 3px 0 rgba(0, 0, 0, 0.2),
-    0 5px 10px rgba(0, 0, 0, 0.25),
+    0 3px 0 rgba(0, 0, 0, 0.25),
+    0 5px 10px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
   transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
   display: inline-flex !important;
@@ -621,29 +568,67 @@ input:focus, textarea:focus, select:focus {
   position: relative;
   top: 0;
 }
-
 .crud-selector-btn:hover {
   transform: translateY(-2px) !important;
   background: rgba(255, 122, 200, 0.1) !important;
-  border-color: rgba(255, 122, 200, 0.25) !important;
-  color: #ffb3dd !important;
+  border-color: rgba(255, 122, 200, 0.3) !important;
+  color: #ffc4e8 !important;
   box-shadow:
-    0 5px 0 rgba(120, 15, 50, 0.22),
-    0 8px 16px rgba(0, 0, 0, 0.35) !important;
+    0 5px 0 rgba(120, 15, 50, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(255, 122, 200, 0.1) !important;
 }
-
 .crud-selector-btn.active {
-  background: linear-gradient(135deg, rgba(255, 122, 200, 0.22), rgba(255, 23, 68, 0.15)) !important;
-  border-color: rgba(255, 122, 200, 0.35) !important;
+  background: linear-gradient(135deg, rgba(255, 122, 200, 0.25), rgba(255, 45, 85, 0.18)) !important;
+  border-color: rgba(255, 122, 200, 0.4) !important;
   color: #fff !important;
   box-shadow:
-    0 4px 0 rgba(120, 15, 50, 0.3),
-    0 8px 16px rgba(0, 0, 0, 0.35),
-    0 0 16px rgba(255, 122, 200, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    0 4px 0 rgba(120, 15, 50, 0.35),
+    0 8px 18px rgba(0, 0, 0, 0.4),
+    0 0 25px rgba(255, 122, 200, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
-
 .crud-selector-btn:active {
   transform: translateY(2px) !important;
-  box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ================================================
+   MUSIC TOGGLE
+   ================================================ */
+.hero-music-toggle {
+  border-radius: 14px !important;
+  padding: 8px 16px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  color: #ffc4e8 !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 4px 0 rgba(100, 10, 50, 0.25),
+    0 6px 14px rgba(0, 0, 0, 0.35),
+    0 0 16px rgba(255, 122, 200, 0.1) !important;
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.hero-music-toggle:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 122, 200, 0.12) !important;
+  border-color: rgba(255, 122, 200, 0.35) !important;
+  box-shadow:
+    0 6px 0 rgba(120, 15, 50, 0.3),
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    0 0 24px rgba(255, 122, 200, 0.18) !important;
+}
+
+/* Volume button */
+.scene-volume-icon {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px solid rgba(255, 122, 200, 0.2) !important;
+  color: #ffc4e8 !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 3px 0 rgba(100, 10, 50, 0.25),
+    0 4px 10px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.12s ease !important;
 }
