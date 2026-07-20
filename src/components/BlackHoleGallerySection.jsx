@@ -407,6 +407,19 @@ function BlackHoleGallerySection({ items = [] }) {
     return () => window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
   }, [])
 
+  // Reset entered state when navigating away from galeria scene
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.appSceneId !== 'galeria') {
+        setHasEntered(false)
+        setNeedsGate(true)
+        setIsOpen(false)
+      }
+    }
+    window.addEventListener('distancia-cero-scene-change', handler)
+    return () => window.removeEventListener('distancia-cero-scene-change', handler)
+  }, [])
+
   useEffect(() => {
     if (!isEntering) return
 
@@ -457,7 +470,7 @@ function BlackHoleGallerySection({ items = [] }) {
     <section
       className={`section blackhole-section ${isEntering ? 'blackhole-entering' : ''} ${needsGate ? 'blackhole-needs-gate' : ''} ${hasEntered ? 'blackhole-entered' : ''}`}
       id="galeria-agujero-negro"
-      style={isEntering ? { display: 'block', minHeight: '100vh' } : undefined}
+      style={(isEntering || hasEntered) ? { display: 'block', minHeight: '100vh' } : undefined}
     >
       <SectionTitle
         eyebrow="Galería"
