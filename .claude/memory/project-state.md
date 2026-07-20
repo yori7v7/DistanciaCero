@@ -30,6 +30,7 @@ metadata:
 | `1448d33` | docs: update Claude memory files after cleanup |
 | `51ee625` | refactor: CSS cleanup — remove dead fix/polish, merge chaotic-reasons |
 | `aa67ed7` | refactor: extract CrudStatButton, create useCrudCollection hook + CrudEditorPanel |
+| `beb63e4` | refactor: remove dead rules from relationship-refactor.css |
 
 ## Bugs corregidos
 
