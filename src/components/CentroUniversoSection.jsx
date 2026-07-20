@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import SectionTitle from './SectionTitle'
 import LocalIdentitySelector from './LocalIdentitySelector'
 import LocalContentMeta from './LocalContentMeta'
+import CrudStatButton from './centro-universo/CrudStatButton'
 import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
@@ -198,17 +199,6 @@ function CentroUniversoSection() {
     { id: 'local', label: 'Ver creados por ti' },
     { id: 'create', label: 'Crear nuevo' }
   ]
-  const CrudStatButton = ({ filter, value, label }) => (
-    <button
-      type="button"
-      className={`crud-stat-button ${activeCrudFilter === filter ? 'is-active' : ''}`}
-      onClick={() => handleCrudFilterClick(filter)}
-    >
-      <strong>{value}</strong>
-      <span>{label}</span>
-    </button>
-  )
-
   useEffect(() => {
     setIsSimUnlocked(getSimulationUnlocked())
 
@@ -2602,10 +2592,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseMonthly)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseMonthlyCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseMonthlyCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localMonthly.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseMonthly)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseMonthlyCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseMonthlyCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localMonthly.length} label="Tuyos" />
           </div>
 
           <div className="editor-warning">
@@ -2763,10 +2753,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseOpenWhen)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseOpenWhenCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseOpenWhenCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localOpenWhen.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseOpenWhen)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseOpenWhenCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseOpenWhenCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localOpenWhen.length} label="Tuyos" />
           </div>
 
           <div className="editor-warning">
@@ -3019,10 +3009,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseReasons)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseReasonsCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseReasonsCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localReasons.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseReasons)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseReasonsCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseReasonsCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localReasons.length} label="Tuyos" />
           </div>
 
           <div className="editor-field">
@@ -3155,10 +3145,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseImportantDates)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseImportantDatesCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseImportantDatesCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localImportantDates.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseImportantDates)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseImportantDatesCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseImportantDatesCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localImportantDates.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -3415,10 +3405,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseFutureDreams)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseFutureDreamsCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseFutureDreamsCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localFutureDreams.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseFutureDreams)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseFutureDreamsCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseFutureDreamsCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localFutureDreams.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -3646,10 +3636,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseTimelinePages)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseTimelineCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseTimelineCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localTimelinePages.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseTimelinePages)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseTimelineCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseTimelineCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localTimelinePages.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -3988,10 +3978,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBaseBlackHoleGallery)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBaseBlackHoleGalleryCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBaseBlackHoleGalleryCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localBlackHoleGallery.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseBlackHoleGallery)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseBlackHoleGalleryCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseBlackHoleGalleryCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localBlackHoleGallery.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -4360,10 +4350,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBasePlaylist)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBasePlaylistCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBasePlaylistCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localPlaylist.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBasePlaylist)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBasePlaylistCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBasePlaylistCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localPlaylist.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
@@ -4788,10 +4778,10 @@ function CentroUniversoSection() {
           </div>
 
           <div className="reason-stats-grid">
-            <CrudStatButton filter="base" value={getNormalBaseCount(visibleBasePromises)} label="Base" />
-            <CrudStatButton filter="edited" value={editedBasePromisesCount} label="Editadas" />
-            <CrudStatButton filter="hidden" value={hiddenBasePromisesCount} label="Ocultas" />
-            <CrudStatButton filter="local" value={localPromises.length} label="Tuyos" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBasePromises)} label="Base" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBasePromisesCount} label="Editadas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBasePromisesCount} label="Ocultas" />
+            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localPromises.length} label="Tuyos" />
           </div>
 
           <div className="base-reasons-list">
