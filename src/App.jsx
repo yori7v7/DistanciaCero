@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react'
 import AuthGate from './components/AuthGate'
 import LoadingIntro from './components/LoadingIntro'
 import Hero from './components/Hero'
@@ -6,17 +5,17 @@ import ProposalSection from './components/ProposalSection'
 import CounterSection from './components/CounterSection'
 import MainLetter from './components/MainLetter'
 import StoryTimeline from './components/StoryTimeline'
-const UniverseSection = lazy(() => import('./components/UniverseSection'))
+import UniverseSection from './components/UniverseSection'
 import MonthlyLetters from './components/MonthlyLetters'
 import OpenWhenSection from './components/OpenWhenSection'
 import PlaylistSection from './components/PlaylistSection'
 import ReasonsSection from './components/ReasonsSection'
 import ImportantDatesSection from './components/ImportantDatesSection'
-const BlackHoleGallerySection = lazy(() => import('./components/BlackHoleGallerySection'))
+import BlackHoleGallerySection from './components/BlackHoleGallerySection'
 import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
-const CentroUniversoSection = lazy(() => import('./components/CentroUniversoSection'))
+import CentroUniversoSection from './components/CentroUniversoSection'
 import SceneMusicController from './components/SceneMusicController'
 import SceneModeController from './components/SceneModeController'
 import BackToTop from './components/BackToTop'
@@ -54,23 +53,17 @@ function App() {
         <CounterSection />
         <MainLetter />
         <StoryTimeline timeline={timeline} />
-        <Suspense fallback={<div className="section" />}>
-          <UniverseSection universe={universe} />
-        </Suspense>
+        <UniverseSection universe={universe} />
         <MonthlyLetters letters={monthlyLetters} />
         <OpenWhenSection cards={openWhen} />
         <PlaylistSection playlist={playlist} />
         <ReasonsSection reasons={reasons} />
         <ImportantDatesSection dates={importantDates} />
-        <Suspense fallback={<div className="section" />}>
-          <BlackHoleGallerySection items={blackHoleGallery} />
-        </Suspense>
+        <BlackHoleGallerySection items={blackHoleGallery} />
         <FutureDreamsSection dreams={futureDreams} />
         <PromisesSection promises={promises} />
         <DistanceMapSection />
-        <Suspense fallback={<div className="section"><div className="section-title"><span className="small-pill">Cargando...</span></div></div>}>
-          <CentroUniversoSection />
-        </Suspense>
+        <CentroUniversoSection />
       </main>
 
       <SceneModeController />
