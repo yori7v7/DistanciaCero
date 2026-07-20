@@ -3,6 +3,8 @@ import SectionTitle from './SectionTitle'
 import LocalIdentitySelector from './LocalIdentitySelector'
 import LocalContentMeta from './LocalContentMeta'
 import CrudStatButton from './centro-universo/CrudStatButton'
+import useCrudCollection from './centro-universo/useCrudCollection'
+import CrudEditorPanel from './centro-universo/CrudEditorPanel'
 import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
@@ -183,6 +185,61 @@ function CentroUniversoSection() {
   const [activeCrudFilter, setActiveCrudFilter] = useState('all')
   const activeLetterType = activeCrudModule === 'openWhenLetters' ? 'openwhen' : 'monthly'
 
+  // --- Refactored collections using useCrudCollection ---
+  const reasonsFields = [
+    { name: 'title', label: 'Título de la razón', required: true, placeholder: 'Ej. Razón 101' },
+    { name: 'text', label: 'Texto de la razón', required: true, type: 'textarea', rows: 4, placeholder: 'Escribe una nueva razón para que flote en la sección.' }
+  ]
+  const reasonsCrud = useCrudCollection('reasons', reasonsData, {
+    fields: reasonsFields,
+    idPrefix: 'local-reason-'
+  })
+
+  const promisesFields = [
+    { name: 'title', label: 'Título', required: true, placeholder: 'Ej. Promesa #1' },
+    { name: 'text', label: 'Texto', required: true, type: 'textarea', rows: 4, placeholder: 'Escribe la promesa...' },
+    { name: 'tag', label: 'Tag', placeholder: 'Ej. eterna, diaria, viaje' }
+  ]
+  const promisesCrud = useCrudCollection('promises', promisesData, {
+    fields: promisesFields,
+    idPrefix: 'local-promise-'
+  })
+
+  const importantDatesFields = [
+    { name: 'date', label: 'Fecha', type: 'date' },
+    { name: 'title', label: 'Título', required: true, placeholder: 'Ej. Primer beso' },
+    { name: 'description', label: 'Descripción', type: 'textarea', rows: 3, placeholder: '¿Qué pasó ese día?' },
+    { name: 'tag', label: 'Tag', placeholder: 'Ej. aniversario, viaje' }
+  ]
+  const importantDatesCrud = useCrudCollection('importantDates', importantDatesData, {
+    fields: importantDatesFields,
+    idPrefix: 'local-date-'
+  })
+
+  const futureDreamsFields = [
+    { name: 'category', label: 'Categoría', placeholder: 'Ej. Viajes, Hogar, Aventuras' },
+    { name: 'title', label: 'Título', required: true, placeholder: 'Ej. Viaje a Japón' },
+    { name: 'description', label: 'Descripción', type: 'textarea', rows: 3, placeholder: 'Describe el sueño...' }
+  ]
+  const futureDreamsCrud = useCrudCollection('futureDreams', futureDreamsData, {
+    fields: futureDreamsFields,
+    idPrefix: 'local-dream-'
+  })
+
+  const playlistFields = [
+    { name: 'title', label: 'Título', required: true, placeholder: 'Ej. Nuestra canción' },
+    { name: 'artist', label: 'Artista', placeholder: 'Nombre del artista' },
+    { name: 'description', label: 'Descripción', type: 'textarea', rows: 3, placeholder: '¿Por qué es especial?' },
+    { name: 'sourceType', label: 'Tipo', type: 'select', options: [{value:'local',label:'Local'},{value:'external',label:'Enlace externo'}] },
+    { name: 'src', label: 'URL o archivo', placeholder: '/audio/cancion.mp3' },
+    { name: 'link', label: 'Enlace', placeholder: 'https://...' },
+    { name: 'tag', label: 'Tag', placeholder: 'Ej. romántica, bailable' }
+  ]
+  const playlistCrud = useCrudCollection('playlist', playlistData, {
+    fields: playlistFields,
+    idPrefix: 'local-song-'
+  })
+
   const crudModules = [
     { id: 'monthlyLetters', label: 'Cartas mensuales' },
     { id: 'openWhenLetters', label: 'Abrir cuando' },
@@ -206,8 +263,10 @@ function CentroUniversoSection() {
     setLocalOpenWhen(getLegacyOpenWhenLetters())
     setLocalReasons(getLocalItems('reasons'))
     setReasonOverrides(getLocalOverrides('reasons'))
+    reasonsCrud.loadData()
     setHiddenReasonIds(getHiddenItemIds('reasons'))
     setLocalPromises(getLocalItems('promises'))
+    promisesCrud.loadData()
     setPromiseOverrides(getLocalOverrides('promises'))
     setHiddenPromiseIds(getHiddenItemIds('promises'))
     setMonthlyOverrides(getLocalOverrides('monthlyLetters'))
@@ -217,9 +276,11 @@ function CentroUniversoSection() {
     setLocalImportantDates(getLocalItems('importantDates'))
     setImportantDateOverrides(getLocalOverrides('importantDates'))
     setHiddenImportantDateIds(getHiddenItemIds('importantDates'))
+    importantDatesCrud.loadData()
     setLocalFutureDreams(getLocalItems('futureDreams'))
     setFutureDreamOverrides(getLocalOverrides('futureDreams'))
     setHiddenFutureDreamIds(getHiddenItemIds('futureDreams'))
+    futureDreamsCrud.loadData()
     setLocalTimelinePages(getLocalItems('timeline'))
     setTimelineOverrides(getLocalOverrides('timeline'))
     setHiddenTimelineIds(getHiddenItemIds('timeline'))
@@ -229,6 +290,7 @@ function CentroUniversoSection() {
     setLocalPlaylist(getLocalItems('playlist'))
     setPlaylistOverrides(getLocalOverrides('playlist'))
     setHiddenPlaylistIds(getHiddenItemIds('playlist'))
+    playlistCrud.loadData()
   }, [])
 
   useEffect(() => {
@@ -2901,240 +2963,19 @@ function CentroUniversoSection() {
         </div>
       </div>
 
-      {/* Local reasons CRUD editor */}
-      <div className={`local-reasons-editor ${activeCrudModule === 'reasons' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-reasons-editor">
-        <div className="reasons-editor-card">
-          <div className="crud-subsection-title">Crear nueva</div>
-          <h3>
-            <Plus size={18} />
-            Editor de 100 razones
-          </h3>
-
-          <div className="editor-warning">
-            <AlertTriangle size={15} />
-            <span>
-              <strong>Aviso de pruebas</strong>: Estas razones son tuyas y de prueba; las razones originales no se modifican.
-            </span>
-          </div>
-
-          <form className="editor-form" onSubmit={handleReasonSubmit}>
-            <div className="editor-field">
-              <label htmlFor="reasonTitle">Titulo de la razon *</label>
-              <input
-                id="reasonTitle"
-                type="text"
-                placeholder="Ej. Razon 101"
-                value={reasonTitle}
-                onChange={(event) => setReasonTitle(event.target.value)}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="reasonText">Texto de la razon *</label>
-              <textarea
-                id="reasonText"
-                rows="4"
-                placeholder="Escribe una nueva razon para que flote en la seccion."
-                value={reasonText}
-                onChange={(event) => setReasonText(event.target.value)}
-                required
-              ></textarea>
-            </div>
-
-            <div className="form-actions">
-              {editingReasonId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={resetReasonForm}>
-                  Cancelar
-                </button>
-              )}
-
-              <button type="submit" className="control-btn submit-btn">
-                {editingReasonId ? 'Actualizar razon' : 'Guardar razon'}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div className="reasons-list-card">
-          <div className="crud-subsection-title">Creadas por ti</div>
-          <div className="reasons-list-header">
-            <h3>Razones creadas por ti</h3>
-            <span>{localReasons.length} tuyas</span>
-          </div>
-
-          {localReasons.length === 0 ? (
-            <p className="no-items">No hay razones tuyas creadas.</p>
-          ) : (
-            <div className="reason-items-list">
-              {localReasons.map((reason) => (
-                <div className="reason-item-row" key={reason.id}>
-                  <div className="item-info">
-                    <strong>{reason.title}</strong>
-                    <span>{reason.text}</span>
-                    <LocalContentMeta item={reason} />
-                  </div>
-
-                  <div className="item-actions">
-                    <button
-                      type="button"
-                      className="action-icon-btn edit"
-                      onClick={() => handleReasonEdit(reason)}
-                      title="Editar razon tuya"
-                    >
-                      <Edit2 size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      className="action-icon-btn delete"
-                      onClick={() => handleReasonDelete(reason)}
-                      title="Eliminar razon tuya"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className={`base-reasons-editor ${activeCrudModule === 'reasons' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-reasons-editor">
-        <div className="base-reasons-panel">
-          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
-          <div className="reasons-list-header">
-            <h3>Razones originales</h3>
-            <span>{reasonsData.length} base</span>
-          </div>
-
-          <div className="reason-stats-grid">
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseReasons)} label="Base" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseReasonsCount} label="Editadas" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseReasonsCount} label="Ocultas" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localReasons.length} label="Tuyos" />
-          </div>
-
-          <div className="editor-field">
-            <label htmlFor="baseReasonSearch">Buscar razon original</label>
-            <input
-              id="baseReasonSearch"
-              type="text"
-              placeholder="Busca por numero, titulo o texto"
-              value={baseReasonQuery}
-              onChange={(event) => setBaseReasonQuery(event.target.value)}
-            />
-          </div>
-
-          <div className="base-reasons-list">
-            {filteredVisibleBaseReasons.length === 0 ? (
-              <p className="no-items">No hay elementos en este filtro.</p>
-            ) : filteredVisibleBaseReasons.map((reason) => (
-              <div
-                className={`base-reason-row ${reason.isOverridden ? 'is-overridden' : ''} ${reason.isHidden ? 'is-hidden' : ''}`}
-                key={reason.id}
-              >
-                <div className="base-reason-copy">
-                  <strong>
-                    #{reason.id} {reason.title}
-                  </strong>
-                  <span>{reason.text}</span>
-                  <small>
-                    {reason.isHidden ? 'Oculta' : reason.isOverridden ? 'Editada' : 'Original'}
-                  </small>
-                </div>
-
-                <div className="base-reason-actions">
-                  <button type="button" className="ghost-button" onClick={() => handleBaseReasonEdit(reason)}>
-                    <Edit2 size={14} />
-                    Editar
-                  </button>
-
-                  {reason.isOverridden && (
-                    <button type="button" className="ghost-button" onClick={() => handleBaseReasonRestore(reason.id)}>
-                      Restaurar
-                    </button>
-                  )}
-
-                  {reason.isHidden ? (
-                    <button type="button" className="ghost-button" onClick={() => handleBaseReasonUnhide(reason.id)}>
-                      Mostrar
-                    </button>
-                  ) : (
-                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseReasonHide(reason)}>
-                      Ocultar
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="base-reasons-panel">
-          <div className="crud-subsection-title">Editar original</div>
-          <h3>
-            <Edit2 size={18} />
-            {editingBaseReasonId ? `Editando razon #${editingBaseReasonId}` : 'Editar razon original'}
-          </h3>
-
-          <div className="editor-warning">
-            <AlertTriangle size={15} />
-            <span>
-              <strong>Edicion tuya</strong>: Esto no modifica reasons.json; solo guarda una version tuya.
-            </span>
-          </div>
-
-          <form className="editor-form" onSubmit={handleBaseReasonSubmit}>
-            <div className="editor-field">
-              <label htmlFor="baseReasonTitle">Titulo override *</label>
-              <input
-                id="baseReasonTitle"
-                type="text"
-                value={baseReasonTitle}
-                onChange={(event) => setBaseReasonTitle(event.target.value)}
-                disabled={!editingBaseReasonId}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseReasonText">Texto override *</label>
-              <textarea
-                id="baseReasonText"
-                rows="5"
-                value={baseReasonText}
-                onChange={(event) => setBaseReasonText(event.target.value)}
-                disabled={!editingBaseReasonId}
-                required
-              ></textarea>
-            </div>
-
-            <div className="form-actions">
-              {editingBaseReasonId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseReasonForm}>
-                  Cancelar
-                </button>
-              )}
-
-              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseReasonId}>
-                Guardar override
-              </button>
-            </div>
-          </form>
-
-          {hiddenBaseReasonsCount > 0 && (
-            <div className="hidden-reasons-box">
-              <h4>Razones ocultas</h4>
-              {visibleBaseReasons.filter((reason) => reason.isHidden).map((reason) => (
-                <button type="button" className="ghost-button" key={reason.id} onClick={() => handleBaseReasonUnhide(reason.id)}>
-                  Mostrar #{reason.id}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <CrudEditorPanel
+        collectionLabel="100 razones"
+        collectionName="reasons"
+        activeCrudModule={activeCrudModule}
+        activeCrudAction={activeCrudAction}
+        activeCrudFilter={activeCrudFilter}
+        onCrudFilterClick={handleCrudFilterClick}
+        crud={reasonsCrud}
+        fields={reasonsFields}
+        listFields={['title', 'text']}
+        editorPanelId="local-reasons-editor"
+        baseEditorPanelId="base-reasons-editor"
+      />
 
       <div className={`base-dates-editor ${activeCrudModule === 'importantDates' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-dates-editor">
         <div className="base-reasons-panel">
