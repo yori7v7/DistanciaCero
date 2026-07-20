@@ -7,7 +7,7 @@ metadata:
 
 # Estado actual de DistanciaCero
 
-**Última actualización**: 2026-07-20 (limpieza + CSS cleanup + inicio refactor CentroUniverso)
+**Última actualización**: 2026-07-20 (sesión completa — limpieza + refactor + diseño + bug fixes)
 
 ## Commits de la sesión anterior (Julio 14)
 
@@ -35,8 +35,51 @@ metadata:
 | `3ee9938` | chore: remove temp migration scripts |
 | `d47bccc` | refactor: migrate 4 collections to CrudEditorPanel (5,092 → 3,947 lines) |
 | `e13b140` | refactor: remove ~50 handlers + ~55 state vars (→ 3,276 lines, -36%) |
+| `dd3a1b5` | fix: lazy-loaded sections flashing visible (CSS default hide + scene-visible) |
+| `f3a13ff` | perf: lazy-load 3 heavy components (initial JS 1,554→552 kB) |
+| `ea85129` | test: 17 tests for contentService |
+| `94e8c12` | content: populate timeline, playlist, promises, dates, dreams |
+| `0d2eb23` | feat: Claymorphism 3D + animated nebula background |
+| `9792e94` | feat: MAXIMUM 3D Flutter-style + monthlyLetters/openWhen populated |
+| `779db7f` | feat: 3D v2 vibrant colors + visible background |
+| `813d3ac` | design: clay-3d v3 + vibrant colors on stable base |
+| `b0b0e39` | fix: BlackHole gate CSS override for scene-mode |
+| `70fb03d` | fix: BlackHole entered state visibility |
+| `dde0d4a` | fix: BlackHole direct import + remove manual visibility hack |
+| `48a5b87` | fix: BlackHole overflow visible |
+| `2683068` | fix: BlackHole min-height + promises placeholder |
+| `7e50ba5` | fix: BlackHole entering animation CSS override |
+| `1b2ba25` | fix: BlackHole remove sessionStorage + CSS hacks |
+| `981aeb4` | fix: BlackHole inline style during entering |
+| `d476832` | fix: BlackHole final — inline entering+entered + scene reset |
 
-## Bugs corregidos
+## Estado final del proyecto
+
+### Diseño
+- **Glassmorphism + Claymorphism + Space UI**: fondos translúcidos, sombras 3D, bordes rosa brillantes
+- **Colores vibrantes**: rosa #ff8ad4, rojo #ff2d55
+- **Fondo animado**: nebulosas + estrellas visibles + anillos de energía
+- **Tipografía**: Inter (body) + Playfair Display (headings)
+- **3D**: todos los botones, cards, nav, inputs con extrusión clay
+- **Impeccable skill**: instalado con reglas de diseño
+
+### Arquitectura
+- **CentroUniversoSection**: 5,092 → ~3,200 líneas (-37%)
+- **useCrudCollection hook**: genérico para 5 colecciones
+- **CrudEditorPanel**: panel CRUD reutilizable
+- **Lazy loading**: UniverseSection + CentroUniversoSection
+- **17 tests**: contentService (Vitest)
+
+### Datos
+- 15 JSONs poblados (3 items c/u + 100 razones)
+- Cartas mensuales: 3 | Abrir cuando: 3 | Promesas: 3+1
+
+### Bugs conocidos resueltos
+- ✅ BlackHole: animación wormhole + contenido post-entrada
+- ✅ BlackHole: no aparece en otras secciones
+- ✅ Cartas mensuales: ya no 0/0
+- ✅ Flash de secciones lazy-loaded
+- ✅ SceneModeController estable
 
 - ✅ **Login roto**: `VITE_REMOTE_CONTENT_ENABLED=true` → `false`
 - ✅ **Proposal gate bloqueaba todo**: `display:none` en todas las secciones
