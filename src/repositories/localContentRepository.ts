@@ -1,3 +1,4 @@
+import type { ContentItem, OverrideMap } from '../types/content'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -20,80 +21,80 @@ const LEGACY_MONTHLY_LETTERS_KEY = 'distancia-cero-local-monthly-letters'
 const LEGACY_OPEN_WHEN_LETTERS_KEY = 'distancia-cero-local-open-when'
 const SIMULATION_UNLOCKED_KEY = 'distancia-cero-sim-unlocked'
 
-function canUseLocalStorage() {
+function canUseLocalStorage(): boolean {
   if (typeof window === 'undefined') return false
 
   try {
     return typeof window.localStorage !== 'undefined'
-  } catch (error) {
+  } catch {
     return false
   }
 }
 
-function safeGetItem(key) {
+function safeGetItem(key: string): string | null {
   if (!canUseLocalStorage()) return null
 
   try {
     return window.localStorage.getItem(key)
-  } catch (error) {
+  } catch {
     return null
   }
 }
 
-function safeSetItem(key, value) {
+function safeSetItem(key: string, value: string): void {
   if (!canUseLocalStorage()) return
 
   try {
     window.localStorage.setItem(key, value)
-  } catch (error) {
+  } catch {
     // LocalStorage can fail in private mode or quota-limited contexts.
   }
 }
 
-function safeRemoveItem(key) {
+function safeRemoveItem(key: string): void {
   if (!canUseLocalStorage()) return
 
   try {
     window.localStorage.removeItem(key)
-  } catch (error) {
+  } catch {
     // Keep legacy helpers non-throwing.
   }
 }
 
-function safeReadJsonArray(key) {
+function safeReadJsonArray(key: string): ContentItem[] {
   try {
     const rawValue = safeGetItem(key)
-    const parsedValue = rawValue ? JSON.parse(rawValue) : []
+    const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : []
     return Array.isArray(parsedValue) ? parsedValue : []
-  } catch (error) {
+  } catch {
     return []
   }
 }
 
-function safeSaveJsonArray(key, items) {
+function safeSaveJsonArray(key: string, items: ContentItem[]): ContentItem[] {
   const safeItems = Array.isArray(items) ? items : []
   safeSetItem(key, JSON.stringify(safeItems))
   return safeItems
 }
 
-function getSafeIdSegment(id) {
+function getSafeIdSegment(id: string | number | null | undefined): string {
   if (id === null || id === undefined) return ''
   return String(id).trim()
 }
 
-export function getCollectionItems(collectionName) {
+export function getCollectionItems(collectionName: string): ContentItem[] {
   return getLocalItems(collectionName)
 }
 
-export function saveCollectionItems(collectionName, items) {
+export function saveCollectionItems(collectionName: string, items: ContentItem[]): ContentItem[] {
   return saveLocalItems(collectionName, items)
 }
 
-export function addCollectionItem(collectionName, item) {
+export function addCollectionItem(collectionName: string, item: ContentItem): ContentItem[] {
   return addLocalItem(collectionName, withCreateMetadata(item))
 }
 
-export function updateCollectionItem(collectionName, id, patch) {
+export function updateCollectionItem(collectionName: string, id: string, patch: Partial<ContentItem>): ContentItem[] {
   const currentItem = getLocalItems(collectionName).find(
     (item) => String(item.id) === String(id) && item.isLocal
   )
@@ -108,70 +109,70 @@ export function updateCollectionItem(collectionName, id, patch) {
   })
 }
 
-export function deleteCollectionItem(collectionName, id) {
+export function deleteCollectionItem(collectionName: string, id: string): ContentItem[] {
   return deleteLocalItem(collectionName, id)
 }
 
-export function getCollectionOverrides(collectionName) {
+export function getCollectionOverrides(collectionName: string): OverrideMap {
   return getLocalOverrides(collectionName)
 }
 
-export function saveCollectionOverrides(collectionName, overrides) {
+export function saveCollectionOverrides(collectionName: string, overrides: OverrideMap): OverrideMap {
   return saveLocalOverrides(collectionName, overrides)
 }
 
-export function setCollectionOverride(collectionName, id, patch) {
+export function setCollectionOverride(collectionName: string, id: string, patch: Partial<ContentItem>): OverrideMap {
   return setLocalOverride(collectionName, id, patch)
 }
 
-export function deleteCollectionOverride(collectionName, id) {
+export function deleteCollectionOverride(collectionName: string, id: string): OverrideMap {
   return deleteLocalOverride(collectionName, id)
 }
 
-export function getCollectionHiddenIds(collectionName) {
+export function getCollectionHiddenIds(collectionName: string): string[] {
   return getHiddenItemIds(collectionName)
 }
 
-export function saveCollectionHiddenIds(collectionName, ids) {
+export function saveCollectionHiddenIds(collectionName: string, ids: string[]): string[] {
   return saveHiddenItemIds(collectionName, ids)
 }
 
-export function hideCollectionItem(collectionName, id) {
+export function hideCollectionItem(collectionName: string, id: string): string[] {
   return hideDefaultItem(collectionName, id)
 }
 
-export function restoreCollectionItem(collectionName, id) {
+export function restoreCollectionItem(collectionName: string, id: string): string[] {
   return restoreHiddenItem(collectionName, id)
 }
 
-export function mergeCollectionWithLocal(defaultItems, collectionName) {
+export function mergeCollectionWithLocal(defaultItems: ContentItem[], collectionName: string): ContentItem[] {
   return mergeWithLocalItems(defaultItems, collectionName)
 }
 
-export function getLegacyMonthlyLetters() {
+export function getLegacyMonthlyLetters(): ContentItem[] {
   return safeReadJsonArray(LEGACY_MONTHLY_LETTERS_KEY)
 }
 
-export function saveLegacyMonthlyLetters(items) {
+export function saveLegacyMonthlyLetters(items: ContentItem[]): ContentItem[] {
   return safeSaveJsonArray(LEGACY_MONTHLY_LETTERS_KEY, items)
 }
 
-export function getLegacyOpenWhenLetters() {
+export function getLegacyOpenWhenLetters(): ContentItem[] {
   return safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
 }
 
-export function saveLegacyOpenWhenLetters(items) {
+export function saveLegacyOpenWhenLetters(items: ContentItem[]): ContentItem[] {
   return safeSaveJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY, items)
 }
 
-export function isMonthlyLetterOpened(id) {
+export function isMonthlyLetterOpened(id: string | number): boolean {
   const safeId = getSafeIdSegment(id)
   if (!safeId) return false
 
   return safeGetItem(`distancia-cero-monthly-letter-${safeId}`) === 'opened'
 }
 
-export function setMonthlyLetterOpened(id, value = true) {
+export function setMonthlyLetterOpened(id: string | number, value = true): void {
   const safeId = getSafeIdSegment(id)
   if (!safeId) return
 
@@ -183,14 +184,14 @@ export function setMonthlyLetterOpened(id, value = true) {
   }
 }
 
-export function isOpenWhenLetterOpened(id) {
+export function isOpenWhenLetterOpened(id: string | number): boolean {
   const safeId = getSafeIdSegment(id)
   if (!safeId) return false
 
   return safeGetItem(`distancia-cero-open-when-${safeId}`) === 'opened'
 }
 
-export function setOpenWhenLetterOpened(id, value = true) {
+export function setOpenWhenLetterOpened(id: string | number, value = true): void {
   const safeId = getSafeIdSegment(id)
   if (!safeId) return
 
@@ -202,11 +203,11 @@ export function setOpenWhenLetterOpened(id, value = true) {
   }
 }
 
-export function getSimulationUnlocked() {
+export function getSimulationUnlocked(): boolean {
   return safeGetItem(SIMULATION_UNLOCKED_KEY) === '1'
 }
 
-export function setSimulationUnlocked(value) {
+export function setSimulationUnlocked(value: boolean): void {
   if (value) {
     safeSetItem(SIMULATION_UNLOCKED_KEY, '1')
   } else {

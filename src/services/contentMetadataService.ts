@@ -1,15 +1,23 @@
+import type { CreateMetadata, UpdateMetadata, MetadataOptions } from '../types/content'
 import { getCurrentUserId } from './authService'
 import { getCurrentSpaceId } from './universeService'
 
 export const METADATA_SOURCE = 'local-dev'
 
-function normalizeTimestamp(now) {
+interface ResolvedContext {
+  userId: string
+  spaceId: string
+  source: string
+  timestamp: string
+}
+
+function normalizeTimestamp(now?: string | Date): string {
   if (typeof now === 'string') return now
   if (now instanceof Date) return now.toISOString()
   return new Date().toISOString()
 }
 
-function resolveMetadataContext(options = {}) {
+function resolveMetadataContext(options: MetadataOptions = {}): ResolvedContext {
   const timestamp = normalizeTimestamp(options.now)
 
   return {
@@ -20,7 +28,7 @@ function resolveMetadataContext(options = {}) {
   }
 }
 
-export function buildCreateMetadata(options = {}) {
+export function buildCreateMetadata(options: MetadataOptions = {}): CreateMetadata {
   const { userId, spaceId, source, timestamp } = resolveMetadataContext(options)
 
   return {
@@ -33,7 +41,7 @@ export function buildCreateMetadata(options = {}) {
   }
 }
 
-export function buildUpdateMetadata(options = {}) {
+export function buildUpdateMetadata(options: MetadataOptions = {}): UpdateMetadata {
   const { userId, spaceId, source, timestamp } = resolveMetadataContext(options)
 
   return {
@@ -44,16 +52,16 @@ export function buildUpdateMetadata(options = {}) {
   }
 }
 
-export function withCreateMetadata(item, options = {}) {
+export function withCreateMetadata<T extends Record<string, unknown>>(item: T, options: MetadataOptions = {}): T & CreateMetadata {
   return {
     ...(item || {}),
     ...buildCreateMetadata(options)
-  }
+  } as T & CreateMetadata
 }
 
-export function withUpdateMetadata(item, options = {}) {
+export function withUpdateMetadata<T extends Record<string, unknown>>(item: T, options: MetadataOptions = {}): T & UpdateMetadata {
   return {
     ...(item || {}),
     ...buildUpdateMetadata(options)
-  }
+  } as T & UpdateMetadata
 }

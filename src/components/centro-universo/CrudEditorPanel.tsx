@@ -1,6 +1,26 @@
 import { Plus, Edit2, Trash2, AlertTriangle } from 'lucide-react'
+import type { ReactNode } from 'react'
+import type { ContentItem } from '../../types/content'
+import type { CrudCollectionAPI, CrudField } from './useCrudCollection'
 import LocalContentMeta from '../LocalContentMeta'
 import CrudStatButton from './CrudStatButton'
+
+interface CrudEditorPanelProps {
+  collectionLabel: string
+  collectionName: string
+  activeCrudModule: string
+  activeCrudAction: string
+  activeCrudFilter: string
+  onCrudFilterClick: (filter: string) => void
+  crud: CrudCollectionAPI
+  fields: CrudField[]
+  listFields?: string[]
+  renderItemInfo?: (item: ContentItem) => ReactNode
+  onEdit?: (item: ContentItem | null) => void
+  onBaseEdit?: (item: ContentItem) => void
+  editorPanelId?: string
+  baseEditorPanelId?: string
+}
 
 /**
  * Generic CRUD editor panel for one collection.
@@ -18,15 +38,14 @@ export default function CrudEditorPanel({
   listFields,
   renderItemInfo,
   onEdit,
-  onBaseEdit,
   editorPanelId,
   baseEditorPanelId
-}) {
+}: CrudEditorPanelProps) {
   const isActive = activeCrudModule === collectionName
   const showLocal = isActive && activeCrudAction === 'local'
   const showBase = isActive && activeCrudAction === 'originals'
 
-  const filterBaseItems = (items) => {
+  const filterBaseItems = (items: ContentItem[]): ContentItem[] => {
     if (activeCrudFilter === 'all') return items
     if (activeCrudFilter === 'overridden') return items.filter(i => i.isOverridden)
     if (activeCrudFilter === 'hidden') return items.filter(i => i.isHidden)
@@ -115,12 +134,12 @@ export default function CrudEditorPanel({
                 <div className="reason-item-row" key={item.id}>
                   <div className="item-info">
                     {listFields ? listFields.map((f, i) => {
-                      if (i === 0) return <strong key={f}>{item[f]}</strong>
-                      return <span key={f}>{item[f]}</span>
+                      if (i === 0) return <strong key={f}>{item[f] as string}</strong>
+                      return <span key={f}>{item[f] as string}</span>
                     }) : (
                       <>
-                        <strong>{item.title || item.displayLabel || item.id}</strong>
-                        <span>{item.text || item.description || ''}</span>
+                        <strong>{String(item.title || item.displayLabel || item.id)}</strong>
+                        <span>{String(item.text || item.description || '')}</span>
                       </>
                     )}
                     <LocalContentMeta item={item} />
@@ -212,12 +231,12 @@ export default function CrudEditorPanel({
                 <div className={`reason-item-row ${item.isOverridden ? 'overridden' : ''} ${item.isHidden ? 'hidden-item' : ''}`} key={item.id}>
                   <div className="item-info">
                     {listFields ? listFields.map((f, i) => {
-                      if (i === 0) return <strong key={f}>{item[f]}</strong>
-                      return <span key={f}>{item[f]}</span>
+                      if (i === 0) return <strong key={f}>{item[f] as string}</strong>
+                      return <span key={f}>{item[f] as string}</span>
                     }) : (
                       <>
-                        <strong>{item.title || item.displayLabel || item.id}</strong>
-                        <span>{item.text || item.description || ''}</span>
+                        <strong>{String(item.title || item.displayLabel || item.id)}</strong>
+                        <span>{String(item.text || item.description || '')}</span>
                       </>
                     )}
                     {item.isOverridden && <small className="text-pink">(editado)</small>}
@@ -230,12 +249,12 @@ export default function CrudEditorPanel({
                     </button>
                     {item.isOverridden && (
                       <button type="button" className="action-icon-btn restore"
-                        onClick={() => crud.handleBaseRestore(item.id)} title="Restaurar">
+                        onClick={() => crud.handleBaseRestore(String(item.id))} title="Restaurar">
                         <Edit2 size={14} />
                       </button>
                     )}
                     <button type="button" className="action-icon-btn delete"
-                      onClick={() => item.isHidden ? crud.handleBaseUnhide(item.id) : crud.handleBaseHide(item)}
+                      onClick={() => item.isHidden ? crud.handleBaseUnhide(String(item.id)) : crud.handleBaseHide(item)}
                       title={item.isHidden ? 'Mostrar' : 'Ocultar'}>
                       <Trash2 size={14} />
                     </button>

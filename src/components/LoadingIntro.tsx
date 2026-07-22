@@ -11,7 +11,7 @@ const loadingLines = [
 ]
 
 function LoadingIntro() {
-  const [visible, setVisible] = useState(() => {
+  const [visible, setVisible] = useState<boolean>(() => {
     return sessionStorage.getItem('distancia-cero-intro-seen') !== 'true'
   })
 

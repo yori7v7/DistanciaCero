@@ -6,20 +6,31 @@
  * return the fake local identity, keeping the app running in local-only mode.
  */
 
+import type { Session, User } from '@supabase/supabase-js'
 import { getSupabaseClient, isRemoteContentEnabled } from '../integrations/supabase/client'
-import { getCurrentUser, setCurrentUser, getCurrentUserId } from './authService'
+import { getCurrentUser, setCurrentUser } from './authService'
 import { getProfileById } from './profileService'
+
+type SessionListener = (session: Session | null) => void
+
+interface AuthResult {
+  user: User | null
+  session: Session | null
+  mode: 'local-dev' | 'remote'
+  error?: { code: string; message: string } | null
+  needsEmailConfirmation?: boolean
+}
 
 // ---- state -----------------------------------------------------------------
 
-let supabaseSession = null
-let sessionListeners = []
+let supabaseSession: Session | null = null
+let sessionListeners: SessionListener[] = []
 
-function notifyListeners() {
+function notifyListeners(): void {
   sessionListeners.forEach((fn) => {
     try {
       fn(supabaseSession)
-    } catch (_) {
+    } catch {
       // listener errors must not break other listeners
     }
   })
@@ -27,12 +38,12 @@ function notifyListeners() {
 
 // ---- helpers ---------------------------------------------------------------
 
-function isRemoteAvailable() {
+function isRemoteAvailable(): boolean {
   if (!isRemoteContentEnabled()) return false
   try {
     getSupabaseClient() // throws if env is misconfigured
     return true
-  } catch (_) {
+  } catch {
     return false
   }
 }
@@ -41,12 +52,10 @@ function isRemoteAvailable() {
 
 /**
  * Sign in with email + password.
- * On success the Supabase session is stored and the local identity selector
- * is updated to match the authenticated profile.
  */
-export async function signInWithEmail(email, password) {
+export async function signInWithEmail(email: string, password: string): Promise<AuthResult> {
   if (!isRemoteAvailable()) {
-    return { user: getCurrentUser(), session: null, mode: 'local-dev' }
+    return { user: getCurrentUser() as unknown as User, session: null, mode: 'local-dev' }
   }
 
   const client = getSupabaseClient()
@@ -83,10 +92,8 @@ export async function signInWithEmail(email, password) {
 
 /**
  * Create a new account with email + password.
- * The profile row is NOT created here — bootstrap_space() must be called
- * separately or the profile must be inserted by an admin/trigger.
  */
-export async function signUpWithEmail(email, password, displayName) {
+export async function signUpWithEmail(email: string, password: string, displayName?: string): Promise<AuthResult> {
   if (!isRemoteAvailable()) {
     return {
       user: null,
@@ -98,7 +105,6 @@ export async function signUpWithEmail(email, password, displayName) {
 
   const client = getSupabaseClient()
 
-  // Create Auth user
   const { data: signUpData, error: signUpError } = await client.auth.signUp({
     email,
     password,
@@ -119,8 +125,6 @@ export async function signUpWithEmail(email, password, displayName) {
     }
   }
 
-  // Supabase may require email confirmation. If the user is created but not
-  // confirmed, there's no session yet — that's fine, we return what we have.
   supabaseSession = signUpData.session
   notifyListeners()
 
@@ -143,7 +147,7 @@ export async function signUpWithEmail(email, password, displayName) {
 /**
  * Sign out. Clears Supabase session and resets to local identity.
  */
-export async function signOut() {
+export async function signOut(): Promise<void> {
   if (!isRemoteAvailable()) {
     setCurrentUser('local-user1')
     return
@@ -152,7 +156,7 @@ export async function signOut() {
   try {
     const client = getSupabaseClient()
     await client.auth.signOut()
-  } catch (_) {
+  } catch {
     // Even if the remote call fails, clear local state
   }
 
@@ -164,7 +168,7 @@ export async function signOut() {
 /**
  * Returns the current Supabase session (or null if local-only / logged out).
  */
-export function getSupabaseSession() {
+export function getSupabaseSession(): Session | null {
   if (!isRemoteAvailable()) return null
   return supabaseSession
 }
@@ -172,27 +176,26 @@ export function getSupabaseSession() {
 /**
  * Returns true if we have a live Supabase session.
  */
-export function isSupabaseAuthenticated() {
+export function isSupabaseAuthenticated(): boolean {
   return isRemoteAvailable() && supabaseSession !== null
 }
 
 /**
  * Returns the Supabase user id (UUID) or null.
  */
-export function getSupabaseUserId() {
+export function getSupabaseUserId(): string | null {
   if (!supabaseSession) return null
   return supabaseSession.user?.id || null
 }
 
 /**
  * Returns the Supabase client instance for direct calls (queries, storage, etc.).
- * Returns null if remote is not available.
  */
 export function getAuthenticatedClient() {
   if (!isSupabaseAuthenticated()) return null
   try {
     return getSupabaseClient()
-  } catch (_) {
+  } catch {
     return null
   }
 }
@@ -201,7 +204,7 @@ export function getAuthenticatedClient() {
  * Register a listener for session changes.
  * Returns an unsubscribe function.
  */
-export function onSessionChange(listener) {
+export function onSessionChange(listener: SessionListener): () => void {
   sessionListeners.push(listener)
   return () => {
     sessionListeners = sessionListeners.filter((fn) => fn !== listener)
@@ -210,9 +213,8 @@ export function onSessionChange(listener) {
 
 /**
  * Try to restore a session from Supabase (e.g. on page reload).
- * Call once at app startup.
  */
-export async function restoreSession() {
+export async function restoreSession(): Promise<Session | null> {
   if (!isRemoteAvailable()) return null
 
   try {
@@ -228,7 +230,6 @@ export async function restoreSession() {
     supabaseSession = data.session
     notifyListeners()
 
-    // Update local identity
     const profile = getProfileById(data.session.user.id)
     if (profile) {
       setCurrentUser(profile.id)
@@ -236,7 +237,7 @@ export async function restoreSession() {
 
     return data.session
   } catch (err) {
-    console.warn('[auth] restoreSession failed:', err.message)
+    console.warn('[auth] restoreSession failed:', (err as Error).message)
     supabaseSession = null
     notifyListeners()
     return null

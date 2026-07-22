@@ -5,22 +5,42 @@
  * Path convention: {space_id}/{filename}
  */
 
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { getAuthenticatedClient, isSupabaseAuthenticated } from './supabaseAuthService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { getLocalSpaceId } from '../utils/localIdentityStore'
 
+type StorageBucket = 'images' | 'audio' | 'videos'
+
+interface UploadResult {
+  path: string
+  url: string | null
+  error: string | null
+}
+
+interface DeleteResult {
+  error: string | null
+}
+
+interface FileEntry {
+  name: string
+  path: string
+  size: number
+  createdAt: string
+}
+
 // ---- helpers ---------------------------------------------------------------
 
-function getClient() {
+function getClient(): SupabaseClient | null {
   if (!isRemoteContentEnabled() || !isSupabaseAuthenticated()) return null
   try {
     return getAuthenticatedClient()
-  } catch (_) {
+  } catch {
     return null
   }
 }
 
-async function getSpaceId() {
+async function getSpaceId(): Promise<string> {
   const client = getClient()
   if (!client) return getLocalSpaceId()
 
@@ -30,39 +50,36 @@ async function getSpaceId() {
       .select('space_id')
       .limit(1)
       .single()
-    return data?.space_id || getLocalSpaceId()
-  } catch (_) {
+    return (data as { space_id?: string })?.space_id || getLocalSpaceId()
+  } catch {
     return getLocalSpaceId()
   }
 }
 
-function getBucketForType(type) {
+function getBucketForType(type: string): StorageBucket {
   if (type === 'audio') return 'audio'
   if (type === 'video') return 'videos'
   return 'images'
 }
 
-function getContentType(file) {
+function getContentType(file: File): string {
   if (file.type) return file.type
   const ext = (file.name || '').split('.').pop()?.toLowerCase()
-  const map = {
+  const map: Record<string, string> = {
     mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg',
     jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
     gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml',
     mp4: 'video/mp4', webm: 'video/webm'
   }
-  return map[ext] || 'application/octet-stream'
+  return map[ext || ''] || 'application/octet-stream'
 }
 
 // ---- public API ------------------------------------------------------------
 
 /**
  * Upload a file to Supabase Storage.
- * @param {File} file - The File object from an input
- * @param {'images'|'audio'|'videos'} type
- * @returns {{ path: string, url: string|null, error: string|null }}
  */
-export async function uploadFile(file, type = 'images') {
+export async function uploadFile(file: File, type = 'images'): Promise<UploadResult> {
   const client = getClient()
   if (!client) return { path: '', url: null, error: 'No authenticated client.' }
 
@@ -85,7 +102,6 @@ export async function uploadFile(file, type = 'images') {
       return { path: '', url: null, error: error.message || 'Upload failed.' }
     }
 
-    // Get a signed URL (valid 1 hour — for display we may want longer-lived URLs)
     const { data: urlData } = await client.storage
       .from(bucket)
       .createSignedUrl(path, 3600)
@@ -96,16 +112,14 @@ export async function uploadFile(file, type = 'images') {
       error: null
     }
   } catch (err) {
-    return { path: '', url: null, error: err.message || 'Upload error.' }
+    return { path: '', url: null, error: (err as Error).message || 'Upload error.' }
   }
 }
 
 /**
  * Get a public/signed URL for a stored file.
- * @param {string} fullPath - bucket/path format from uploadFile result
- * @param {number} expiresIn - seconds until URL expires (default 1 hour)
  */
-export async function getFileUrl(fullPath, expiresIn = 3600) {
+export async function getFileUrl(fullPath: string, expiresIn = 3600): Promise<string | null> {
   const client = getClient()
   if (!client) return null
 
@@ -119,16 +133,15 @@ export async function getFileUrl(fullPath, expiresIn = 3600) {
 
     return data?.signedUrl || null
   } catch (err) {
-    console.warn('[storage] getFileUrl failed:', err.message)
+    console.warn('[storage] getFileUrl failed:', (err as Error).message)
     return null
   }
 }
 
 /**
  * Get a public URL for a file (for reading, not downloading).
- * Only works for public buckets.
  */
-export function getPublicUrl(fullPath) {
+export function getPublicUrl(fullPath: string): string | null {
   const client = getClient()
   if (!client) return null
 
@@ -139,16 +152,15 @@ export function getPublicUrl(fullPath) {
     const { data } = client.storage.from(bucket).getPublicUrl(path)
     return data?.publicUrl || null
   } catch (err) {
-    console.warn('[storage] getPublicUrl failed:', err.message)
+    console.warn('[storage] getPublicUrl failed:', (err as Error).message)
     return null
   }
 }
 
 /**
  * Delete a file from Storage.
- * @param {string} fullPath - bucket/path format
  */
-export async function deleteFile(fullPath) {
+export async function deleteFile(fullPath: string): Promise<DeleteResult> {
   const client = getClient()
   if (!client) return { error: 'No authenticated client.' }
 
@@ -160,15 +172,14 @@ export async function deleteFile(fullPath) {
     if (error) return { error: error.message }
     return { error: null }
   } catch (err) {
-    return { error: err.message }
+    return { error: (err as Error).message }
   }
 }
 
 /**
  * List files in a bucket for the current space.
- * @param {'images'|'audio'|'videos'} type
  */
-export async function listFiles(type = 'images') {
+export async function listFiles(type = 'images'): Promise<FileEntry[]> {
   const client = getClient()
   if (!client) return []
 
@@ -184,11 +195,11 @@ export async function listFiles(type = 'images') {
     return (data || []).map((f) => ({
       name: f.name,
       path: `${bucket}/${spaceId}/${f.name}`,
-      size: f.metadata?.size || 0,
+      size: (f.metadata as { size?: number })?.size || 0,
       createdAt: f.created_at
     }))
   } catch (err) {
-    console.warn('[storage] listFiles failed:', err.message)
+    console.warn('[storage] listFiles failed:', (err as Error).message)
     return []
   }
 }

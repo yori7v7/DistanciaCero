@@ -1,7 +1,9 @@
+import type { LocalUser, RelationshipSpace } from '../types/identity'
+
 export const DEFAULT_LOCAL_USER_ID = 'local-user1'
 export const DEFAULT_SPACE_ID = 'distancia-cero-local-space'
 
-export const LOCAL_USERS = [
+export const LOCAL_USERS: LocalUser[] = [
   {
     id: 'local-user1',
     slug: 'user1',
@@ -18,7 +20,7 @@ export const LOCAL_USERS = [
   }
 ]
 
-export const LOCAL_RELATIONSHIP_SPACE = {
+export const LOCAL_RELATIONSHIP_SPACE: RelationshipSpace = {
   id: DEFAULT_SPACE_ID,
   name: 'Distancia Cero',
   members: ['local-user1', 'local-user2'],

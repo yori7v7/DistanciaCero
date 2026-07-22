@@ -1,4 +1,4 @@
-import { createClient as createSupabaseJsClient } from '@supabase/supabase-js'
+import { createClient as createSupabaseJsClient, SupabaseClient } from '@supabase/supabase-js'
 
 export const SUPABASE_CLIENT_FACTORY_IMPLEMENTED = true
 
@@ -7,27 +7,47 @@ const STATUS_READY = 'ready'
 const STATUS_ENV_MISSING = 'env-missing'
 const STATUS_ENV_INVALID = 'env-invalid'
 
-const ERROR_MESSAGES = Object.freeze({
+const ERROR_MESSAGES: Record<string, string> = Object.freeze({
   SUPABASE_REMOTE_DISABLED: 'Remote Supabase content is disabled. No client was created.',
   SUPABASE_ENV_MISSING: 'Required public Supabase environment variables are missing. No client was created.',
   SUPABASE_ENV_INVALID: 'Supabase environment configuration is invalid. No client was created.'
 })
 
-let defaultSupabaseClient = null
-
-function getDefaultEnv() {
-  return import.meta.env || {}
+interface InspectedEnv {
+  status: string
+  remoteEnabled: boolean
+  missing: string[]
+  hasUrl: boolean
+  hasPublicKey: boolean
+  keySource: 'publishable' | 'anon' | null
+  url: string
+  key: string
 }
 
-function getSafeEnv(env) {
+interface EnvSummary {
+  status: string
+  remoteEnabled: boolean
+  missing: readonly string[]
+  hasUrl: boolean
+  hasPublicKey: boolean
+  keySource: 'publishable' | 'anon' | null
+}
+
+let defaultSupabaseClient: SupabaseClient | null = null
+
+function getDefaultEnv(): Record<string, unknown> {
+  return (import.meta as unknown as { env: Record<string, unknown> }).env || {}
+}
+
+function getSafeEnv(env?: Record<string, unknown>): Record<string, unknown> {
   return env && typeof env === 'object' ? env : {}
 }
 
-function getTrimmedString(value) {
+function getTrimmedString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function isValidHttpsUrl(value) {
+function isValidHttpsUrl(value: string): boolean {
   try {
     const parsedUrl = new URL(value)
     return (
@@ -36,12 +56,12 @@ function isValidHttpsUrl(value) {
       !parsedUrl.username &&
       !parsedUrl.password
     )
-  } catch (error) {
+  } catch {
     return false
   }
 }
 
-function inspectSupabaseEnv(env) {
+function inspectSupabaseEnv(env?: Record<string, unknown>): InspectedEnv {
   const safeEnv = getSafeEnv(env)
   const remoteEnabled = isRemoteContentEnabled(safeEnv)
 
@@ -59,22 +79,17 @@ function inspectSupabaseEnv(env) {
   }
 
   const url = getTrimmedString(safeEnv.VITE_SUPABASE_URL)
-  const publishableKey = getTrimmedString(
-    safeEnv.VITE_SUPABASE_PUBLISHABLE_KEY
-  )
+  const publishableKey = getTrimmedString(safeEnv.VITE_SUPABASE_PUBLISHABLE_KEY)
   const anonKey = getTrimmedString(safeEnv.VITE_SUPABASE_ANON_KEY)
   const key = publishableKey || anonKey
-  let keySource = null
+  let keySource: 'publishable' | 'anon' | null = null
   if (publishableKey) keySource = 'publishable'
   else if (anonKey) keySource = 'anon'
-  const missing = []
+  const missing: string[] = []
 
   if (!url) missing.push('VITE_SUPABASE_URL')
   if (!key) {
-    missing.push(
-      'VITE_SUPABASE_PUBLISHABLE_KEY',
-      'VITE_SUPABASE_ANON_KEY'
-    )
+    missing.push('VITE_SUPABASE_PUBLISHABLE_KEY', 'VITE_SUPABASE_ANON_KEY')
   }
 
   if (missing.length > 0) {
@@ -115,19 +130,18 @@ function inspectSupabaseEnv(env) {
   }
 }
 
-function getErrorCode(status) {
+function getErrorCode(status: string): string {
   if (status === STATUS_DISABLED) return 'SUPABASE_REMOTE_DISABLED'
   if (status === STATUS_ENV_MISSING) return 'SUPABASE_ENV_MISSING'
   return 'SUPABASE_ENV_INVALID'
 }
 
 export class SupabaseEnvironmentError extends Error {
-  /**
-   * @param {string} code
-   * @param {string} status
-   * @param {string[]} [missing]
-   */
-  constructor(code, status, missing = []) {
+  readonly code: string
+  readonly status: string
+  readonly missing: readonly string[]
+
+  constructor(code: string, status: string, missing: string[] = []) {
     super(ERROR_MESSAGES[code] || ERROR_MESSAGES.SUPABASE_ENV_INVALID)
     this.name = 'SupabaseEnvironmentError'
     this.code = code
@@ -138,28 +152,15 @@ export class SupabaseEnvironmentError extends Error {
 
 /**
  * Returns true only for the explicit remote opt-in string "true".
- *
- * @param {Record<string, unknown>} [env]
- * @returns {boolean}
  */
-export function isRemoteContentEnabled(env = getDefaultEnv()) {
+export function isRemoteContentEnabled(env?: Record<string, unknown>): boolean {
   return getSafeEnv(env).VITE_REMOTE_CONTENT_ENABLED === 'true'
 }
 
 /**
  * Returns a safe environment summary without exposing URL or key values.
- *
- * @param {Record<string, unknown>} [env]
- * @returns {{
- *   status: string,
- *   remoteEnabled: boolean,
- *   missing: readonly string[],
- *   hasUrl: boolean,
- *   hasPublicKey: boolean,
- *   keySource: 'publishable'|'anon'|null
- * }}
  */
-export function getSupabaseEnvStatus(env = getDefaultEnv()) {
+export function getSupabaseEnvStatus(env?: Record<string, unknown>): EnvSummary {
   const inspected = inspectSupabaseEnv(env)
 
   return Object.freeze({
@@ -175,12 +176,8 @@ export function getSupabaseEnvStatus(env = getDefaultEnv()) {
 /**
  * Creates a new passive Supabase client after explicit environment validation.
  * It does not execute queries or start application listeners.
- *
- * @param {Record<string, unknown>} [env]
- * @returns {import('@supabase/supabase-js').SupabaseClient}
- * @throws {SupabaseEnvironmentError}
  */
-export function createSupabaseClient(env = getDefaultEnv()) {
+export function createSupabaseClient(env?: Record<string, unknown>): SupabaseClient {
   const inspected = inspectSupabaseEnv(env)
 
   if (inspected.status !== STATUS_READY) {
@@ -203,11 +200,8 @@ export function createSupabaseClient(env = getDefaultEnv()) {
 /**
  * Lazily creates the default client. Custom env objects create isolated clients
  * and never populate the default singleton, which keeps smoke tests contained.
- *
- * @param {Record<string, unknown>} [env]
- * @returns {import('@supabase/supabase-js').SupabaseClient}
  */
-export function getSupabaseClient(env) {
+export function getSupabaseClient(env?: Record<string, unknown>): SupabaseClient {
   if (env !== undefined) return createSupabaseClient(env)
 
   if (!defaultSupabaseClient) {

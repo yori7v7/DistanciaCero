@@ -4,13 +4,18 @@ import { useAudio } from '../context/AudioContext'
 import randomPhrases from '../data/randomPhrases.json'
 import siteConfig from '../data/siteConfig.json'
 
+interface RandomPhrase {
+  text: string
+  author?: string
+}
+
 function Hero() {
   const { backgroundPlaying, toggleBackground } = useAudio()
 
-  const dailyPhrase = useMemo(() => {
+  const dailyPhrase: RandomPhrase | null = useMemo(() => {
     if (!randomPhrases.length) return null
     const index = new Date().getDate() % randomPhrases.length
-    return randomPhrases[index]
+    return randomPhrases[index] as RandomPhrase
   }, [])
 
   return (

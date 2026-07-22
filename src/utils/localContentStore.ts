@@ -1,4 +1,8 @@
-const COLLECTION_KEYS = {
+import type { ContentItem, OverrideMap } from '../types/content'
+
+// ─── Storage key maps ───
+
+const COLLECTION_KEYS: Record<string, string> = {
   reasons: 'distancia-cero-content-reasons',
   promises: 'distancia-cero-content-promises',
   importantDates: 'distancia-cero-content-importantDates',
@@ -8,7 +12,7 @@ const COLLECTION_KEYS = {
   playlist: 'distancia-cero-content-playlist'
 }
 
-const OVERRIDE_KEYS = {
+const OVERRIDE_KEYS: Record<string, string> = {
   reasons: 'distancia-cero-content-reasons-overrides',
   promises: 'distancia-cero-content-promises-overrides',
   monthlyLetters: 'distancia-cero-content-monthlyLetters-overrides',
@@ -20,7 +24,7 @@ const OVERRIDE_KEYS = {
   playlist: 'distancia-cero-content-playlist-overrides'
 }
 
-const HIDDEN_KEYS = {
+const HIDDEN_KEYS: Record<string, string> = {
   reasons: 'distancia-cero-content-reasons-hidden',
   promises: 'distancia-cero-content-promises-hidden',
   monthlyLetters: 'distancia-cero-content-monthlyLetters-hidden',
@@ -32,35 +36,39 @@ const HIDDEN_KEYS = {
   playlist: 'distancia-cero-content-playlist-hidden'
 }
 
-function getStorageKey(collectionName) {
+// ─── Internal helpers ───
+
+function getStorageKey(collectionName: string): string {
   return COLLECTION_KEYS[collectionName] || `distancia-cero-content-${collectionName}`
 }
 
-function getOverrideStorageKey(collectionName) {
+function getOverrideStorageKey(collectionName: string): string {
   return OVERRIDE_KEYS[collectionName] || `distancia-cero-content-${collectionName}-overrides`
 }
 
-function getHiddenStorageKey(collectionName) {
+function getHiddenStorageKey(collectionName: string): string {
   return HIDDEN_KEYS[collectionName] || `distancia-cero-content-${collectionName}-hidden`
 }
 
-function canUseLocalStorage() {
+function canUseLocalStorage(): boolean {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 }
 
-export function getLocalItems(collectionName) {
+// ─── Items ───
+
+export function getLocalItems(collectionName: string): ContentItem[] {
   if (!canUseLocalStorage()) return []
 
   try {
     const rawValue = window.localStorage.getItem(getStorageKey(collectionName))
-    const parsedValue = rawValue ? JSON.parse(rawValue) : []
+    const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : []
     return Array.isArray(parsedValue) ? parsedValue : []
-  } catch (error) {
+  } catch {
     return []
   }
 }
 
-export function saveLocalItems(collectionName, items) {
+export function saveLocalItems(collectionName: string, items: ContentItem[]): ContentItem[] {
   if (!canUseLocalStorage()) return []
 
   const safeItems = Array.isArray(items) ? items : []
@@ -68,7 +76,7 @@ export function saveLocalItems(collectionName, items) {
   return safeItems
 }
 
-export function addLocalItem(collectionName, item) {
+export function addLocalItem(collectionName: string, item: ContentItem): ContentItem[] {
   const currentItems = getLocalItems(collectionName)
   const localIndexes = currentItems
     .map((currentItem) => {
@@ -76,7 +84,7 @@ export function addLocalItem(collectionName, item) {
       return match ? Number(match[1]) : 0
     })
   const nextLocalIndex = Math.max(0, ...localIndexes) + 1
-  const nextItem = {
+  const nextItem: ContentItem = {
     ...item,
     isLocal: true,
     displayLabel: item.displayLabel || `Local ${nextLocalIndex}`
@@ -86,7 +94,7 @@ export function addLocalItem(collectionName, item) {
   return updatedItems
 }
 
-export function updateLocalItem(collectionName, id, patch) {
+export function updateLocalItem(collectionName: string, id: string, patch: Partial<ContentItem>): ContentItem[] {
   const currentItems = getLocalItems(collectionName)
   const updatedItems = currentItems.map((item) => {
     if (String(item.id) !== String(id) || !item.isLocal) return item
@@ -102,26 +110,28 @@ export function updateLocalItem(collectionName, id, patch) {
   return updatedItems
 }
 
-export function deleteLocalItem(collectionName, id) {
+export function deleteLocalItem(collectionName: string, id: string): ContentItem[] {
   const currentItems = getLocalItems(collectionName)
   const updatedItems = currentItems.filter((item) => String(item.id) !== String(id) || !item.isLocal)
   saveLocalItems(collectionName, updatedItems)
   return updatedItems
 }
 
-export function getLocalOverrides(collectionName) {
+// ─── Overrides ───
+
+export function getLocalOverrides(collectionName: string): OverrideMap {
   if (!canUseLocalStorage()) return {}
 
   try {
     const rawValue = window.localStorage.getItem(getOverrideStorageKey(collectionName))
-    const parsedValue = rawValue ? JSON.parse(rawValue) : {}
-    return parsedValue && !Array.isArray(parsedValue) && typeof parsedValue === 'object' ? parsedValue : {}
-  } catch (error) {
+    const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : {}
+    return parsedValue && !Array.isArray(parsedValue) && typeof parsedValue === 'object' ? parsedValue as OverrideMap : {}
+  } catch {
     return {}
   }
 }
 
-export function saveLocalOverrides(collectionName, overrides) {
+export function saveLocalOverrides(collectionName: string, overrides: OverrideMap): OverrideMap {
   if (!canUseLocalStorage()) return {}
 
   const safeOverrides = overrides && !Array.isArray(overrides) && typeof overrides === 'object' ? overrides : {}
@@ -129,9 +139,9 @@ export function saveLocalOverrides(collectionName, overrides) {
   return safeOverrides
 }
 
-export function setLocalOverride(collectionName, id, patch) {
+export function setLocalOverride(collectionName: string, id: string, patch: Partial<ContentItem>): OverrideMap {
   const currentOverrides = getLocalOverrides(collectionName)
-  const updatedOverrides = {
+  const updatedOverrides: OverrideMap = {
     ...currentOverrides,
     [String(id)]: {
       ...patch,
@@ -143,7 +153,7 @@ export function setLocalOverride(collectionName, id, patch) {
   return updatedOverrides
 }
 
-export function deleteLocalOverride(collectionName, id) {
+export function deleteLocalOverride(collectionName: string, id: string): OverrideMap {
   const currentOverrides = getLocalOverrides(collectionName)
   const updatedOverrides = { ...currentOverrides }
   delete updatedOverrides[String(id)]
@@ -151,19 +161,21 @@ export function deleteLocalOverride(collectionName, id) {
   return updatedOverrides
 }
 
-export function getHiddenItemIds(collectionName) {
+// ─── Hidden ───
+
+export function getHiddenItemIds(collectionName: string): string[] {
   if (!canUseLocalStorage()) return []
 
   try {
     const rawValue = window.localStorage.getItem(getHiddenStorageKey(collectionName))
-    const parsedValue = rawValue ? JSON.parse(rawValue) : []
+    const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : []
     return Array.isArray(parsedValue) ? parsedValue.map((id) => String(id)) : []
-  } catch (error) {
+  } catch {
     return []
   }
 }
 
-export function saveHiddenItemIds(collectionName, ids) {
+export function saveHiddenItemIds(collectionName: string, ids: string[]): string[] {
   if (!canUseLocalStorage()) return []
 
   const safeIds = Array.isArray(ids) ? ids.map((id) => String(id)) : []
@@ -171,7 +183,7 @@ export function saveHiddenItemIds(collectionName, ids) {
   return safeIds
 }
 
-export function hideDefaultItem(collectionName, id) {
+export function hideDefaultItem(collectionName: string, id: string): string[] {
   const currentIds = getHiddenItemIds(collectionName)
   const nextId = String(id)
   const updatedIds = currentIds.includes(nextId) ? currentIds : [...currentIds, nextId]
@@ -179,13 +191,15 @@ export function hideDefaultItem(collectionName, id) {
   return updatedIds
 }
 
-export function restoreHiddenItem(collectionName, id) {
+export function restoreHiddenItem(collectionName: string, id: string): string[] {
   const updatedIds = getHiddenItemIds(collectionName).filter((hiddenId) => hiddenId !== String(id))
   saveHiddenItemIds(collectionName, updatedIds)
   return updatedIds
 }
 
-export function mergeWithLocalItems(defaultItems, collectionName) {
+// ─── Merge ───
+
+export function mergeWithLocalItems(defaultItems: ContentItem[], collectionName: string): ContentItem[] {
   const safeDefaultItems = Array.isArray(defaultItems) ? defaultItems : []
   const localOverrides = getLocalOverrides(collectionName)
   const hiddenIds = getHiddenItemIds(collectionName)

@@ -2,7 +2,10 @@
  * Generic content operations that a future remote repository must expose.
  * This contract validates structure only; it never executes repository code.
  */
-export const REQUIRED_REMOTE_REPOSITORY_FUNCTIONS = Object.freeze([
+
+import type { ContentRepository } from '../types/content'
+
+export const REQUIRED_REMOTE_REPOSITORY_FUNCTIONS: readonly string[] = Object.freeze([
   'getCollectionItems',
   'saveCollectionItems',
   'addCollectionItem',
@@ -22,7 +25,7 @@ export const REQUIRED_REMOTE_REPOSITORY_FUNCTIONS = Object.freeze([
  * Local-only operations intentionally excluded from the generic remote
  * content contract. They require migration adapters or separate domains.
  */
-export const LOCAL_ONLY_REPOSITORY_FUNCTIONS = Object.freeze([
+export const LOCAL_ONLY_REPOSITORY_FUNCTIONS: readonly string[] = Object.freeze([
   'mergeCollectionWithLocal',
   'getLegacyMonthlyLetters',
   'saveLegacyMonthlyLetters',
@@ -37,10 +40,10 @@ export const LOCAL_ONLY_REPOSITORY_FUNCTIONS = Object.freeze([
 ])
 
 export class ContentRepositoryContractError extends Error {
-  /**
-   * @param {string[]} missingFunctions
-   */
-  constructor(missingFunctions) {
+  readonly code: string
+  readonly missingFunctions: readonly string[]
+
+  constructor(missingFunctions: string[]) {
     const safeMissingFunctions = Array.isArray(missingFunctions)
       ? [...missingFunctions]
       : []
@@ -58,17 +61,13 @@ export class ContentRepositoryContractError extends Error {
 /**
  * Returns required names whose corresponding repository property is not a
  * function. It does not call any repository operation.
- *
- * @param {object|null|undefined} repository
- * @param {readonly string[]} [requiredNames]
- * @returns {string[]}
  */
 export function getMissingRepositoryFunctions(
-  repository,
-  requiredNames = REQUIRED_REMOTE_REPOSITORY_FUNCTIONS
-) {
+  repository: object | null | undefined,
+  requiredNames: readonly string[] = REQUIRED_REMOTE_REPOSITORY_FUNCTIONS
+): string[] {
   const safeRepository = repository && typeof repository === 'object'
-    ? repository
+    ? repository as Record<string, unknown>
     : {}
   const safeRequiredNames = Array.isArray(requiredNames)
     ? requiredNames
@@ -82,14 +81,11 @@ export function getMissingRepositoryFunctions(
 /**
  * Asserts that a repository exposes every required function. This is a
  * structural check only and returns the original repository when valid.
- *
- * @template {object} T
- * @param {T} repository
- * @param {{ requiredNames?: readonly string[] }} [options]
- * @returns {T}
- * @throws {ContentRepositoryContractError}
  */
-export function assertRepositoryContract(repository, options = {}) {
+export function assertRepositoryContract<T extends object>(
+  repository: T,
+  options: { requiredNames?: readonly string[] } = {}
+): T {
   const missingFunctions = getMissingRepositoryFunctions(
     repository,
     options.requiredNames

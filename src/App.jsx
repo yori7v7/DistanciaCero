@@ -5,22 +5,35 @@ import Hero from './components/Hero'
 import ProposalSection from './components/ProposalSection'
 import CounterSection from './components/CounterSection'
 import MainLetter from './components/MainLetter'
-import StoryTimeline from './components/StoryTimeline'
+
+// ─── Lazy-loaded heavy sections (3D, gallery, physics) ───
 const UniverseSection = lazy(() => import('./components/UniverseSection'))
-import MonthlyLetters from './components/MonthlyLetters'
-import OpenWhenSection from './components/OpenWhenSection'
-import PlaylistSection from './components/PlaylistSection'
-import ReasonsSection from './components/ReasonsSection'
+const StoryTimeline = lazy(() => import('./components/StoryTimeline'))
+const MonthlyLetters = lazy(() => import('./components/MonthlyLetters'))
+const OpenWhenSection = lazy(() => import('./components/OpenWhenSection'))
+const PlaylistSection = lazy(() => import('./components/PlaylistSection'))
+const ReasonsSection = lazy(() => import('./components/ReasonsSection'))
+const BlackHoleGallerySection = lazy(() => import('./components/BlackHoleGallerySection'))
+const CentroUniversoSection = lazy(() => import('./components/CentroUniversoSection'))
+
+// ─── Light sections (eager, render fast) ───
 import ImportantDatesSection from './components/ImportantDatesSection'
-import BlackHoleGallerySection from './components/BlackHoleGallerySection'
 import FutureDreamsSection from './components/FutureDreamsSection'
 import PromisesSection from './components/PromisesSection'
 import DistanceMapSection from './components/DistanceMapSection'
-const CentroUniversoSection = lazy(() => import('./components/CentroUniversoSection'))
 import SceneMusicController from './components/SceneMusicController'
 import SceneModeController from './components/SceneModeController'
 import BackToTop from './components/BackToTop'
 import Footer from './components/Footer'
+
+// ─── Shared Suspense skeleton ───
+const SectionSkeleton = () => (
+  <div className="section" style={{ minHeight: '200px', display: 'grid', placeItems: 'center' }}>
+    <div className="small-pill" style={{ opacity: 0.6 }}>
+      <span>Cargando sección...</span>
+    </div>
+  </div>
+)
 
 import timeline from './data/timeline.json'
 import universe from './data/universe.json'
@@ -53,22 +66,18 @@ function App() {
         <ProposalSection />
         <CounterSection />
         <MainLetter />
-        <StoryTimeline timeline={timeline} />
-        <Suspense fallback={<div className="section" />}>
-          <UniverseSection universe={universe} />
-        </Suspense>
-        <MonthlyLetters letters={monthlyLetters} />
-        <OpenWhenSection cards={openWhen} />
-        <PlaylistSection playlist={playlist} />
-        <ReasonsSection reasons={reasons} />
+        <Suspense fallback={<SectionSkeleton />}><StoryTimeline timeline={timeline} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><UniverseSection universe={universe} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><MonthlyLetters letters={monthlyLetters} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><OpenWhenSection cards={openWhen} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><PlaylistSection playlist={playlist} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><ReasonsSection reasons={reasons} /></Suspense>
         <ImportantDatesSection dates={importantDates} />
-        <BlackHoleGallerySection items={blackHoleGallery} />
+        <Suspense fallback={<SectionSkeleton />}><BlackHoleGallerySection items={blackHoleGallery} /></Suspense>
         <FutureDreamsSection dreams={futureDreams} />
         <PromisesSection promises={promises} />
         <DistanceMapSection />
-        <Suspense fallback={<div className="section"><div className="section-title"><span className="small-pill">Cargando...</span></div></div>}>
-          <CentroUniversoSection />
-        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}><CentroUniversoSection /></Suspense>
       </main>
 
       <SceneModeController />

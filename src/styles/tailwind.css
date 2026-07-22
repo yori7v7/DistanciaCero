@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens — Distancia Cero ─── */
+@theme {
+  /* Colores base */
+  --color-bg-main: #060010;
+  --color-bg-card: rgba(255, 255, 255, 0.04);
+  --color-bg-card-hover: rgba(255, 255, 255, 0.07);
+  --color-bg-glass: rgba(12, 2, 20, 0.65);
+  --color-bg-glass-strong: rgba(18, 4, 28, 0.82);
+
+  /* Paleta rosa/rojo */
+  --color-pink: #ff8ad4;
+  --color-pink-soft: #ffc4e8;
+  --color-pink-glow: rgba(255, 138, 212, 0.25);
+  --color-red: #ff2d55;
+  --color-red-dark: #b30030;
+  --color-white-soft: #fff5fa;
+  --color-muted: #d4b8c8;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-glow: rgba(255, 138, 212, 0.28);
+
+  /* Sombras */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 40px var(--pink-glow);
+  --shadow-glow-soft: 0 0 20px rgba(255, 122, 200, 0.12);
+  --shadow-red: 0 0 35px rgba(255, 23, 68, 0.15);
+
+  /* Radios */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --radius-full: 999px;
+
+  /* Tipografía */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* Layout */
+  --max-width: 1120px;
+}
+
+/* ─── Claymorphism 3D utilities ─── */
+@utility clay-card {
+  background: var(--color-bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility clay-button {
+  position: relative;
+  top: 0;
+  background: var(--color-bg-glass-strong);
+  border: 1.5px solid var(--color-border-glow);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 0 rgba(160, 20, 60, 0.2),
+              0 6px 12px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility clay-pressed {
+  box-shadow: 0 2px 0 rgba(160, 20, 60, 0.2),
+              0 4px 8px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Clay hover/active states (pseudo-classes not allowed in @utility names) */
+@layer components {
+  .clay-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(160, 20, 60, 0.2),
+                0 10px 20px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .clay-button:active {
+    top: 3px;
+    box-shadow: 0 1px 0 rgba(160, 20, 60, 0.15),
+                0 2px 4px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ─── Base global ─── */
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg-main);
+    color: var(--color-white-soft);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ─── Keyframes esenciales que requieren CSS puro ─── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

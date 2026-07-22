@@ -1,13 +1,14 @@
+import type { LocalUser, AuthSession } from '../types/identity'
 import { DEFAULT_LOCAL_USER_ID } from '../constants/localUsers'
 import { getLocalCurrentUserId, setLocalCurrentUserId } from '../utils/localIdentityStore'
 import { getProfileById } from './profileService'
 import { isSupabaseAuthenticated, getSupabaseSession, getSupabaseUserId } from './supabaseAuthService'
 
-function getDefaultUser() {
-  return getProfileById(DEFAULT_LOCAL_USER_ID)
+function getDefaultUser(): LocalUser {
+  return getProfileById(DEFAULT_LOCAL_USER_ID)!
 }
 
-export function getCurrentUserId() {
+export function getCurrentUserId(): string {
   if (isSupabaseAuthenticated()) {
     const supabaseId = getSupabaseUserId()
     if (supabaseId) return supabaseId
@@ -17,13 +18,14 @@ export function getCurrentUserId() {
   return getProfileById(storedUserId)?.id || DEFAULT_LOCAL_USER_ID
 }
 
-export function getCurrentUser() {
+export function getCurrentUser(): LocalUser {
   if (isSupabaseAuthenticated()) {
     const session = getSupabaseSession()
     if (session?.user) {
       return {
         id: session.user.id,
-        displayName: session.user.user_metadata?.display_name || session.user.email,
+        slug: '',
+        displayName: session.user.user_metadata?.display_name || session.user.email || 'Usuario',
         role: 'member',
         avatar: null
       }
@@ -33,7 +35,7 @@ export function getCurrentUser() {
   return getProfileById(getCurrentUserId()) || getDefaultUser()
 }
 
-export function setCurrentUser(userId) {
+export function setCurrentUser(userId: string): LocalUser {
   if (isSupabaseAuthenticated()) {
     return getCurrentUser()
   }
@@ -45,12 +47,12 @@ export function setCurrentUser(userId) {
   return nextUser
 }
 
-export function isAuthenticated() {
+export function isAuthenticated(): boolean {
   if (isSupabaseAuthenticated()) return true
   return true // local mode is always authenticated
 }
 
-export function getSession() {
+export function getSession(): AuthSession {
   if (isSupabaseAuthenticated()) {
     const session = getSupabaseSession()
     if (session) {
@@ -58,7 +60,8 @@ export function getSession() {
         mode: 'remote',
         user: {
           id: session.user.id,
-          displayName: session.user.user_metadata?.display_name || session.user.email,
+          slug: '',
+          displayName: session.user.user_metadata?.display_name || session.user.email || 'Usuario',
           role: 'member',
           avatar: null
         }

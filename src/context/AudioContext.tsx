@@ -1,21 +1,26 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import type { AudioTrack, AudioContextValue } from '../types/audio'
 import siteConfig from '../data/siteConfig.json'
 
-const AudioPlayerContext = createContext(null)
+interface AudioContextExtended extends AudioContextValue {
+  backgroundTrackPath: string
+}
 
-function resolvePublicPath(path) {
+const AudioPlayerContext = createContext<AudioContextExtended | null>(null)
+
+function resolvePublicPath(path: string): string {
   const cleanPath = path.startsWith('/') ? path.slice(1) : path
   return `${import.meta.env.BASE_URL}${cleanPath}`
 }
 
 const BACKGROUND_TRACK = resolvePublicPath(siteConfig.audio.backgroundTrackPath)
 
-export function AudioProvider({ children }) {
-  const backgroundAudioRef = useRef(null)
-  const trackAudioRef = useRef(null)
+export function AudioProvider({ children }: { children: ReactNode }) {
+  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null)
+  const trackAudioRef = useRef<HTMLAudioElement | null>(null)
 
   const [backgroundPlaying, setBackgroundPlaying] = useState(false)
-  const [currentTrack, setCurrentTrack] = useState(null)
+  const [currentTrack, setCurrentTrack] = useState<AudioTrack | null>(null)
   const [infoMessage, setInfoMessage] = useState('Tema principal listo para reproducirse.')
   const [backgroundVolume, setBackgroundVolume] = useState(siteConfig.audio.defaultVolume)
 
@@ -99,7 +104,7 @@ export function AudioProvider({ children }) {
     }
   }
 
-  const playLocalTrack = async (track) => {
+  const playLocalTrack = async (track: AudioTrack) => {
     if (!track?.src) {
       setInfoMessage('Esa canción local todavía no tiene ruta.')
       return
@@ -139,7 +144,7 @@ export function AudioProvider({ children }) {
     setInfoMessage('Reproductor detenido.')
   }
 
-  const openExternalLink = (item) => {
+  const openExternalLink = (item: AudioTrack) => {
     pauseBackground()
 
     if (item?.link) {
@@ -170,7 +175,7 @@ export function AudioProvider({ children }) {
   )
 }
 
-export function useAudio() {
+export function useAudio(): AudioContextExtended {
   const context = useContext(AudioPlayerContext)
 
   if (!context) {

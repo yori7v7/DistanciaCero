@@ -9,16 +9,33 @@
  * Components keep using contentService synchronously — zero changes needed.
  */
 
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { ContentItem, OverrideMap } from '../types/content'
 import { isSupabaseAuthenticated, getAuthenticatedClient, getSupabaseUserId } from './supabaseAuthService'
 import * as localContentRepository from '../repositories/localContentRepository'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { getLocalSpaceId } from '../utils/localIdentityStore'
 
+interface SupabaseContentRow {
+  id: string
+  space_id: string
+  collection: string
+  local_id: string | null
+  base_id: string | null
+  kind: 'local' | 'override' | 'hidden'
+  data: Record<string, unknown>
+  schema_version: number
+  created_by: string
+  updated_by: string
+  deleted_at: string | null
+  source: string
+}
+
 // ---- helpers ---------------------------------------------------------------
 
-let _cachedSpaceId = null
+let _cachedSpaceId: string | null = null
 
-function canSync() {
+function canSync(): boolean {
   return isRemoteContentEnabled() && isSupabaseAuthenticated()
 }
 
@@ -26,7 +43,7 @@ function canSync() {
  * Resolves the real Supabase space UUID from the user's memberships.
  * Cached after first successful lookup.
  */
-async function resolveSpaceId() {
+async function resolveSpaceId(): Promise<string | null> {
   if (_cachedSpaceId) return _cachedSpaceId
 
   const client = getAuthenticatedClient()
@@ -41,15 +58,15 @@ async function resolveSpaceId() {
 
     if (error || !data) return null
 
-    _cachedSpaceId = data.space_id
+    _cachedSpaceId = (data as { space_id: string }).space_id
     return _cachedSpaceId
   } catch (err) {
-    console.warn('[sync] resolveSpaceId failed:', err.message)
+    console.warn('[sync] resolveSpaceId failed:', (err as Error).message)
     return null
   }
 }
 
-async function getSpaceId() {
+async function getSpaceId(): Promise<string> {
   const realId = await resolveSpaceId()
   return realId || getLocalSpaceId()
 }
@@ -59,10 +76,8 @@ async function getSpaceId() {
 /**
  * Fetch ALL content for the current space from Supabase and write it into
  * localStorage. Called once after successful login.
- *
- * Returns { synced: number, error: string|null }
  */
-export async function pullFromSupabase() {
+export async function pullFromSupabase(): Promise<{ synced: number; error: string | null }> {
   if (!canSync()) {
     return { synced: 0, error: 'Remote not available or not authenticated.' }
   }
@@ -75,7 +90,6 @@ export async function pullFromSupabase() {
   const spaceId = await getSpaceId()
 
   try {
-    // Fetch all non-deleted content_items for this space
     const { data, error } = await client
       .from('content_items')
       .select('*')
@@ -91,11 +105,11 @@ export async function pullFromSupabase() {
     }
 
     // Group by collection and kind
-    const collections = {}
-    const overrides = {}
-    const hiddenIds = {}
+    const collections: Record<string, ContentItem[]> = {}
+    const overrides: Record<string, OverrideMap> = {}
+    const hiddenIds: Record<string, string[]> = {}
 
-    for (const item of data) {
+    for (const item of data as SupabaseContentRow[]) {
       const col = item.collection
       if (!collections[col]) collections[col] = []
       if (!overrides[col]) overrides[col] = {}
@@ -109,24 +123,24 @@ export async function pullFromSupabase() {
           isLocal: true,
           createdBy: item.created_by,
           updatedBy: item.updated_by,
-          createdAt: item.created_at,
-          updatedAt: item.updated_at,
+          createdAt: item.data.created_at as string,
+          updatedAt: item.data.updated_at as string,
           source: item.source,
           spaceId: item.space_id
         })
       } else if (item.kind === 'override') {
-        overrides[col][item.base_id] = {
+        overrides[col][item.base_id!] = {
           ...item.data,
+          id: item.base_id,
           _supabaseId: item.id
         }
       } else if (item.kind === 'hidden') {
-        hiddenIds[col].push(item.base_id)
+        hiddenIds[col].push(item.base_id!)
       }
     }
 
     let synced = 0
 
-    // Write collections to localStorage
     for (const [col, items] of Object.entries(collections)) {
       if (items.length > 0) {
         localContentRepository.saveCollectionItems(col, items)
@@ -134,7 +148,6 @@ export async function pullFromSupabase() {
       }
     }
 
-    // Write overrides
     for (const [col, patches] of Object.entries(overrides)) {
       if (Object.keys(patches).length > 0) {
         localContentRepository.saveCollectionOverrides(col, patches)
@@ -142,7 +155,6 @@ export async function pullFromSupabase() {
       }
     }
 
-    // Write hidden ids
     for (const [col, ids] of Object.entries(hiddenIds)) {
       if (ids.length > 0) {
         localContentRepository.saveCollectionHiddenIds(col, ids)
@@ -150,16 +162,15 @@ export async function pullFromSupabase() {
       }
     }
 
-    // Legacy letter sync
     await pullLegacyLetters(client, spaceId)
 
     return { synced, error: null }
   } catch (err) {
-    return { synced: 0, error: err.message || 'Unexpected sync error.' }
+    return { synced: 0, error: (err as Error).message || 'Unexpected sync error.' }
   }
 }
 
-async function pullLegacyLetters(client, spaceId) {
+async function pullLegacyLetters(client: SupabaseClient, spaceId: string): Promise<void> {
   try {
     const { data } = await client
       .from('content_items')
@@ -170,13 +181,13 @@ async function pullLegacyLetters(client, spaceId) {
       .is('deleted_at', null)
 
     if (data && data.length > 0) {
-      localContentRepository.saveLegacyMonthlyLetters(data.map((item) => ({
+      localContentRepository.saveLegacyMonthlyLetters(data.map((item: SupabaseContentRow) => ({
         ...item.data,
         id: item.local_id || item.id,
         _supabaseId: item.id
       })))
     }
-  } catch (_) { /* best-effort */ }
+  } catch { /* best-effort */ }
 
   try {
     const { data } = await client
@@ -188,21 +199,18 @@ async function pullLegacyLetters(client, spaceId) {
       .is('deleted_at', null)
 
     if (data && data.length > 0) {
-      localContentRepository.saveLegacyOpenWhenLetters(data.map((item) => ({
+      localContentRepository.saveLegacyOpenWhenLetters(data.map((item: SupabaseContentRow) => ({
         ...item.data,
         id: item.local_id || item.id,
         _supabaseId: item.id
       })))
     }
-  } catch (_) { /* best-effort */ }
+  } catch { /* best-effort */ }
 }
 
 // ---- push: background sync to Supabase -------------------------------------
 
-/**
- * Push a single content item create to Supabase (fire-and-forget).
- */
-export async function pushCreateToSupabase(collection, item) {
+export async function pushCreateToSupabase(collection: string, item: ContentItem): Promise<void> {
   if (!canSync()) return
 
   const client = getAuthenticatedClient()
@@ -228,14 +236,11 @@ export async function pushCreateToSupabase(collection, item) {
       console.warn('[sync] pushCreate failed:', error.message)
     }
   } catch (err) {
-    console.warn('[sync] pushCreate error:', err.message)
+    console.warn('[sync] pushCreate error:', (err as Error).message)
   }
 }
 
-/**
- * Push a content item update to Supabase (fire-and-forget).
- */
-export async function pushUpdateToSupabase(collection, id, patch) {
+export async function pushUpdateToSupabase(collection: string, id: string, patch: Partial<ContentItem>): Promise<void> {
   if (!canSync()) return
 
   const client = getAuthenticatedClient()
@@ -245,13 +250,11 @@ export async function pushUpdateToSupabase(collection, id, patch) {
   const userId = getSupabaseUserId()
 
   try {
-    // Find the Supabase id for this local item
     const items = localContentRepository.getCollectionItems(collection)
     const item = items.find((i) => String(i.id) === String(id))
 
-    const supabaseId = item?._supabaseId
+    const supabaseId = item?._supabaseId as string | undefined
     if (!supabaseId) {
-      // Item exists locally but not yet in Supabase — create it instead
       if (item) {
         await pushCreateToSupabase(collection, { ...item, ...patch, id })
       }
@@ -271,16 +274,11 @@ export async function pushUpdateToSupabase(collection, id, patch) {
       console.warn('[sync] pushUpdate failed:', error.message)
     }
   } catch (err) {
-    console.warn('[sync] pushUpdate error:', err.message)
+    console.warn('[sync] pushUpdate error:', (err as Error).message)
   }
 }
 
-/**
- * Push an OVERRIDE update to Supabase.
- * Overrides are stored in a separate localStorage key from items,
- * so they need their own lookup logic.
- */
-export async function pushOverrideToSupabase(collection, baseId, patch) {
+export async function pushOverrideToSupabase(collection: string, baseId: string, patch: Partial<ContentItem>): Promise<void> {
   if (!canSync()) return
 
   const client = getAuthenticatedClient()
@@ -290,11 +288,9 @@ export async function pushOverrideToSupabase(collection, baseId, patch) {
   const userId = getSupabaseUserId()
 
   try {
-    // Overrides are stored by base_id in the overrides store
     const overrides = localContentRepository.getCollectionOverrides(collection)
     const existingOverride = overrides ? overrides[String(baseId)] : null
 
-    // Try to find if this override already exists in Supabase
     const { data: existing } = await client
       .from('content_items')
       .select('id')
@@ -306,12 +302,11 @@ export async function pushOverrideToSupabase(collection, baseId, patch) {
       .limit(1)
 
     if (existing && existing.length > 0) {
-      // Update existing override
-      const supabaseId = existing[0].id
+      const supabaseId = (existing[0] as { id: string }).id
       const { error } = await client
         .from('content_items')
         .update({
-          data: sanitizeItemData(existingOverride || patch),
+          data: sanitizeItemData((existingOverride || patch) as Record<string, unknown>),
           updated_by: userId,
           updated_at: new Date().toISOString()
         })
@@ -319,7 +314,6 @@ export async function pushOverrideToSupabase(collection, baseId, patch) {
 
       if (error) console.warn('[sync] pushOverride update failed:', error.message)
     } else {
-      // Create new override record
       const { error } = await client.from('content_items').insert({
         space_id: spaceId,
         collection,
@@ -335,14 +329,11 @@ export async function pushOverrideToSupabase(collection, baseId, patch) {
       if (error) console.warn('[sync] pushOverride create failed:', error.message)
     }
   } catch (err) {
-    console.warn('[sync] pushOverride error:', err.message)
+    console.warn('[sync] pushOverride error:', (err as Error).message)
   }
 }
 
-/**
- * Push an OVERRIDE deletion to Supabase (soft-delete).
- */
-export async function pushDeleteOverrideToSupabase(collection, baseId) {
+export async function pushDeleteOverrideToSupabase(collection: string, baseId: string): Promise<void> {
   if (!canSync()) return
 
   const client = getAuthenticatedClient()
@@ -362,14 +353,11 @@ export async function pushDeleteOverrideToSupabase(collection, baseId) {
 
     if (error) console.warn('[sync] pushDeleteOverride failed:', error.message)
   } catch (err) {
-    console.warn('[sync] pushDeleteOverride error:', err.message)
+    console.warn('[sync] pushDeleteOverride error:', (err as Error).message)
   }
 }
 
-/**
- * Push a content item delete (soft-delete) to Supabase (fire-and-forget).
- */
-export async function pushDeleteToSupabase(collection, id) {
+export async function pushDeleteToSupabase(collection: string, id: string): Promise<void> {
   if (!canSync()) return
 
   const client = getAuthenticatedClient()
@@ -380,7 +368,7 @@ export async function pushDeleteToSupabase(collection, id) {
   try {
     const items = localContentRepository.getCollectionItems(collection)
     const item = items.find((i) => String(i.id) === String(id))
-    const supabaseId = item?._supabaseId
+    const supabaseId = item?._supabaseId as string | undefined
 
     if (!supabaseId) return
 
@@ -393,11 +381,11 @@ export async function pushDeleteToSupabase(collection, id) {
       console.warn('[sync] pushDelete failed:', error.message)
     }
   } catch (err) {
-    console.warn('[sync] pushDelete error:', err.message)
+    console.warn('[sync] pushDelete error:', (err as Error).message)
   }
 }
 
-export async function pushHideToSupabase(collection, baseId) {
+export async function pushHideToSupabase(collection: string, baseId: string): Promise<void> {
   if (!canSync()) return
   const client = getAuthenticatedClient()
   if (!client) return
@@ -420,10 +408,10 @@ export async function pushHideToSupabase(collection, baseId) {
         created_by: userId, updated_by: userId, source: 'user'
       })
     }
-  } catch (err) { console.warn('[sync] pushHide error:', err.message) }
+  } catch (err) { console.warn('[sync] pushHide error:', (err as Error).message) }
 }
 
-export async function pushRestoreToSupabase(collection, baseId) {
+export async function pushRestoreToSupabase(collection: string, baseId: string): Promise<void> {
   if (!canSync()) return
   const client = getAuthenticatedClient()
   if (!client) return
@@ -437,14 +425,13 @@ export async function pushRestoreToSupabase(collection, baseId) {
       .eq('base_id', String(baseId))
       .eq('kind', 'hidden')
       .is('deleted_at', null)
-  } catch (err) { console.warn('[sync] pushRestore error:', err.message) }
+  } catch (err) { console.warn('[sync] pushRestore error:', (err as Error).message) }
 }
 
 // ---- helpers ---------------------------------------------------------------
 
-function sanitizeItemData(item) {
+function sanitizeItemData(item: Record<string, unknown> | null | undefined): Record<string, unknown> {
   if (!item) return {}
-  // Strip internal fields before sending to Supabase
   const { _supabaseId, id, isLocal, isOverridden, createdBy, updatedBy, createdAt, updatedAt, source, spaceId, ...data } = item
-  return data
+  return data as Record<string, unknown>
 }

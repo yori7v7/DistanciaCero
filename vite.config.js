@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // Default: root (Vercel). Set VITE_BASE=/DistanciaCero/ for GitHub Pages.
@@ -7,6 +8,7 @@ const base = process.env.VITE_BASE || '/'
 
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',
