@@ -18,7 +18,11 @@ export interface ContentItem {
   displayLabel?: string
   isLocal?: boolean
   isOverridden?: boolean
-  [key: string]: unknown
+  // Content items are user-editable dictionaries with dynamic fields.
+  // Using `any` for the index signature is intentional — fields like title,
+  // text, description, date, image, tag, etc. vary by collection.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
 }
 
 /** Payload de metadata de creación */

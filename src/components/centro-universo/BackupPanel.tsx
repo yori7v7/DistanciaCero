@@ -138,7 +138,7 @@ export default function BackupPanel() {
 
         for (const col of COLLECTIONS) {
           if (Array.isArray(content?.[col])) saveCollectionItems(col, content[col])
-          if (isPlainObject(overrides?.[col])) saveCollectionOverrides(col, overrides[col] as Record<string, unknown>)
+          if (isPlainObject(overrides?.[col])) saveCollectionOverrides(col, overrides[col] as any)
           if (Array.isArray(hidden?.[col])) saveCollectionHiddenIds(col, hidden[col])
         }
 

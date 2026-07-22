@@ -411,7 +411,7 @@ function CentroUniversoSection() {
     const reader = new FileReader()
     reader.onload = () => {
       try {
-        const importedData = JSON.parse(reader.result)
+        const importedData = JSON.parse(reader.result as string)
 
         if (importedData?.version === 1) {
           if (!Array.isArray(importedData.monthlyLetters) || !Array.isArray(importedData.openWhenLetters)) {
@@ -944,14 +944,14 @@ function CentroUniversoSection() {
       setBaseBlackHoleImage('')
       setBaseBlackHoleImageStatus('')
       const fileInput = document.getElementById('baseBlackHoleImageFile')
-      if (fileInput) fileInput.value = ''
+      if (fileInput) (fileInput as HTMLInputElement).value = ''
       return
     }
 
     setBlackHoleImage('')
     setBlackHoleImageStatus('')
     const fileInput = document.getElementById('blackHoleImageFile')
-    if (fileInput) fileInput.value = ''
+    if (fileInput) (fileInput as HTMLInputElement).value = ''
   }
 
 

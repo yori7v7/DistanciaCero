@@ -417,7 +417,7 @@ function UniverseSection({ universe }) {
 
       {activeWorld && showDetails && (
         <article className="universe-selected-card fade-up" ref={detailsRef}>
-          <div className="universe-selected-orb" style={{ '--planet-a': activeWorld.colorA, '--planet-b': activeWorld.colorB }}>
+          <div className="universe-selected-orb" style={{ '--planet-a': activeWorld.colorA, '--planet-b': activeWorld.colorB } as React.CSSProperties}>
             <span></span>
           </div>
 

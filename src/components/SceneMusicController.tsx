@@ -60,7 +60,7 @@ function getSceneVolume(scene, masterVolume) {
 }
 
 function fadeAudio(audio, targetVolume, duration = 650) {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     if (!audio) {
       resolve()
       return
@@ -465,7 +465,7 @@ function SceneMusicController() {
           onChange={seekSong}
           disabled={!duration}
           aria-label="Progreso de la canción"
-          style={{ '--song-progress': `${progressPercent}%` }}
+          style={{ '--song-progress': `${progressPercent}%` } as React.CSSProperties}
         />
 
         <span>{formatTime(duration)}</span>
@@ -483,7 +483,7 @@ function SceneMusicController() {
           value={volumePercent}
           onChange={changeVolume}
           aria-label="Volumen de la banda sonora"
-          style={{ '--volume-progress': `${volumePercent}%` }}
+          style={{ '--volume-progress': `${volumePercent}%` } as React.CSSProperties}
         />
 
         <span>{volumePercent}%</span>
