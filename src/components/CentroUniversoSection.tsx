@@ -2015,7 +2015,7 @@ function CentroUniversoSection() {
               <label htmlFor="baseMonthlyContent">Contenido override (un parrafo por linea) *</label>
               <textarea
                 id="baseMonthlyContent"
-                rows="6"
+                rows={6}
                 value={baseMonthlyContent}
                 onChange={(event) => setBaseMonthlyContent(event.target.value)}
                 disabled={!editingBaseMonthlyId}
@@ -2176,7 +2176,7 @@ function CentroUniversoSection() {
               <label htmlFor="baseOpenWhenContent">Contenido override (un parrafo por linea) *</label>
               <textarea
                 id="baseOpenWhenContent"
-                rows="6"
+                rows={6}
                 value={baseOpenWhenContent}
                 onChange={(event) => setBaseOpenWhenContent(event.target.value)}
                 disabled={!editingBaseOpenWhenId}
@@ -2365,7 +2365,7 @@ function CentroUniversoSection() {
               <label htmlFor="baseTimelineDescription">Descripcion *</label>
               <textarea
                 id="baseTimelineDescription"
-                rows="4"
+                rows={4}
                 value={baseTimelineDescription}
                 onChange={(event) => setBaseTimelineDescription(event.target.value)}
                 disabled={!editingBaseTimelineId}
@@ -2377,7 +2377,7 @@ function CentroUniversoSection() {
               <label htmlFor="baseTimelineQuote">Frase</label>
               <textarea
                 id="baseTimelineQuote"
-                rows="3"
+                rows={3}
                 value={baseTimelineQuote}
                 onChange={(event) => setBaseTimelineQuote(event.target.value)}
                 disabled={!editingBaseTimelineId}
@@ -2388,7 +2388,7 @@ function CentroUniversoSection() {
               <label htmlFor="baseTimelineDetails">Detalles</label>
               <textarea
                 id="baseTimelineDetails"
-                rows="4"
+                rows={4}
                 value={baseTimelineDetails}
                 onChange={(event) => setBaseTimelineDetails(event.target.value)}
                 disabled={!editingBaseTimelineId}
@@ -2484,7 +2484,7 @@ function CentroUniversoSection() {
               <label htmlFor="timelineDescription">Descripcion *</label>
               <textarea
                 id="timelineDescription"
-                rows="4"
+                rows={4}
                 placeholder="Ej. Este dia se queda guardado como una página bonita de nuestra historia."
                 value={timelineDescription}
                 onChange={(event) => setTimelineDescription(event.target.value)}
@@ -2496,7 +2496,7 @@ function CentroUniversoSection() {
               <label htmlFor="timelineQuote">Frase</label>
               <textarea
                 id="timelineQuote"
-                rows="3"
+                rows={3}
                 placeholder="Ej. Hay recuerdos que brillan aunque pase el tiempo."
                 value={timelineQuote}
                 onChange={(event) => setTimelineQuote(event.target.value)}
@@ -2507,7 +2507,7 @@ function CentroUniversoSection() {
               <label htmlFor="timelineDetails">Detalles</label>
               <textarea
                 id="timelineDetails"
-                rows="4"
+                rows={4}
                 placeholder="Una linea por detalle"
                 value={timelineDetails}
                 onChange={(event) => setTimelineDetails(event.target.value)}
@@ -2684,7 +2684,7 @@ function CentroUniversoSection() {
               <label htmlFor="baseBlackHoleDescription">Descripcion *</label>
               <textarea
                 id="baseBlackHoleDescription"
-                rows="4"
+                rows={4}
                 value={baseBlackHoleDescription}
                 onChange={(event) => setBaseBlackHoleDescription(event.target.value)}
                 disabled={!editingBaseBlackHoleId}
@@ -2819,7 +2819,7 @@ function CentroUniversoSection() {
               <label htmlFor="blackHoleDescription">Descripcion *</label>
               <textarea
                 id="blackHoleDescription"
-                rows="4"
+                rows={4}
                 placeholder="Ej. Este recuerdo se queda orbitando aqui porque significa mucho."
                 value={blackHoleDescription}
                 onChange={(event) => setBlackHoleDescription(event.target.value)}
@@ -3058,7 +3058,7 @@ function CentroUniversoSection() {
               <label htmlFor="contentRaw">Contenido de la carta (un párrafo por línea) *</label>
               <textarea
                 id="contentRaw"
-                rows="6"
+                rows={6}
                 placeholder="Escribe el texto de tu carta aquí.&#10;Presiona Enter para crear un nuevo párrafo."
                 value={contentRaw}
                 onChange={(e) => setContentRaw(e.target.value)}

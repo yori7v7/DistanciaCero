@@ -1,19 +1,20 @@
 import { useState } from 'react'
+import type { LocalUser } from '../types/identity'
 import { getCurrentUser, setCurrentUser } from '../services/authService'
 import { getProfiles } from '../services/profileService'
 import { getCurrentSpace } from '../services/universeService'
-import { isSupabaseAuthenticated, getSupabaseSession } from '../services/supabaseAuthService'
+import { isSupabaseAuthenticated } from '../services/supabaseAuthService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { ShieldCheck } from 'lucide-react'
 
 function LocalIdentitySelector() {
-  const [currentUser, setCurrentUserState] = useState(() => getCurrentUser())
+  const [currentUser, setCurrentUserState] = useState<LocalUser>(() => getCurrentUser())
   const profiles = getProfiles()
   const space = getCurrentSpace()
   const remoteEnabled = isRemoteContentEnabled()
   const isRemoteAuth = remoteEnabled && isSupabaseAuthenticated()
 
-  const handleUserChange = (userId) => {
+  const handleUserChange = (userId: string) => {
     const nextUser = setCurrentUser(userId)
     setCurrentUserState(nextUser)
   }

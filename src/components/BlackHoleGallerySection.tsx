@@ -24,6 +24,7 @@ function AccretionDiskLayer({
   })
 
   return (
+    // @ts-expect-error Three.js rotation accepts number[]
     <mesh rotation={rotation}>
       <ringGeometry args={[inner, outer, 320, 1]} />
       <shaderMaterial
@@ -549,7 +550,7 @@ function BlackHoleGallerySection({ items = [] }) {
         <div className="blackhole-transition">
           <div className="blackhole-warp-lines">
             {warpLines.map((line) => (
-              <span key={line} style={{ '--line-index': line }} />
+              <span key={line} style={{ '--line-index': line } as React.CSSProperties} />
             ))}
           </div>
 
@@ -583,7 +584,7 @@ function BlackHoleGallerySection({ items = [] }) {
           <div className="portal-layout">
             <div className="portal-preview">
               {activeItem?.image ? (
-                <img src={activeItem.image} alt={activeItem.alt || activeItem.title} draggable="false" />
+                <img src={activeItem.image as string} alt={(activeItem.alt || activeItem.title) as string} draggable="false" />
               ) : (
                 <div className="portal-placeholder">
                   <ImageIcon size={42} />

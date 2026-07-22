@@ -20,10 +20,11 @@ async function ensureSpaceSetup() {
       .select('space_id')
       .limit(1)
     if (error || !memberships?.length) {
-      await client.rpc('bootstrap_space', {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(client.rpc('bootstrap_space', {
         space_name: 'Distancia Cero',
         space_slug: 'distancia-cero'
-      }).catch(() => {})
+      }) as any).catch(() => {})
     }
   } catch (err) {
     console.warn('[auth] ensureSpaceSetup:', (err as Error).message)

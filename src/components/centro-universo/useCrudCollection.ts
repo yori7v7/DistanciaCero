@@ -22,7 +22,7 @@ export interface CrudField {
   name: string
   label: string
   required?: boolean
-  type?: 'text' | 'textarea' | 'date' | 'select'
+  type?: string  // 'text' | 'textarea' | 'date' | 'select'
   rows?: number
   placeholder?: string
   options?: { value: string; label: string }[]
