@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type ReactNode, type FormEvent } from 'react'
 import { LogIn, UserPlus, Heart, Mail, Lock, User, AlertCircle, Eye, EyeOff, Sparkles } from 'lucide-react'
 import {
   signInWithEmail,
@@ -11,9 +11,6 @@ import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { pullFromSupabase } from '../services/supabaseSyncService'
 import { notifyAllContentUpdated } from '../services/contentService'
 
-/**
- * After login/signup, ensures the user has a profile and space.
- */
 async function ensureSpaceSetup() {
   const client = getAuthenticatedClient()
   if (!client) return
@@ -29,16 +26,15 @@ async function ensureSpaceSetup() {
       }).catch(() => {})
     }
   } catch (err) {
-    console.warn('[auth] ensureSpaceSetup:', err.message)
+    console.warn('[auth] ensureSpaceSetup:', (err as Error).message)
   }
 }
 
-/**
- * Background wrapper used by all auth screens.
- */
-function AuthBackground({ children }) {
+function AuthBackground({ children }: { children: ReactNode }) {
   return (
-    <div className="auth-gate">
+    <div className="fixed inset-0 z-50 flex items-center justify-center
+      bg-[radial-gradient(circle_at_center,rgba(255,122,200,0.15),transparent_30%),rgba(3,0,8,0.94)]
+      backdrop-blur-lg overflow-hidden">
       <div className="background-orbs">
         <span className="orb orb-pink"></span>
         <span className="orb orb-red"></span>
@@ -46,9 +42,11 @@ function AuthBackground({ children }) {
       </div>
       <div className="energy-lines"></div>
       <div className="stars-layer"></div>
-      <div className="auth-gate__particles">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(8)].map((_, i) => (
-          <span key={i} className="auth-gate__particle"
+          <span key={i}
+            className="absolute bottom-0 w-1 h-1 rounded-full bg-pink opacity-25
+              animate-[authParticleRise_5s_ease-in_infinite]"
             style={{ left: `${10 + i * 10}%`, animationDelay: `${i * 0.5}s` }} />
         ))}
       </div>
@@ -57,12 +55,17 @@ function AuthBackground({ children }) {
   )
 }
 
-function AuthGate({ children, onReady }) {
-  const [mode, setMode] = useState('login')
+interface AuthGateProps {
+  children: ReactNode
+  onReady?: () => void
+}
+
+function AuthGate({ children, onReady }: AuthGateProps) {
+  const [mode, setMode] = useState<'login' | 'signup' | 'confirm'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [remoteEnabled] = useState(() => isRemoteContentEnabled())
@@ -102,35 +105,38 @@ function AuthGate({ children, onReady }) {
     return () => { cancelled = true; unsubscribe() }
   }, [remoteEnabled])
 
-  if (!remoteEnabled) return children
+  if (!remoteEnabled) return <>{children}</>
 
-  // ---- Loading ----
+  // Loading
   if (checking) {
     return (
       <AuthBackground>
-        <div className="auth-gate__card auth-gate__card--center">
-          <Heart className="auth-gate__loading-icon" size={48} />
-          <p className="auth-gate__loading-text">Cargando tu universo...</p>
+        <div className="flex flex-col items-center gap-4">
+          <Heart className="text-pink animate-[authPulse_1.4s_ease-in-out_infinite]" size={48} />
+          <p className="text-pink-soft font-semibold text-lg">Cargando tu universo...</p>
         </div>
       </AuthBackground>
     )
   }
 
-  if (authenticated) return children
+  if (authenticated) return <>{children}</>
 
-  // ---- Verified ----
+  // Verified email
   if (verified) {
     return (
       <AuthBackground>
-        <div className="auth-gate__card">
-          <div className="auth-gate__header">
-            <div className="auth-gate__verified-icon">💖</div>
-            <h1 className="auth-gate__title">¡Email verificado!</h1>
-            <p className="auth-gate__subtitle">
-              Tu cuenta fue confirmada. Inicia sesión para entrar.
-            </p>
+        <div className="w-full max-w-md mx-4 rounded-[36px] p-10 text-center
+          border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
+          shadow-[0_0_60px_rgba(255,122,200,0.12)]">
+          <div className="mb-8">
+            <div className="text-5xl mb-4">💖</div>
+            <h1 className="font-display text-3xl font-black mb-3 text-white-soft">¡Email verificado!</h1>
+            <p className="text-muted">Tu cuenta fue confirmada. Inicia sesión para entrar.</p>
           </div>
-          <button className="auth-gate__submit" onClick={() => { setVerified(false); setMode('login') }}>
+          <button className="w-full py-3.5 rounded-full font-bold text-white
+            bg-gradient-to-r from-pink to-red shadow-[0_0_25px_rgba(255,122,200,0.25)]
+            hover:shadow-[0_0_40px_rgba(255,122,200,0.4)] transition-shadow flex items-center justify-center gap-2"
+            onClick={() => { setVerified(false); setMode('login') }}>
             <LogIn size={18} /> Iniciar sesión
           </button>
         </div>
@@ -138,20 +144,25 @@ function AuthGate({ children, onReady }) {
     )
   }
 
-  // ---- Confirm ----
+  // Email confirmation sent
   if (mode === 'confirm') {
     return (
       <AuthBackground>
-        <div className="auth-gate__card">
-          <div className="auth-gate__header">
-            <Heart className="auth-gate__logo" size={40} />
-            <h1 className="auth-gate__title">¡Revisa tu correo!</h1>
-            <p className="auth-gate__subtitle">
-              Enviamos un enlace de confirmación a <strong>{email}</strong>.
+        <div className="w-full max-w-md mx-4 rounded-[36px] p-10 text-center
+          border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
+          shadow-[0_0_60px_rgba(255,122,200,0.12)]">
+          <div className="mb-8">
+            <Heart className="text-pink mx-auto mb-4" size={40} />
+            <h1 className="font-display text-3xl font-black mb-3 text-white-soft">¡Revisa tu correo!</h1>
+            <p className="text-muted">
+              Enviamos un enlace de confirmación a <strong className="text-pink-soft">{email}</strong>.
               Haz click en el enlace y luego inicia sesión.
             </p>
           </div>
-          <button className="auth-gate__submit" onClick={() => setMode('login')}>
+          <button className="w-full py-3.5 rounded-full font-bold text-white
+            bg-gradient-to-r from-pink to-red shadow-[0_0_25px_rgba(255,122,200,0.25)]
+            hover:shadow-[0_0_40px_rgba(255,122,200,0.4)] transition-shadow flex items-center justify-center gap-2"
+            onClick={() => setMode('login')}>
             <LogIn size={18} /> Ir al inicio de sesión
           </button>
         </div>
@@ -159,8 +170,9 @@ function AuthGate({ children, onReady }) {
     )
   }
 
-  // ---- Handlers ----
-  const handleLogin = async (e) => {
+  const isLogin = mode === 'login'
+
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
     if (!email.trim() || !password.trim()) { setError('Llena todos los campos.'); return }
@@ -175,11 +187,11 @@ function AuthGate({ children, onReady }) {
         notifyAllContentUpdated()
         if (onReadyRef.current) onReadyRef.current()
       }
-    } catch (err) { setError(err.message || 'Error inesperado.') }
+    } catch (err) { setError((err as Error).message || 'Error inesperado.') }
     finally { setBusy(false) }
   }
 
-  const handleSignup = async (e) => {
+  const handleSignup = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
     if (!email.trim() || !password.trim() || !displayName.trim()) { setError('Llena todos los campos.'); return }
@@ -196,50 +208,59 @@ function AuthGate({ children, onReady }) {
         notifyAllContentUpdated()
         if (onReadyRef.current) onReadyRef.current()
       }
-    } catch (err) { setError(err.message || 'Error inesperado.') }
+    } catch (err) { setError((err as Error).message || 'Error inesperado.') }
     finally { setBusy(false) }
   }
 
-  const isLogin = mode === 'login'
+  // Login/Signup form card
+  const cardClasses = `w-full max-w-md mx-4 rounded-[36px] p-10 text-center
+    border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
+    shadow-[0_24px_48px_rgba(0,0,0,0.4),0_0_60px_rgba(255,122,200,0.1)]
+    animate-[authCardIn_0.5s_ease_both]`
+
+  const inputClasses = `w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[rgba(255,255,255,0.05)]
+    border border-[var(--color-border)] text-white-soft placeholder:text-muted/50
+    focus:outline-none focus:border-pink/50 focus:bg-[rgba(255,255,255,0.08)]
+    transition-colors disabled:opacity-50`
 
   return (
     <AuthBackground>
-      <div className="auth-gate__card">
-        <div className="auth-gate__header">
+      <div className={cardClasses}>
+        <div className="mb-8">
           <div className="small-pill" style={{ margin: '0 auto 16px' }}>
             <Sparkles size={14} />
             <span>Distancia Cero</span>
           </div>
-          <h1 className="auth-gate__title">
+          <h1 className="font-display text-3xl font-black mb-2 text-white-soft">
             {isLogin ? 'Bienvenida de vuelta' : 'Crea tu cuenta'}
           </h1>
-          <p className="auth-gate__subtitle">
+          <p className="text-muted text-sm">
             {isLogin ? 'Bienvenida de vuelta' : 'Únete a este universo'}
           </p>
         </div>
 
-        <form className="auth-gate__form" onSubmit={isLogin ? handleLogin : handleSignup}>
+        <form className="flex flex-col gap-4" onSubmit={isLogin ? handleLogin : handleSignup}>
           {!isLogin && (
-            <div className="auth-gate__field">
-              <User className="auth-gate__field-icon" size={18} />
-              <input className="auth-gate__input" type="text" placeholder="Tu nombre"
+            <div className="relative">
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={18} />
+              <input className={inputClasses} type="text" placeholder="Tu nombre"
                 value={displayName} onChange={(e) => setDisplayName(e.target.value)}
                 disabled={busy} autoComplete="name" />
             </div>
           )}
-          <div className="auth-gate__field">
-            <Mail className="auth-gate__field-icon" size={18} />
-            <input className="auth-gate__input" type="email" placeholder="Correo electrónico"
+          <div className="relative">
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={18} />
+            <input className={inputClasses} type="email" placeholder="Correo electrónico"
               value={email} onChange={(e) => setEmail(e.target.value)}
               disabled={busy} autoComplete="email" />
           </div>
-          <div className="auth-gate__field">
-            <Lock className="auth-gate__field-icon" size={18} />
-            <input className="auth-gate__input" type={showPassword ? 'text' : 'password'}
+          <div className="relative">
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={18} />
+            <input className={inputClasses} type={showPassword ? 'text' : 'password'}
               placeholder="Contraseña" value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={busy} autoComplete={isLogin ? 'current-password' : 'new-password'} />
-            <button type="button" className="auth-gate__password-toggle"
+            <button type="button" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-white-soft"
               onClick={() => setShowPassword((s) => !s)} tabIndex={-1}
               aria-label={showPassword ? 'Ocultar' : 'Mostrar'}>
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -247,14 +268,18 @@ function AuthGate({ children, onReady }) {
           </div>
 
           {error && (
-            <div className="auth-gate__error">
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-[rgba(255,45,85,0.1)] border border-[rgba(255,45,85,0.25)] text-red text-sm">
               <AlertCircle size={16} /><span>{error}</span>
             </div>
           )}
 
-          <button className="auth-gate__submit" type="submit" disabled={busy}>
+          <button className="w-full py-3.5 mt-2 rounded-full font-bold text-white
+            bg-gradient-to-r from-pink to-red shadow-[0_0_25px_rgba(255,122,200,0.25)]
+            hover:shadow-[0_0_40px_rgba(255,122,200,0.4)] transition-shadow
+            flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            type="submit" disabled={busy}>
             {busy ? (
-              <span className="auth-gate__spinner" />
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : isLogin ? (
               <><LogIn size={18} /> Entrar</>
             ) : (
@@ -262,7 +287,7 @@ function AuthGate({ children, onReady }) {
             )}
           </button>
 
-          <button type="button" className="auth-gate__switch"
+          <button type="button" className="text-sm text-muted hover:text-pink-soft transition-colors bg-transparent border-0 cursor-pointer disabled:opacity-50"
             onClick={() => { setError(null); setMode(isLogin ? 'signup' : 'login') }}
             disabled={busy}>
             {isLogin ? '¿No tienes cuenta? Crea una aquí' : '¿Ya tienes cuenta? Inicia sesión'}

@@ -6,19 +6,6 @@ import PublicLanding from './components/PublicLanding'
 import { AudioProvider } from './context/AudioContext.jsx'
 
 import './styles/tailwind.css'
-import './styles/global.css'
-import './styles/animations.css'
-import './styles/responsive.css'
-import './styles/universe-interactive.css'
-import './styles/ui-expansions.css'
-import './styles/chaotic-reasons.css'
-import './styles/scene-music-controller.css'
-import './styles/scene-mode.css'
-import './styles/diary-story.css'
-import './styles/true-3d.css'
-import './styles/blackhole-gallery.css'
-import './styles/auth-gate.css'
-import './styles/clay-3d.css'
 
 const resetParams = new URLSearchParams(window.location.search)
 
