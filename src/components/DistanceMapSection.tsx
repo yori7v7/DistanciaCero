@@ -53,7 +53,6 @@ function DistanceMapSection() {
               <ExternalLink size={16} />
               Ver punto 1
             </a>
-
             <a href={location2} target="_blank" rel="noreferrer">
               <ExternalLink size={16} />
               Ver punto 2

@@ -2,7 +2,11 @@ import { Heart, Sparkles, Stars, ArrowRight, Music } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import siteConfig from '../data/siteConfig.json'
 
-function PublicLanding({ onEnter }) {
+interface PublicLandingProps {
+  onEnter: () => void
+}
+
+function PublicLanding({ onEnter }: PublicLandingProps) {
   const [phraseIndex, setPhraseIndex] = useState(0)
 
   const phrases = [
@@ -21,7 +25,9 @@ function PublicLanding({ onEnter }) {
   }, [])
 
   return (
-    <div className="public-landing">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center
+      bg-[radial-gradient(circle_at_center,rgba(255,122,200,0.18),transparent_28%),rgba(3,0,8,0.96)]
+      backdrop-blur-lg overflow-hidden">
       {/* Same background as main app */}
       <div className="background-orbs">
         <span className="orb orb-pink"></span>
@@ -32,11 +38,12 @@ function PublicLanding({ onEnter }) {
       <div className="stars-layer"></div>
 
       {/* Floating particles */}
-      <div className="public-landing__particles">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(12)].map((_, i) => (
           <span
             key={i}
-            className="public-landing__particle"
+            className="absolute bottom-0 w-1 h-1 rounded-full bg-pink opacity-30
+              animate-[particleRise_5s_ease-in_infinite]"
             style={{
               left: `${10 + (i * 7)}%`,
               animationDelay: `${i * 0.4}s`,
@@ -47,48 +54,48 @@ function PublicLanding({ onEnter }) {
       </div>
 
       {/* Content */}
-      <div className="public-landing__content">
-        <div className="small-pill public-landing__badge">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg w-full">
+        <div className="small-pill mb-6">
           <Sparkles size={14} />
           <span>{siteConfig.hero.eyebrow}</span>
         </div>
 
-        <h1 className="public-landing__title">
-          <span className="public-landing__title-line">{siteConfig.hero.titlePrefix}</span>
-          <span className="public-landing__title-line public-landing__title-line--accent">
+        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-display font-black leading-tight mb-6">
+          <span className="block text-white-soft">{siteConfig.hero.titlePrefix}</span>
+          <span className="block bg-gradient-to-r from-pink via-red to-pink-soft bg-clip-text text-transparent">
             {siteConfig.hero.titleName}
           </span>
         </h1>
 
-        <div className="hero-names public-landing__names">
+        <div className="hero-names mb-8">
           <span>{siteConfig.couple.yourName}</span>
-          <Heart size={22} className="public-landing__heart" />
+          <Heart size={22} className="mx-3 inline-block text-pink animate-[pulse-heart_2s_ease-in-out_infinite]" />
           <span>{siteConfig.couple.herName}</span>
         </div>
 
         {/* Animated phrase */}
-        <div className="public-landing__phrase">
-          <Music size={14} className="public-landing__phrase-icon" />
-          <span key={phraseIndex} className="public-landing__phrase-text">
+        <div className="flex items-center gap-2 text-muted text-sm min-h-[24px] mb-10">
+          <Music size={14} className="text-pink-soft shrink-0" />
+          <span key={phraseIndex} className="animate-[fade-up_0.4s_ease_both]">
             {phrases[phraseIndex]}
           </span>
         </div>
 
         {/* CTA */}
-        <div className="public-landing__actions">
-          <button className="main-button public-landing__cta" onClick={onEnter}>
+        <div className="flex flex-col items-center gap-3">
+          <button className="main-button flex items-center gap-3 text-lg px-8 py-4" onClick={onEnter}>
             <span>{siteConfig.hero.primaryButton}</span>
             <ArrowRight size={20} />
           </button>
         </div>
 
-        <p className="public-landing__hint">
+        <p className="mt-8 text-xs text-muted/60">
           Solo {siteConfig.couple.herName} y {siteConfig.couple.yourName} pueden entrar.
         </p>
       </div>
 
       {/* Footer */}
-      <div className="public-landing__footer">
+      <div className="absolute bottom-6 flex items-center gap-2 text-muted text-xs">
         <Stars size={12} />
         <span>{siteConfig.project.name} • Desde {siteConfig.dates.metDate?.split('-')[0] || '2026'}</span>
         <Heart size={10} />

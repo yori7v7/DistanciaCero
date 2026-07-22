@@ -1,8 +1,33 @@
 import { useState, useRef } from 'react'
-import { Upload, X, Check, AlertCircle, Loader, Image, Music, Video } from 'lucide-react'
-import { uploadFile, deleteFile } from '../services/storageService'
+import { Upload, X, AlertCircle, Loader, Image, Music, Video } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import { uploadFile } from '../services/storageService'
 
-const TYPE_CONFIG = {
+type FileType = 'images' | 'audio' | 'videos'
+
+interface TypeConfig {
+  label: string
+  icon: LucideIcon
+  accept: string
+  color: string
+}
+
+interface UploadResult {
+  path: string
+  url: string | null
+  name: string
+  size: number
+}
+
+interface FileUploaderProps {
+  type?: FileType
+  onUploaded?: (result: UploadResult) => void
+  onDelete?: (path: string) => void
+  maxSize?: number
+  className?: string
+}
+
+const TYPE_CONFIG: Record<FileType, TypeConfig> = {
   images: {
     label: 'Imagen',
     icon: Image,
@@ -23,25 +48,15 @@ const TYPE_CONFIG = {
   }
 }
 
-/**
- * FileUploader — reusable drag-and-drop + click file upload.
- *
- * Props:
- *   type        — 'images' | 'audio' | 'videos'
- *   onUploaded  — callback({ path, url, name }) when upload succeeds
- *   onDelete    — callback(path) when user deletes an uploaded file
- *   maxSize     — max file size in bytes (default 50MB)
- *   className   — optional wrapper class
- */
-function FileUploader({ type = 'images', onUploaded, onDelete, maxSize = 52428800, className = '' }) {
+function FileUploader({ type = 'images', onUploaded, maxSize = 52428800, className = '' }: FileUploaderProps) {
   const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const config = TYPE_CONFIG[type] || TYPE_CONFIG.images
   const Icon = config.icon
 
-  const handleFile = async (file) => {
+  const handleFile = async (file: File) => {
     setError(null)
 
     if (file.size > maxSize) {
@@ -70,26 +85,26 @@ function FileUploader({ type = 'images', onUploaded, onDelete, maxSize = 5242880
         onUploaded({ path: result.path, url: result.url, name: file.name, size: file.size })
       }
     } catch (err) {
-      setError(err.message || 'Error al subir archivo.')
+      setError((err as Error).message || 'Error al subir archivo.')
     } finally {
       setUploading(false)
     }
   }
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) handleFile(file)
     if (inputRef.current) inputRef.current.value = ''
   }
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setDragOver(false)
     const file = e.dataTransfer?.files?.[0]
     if (file) handleFile(file)
   }
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
     setDragOver(true)
   }
@@ -97,46 +112,50 @@ function FileUploader({ type = 'images', onUploaded, onDelete, maxSize = 5242880
   const handleDragLeave = () => setDragOver(false)
 
   return (
-    <div className={`file-uploader ${className} ${dragOver ? 'file-uploader--drag-over' : ''}`}>
+    <div className={`file-uploader ${className} ${dragOver ? 'file-uploader--drag-over' : ''}`.trim()}>
       <input
         ref={inputRef}
         type="file"
         accept={config.accept}
         onChange={handleInputChange}
-        className="file-uploader__input"
+        className="hidden"
         aria-label={`Subir ${config.label.toLowerCase()}`}
       />
 
       <div
-        className="file-uploader__dropzone"
+        className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer
+          transition-all duration-200
+          ${dragOver
+            ? 'border-[var(--color-pink)] bg-[rgba(255,138,212,0.08)] scale-[1.02]'
+            : 'border-[var(--color-border)] hover:border-[var(--color-border-glow)] bg-[rgba(255,255,255,0.02)]'}`}
         onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
         {uploading ? (
-          <>
-            <Loader className="file-uploader__icon file-uploader__icon--spinning" size={28} />
-            <span>Subiendo...</span>
-          </>
+          <div className="flex flex-col items-center gap-3">
+            <Loader className="animate-spin text-pink" size={28} />
+            <span className="text-muted">Subiendo...</span>
+          </div>
         ) : (
-          <>
-            <Icon className="file-uploader__icon" size={28} style={{ color: config.color }} />
-            <span className="file-uploader__label">
+          <div className="flex flex-col items-center gap-2">
+            <Icon size={28} style={{ color: config.color }} />
+            <span className="text-sm text-white-soft">
               <strong>Click</strong> o arrastra tu {config.label.toLowerCase()} aquí
             </span>
-            <span className="file-uploader__hint">
+            <span className="text-xs text-muted">
               {config.accept.split(',').slice(0, 3).join(', ')} — máx {Math.round(maxSize / 1024 / 1024)}MB
             </span>
-          </>
+          </div>
         )}
       </div>
 
       {error && (
-        <div className="file-uploader__error">
+        <div className="flex items-center gap-2 mt-3 p-3 rounded-xl bg-[rgba(255,45,85,0.1)] border border-[rgba(255,45,85,0.25)] text-red text-sm">
           <AlertCircle size={14} />
-          <span>{error}</span>
-          <button onClick={() => setError(null)} className="file-uploader__error-close" aria-label="Cerrar">
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError(null)} className="text-muted hover:text-white" aria-label="Cerrar">
             <X size={14} />
           </button>
         </div>

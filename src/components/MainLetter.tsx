@@ -1,5 +1,5 @@
-import SectionTitle from './SectionTitle'
 import { Heart } from 'lucide-react'
+import SectionTitle from './SectionTitle'
 
 function MainLetter() {
   return (
