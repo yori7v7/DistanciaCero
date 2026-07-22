@@ -20,11 +20,11 @@ describe('SectionTitle', () => {
     expect(paragraphs.length).toBe(0)
   })
 
-  it('renders eyebrow as uppercase badge', () => {
+  it('renders eyebrow inside pill badge', () => {
     render(<SectionTitle eyebrow="UNIVERSO" title="Sistema Solar" />)
     const eyebrow = screen.getByText('UNIVERSO')
-    expect(eyebrow.tagName).toBe('SPAN')
-    expect(eyebrow.className).toContain('uppercase')
+    // eyebrow text is inside the pill span
+    expect(eyebrow.className).toContain('pill')
   })
 
   it('renders title as h2', () => {

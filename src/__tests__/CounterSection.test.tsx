@@ -29,7 +29,7 @@ describe('CounterSection', () => {
 
   it('renders all 4 counter cards', () => {
     const { container } = render(<CounterSection />)
-    const cards = container.querySelectorAll('.counter-card')
+    const cards = container.querySelectorAll('.glass-card')
     expect(cards.length).toBe(4)
   })
 

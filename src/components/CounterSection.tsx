@@ -57,19 +57,32 @@ function CounterSection() {
 
   return (
     <section className="section" id="contador">
-      <div className="section-title fade-up">
-        <span>Tiempo</span>
-        <h2>Contadores del universo</h2>
-        <p>Pequeñas formas de medir todo lo que empezó, todo lo que somos y todo lo que viene.</p>
+      <div className="text-center mb-16 animate-[fade-up_0.6s_ease_both]">
+        <span className="pill mb-5">Tiempo</span>
+        <h2 className="font-display text-[clamp(2rem,5vw,3.2rem)] font-black text-white-soft mb-5 leading-tight">
+          Contadores del universo
+        </h2>
+        <p className="max-w-[640px] mx-auto text-muted text-base leading-relaxed">
+          Pequeñas formas de medir todo lo que empezó, todo lo que somos y todo lo que viene.
+        </p>
       </div>
 
-      <div className="counter-grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat) => (
-          <article className="counter-card fade-up" key={stat.id}>
-            <div className="counter-icon">{stat.icon}</div>
-            <h3>{stat.value}</h3>
-            <span>{stat.label}</span>
-            <p>{stat.hint}</p>
+          <article
+            className="glass-card p-8 text-center animate-[fade-up_0.6s_ease_both]
+              hover:border-pink/30 hover:-translate-y-1 transition-all duration-300"
+            key={stat.id}
+          >
+            <div className="w-12 h-12 mx-auto mb-4 rounded-xl grid place-items-center
+              bg-gradient-to-br from-pink/20 to-red/20 text-pink">
+              {stat.icon}
+            </div>
+            <h3 className="font-display text-4xl font-black text-white-soft mb-2">{stat.value}</h3>
+            <span className="inline-block text-pink-soft font-bold text-sm uppercase tracking-wider mb-3">
+              {stat.label}
+            </span>
+            <p className="text-muted text-sm">{stat.hint}</p>
           </article>
         ))}
       </div>
