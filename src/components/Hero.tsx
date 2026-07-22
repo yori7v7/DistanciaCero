@@ -19,7 +19,7 @@ function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" id="inicio">
+    <section className="section hero relative min-h-screen flex items-center justify-center overflow-hidden" id="inicio">
       {/* Background ambient orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="glow-orb w-[500px] h-[500px] bg-pink top-1/4 -left-32" />
