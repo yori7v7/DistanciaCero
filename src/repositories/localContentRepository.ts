@@ -47,7 +47,7 @@ function safeSetItem(key: string, value: string): void {
   try {
     window.localStorage.setItem(key, value)
   } catch {
-    // LocalStorage can fail in private mode or quota-limited contexts.
+    // localStorage puede fallar en modo privado o por cuota excedida.
   }
 }
 
@@ -57,7 +57,7 @@ function safeRemoveItem(key: string): void {
   try {
     window.localStorage.removeItem(key)
   } catch {
-    // Keep legacy helpers non-throwing.
+    // Mantener helpers legacy sin lanzar errores.
   }
 }
 

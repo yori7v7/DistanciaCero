@@ -41,6 +41,7 @@ import {
   updateCollectionItem as updateLocalItem
 } from '../services/contentService'
 import { buildCreateMetadata, buildUpdateMetadata } from '../services/contentMetadataService'
+import { isPlainObject } from '../utils/helpers'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
@@ -345,10 +346,6 @@ function CentroUniversoSection() {
     window.location.reload()
   }
 
-  const isPlainObject = (value) => {
-    return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
-  }
-
   const handleExportLocalLetters = () => {
     const exportData = {
       version: 2,
@@ -411,7 +408,9 @@ function CentroUniversoSection() {
     const reader = new FileReader()
     reader.onload = () => {
       try {
-        const importedData = JSON.parse(reader.result as string)
+        // TS 7.0: JSON.parse devuelve unknown; any permite acceso libre
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const importedData: any = JSON.parse(reader.result as string)
 
         if (importedData?.version === 1) {
           if (!Array.isArray(importedData.monthlyLetters) || !Array.isArray(importedData.openWhenLetters)) {
@@ -444,79 +443,85 @@ function CentroUniversoSection() {
           return
         }
 
-        const content = importedData?.content
-        const overrides = importedData?.overrides
-        const hidden = importedData?.hidden
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const content: any = (importedData as any).content
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const overrides: any = (importedData as any).overrides
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const hidden: any = (importedData as any).hidden
+        const safeC = content || {}
+        const safeO = overrides || {}
+        const safeH = hidden || {}
         const hasPromisesBackup =
-          Object.prototype.hasOwnProperty.call(content || {}, 'promises') ||
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'promises') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'promises')
+          Object.prototype.hasOwnProperty.call(safeC, 'promises') ||
+          Object.prototype.hasOwnProperty.call(safeO, 'promises') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'promises')
         const hasMonthlyBaseBackup =
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'monthlyLetters') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'monthlyLetters')
+          Object.prototype.hasOwnProperty.call(safeO, 'monthlyLetters') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'monthlyLetters')
         const hasOpenWhenBaseBackup =
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'openWhenLetters') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'openWhenLetters')
+          Object.prototype.hasOwnProperty.call(safeO, 'openWhenLetters') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'openWhenLetters')
         const hasImportantDatesBackup =
-          Object.prototype.hasOwnProperty.call(content || {}, 'importantDates') ||
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'importantDates') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'importantDates')
+          Object.prototype.hasOwnProperty.call(safeC, 'importantDates') ||
+          Object.prototype.hasOwnProperty.call(safeO, 'importantDates') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'importantDates')
         const hasFutureDreamsBackup =
-          Object.prototype.hasOwnProperty.call(content || {}, 'futureDreams') ||
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'futureDreams') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'futureDreams')
+          Object.prototype.hasOwnProperty.call(safeC, 'futureDreams') ||
+          Object.prototype.hasOwnProperty.call(safeO, 'futureDreams') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'futureDreams')
         const hasTimelineBackup =
-          Object.prototype.hasOwnProperty.call(content || {}, 'timeline') ||
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'timeline') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'timeline')
+          Object.prototype.hasOwnProperty.call(safeC, 'timeline') ||
+          Object.prototype.hasOwnProperty.call(safeO, 'timeline') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'timeline')
         const hasBlackHoleGalleryBackup =
-          Object.prototype.hasOwnProperty.call(content || {}, 'blackHoleGallery') ||
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'blackHoleGallery') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'blackHoleGallery')
+          Object.prototype.hasOwnProperty.call(safeC, 'blackHoleGallery') ||
+          Object.prototype.hasOwnProperty.call(safeO, 'blackHoleGallery') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'blackHoleGallery')
         const hasPlaylistBackup =
-          Object.prototype.hasOwnProperty.call(content || {}, 'playlist') ||
-          Object.prototype.hasOwnProperty.call(overrides || {}, 'playlist') ||
-          Object.prototype.hasOwnProperty.call(hidden || {}, 'playlist')
+          Object.prototype.hasOwnProperty.call(safeC, 'playlist') ||
+          Object.prototype.hasOwnProperty.call(safeO, 'playlist') ||
+          Object.prototype.hasOwnProperty.call(safeH, 'playlist')
         const isValidV2 =
           importedData?.version === 2 &&
-          isPlainObject(content) &&
-          Array.isArray(content.monthlyLetters) &&
-          Array.isArray(content.openWhenLetters) &&
-          Array.isArray(content.reasons) &&
-          isPlainObject(overrides) &&
-          isPlainObject(overrides.reasons) &&
-          isPlainObject(hidden) &&
+          isPlainObject(safeC) &&
+          Array.isArray(safeC.monthlyLetters) &&
+          Array.isArray(safeC.openWhenLetters) &&
+          Array.isArray(safeC.reasons) &&
+          isPlainObject(safeO) &&
+          isPlainObject(safeO.reasons) &&
+          isPlainObject(safeH) &&
           (!hasMonthlyBaseBackup ||
-            (isPlainObject(overrides.monthlyLetters) &&
-              Array.isArray(hidden.monthlyLetters))) &&
+            (isPlainObject(safeO.monthlyLetters) &&
+              Array.isArray(safeH.monthlyLetters))) &&
           (!hasOpenWhenBaseBackup ||
-            (isPlainObject(overrides.openWhenLetters) &&
-              Array.isArray(hidden.openWhenLetters))) &&
-          Array.isArray(hidden.reasons) &&
+            (isPlainObject(safeO.openWhenLetters) &&
+              Array.isArray(safeH.openWhenLetters))) &&
+          Array.isArray(safeH.reasons) &&
           (!hasImportantDatesBackup ||
-            (Array.isArray(content.importantDates) &&
-              isPlainObject(overrides.importantDates) &&
-              Array.isArray(hidden.importantDates))) &&
+            (Array.isArray(safeC.importantDates) &&
+              isPlainObject(safeO.importantDates) &&
+              Array.isArray(safeH.importantDates))) &&
           (!hasFutureDreamsBackup ||
-            (Array.isArray(content.futureDreams) &&
-              isPlainObject(overrides.futureDreams) &&
-              Array.isArray(hidden.futureDreams))) &&
+            (Array.isArray(safeC.futureDreams) &&
+              isPlainObject(safeO.futureDreams) &&
+              Array.isArray(safeH.futureDreams))) &&
           (!hasTimelineBackup ||
-            (Array.isArray(content.timeline) &&
-              isPlainObject(overrides.timeline) &&
-              Array.isArray(hidden.timeline))) &&
+            (Array.isArray(safeC.timeline) &&
+              isPlainObject(safeO.timeline) &&
+              Array.isArray(safeH.timeline))) &&
           (!hasBlackHoleGalleryBackup ||
-            (Array.isArray(content.blackHoleGallery) &&
-              isPlainObject(overrides.blackHoleGallery) &&
-              Array.isArray(hidden.blackHoleGallery))) &&
+            (Array.isArray(safeC.blackHoleGallery) &&
+              isPlainObject(safeO.blackHoleGallery) &&
+              Array.isArray(safeH.blackHoleGallery))) &&
           (!hasPlaylistBackup ||
-            (Array.isArray(content.playlist) &&
-              isPlainObject(overrides.playlist) &&
-              Array.isArray(hidden.playlist))) &&
+            (Array.isArray(safeC.playlist) &&
+              isPlainObject(safeO.playlist) &&
+              Array.isArray(safeH.playlist))) &&
           (!hasPromisesBackup ||
-            (Array.isArray(content.promises) &&
-              isPlainObject(overrides.promises) &&
-              Array.isArray(hidden.promises)))
+            (Array.isArray(safeC.promises) &&
+              isPlainObject(safeO.promises) &&
+              Array.isArray(safeH.promises)))
 
         if (!isValidV2) {
           setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato válido de respaldo v2.' })

@@ -24,9 +24,7 @@ const COLLECTIONS = [
   'timeline', 'blackHoleGallery', 'playlist'
 ] as const
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
-}
+import { isPlainObject } from '../../utils/helpers'
 
 export default function BackupPanel() {
   const [backupStatus, setBackupStatus] = useState<BackupStatus | null>(null)
@@ -95,7 +93,7 @@ export default function BackupPanel() {
         const overrides = importedData?.overrides
         const hidden = importedData?.hidden
 
-        // v1 legacy import
+        // Importación de respaldo v1 (legacy)
         if (importedData?.version === 1) {
           if (!Array.isArray(importedData.monthlyLetters) || !Array.isArray(importedData.openWhenLetters)) {
             setBackupStatus({ type: 'error', text: 'El respaldo v1 no tiene cartas válidas.' })
@@ -115,7 +113,7 @@ export default function BackupPanel() {
           return
         }
 
-        // v2 import validation
+        // Validación de respaldo v2
         const isValidV2 =
           importedData?.version === 2 &&
           isPlainObject(content) &&
@@ -132,7 +130,7 @@ export default function BackupPanel() {
           return
         }
 
-        // Restore content
+        // Restaurar contenido
         if (Array.isArray(content.monthlyLetters)) saveLegacyMonthlyLetters(content.monthlyLetters)
         if (Array.isArray(content.openWhenLetters)) saveLegacyOpenWhenLetters(content.openWhenLetters)
 

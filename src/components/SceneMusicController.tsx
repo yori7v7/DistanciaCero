@@ -154,6 +154,9 @@ function formatTime(seconds) {
   return `${minutes}:${remainingSeconds}`
 }
 
+const _safeGet = (k: string) => { try { return localStorage.getItem(k) } catch { return null } }
+const _safeSet = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* degraded */ } }
+
 function SceneMusicController() {
   const scenes = useMemo(() => Array.isArray(sceneMusic) ? sceneMusic : [], [])
   const [activeSectionId, setActiveSectionId] = useState(scenes[0]?.sectionId || '')
@@ -235,8 +238,8 @@ function SceneMusicController() {
   }, [])
 
   useEffect(() => {
-    const storedUnlock = localStorage.getItem(UNLOCK_KEY)
-    const storedVolumeRaw = localStorage.getItem(VOLUME_KEY)
+    const storedUnlock = _safeGet(UNLOCK_KEY)
+    const storedVolumeRaw = _safeGet(VOLUME_KEY)
     const storedVolume = Number(storedVolumeRaw)
 
     if (storedUnlock === '1') {
@@ -249,7 +252,7 @@ function SceneMusicController() {
     } else {
       setMasterVolume(DEFAULT_VOLUME)
       masterVolumeRef.current = DEFAULT_VOLUME
-      localStorage.setItem(VOLUME_KEY, String(DEFAULT_VOLUME))
+      _safeSet(VOLUME_KEY, String(DEFAULT_VOLUME))
     }
   }, [])
 
@@ -290,7 +293,7 @@ function SceneMusicController() {
     scheduleDetection()
 
     window.addEventListener('scroll', scheduleDetection, { passive: true })
-    window.addEventListener('resize', scheduleDetection)
+    window.addEventListener('resize', scheduleDetection, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', scheduleDetection)
@@ -362,8 +365,8 @@ function SceneMusicController() {
   }, [masterVolume])
 
   const unlockAndPlay = async () => {
-    localStorage.setItem(UNLOCK_KEY, '1')
-    localStorage.setItem(VOLUME_KEY, String(masterVolumeRef.current || DEFAULT_VOLUME))
+    _safeSet(UNLOCK_KEY, '1')
+    _safeSet(VOLUME_KEY, String(masterVolumeRef.current || DEFAULT_VOLUME))
     setIsUnlocked(true)
 
     await playScene(activeSceneRef.current || activeScene, true)
@@ -381,8 +384,8 @@ function SceneMusicController() {
 
   const resumeMusic = async () => {
     setIsUnlocked(true)
-    localStorage.setItem(UNLOCK_KEY, '1')
-    localStorage.setItem(VOLUME_KEY, String(masterVolumeRef.current || DEFAULT_VOLUME))
+    _safeSet(UNLOCK_KEY, '1')
+    _safeSet(VOLUME_KEY, String(masterVolumeRef.current || DEFAULT_VOLUME))
 
     await playScene(activeSceneRef.current || activeScene, false)
   }
@@ -393,7 +396,7 @@ function SceneMusicController() {
 
     setMasterVolume(safeValue)
     masterVolumeRef.current = safeValue
-    localStorage.setItem(VOLUME_KEY, String(safeValue))
+    _safeSet(VOLUME_KEY, String(safeValue))
   }
 
   const toggleMute = () => {
@@ -401,7 +404,7 @@ function SceneMusicController() {
 
     setMasterVolume(nextVolume)
     masterVolumeRef.current = nextVolume
-    localStorage.setItem(VOLUME_KEY, String(nextVolume))
+    _safeSet(VOLUME_KEY, String(nextVolume))
   }
 
   const seekSong = (event) => {

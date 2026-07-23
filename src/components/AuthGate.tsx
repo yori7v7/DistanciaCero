@@ -98,6 +98,8 @@ function AuthGate({ children, onReady }: AuthGateProps) {
         })
       }
       setChecking(false)
+    }).catch(() => {
+      if (!cancelled) setChecking(false)
     })
     const unsubscribe = onSessionChange((session) => {
       if (session) setAuthenticated(true)

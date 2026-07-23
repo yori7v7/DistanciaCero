@@ -25,7 +25,7 @@ const iconMap = {
 
 function getInitialSceneId(scenes) {
   const hash = window.location.hash.replace('#/', '').replace('#', '').trim()
-  const stored = localStorage.getItem(SCENE_STORAGE_KEY)
+  const stored = _sG(SCENE_STORAGE_KEY)
   if (hash && scenes.some((s) => s.id === hash && s.id !== 'centro-universo')) return hash
   if (stored && scenes.some((s) => s.id === stored && s.id !== 'centro-universo')) return stored
   return scenes.find((s) => s.id !== 'centro-universo')?.id || 'inicio'
@@ -34,6 +34,9 @@ function getInitialSceneId(scenes) {
 function getSectionElements() {
   return Array.from(document.querySelectorAll('section.section, section.hero'))
 }
+
+const _sG = (k: string) => { try { return localStorage.getItem(k) } catch { return null } }
+const _sS = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* degraded */ } }
 
 function SceneModeController() {
   const scenes = useMemo(() => Array.isArray(scenesData) ? scenesData : [], [])
@@ -44,7 +47,7 @@ function SceneModeController() {
   const [navDirection, setNavDirection] = useState('next')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [centroVisible, setCentroVisible] = useState(() =>
-    localStorage.getItem(CENTRO_VISIBLE_KEY) === 'true'
+    _sG(CENTRO_VISIBLE_KEY) === 'true'
   )
   const [loggingOut, setLoggingOut] = useState(false)
 
@@ -104,7 +107,7 @@ function SceneModeController() {
       centroScene.sectionIds?.forEach((id) => activeIds.add(id))
     }
     const allSections = getSectionElements()
-    localStorage.setItem(SCENE_STORAGE_KEY, activeScene.id)
+    _sS(SCENE_STORAGE_KEY, activeScene.id)
 
     if (window.location.hash !== `#/${activeScene.id}`) {
       window.history.replaceState(null, '', `#/${activeScene.id}`)
@@ -139,7 +142,7 @@ function SceneModeController() {
 
   // Persist centro visibility preference
   useEffect(() => {
-    localStorage.setItem(CENTRO_VISIBLE_KEY, centroVisible ? 'true' : 'false')
+    _sS(CENTRO_VISIBLE_KEY, centroVisible ? 'true' : 'false')
   }, [centroVisible])
 
   const centerActiveLink = (smooth = true) => {

@@ -154,9 +154,12 @@ export default function useCrudCollection(
     }))
   }
 
+  // Counter suffix avoids collisions when multiple items created in same ms
+  let _itemCounter = 0
+
   const buildLocalItem = (): ContentItem => {
     const now = new Date().toISOString()
-    const item: ContentItem = { id: `${idPrefix}${Date.now()}`, createdAt: now }
+    const item: ContentItem = { id: `${idPrefix}${Date.now()}_${++_itemCounter}`, createdAt: now }
     fields.forEach(f => { item[f.name] = (getFormValue(f.name) || '').trim() })
     return transformForStorage ? transformForStorage(item) : item
   }

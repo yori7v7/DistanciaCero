@@ -44,8 +44,18 @@ function safeParseAnswer(answer: string): ParsedAnswer | null {
   }
 }
 
+function safeGetItem(key: string): string | null {
+  try { return localStorage.getItem(key) } catch { return null }
+}
+function safeSetItem(key: string, value: string): void {
+  try { localStorage.setItem(key, value) } catch { /* degraded */ }
+}
+function safeRemoveItem(key: string): void {
+  try { localStorage.removeItem(key) } catch { /* degraded */ }
+}
+
 function ProposalSection() {
-  const [answer, setAnswer] = useState<string>(() => localStorage.getItem(STORAGE_KEY) || '')
+  const [answer, setAnswer] = useState<string>(() => safeGetItem(STORAGE_KEY) || '')
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft(proposal.proposalDate))
 
   const parsedAnswer = safeParseAnswer(answer)
@@ -66,18 +76,18 @@ function ProposalSection() {
 
   const handleYes = () => {
     const savedAnswer = JSON.stringify({ value: 'yes', answeredAt: new Date().toISOString() })
-    localStorage.setItem(STORAGE_KEY, savedAnswer)
+    safeSetItem(STORAGE_KEY, savedAnswer)
     setAnswer(savedAnswer)
   }
 
   const handleTalk = () => {
     const savedAnswer = JSON.stringify({ value: 'talk', answeredAt: new Date().toISOString() })
-    localStorage.setItem(STORAGE_KEY, savedAnswer)
+    safeSetItem(STORAGE_KEY, savedAnswer)
     setAnswer(savedAnswer)
   }
 
   const resetQuestion = () => {
-    localStorage.removeItem(STORAGE_KEY)
+    safeRemoveItem(STORAGE_KEY)
     setAnswer('')
   }
 
