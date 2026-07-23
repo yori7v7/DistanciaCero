@@ -77,27 +77,6 @@ function CentroUniversoSection() {
   const [baseOpenWhenContent, setBaseOpenWhenContent] = useState('')
   const [baseOpenWhenLocked, setBaseOpenWhenLocked] = useState(false)
   const [editingBaseOpenWhenId, setEditingBaseOpenWhenId] = useState(null)
-  const [localTimelinePages, setLocalTimelinePages] = useState([])
-  const [timelineOverrides, setTimelineOverrides] = useState({})
-  const [hiddenTimelineIds, setHiddenTimelineIds] = useState([])
-  const [timelineChapter, setTimelineChapter] = useState('')
-  const [timelineDate, setTimelineDate] = useState('')
-  const [timelineTitle, setTimelineTitle] = useState('')
-  const [timelineSubtitle, setTimelineSubtitle] = useState('')
-  const [timelineDescription, setTimelineDescription] = useState('')
-  const [timelineQuote, setTimelineQuote] = useState('')
-  const [timelineDetails, setTimelineDetails] = useState('')
-  const [timelineMood, setTimelineMood] = useState('')
-  const [editingTimelineId, setEditingTimelineId] = useState(null)
-  const [baseTimelineChapter, setBaseTimelineChapter] = useState('')
-  const [baseTimelineDate, setBaseTimelineDate] = useState('')
-  const [baseTimelineTitle, setBaseTimelineTitle] = useState('')
-  const [baseTimelineSubtitle, setBaseTimelineSubtitle] = useState('')
-  const [baseTimelineDescription, setBaseTimelineDescription] = useState('')
-  const [baseTimelineQuote, setBaseTimelineQuote] = useState('')
-  const [baseTimelineDetails, setBaseTimelineDetails] = useState('')
-  const [baseTimelineMood, setBaseTimelineMood] = useState('')
-  const [editingBaseTimelineId, setEditingBaseTimelineId] = useState(null)
   const [localBlackHoleGallery, setLocalBlackHoleGallery] = useState([])
   const [blackHoleGalleryOverrides, setBlackHoleGalleryOverrides] = useState({})
   const [hiddenBlackHoleGalleryIds, setHiddenBlackHoleGalleryIds] = useState([])
@@ -186,6 +165,32 @@ function CentroUniversoSection() {
     idPrefix: 'local-song-'
   })
 
+  const timelineFields = [
+    { name: 'chapter', label: 'Capítulo', required: true, placeholder: 'Ej. Capítulo I' },
+    { name: 'date', label: 'Fecha', required: true, placeholder: 'YYYY-MM-DD o "15 de enero de 2026"' },
+    { name: 'title', label: 'Título', required: true, placeholder: 'Nombre del momento' },
+    { name: 'subtitle', label: 'Subtítulo', placeholder: 'Una frase que lo acompañe' },
+    { name: 'description', label: 'Descripción', required: true, type: 'textarea', rows: 4, placeholder: 'Cuenta la historia...' },
+    { name: 'quote', label: 'Cita', type: 'textarea', rows: 2, placeholder: 'Una frase especial' },
+    { name: 'details', label: 'Detalles', type: 'textarea', rows: 3, placeholder: 'Uno por línea' },
+    { name: 'mood', label: 'Mood', placeholder: 'Ej. romántico, aventura, nostalgia' }
+  ]
+  const timelineCrud = useCrudCollection('timeline', timelineData, {
+    fields: timelineFields,
+    idPrefix: 'local-timeline-'
+  }, {
+    transformForStorage: (item) => ({
+      ...item,
+      date: normalizeTimelineDateForStorage(item.date),
+      details: textToDetails(String(item.details || '')),
+    }),
+    transformForEdit: (item) => ({
+      ...item,
+      date: parseTimelineDateForInput(item.date),
+      details: detailsToText(item.details),
+    })
+  })
+
   const crudModules = [
     { id: 'monthlyLetters', label: 'Cartas', icon: Mail },
     { id: 'openWhenLetters', label: 'Abrir cuando', icon: BookOpen },
@@ -215,9 +220,7 @@ function CentroUniversoSection() {
     setHiddenOpenWhenIds(getHiddenItemIds('openWhenLetters'))
     importantDatesCrud.loadData()
     futureDreamsCrud.loadData()
-    setLocalTimelinePages(getLocalItems('timeline'))
-    setTimelineOverrides(getLocalOverrides('timeline'))
-    setHiddenTimelineIds(getHiddenItemIds('timeline'))
+    timelineCrud.loadData()
     setLocalBlackHoleGallery(getLocalItems('blackHoleGallery'))
     setBlackHoleGalleryOverrides(getLocalOverrides('blackHoleGallery'))
     setHiddenBlackHoleGalleryIds(getHiddenItemIds('blackHoleGallery'))
@@ -311,19 +314,9 @@ function CentroUniversoSection() {
   ).length
   const unlockedOpenWhen = activeBaseOpenWhen.filter((c) => !c.locked).length + localOpenWhen.filter((c) => !c.locked).length
   const lockedOpenWhen = (totalOpenWhen - unlockedOpenWhen)
-  const editedBaseTimelineCount = Object.keys(timelineOverrides).length
-  const hiddenBaseTimelineCount = hiddenTimelineIds.length
-  const visibleBaseTimelinePages = timelineData.map((page) => {
-    const override = timelineOverrides[String(page.id)]
-    return {
-      ...page,
-      ...(override || {}),
-      id: page.id,
-      details: Array.isArray(override?.details) ? override.details : Array.isArray(page.details) ? page.details : [],
-      isOverridden: Boolean(override),
-      isHidden: hiddenTimelineIds.includes(String(page.id))
-    }
-  })
+  const editedBaseTimelineCount = timelineCrud.editedBaseCount
+  const hiddenBaseTimelineCount = timelineCrud.hiddenBaseCount
+  const visibleBaseTimelinePages = timelineCrud.visibleBaseItems
   const editedBaseBlackHoleGalleryCount = Object.keys(blackHoleGalleryOverrides).length
   const hiddenBaseBlackHoleGalleryCount = hiddenBlackHoleGalleryIds.length
   const visibleBaseBlackHoleGallery = blackHoleGalleryData.map((item) => {
@@ -432,29 +425,6 @@ function CentroUniversoSection() {
     }
   }
 
-  const resetTimelineForm = () => {
-    setTimelineChapter('')
-    setTimelineDate('')
-    setTimelineTitle('')
-    setTimelineSubtitle('')
-    setTimelineDescription('')
-    setTimelineQuote('')
-    setTimelineDetails('')
-    setTimelineMood('')
-    setEditingTimelineId(null)
-  }
-
-  const resetBaseTimelineForm = () => {
-    setBaseTimelineChapter('')
-    setBaseTimelineDate('')
-    setBaseTimelineTitle('')
-    setBaseTimelineSubtitle('')
-    setBaseTimelineDescription('')
-    setBaseTimelineQuote('')
-    setBaseTimelineDetails('')
-    setBaseTimelineMood('')
-    setEditingBaseTimelineId(null)
-  }
 
   const resetBlackHoleForm = () => {
     setBlackHoleDate('')
@@ -748,159 +718,6 @@ function CentroUniversoSection() {
 
 
 
-  const buildTimelinePatch = ({
-    chapter,
-    date,
-    title,
-    subtitle,
-    description,
-    quote,
-    details,
-    mood
-  }) => ({
-    chapter: chapter.trim(),
-    date: normalizeTimelineDateForStorage(date),
-    title: title.trim(),
-    subtitle: subtitle.trim(),
-    description: description.trim(),
-    quote: quote.trim(),
-    details: textToDetails(details),
-    mood: mood.trim(),
-    updatedAt: new Date().toISOString()
-  })
-
-  const handleTimelineSubmit = (event) => {
-    event.preventDefault()
-
-    if (!timelineChapter.trim() || !timelineDate.trim() || !timelineTitle.trim() || !timelineDescription.trim()) {
-      alert('Por favor, completa capitulo, fecha, titulo y descripcion.')
-      return
-    }
-
-    const patch = buildTimelinePatch({
-      chapter: timelineChapter,
-      date: timelineDate,
-      title: timelineTitle,
-      subtitle: timelineSubtitle,
-      description: timelineDescription,
-      quote: timelineQuote,
-      details: timelineDetails,
-      mood: timelineMood
-    })
-
-    const updatedPages = editingTimelineId
-      ? updateLocalItem('timeline', editingTimelineId, patch)
-      : addLocalItem('timeline', {
-          id: `local-timeline-${Date.now()}`,
-          ...patch,
-          createdAt: new Date().toISOString()
-        })
-
-    setLocalTimelinePages(updatedPages)
-    resetTimelineForm()
-    dispatchContentUpdate('timeline')
-    showCrudNotice(editingTimelineId ? 'Se editó una página del diario correctamente.' : 'Se agregó una página del diario correctamente.')
-  }
-
-  const handleTimelineEdit = (page) => {
-    if (!page.isLocal) return
-    setActiveCrudAction('create')
-    setEditingTimelineId(page.id)
-    setTimelineChapter(page.chapter || '')
-    setTimelineDate(parseTimelineDateForInput(page.date))
-    setTimelineTitle(page.title || '')
-    setTimelineSubtitle(page.subtitle || '')
-    setTimelineDescription(page.description || '')
-    setTimelineQuote(page.quote || '')
-    setTimelineDetails(detailsToText(page.details))
-    setTimelineMood(page.mood || '')
-  }
-
-  const handleTimelineDelete = (page) => {
-    if (!page.isLocal) return
-
-    if (window.confirm('¿Seguro que quieres eliminar esta página local del diario?')) {
-      const updatedPages = deleteLocalItem('timeline', page.id)
-      setLocalTimelinePages(updatedPages)
-
-      if (editingTimelineId === page.id) {
-        resetTimelineForm()
-      }
-
-      dispatchContentUpdate('timeline')
-      showCrudNotice('Se eliminó una página del diario correctamente.')
-    }
-  }
-
-  const handleBaseTimelineEdit = (page) => {
-    setEditingBaseTimelineId(page.id)
-    setBaseTimelineChapter(page.chapter || '')
-    setBaseTimelineDate(parseTimelineDateForInput(page.date))
-    setBaseTimelineTitle(page.title || '')
-    setBaseTimelineSubtitle(page.subtitle || '')
-    setBaseTimelineDescription(page.description || '')
-    setBaseTimelineQuote(page.quote || '')
-    setBaseTimelineDetails(detailsToText(page.details))
-    setBaseTimelineMood(page.mood || '')
-  }
-
-  const handleBaseTimelineSubmit = (event) => {
-    event.preventDefault()
-
-    if (!editingBaseTimelineId || !baseTimelineChapter.trim() || !baseTimelineDate.trim() || !baseTimelineTitle.trim() || !baseTimelineDescription.trim()) {
-      alert('Selecciona una página base y completa capitulo, fecha, titulo y descripcion.')
-      return
-    }
-
-    const updatedOverrides = setLocalOverride('timeline', editingBaseTimelineId, buildTimelinePatch({
-      chapter: baseTimelineChapter,
-      date: baseTimelineDate,
-      title: baseTimelineTitle,
-      subtitle: baseTimelineSubtitle,
-      description: baseTimelineDescription,
-      quote: baseTimelineQuote,
-      details: baseTimelineDetails,
-      mood: baseTimelineMood
-    }))
-
-    setTimelineOverrides(updatedOverrides)
-    resetBaseTimelineForm()
-    dispatchContentUpdate('timeline')
-    showCrudNotice('Se editó una página del diario correctamente.')
-  }
-
-  const handleBaseTimelineRestore = (pageId) => {
-    const updatedOverrides = deleteLocalOverride('timeline', pageId)
-    setTimelineOverrides(updatedOverrides)
-
-    if (String(editingBaseTimelineId) === String(pageId)) {
-      resetBaseTimelineForm()
-    }
-
-    dispatchContentUpdate('timeline')
-    showCrudNotice('Se restauró una página del diario correctamente.')
-  }
-
-  const handleBaseTimelineHide = (page) => {
-    if (window.confirm('¿Seguro que quieres ocultar esta página base del diario? Podrás restaurarla después.')) {
-      const updatedHiddenIds = hideDefaultItem('timeline', page.id)
-      setHiddenTimelineIds(updatedHiddenIds)
-
-      if (String(editingBaseTimelineId) === String(page.id)) {
-        resetBaseTimelineForm()
-      }
-
-      dispatchContentUpdate('timeline')
-      showCrudNotice('Se ocultó una página del diario correctamente.')
-    }
-  }
-
-  const handleBaseTimelineUnhide = (pageId) => {
-    const updatedHiddenIds = restoreHiddenItem('timeline', pageId)
-    setHiddenTimelineIds(updatedHiddenIds)
-    dispatchContentUpdate('timeline')
-    showCrudNotice('Se restauró una página del diario correctamente.')
-  }
 
   const buildBlackHolePatch = ({
     date,
@@ -1254,8 +1071,8 @@ function CentroUniversoSection() {
     importantDatesCrud.resetBaseForm()
     futureDreamsCrud.resetForm()
     futureDreamsCrud.resetBaseForm()
-    resetTimelineForm()
-    resetBaseTimelineForm()
+    timelineCrud.resetForm()
+    timelineCrud.resetBaseForm()
     resetBlackHoleForm()
     resetBaseBlackHoleForm()
     playlistCrud.resetForm()
@@ -1729,348 +1546,19 @@ function CentroUniversoSection() {
         baseEditorPanelId="base-dreams-editor"
       />
 
-<div className={`base-timeline-editor ${activeCrudModule === 'timeline' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-timeline-editor">
-        <div className="base-reasons-panel">
-          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
-          <div className="reasons-list-header">
-            <h3>Diario original</h3>
-            <span>{timelineData.length} base</span>
-          </div>
-
-          <div className="reason-stats-grid">
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseTimelinePages)} label="Base" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseTimelineCount} label="Editadas" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseTimelineCount} label="Ocultas" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localTimelinePages.length} label="Tuyos" />
-          </div>
-
-          <div className="base-reasons-list">
-            {filteredBaseTimelinePages.length === 0 ? (
-              <p className="no-items">No hay elementos en este filtro.</p>
-            ) : filteredBaseTimelinePages.map((page) => (
-              <div
-                className={`base-reason-row ${page.isOverridden ? 'is-overridden' : ''} ${page.isHidden ? 'is-hidden' : ''}`}
-                key={page.id}
-              >
-                <div className="base-reason-copy">
-                  <strong>{page.chapter} · {formatTimelineDateForDisplay(page.date)} · {page.title}</strong>
-                  <span>{page.description}</span>
-                  <small>{page.isHidden ? 'Oculta' : page.isOverridden ? 'Editada' : 'Original'}</small>
-                </div>
-
-                <div className="base-reason-actions">
-                  <button type="button" className="ghost-button" onClick={() => handleBaseTimelineEdit(page)}>
-                    Editar
-                  </button>
-
-                  {page.isOverridden && (
-                    <button type="button" className="ghost-button" onClick={() => handleBaseTimelineRestore(page.id)}>
-                      Restaurar
-                    </button>
-                  )}
-
-                  {page.isHidden ? (
-                    <button type="button" className="ghost-button" onClick={() => handleBaseTimelineUnhide(page.id)}>
-                      Mostrar
-                    </button>
-                  ) : (
-                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseTimelineHide(page)}>
-                      Ocultar
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {hiddenBaseTimelineCount > 0 && (
-            <div className="hidden-reasons-box">
-              <h4>Paginas ocultas</h4>
-              {visibleBaseTimelinePages.filter((page) => page.isHidden).map((page) => (
-                <button type="button" className="ghost-button" key={page.id} onClick={() => handleBaseTimelineUnhide(page.id)}>
-                  Mostrar {page.title}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="base-reasons-panel">
-          <div className="crud-subsection-title">Editar original</div>
-          <h3>
-            <Edit2 size={18} />
-            Override del diario
-          </h3>
-
-          <form className="editor-form" onSubmit={handleBaseTimelineSubmit}>
-            <div className="editor-field">
-              <label htmlFor="baseTimelineChapter">Capitulo *</label>
-              <input
-                id="baseTimelineChapter"
-                type="text"
-                value={baseTimelineChapter}
-                onChange={(event) => setBaseTimelineChapter(event.target.value)}
-                disabled={!editingBaseTimelineId}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineDate">Fecha *</label>
-              <input
-                id="baseTimelineDate"
-                type="date"
-                value={baseTimelineDate}
-                onChange={(event) => setBaseTimelineDate(event.target.value)}
-                disabled={!editingBaseTimelineId}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineTitle">Titulo *</label>
-              <input
-                id="baseTimelineTitle"
-                type="text"
-                value={baseTimelineTitle}
-                onChange={(event) => setBaseTimelineTitle(event.target.value)}
-                disabled={!editingBaseTimelineId}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineSubtitle">Subtitulo</label>
-              <input
-                id="baseTimelineSubtitle"
-                type="text"
-                value={baseTimelineSubtitle}
-                onChange={(event) => setBaseTimelineSubtitle(event.target.value)}
-                disabled={!editingBaseTimelineId}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineDescription">Descripcion *</label>
-              <textarea
-                id="baseTimelineDescription"
-                rows={4}
-                value={baseTimelineDescription}
-                onChange={(event) => setBaseTimelineDescription(event.target.value)}
-                disabled={!editingBaseTimelineId}
-                required
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineQuote">Frase</label>
-              <textarea
-                id="baseTimelineQuote"
-                rows={3}
-                value={baseTimelineQuote}
-                onChange={(event) => setBaseTimelineQuote(event.target.value)}
-                disabled={!editingBaseTimelineId}
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineDetails">Detalles</label>
-              <textarea
-                id="baseTimelineDetails"
-                rows={4}
-                value={baseTimelineDetails}
-                onChange={(event) => setBaseTimelineDetails(event.target.value)}
-                disabled={!editingBaseTimelineId}
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseTimelineMood">Mood</label>
-              <input
-                id="baseTimelineMood"
-                type="text"
-                value={baseTimelineMood}
-                onChange={(event) => setBaseTimelineMood(event.target.value)}
-                disabled={!editingBaseTimelineId}
-              />
-            </div>
-
-            <div className="form-actions">
-              {editingBaseTimelineId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseTimelineForm}>
-                  Cancelar
-                </button>
-              )}
-              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseTimelineId}>
-                Guardar override
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div className={`local-timeline-editor ${activeCrudModule === 'timeline' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-timeline-editor">
-        <div className="reasons-editor-card">
-          <div className="crud-subsection-title">Crear nueva</div>
-          <h3>
-            <Plus size={18} />
-            Editor del diario
-          </h3>
-
-          <div className="editor-warning">
-            <AlertTriangle size={15} />
-            <span>Estas páginas son tuyas; el JSON original no se modifica.</span>
-          </div>
-
-          <form className="editor-form" onSubmit={handleTimelineSubmit}>
-            <div className="editor-field">
-              <label htmlFor="timelineChapter">Capitulo *</label>
-              <input
-                id="timelineChapter"
-                type="text"
-                placeholder="Ej. Capitulo VI"
-                value={timelineChapter}
-                onChange={(event) => setTimelineChapter(event.target.value)}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineDate">Fecha *</label>
-              <input
-                id="timelineDate"
-                type="date"
-                value={timelineDate}
-                onChange={(event) => setTimelineDate(event.target.value)}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineTitle">Titulo *</label>
-              <input
-                id="timelineTitle"
-                type="text"
-                placeholder="Ej. Una página nueva"
-                value={timelineTitle}
-                onChange={(event) => setTimelineTitle(event.target.value)}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineSubtitle">Subtitulo</label>
-              <input
-                id="timelineSubtitle"
-                type="text"
-                placeholder="Ej. Algo que quiero recordar contigo."
-                value={timelineSubtitle}
-                onChange={(event) => setTimelineSubtitle(event.target.value)}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineDescription">Descripcion *</label>
-              <textarea
-                id="timelineDescription"
-                rows={4}
-                placeholder="Ej. Este dia se queda guardado como una página bonita de nuestra historia."
-                value={timelineDescription}
-                onChange={(event) => setTimelineDescription(event.target.value)}
-                required
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineQuote">Frase</label>
-              <textarea
-                id="timelineQuote"
-                rows={3}
-                placeholder="Ej. Hay recuerdos que brillan aunque pase el tiempo."
-                value={timelineQuote}
-                onChange={(event) => setTimelineQuote(event.target.value)}
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineDetails">Detalles</label>
-              <textarea
-                id="timelineDetails"
-                rows={4}
-                placeholder="Una linea por detalle"
-                value={timelineDetails}
-                onChange={(event) => setTimelineDetails(event.target.value)}
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="timelineMood">Mood</label>
-              <input
-                id="timelineMood"
-                type="text"
-                placeholder="Ej. Recuerdo"
-                value={timelineMood}
-                onChange={(event) => setTimelineMood(event.target.value)}
-              />
-            </div>
-
-            <div className="form-actions">
-              {editingTimelineId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={resetTimelineForm}>
-                  Cancelar
-                </button>
-              )}
-              <button type="submit" className="control-btn submit-btn">
-                {editingTimelineId ? 'Actualizar página local' : 'Guardar página local'}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div className="reasons-list-card">
-          <div className="crud-subsection-title">Creadas por ti</div>
-          <div className="reasons-list-header">
-            <h3>Diario</h3>
-            <span>{localTimelinePages.length} tuyas</span>
-          </div>
-
-          {localTimelinePages.length === 0 ? (
-            <p className="no-items">No hay páginas tuyas creadas.</p>
-          ) : (
-            <div className="reason-items-list">
-              {localTimelinePages.map((page) => (
-                <div className="reason-item-row" key={page.id}>
-                  <div className="item-info">
-                    <strong>{page.chapter} · {formatTimelineDateForDisplay(page.date)} · {page.title}</strong>
-                    <span>{page.description}</span>
-                    <LocalContentMeta item={page} />
-                  </div>
-
-                  <div className="item-actions">
-                    <button
-                      type="button"
-                      className="action-icon-btn edit"
-                      onClick={() => handleTimelineEdit(page)}
-                      title="Editar página local"
-                    >
-                      <Edit2 size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      className="action-icon-btn delete"
-                      onClick={() => handleTimelineDelete(page)}
-                      title="Eliminar página local"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
+      <CrudEditorPanel
+        collectionLabel="Historia"
+        collectionName="timeline"
+        activeCrudModule={activeCrudModule}
+        activeCrudAction={activeCrudAction}
+        activeCrudFilter={activeCrudFilter}
+        onCrudFilterClick={handleCrudFilterClick}
+        crud={timelineCrud}
+        fields={timelineFields}
+        listFields={["chapter", "title", "date"]}
+        editorPanelId="local-timeline-editor"
+        baseEditorPanelId="base-timeline-editor"
+      />
       <div className={`base-blackhole-editor ${activeCrudModule === 'blackHoleGallery' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-blackhole-editor">
         <div className="base-reasons-panel">
           <div className="crud-subsection-title">Originales / editadas / ocultas</div>
