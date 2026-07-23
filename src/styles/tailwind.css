@@ -42,6 +42,18 @@
   --max-width: 1120px;
 }
 
+/* ─── Global polish ─── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(255, 122, 200, 0.3);
+  color: #fff;
+}
+
 /* ─── Shared utility classes ─── */
 @layer components {
   /* Section container — consistent spacing */
@@ -2806,6 +2818,10 @@ button.submit-btn:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25);
 }
+.ghost-button:focus-visible {
+  outline: 2px solid rgba(255, 122, 200, 0.6);
+  outline-offset: 2px;
+}
 
 /* BlackHole section needs overflow visible for wormhole animation */
 section.blackhole-section {
@@ -3066,6 +3082,7 @@ input:focus, textarea:focus, select:focus {
 .crud-selector-btn {
   border-radius: 14px;
   padding: 10px 14px;
+  min-height: 44px;
   font-weight: 700;
   font-size: 0.85rem;
   background: rgba(255, 255, 255, 0.03);
@@ -6448,26 +6465,6 @@ input {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.crud-selector-btn {
-  min-height: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
-  color: rgba(255, 224, 239, 0.72);
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
-}
-
-.crud-selector-btn:hover,
-.crud-selector-btn.active {
-  border-color: rgba(255, 46, 147, 0.45);
-  background: rgba(255, 46, 147, 0.12);
-  color: #ffe0ef;
-}
-
 .crud-notice {
   position: relative;
   z-index: 1;
@@ -7189,28 +7186,6 @@ input {
   border-color: rgba(236, 72, 153, 0.65) !important;
   box-shadow: 0 8px 25px rgba(236, 72, 153, 0.18);
   transform: translateY(-2px);
-}
-
-.ghost-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  letter-spacing: 0.04em;
-}
-
-.ghost-button:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.04);
 }
 
 /* Tarjeta de listado de cartas locales */
