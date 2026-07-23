@@ -328,3 +328,49 @@ Primero cambia:
 7. Cartas mensuales
 
 Así la página se vuelve personal sin que te abrumes.
+
+---
+
+## 15. Centro del Universo (CMS)
+
+El **Centro del Universo** es el panel de administración donde puedes editar TODO el contenido sin tocar código. Se accede desde el botón "Centro" en la navegación.
+
+### ¿Qué puedes editar?
+
+| Sección | Qué contiene |
+|---|---|
+| Cartas Mensuales | Cartas que se desbloquean mes a mes |
+| Abrir Cuando | Cartas temáticas (nostalgia, días especiales, etc.) |
+| 100 Razones | Razones para amar (corazones flotantes) |
+| Promesas | Promesas de la relación |
+| Fechas Importantes | Aniversarios, momentos clave |
+| Wishlist / Sueños | Sueños y planes futuros |
+| Historia | Línea de tiempo / diario de la relación |
+| Galería | Recuerdos con fotos (agujero negro 3D) |
+| Música | Playlist personalizada |
+
+### Cómo funciona
+
+Cada sección tiene dos pestañas:
+
+1. **Originales**: Los datos que vienen del archivo JSON. Puedes:
+   - **Editar** (crea una copia personalizada sin modificar el original)
+   - **Ocultar** (esconder items que no quieras mostrar)
+   - **Restaurar** (volver al valor original si editaste)
+
+2. **Tus creaciones**: Contenido que agregas tú. Puedes:
+   - **Crear** nuevos items
+   - **Editar** los que ya creaste
+   - **Eliminar** los que ya no quieras
+
+### Respaldo
+
+En la parte superior del CMS hay un panel de **Respaldo Local**:
+- **Exportar**: Descarga todo tu contenido en un archivo JSON
+- **Importar**: Restaura un respaldo anterior
+
+Usa esto antes de hacer cambios grandes o para respaldar tus personalizaciones.
+
+### Modo Prueba
+
+El botón **Activar Modo Prueba** desbloquea temporalmente todas las cartas para que puedas previsualizar cómo se verían sin esperar a las fechas reales. Al desactivarlo, todo vuelve a la normalidad.

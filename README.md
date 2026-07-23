@@ -13,6 +13,7 @@ npm install
 npm run dev        # http://localhost:5173
 npm run build      # Build producción
 npm run deploy     # Deploy a GitHub Pages
+npm test           # 154 tests
 ```
 
 ---
@@ -39,7 +40,7 @@ Luego cada sección tiene su propio JSON:
 
 🖼️ **Media**: coloca tus imágenes en `public/images/`, audio en `public/audio/`, videos en `public/videos/`.
 
-📖 **Guía detallada**: revisa `GUIA_PARA_EDITAR.md`.
+🛠️ **CMS integrado**: También puedes editar TODO desde el **Centro del Universo** (botón "Centro" en la navegación). Sin tocar código. Ver `GUIA_PARA_EDITAR.md`.
 
 ---
 
@@ -48,10 +49,13 @@ Luego cada sección tiene su propio JSON:
 | Capa | Tecnología |
 |---|---|
 | Framework | React 19 + Vite 8 |
+| Lenguaje | TypeScript 7.0 |
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
 | Datos | JSON locales + localStorage |
-| Estilos | CSS puro (~20 archivos) |
-| Deploy | GitHub Pages / Vercel |
+| Estilos | Tailwind CSS v4 |
+| Tests | Vitest + @testing-library/react (154 tests) |
+| CI/CD | GitHub Actions |
+| Deploy | GitHub Pages |
 
 ---
 
@@ -59,13 +63,16 @@ Luego cada sección tiene su propio JSON:
 
 ```
 src/
-├── App.jsx                 # Componente raíz (~16 secciones)
-├── components/             # ~40 componentes React
-├── data/                   # JSON con TODO el contenido editable
-├── services/               # Lógica de negocio
-├── context/                # AudioContext (música de fondo)
-├── constants/              # Usuarios locales, config
-└── styles/                 # CSS por sección
+├── App.tsx                  # Componente raíz, lazy loading + Suspense
+├── components/              # ~27 componentes React
+│   └── centro-universo/     # CMS genérico (patrón useCrudCollection)
+├── data/                    # JSON con TODO el contenido editable
+├── services/                # Lógica de negocio (contentService, authService)
+├── repositories/            # Acceso a datos (local + remote skeleton)
+├── utils/                   # helpers.ts, localContentStore, localIdentityStore
+├── types/                   # TypeScript type definitions
+└── styles/
+    └── tailwind.css         # Único archivo CSS (design tokens + estilos)
 ```
 
 ---

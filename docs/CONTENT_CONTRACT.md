@@ -510,4 +510,108 @@ Pruebas manuales recomendadas:
 - Importar backup v2 incompleto sin borrar datos ausentes.
 - Abrir cartas y confirmar progreso opened/read.
 - Activar/desactivar modo prueba.
+
+## 7. Patrón useCrudCollection (Refactor 2026-07-23)
+
+### Propósito
+
+`useCrudCollection` es un hook genérico que encapsula todo el estado, handlers y datos derivados para una colección CRUD. Reemplaza ~30 useState y ~20 handlers por colección.
+
+### Ubicación
+
+`src/components/centro-universo/useCrudCollection.ts`
+
+### API
+
+```ts
+function useCrudCollection(
+  collectionName: string,
+  defaultData: ContentItem[],
+  fieldSchema: CrudFieldSchema,
+  options?: CrudOptions
+): CrudCollectionAPI
+```
+
+### CrudFieldSchema
+
+```ts
+interface CrudFieldSchema {
+  fields?: CrudField[]      // Definición de campos del formulario
+  idPrefix?: string          // Prefijo para IDs locales (default: `local-{name}-`)
+  validate?: (form) => string | null  // Validación custom
+}
+
+interface CrudField {
+  name: string               // Nombre del campo (key en ContentItem)
+  label: string              // Etiqueta visible
+  required?: boolean         // Campo requerido
+  type?: 'text' | 'textarea' | 'date' | 'select'
+  rows?: number              // Filas para textarea
+  placeholder?: string
+  options?: { value: string; label: string }[]  // Para tipo select
+}
+```
+
+### CrudOptions
+
+```ts
+interface CrudOptions {
+  transformForStorage?: (item: ContentItem) => ContentItem  // Form → Storage
+  transformForEdit?: (item: ContentItem) => ContentItem      // Storage → Form
+}
+```
+
+### CrudCollectionAPI (retorno del hook)
+
+```ts
+interface CrudCollectionAPI {
+  // Datos
+  localItems, visibleBaseItems: ContentItem[]
+  overrides: OverrideMap
+  hiddenIds: string[]
+  // Stats
+  editedBaseCount, hiddenBaseCount, localCount, totalCount: number
+  // Form state (local)
+  form, getFormValue, setFormValue, editingId
+  // Form state (base)
+  baseForm, getBaseFormValue, setBaseFormValue, editingBaseId
+  // Handlers
+  handleSubmit, handleEdit, handleDelete
+  handleBaseEdit, handleBaseSubmit, handleBaseRestore, handleBaseHide, handleBaseUnhide
+  resetForm, resetBaseForm
+  // Lifecycle
+  loadData, dispatchContentUpdate
+}
+```
+
+### CrudEditorPanel
+
+Componente que renderiza ambos paneles (local + base) para un `useCrudCollection`. Props adicionales:
+
+- `localFormExtras?: ReactNode` — JSX insertado antes de los botones del formulario local
+- `baseFormExtras?: ReactNode` — JSX insertado antes de los botones del formulario base
+
+### Migración legacy
+
+`migrateLegacyLettersIfNeeded()` en `localContentRepository.ts`:
+- Lee cartas de llaves legacy (`distancia-cero-local-monthly-letters`, `distancia-cero-local-open-when`)
+- Escribe en llaves estándar de colección
+- Marca flag `distancia-cero-legacy-migrated-v1` para no repetir
+- Se llama UNA vez al iniciar el CMS desde el `useEffect` de inicialización
+
+### Colecciones migradas
+
+Las 9 colecciones usan `useCrudCollection`:
+
+| Colección | Campos destacados | Transform |
+|---|---|---|
+| reasons | title, text | — |
+| promises | title, text, tag | — |
+| importantDates | date, title, description, tag | — |
+| futureDreams | category, title, description | — |
+| playlist | title, artist, description, sourceType, src, link, tag | — |
+| timeline | chapter, date, title, subtitle, description, quote, details, mood | date ↔ normalize/parse, details ↔ array/text |
+| blackHoleGallery | date, title, description, image, alt, tag, videoUrl | image upload vía localFormExtras |
+| monthlyLetters | month, title, preview, content, tag, locked | content ↔ array/text, locked ↔ boolean/select |
+| openWhenLetters | mood, title, preview, content, tag, locked | content ↔ array/text, locked ↔ boolean/select |
 - Validar que los componentes visibles refrescan con `distancia-cero-content-updated`.
