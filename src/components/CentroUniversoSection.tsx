@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react'
 import SectionTitle from './SectionTitle'
 import LocalIdentitySelector from './LocalIdentitySelector'
-import LocalContentMeta from './LocalContentMeta'
-import CrudStatButton from './centro-universo/CrudStatButton'
 import useCrudCollection from './centro-universo/useCrudCollection'
 import CrudEditorPanel from './centro-universo/CrudEditorPanel'
 import SimulationBanner from './centro-universo/SimulationBanner'
 import LetterStatsPanel from './centro-universo/LetterStatsPanel'
 import BackupPanel from './centro-universo/BackupPanel'
-import { Trash2, Power, Edit2, Plus, AlertTriangle, Heart, Star, Calendar, Sparkles, Camera, Music, Mail, BookOpen } from 'lucide-react'
+import { Trash2, Power, Edit2, Heart, Star, Calendar, Sparkles, Camera, Music, Mail, BookOpen } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
 import reasonsData from '../data/reasons.json'
@@ -19,41 +17,19 @@ import timelineData from '../data/timeline.json'
 import blackHoleGalleryData from '../data/blackHoleGallery.json'
 import playlistData from '../data/playlist.json'
 import {
-  addCollectionItem as addLocalItem,
-  deleteCollectionItem as deleteLocalItem,
-  deleteCollectionOverride as deleteLocalOverride,
-  getCollectionHiddenIds as getHiddenItemIds,
-  getCollectionItems as getLocalItems,
-  getCollectionOverrides as getLocalOverrides,
-  getLegacyMonthlyLetters,
-  getLegacyOpenWhenLetters,
   getSimulationUnlocked,
   isMonthlyLetterOpened,
   isOpenWhenLetterOpened,
-  hideCollectionItem as hideDefaultItem,
-  restoreCollectionItem as restoreHiddenItem,
-  saveCollectionHiddenIds as saveHiddenItemIds,
-  saveCollectionItems as saveLocalItems,
-  saveCollectionOverrides as saveLocalOverrides,
-  saveLegacyMonthlyLetters,
-  saveLegacyOpenWhenLetters,
-  setCollectionOverride as setLocalOverride,
   setMonthlyLetterOpened,
   setOpenWhenLetterOpened,
   setSimulationUnlocked,
-  updateCollectionItem as updateLocalItem,
   migrateLegacyLettersIfNeeded
 } from '../services/contentService'
-import { buildCreateMetadata, buildUpdateMetadata } from '../services/contentMetadataService'
 import {
-  isPlainObject,
   detailsToText,
   textToDetails,
-  formatTimelineDateForDisplay,
   parseTimelineDateForInput,
-  normalizeTimelineDateForStorage,
-  parseImportantDateForInput,
-  normalizeImportantDateForStorage
+  normalizeTimelineDateForStorage
 } from '../utils/helpers'
 
 function CentroUniversoSection() {
