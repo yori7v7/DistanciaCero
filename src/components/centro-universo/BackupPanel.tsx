@@ -170,7 +170,7 @@ export default function BackupPanel() {
       </div>
 
       {backupStatus && (
-        <div className={`backup-alert ${backupStatus.type === 'error' ? 'backup-alert-error' : ''}`}>
+        <div className={`backup-status ${backupStatus.type === 'error' ? 'error' : 'success'}`}>
           <AlertTriangle size={14} />
           <span>{backupStatus.text}</span>
         </div>
