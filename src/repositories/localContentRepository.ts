@@ -214,3 +214,27 @@ export function setSimulationUnlocked(value: boolean): void {
     safeRemoveItem(SIMULATION_UNLOCKED_KEY)
   }
 }
+
+const LEGACY_MIGRATED_KEY = 'distancia-cero-legacy-migrated-v1'
+
+/**
+ * Migra cartas legacy (monthlyLetters y openWhenLetters) al sistema
+ * estándar de colecciones. Solo se ejecuta una vez.
+ * Retorna true si se migró algo, false si ya estaba migrado.
+ */
+export function migrateLegacyLettersIfNeeded(): boolean {
+  if (safeGetItem(LEGACY_MIGRATED_KEY) === '1') return false
+
+  const monthlyLetters = safeReadJsonArray(LEGACY_MONTHLY_LETTERS_KEY)
+  const openWhenLetters = safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
+
+  if (monthlyLetters.length > 0) {
+    saveLocalItems('monthlyLetters', monthlyLetters)
+  }
+  if (openWhenLetters.length > 0) {
+    saveLocalItems('openWhenLetters', openWhenLetters)
+  }
+
+  safeSetItem(LEGACY_MIGRATED_KEY, '1')
+  return monthlyLetters.length > 0 || openWhenLetters.length > 0
+}

@@ -174,6 +174,10 @@ export function setSimulationUnlocked(value: boolean): void {
   return contentRepository.setSimulationUnlocked(value)
 }
 
+export function migrateLegacyLettersIfNeeded(): boolean {
+  return contentRepository.migrateLegacyLettersIfNeeded()
+}
+
 export function notifyContentUpdated(collectionName: string): void {
   if (typeof window === 'undefined') return
 
