@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { BookOpen, ChevronLeft, ChevronRight, Feather, Heart, MoonStar, Sparkles } from 'lucide-react'
 import { mergeCollectionWithLocal } from '../services/contentService'
+import { formatTimelineDateForDisplay, TIMELINE_MONTH_INDEXES } from '../utils/helpers'
 
 const fallbackPages = [
   {
@@ -16,48 +17,6 @@ const fallbackPages = [
     mood: 'Inicio'
   }
 ]
-
-const spanishMonths = {
-  enero: 0,
-  febrero: 1,
-  marzo: 2,
-  abril: 3,
-  mayo: 4,
-  junio: 5,
-  julio: 6,
-  agosto: 7,
-  septiembre: 8,
-  setiembre: 8,
-  octubre: 9,
-  noviembre: 10,
-  diciembre: 11
-}
-
-const spanishMonthNames = [
-  'enero',
-  'febrero',
-  'marzo',
-  'abril',
-  'mayo',
-  'junio',
-  'julio',
-  'agosto',
-  'septiembre',
-  'octubre',
-  'noviembre',
-  'diciembre'
-]
-
-function formatTimelineDateForDisplay(dateValue) {
-  const rawDate = String(dateValue || '').trim()
-  const isoMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/)
-  if (!isoMatch) return rawDate
-
-  const day = Number(isoMatch[3])
-  const monthName = spanishMonthNames[Number(isoMatch[2]) - 1]
-  return monthName ? `${day} de ${monthName} de ${isoMatch[1]}` : rawDate
-}
-
 function isFuturePage(page) {
   const combinedText = `${page.id || ''} ${page.date || ''} ${page.title || ''}`.toLowerCase()
   return page.id === 'futuro' || combinedText.includes('próximamente') || combinedText.includes('proximamente')
@@ -74,7 +33,7 @@ function getTimelineSortDate(page) {
   const spanishMatch = rawDate.match(/(\d{1,2})\s+de\s+([a-záéíóúñ]+)(?:\s+de\s+(\d{4}))?/)
   if (!spanishMatch) return null
 
-  const month = spanishMonths[spanishMatch[2].normalize('NFD').replace(/[\u0300-\u036f]/g, '')]
+  const month = TIMELINE_MONTH_INDEXES[spanishMatch[2].normalize('NFD').replace(/[\u0300-\u036f]/g, '')]
   if (month === undefined) return null
 
   if (!spanishMatch[3]) return null

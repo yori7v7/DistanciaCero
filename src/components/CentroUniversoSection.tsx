@@ -5,7 +5,10 @@ import LocalContentMeta from './LocalContentMeta'
 import CrudStatButton from './centro-universo/CrudStatButton'
 import useCrudCollection from './centro-universo/useCrudCollection'
 import CrudEditorPanel from './centro-universo/CrudEditorPanel'
-import { ShieldAlert, Trash2, Power, Lock, Check, BookOpen, Edit2, Plus, AlertTriangle, Download, Upload, Mail, MailOpen, Heart, Star, Calendar, Sparkles, Camera, Music } from 'lucide-react'
+import SimulationBanner from './centro-universo/SimulationBanner'
+import LetterStatsPanel from './centro-universo/LetterStatsPanel'
+import BackupPanel from './centro-universo/BackupPanel'
+import { Trash2, Power, Edit2, Plus, AlertTriangle, Heart, Star, Calendar, Sparkles, Camera, Music, Mail, BookOpen } from 'lucide-react'
 import monthlyLettersData from '../data/monthlyLetters.json'
 import openWhenData from '../data/openWhen.json'
 import reasonsData from '../data/reasons.json'
@@ -41,13 +44,21 @@ import {
   updateCollectionItem as updateLocalItem
 } from '../services/contentService'
 import { buildCreateMetadata, buildUpdateMetadata } from '../services/contentMetadataService'
-import { isPlainObject } from '../utils/helpers'
+import {
+  isPlainObject,
+  detailsToText,
+  textToDetails,
+  formatTimelineDateForDisplay,
+  parseTimelineDateForInput,
+  normalizeTimelineDateForStorage,
+  parseImportantDateForInput,
+  normalizeImportantDateForStorage
+} from '../utils/helpers'
 
 function CentroUniversoSection() {
   const [isSimUnlocked, setIsSimUnlocked] = useState(false)
   const [localMonthly, setLocalMonthly] = useState([])
   const [localOpenWhen, setLocalOpenWhen] = useState([])
-  const [backupStatus, setBackupStatus] = useState(null)
   const [crudNotice, setCrudNotice] = useState(null)
   const [, setLetterProgressVersion] = useState(0)
   const [monthlyOverrides, setMonthlyOverrides] = useState({})
@@ -346,353 +357,6 @@ function CentroUniversoSection() {
     window.location.reload()
   }
 
-  const handleExportLocalLetters = () => {
-    const exportData = {
-      version: 2,
-      exportedAt: new Date().toISOString(),
-      source: 'Distancia Cero - Centro del Universo',
-      content: {
-        monthlyLetters: getLegacyMonthlyLetters(),
-        openWhenLetters: getLegacyOpenWhenLetters(),
-        reasons: getLocalItems('reasons'),
-        promises: getLocalItems('promises'),
-        importantDates: getLocalItems('importantDates'),
-        futureDreams: getLocalItems('futureDreams'),
-        timeline: getLocalItems('timeline'),
-        blackHoleGallery: getLocalItems('blackHoleGallery'),
-        playlist: getLocalItems('playlist')
-      },
-      overrides: {
-        monthlyLetters: getLocalOverrides('monthlyLetters'),
-        openWhenLetters: getLocalOverrides('openWhenLetters'),
-        reasons: getLocalOverrides('reasons'),
-        promises: getLocalOverrides('promises'),
-        importantDates: getLocalOverrides('importantDates'),
-        futureDreams: getLocalOverrides('futureDreams'),
-        timeline: getLocalOverrides('timeline'),
-        blackHoleGallery: getLocalOverrides('blackHoleGallery'),
-        playlist: getLocalOverrides('playlist')
-      },
-      hidden: {
-        monthlyLetters: getHiddenItemIds('monthlyLetters'),
-        openWhenLetters: getHiddenItemIds('openWhenLetters'),
-        reasons: getHiddenItemIds('reasons'),
-        promises: getHiddenItemIds('promises'),
-        importantDates: getHiddenItemIds('importantDates'),
-        futureDreams: getHiddenItemIds('futureDreams'),
-        timeline: getHiddenItemIds('timeline'),
-        blackHoleGallery: getHiddenItemIds('blackHoleGallery'),
-        playlist: getHiddenItemIds('playlist')
-      }
-    }
-
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json'
-    })
-    const downloadUrl = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    link.download = `distancia-cero-respaldo-local-${new Date().toISOString().slice(0, 10)}.json`
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    URL.revokeObjectURL(downloadUrl)
-    setBackupStatus({ type: 'success', text: 'Respaldo v2 creado correctamente.' })
-  }
-
-
-  const handleImportLocalBackup = (event) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = () => {
-      try {
-        // TS 7.0: JSON.parse devuelve unknown; any permite acceso libre
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const importedData: any = JSON.parse(reader.result as string)
-
-        if (importedData?.version === 1) {
-          if (!Array.isArray(importedData.monthlyLetters) || !Array.isArray(importedData.openWhenLetters)) {
-            setBackupStatus({ type: 'error', text: 'El respaldo v1 no tiene cartas validas.' })
-            return
-          }
-
-          const confirmed = window.confirm(
-          'Esto reemplazará solo las cartas guardadas. No tocará, promesas, fechas, wishlist, diario, galería ni playlist. ¿Quieres continuar?'
-          )
-
-          if (!confirmed) {
-            setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron tus datos.' })
-            return
-          }
-
-          saveLegacyMonthlyLetters(importedData.monthlyLetters)
-          saveLegacyOpenWhenLetters(importedData.openWhenLetters)
-          setLocalMonthly(importedData.monthlyLetters)
-          setLocalOpenWhen(importedData.openWhenLetters)
-          setEditingId(null)
-          setTitle('')
-          setPreview('')
-          setContentRaw('')
-          setTag('')
-          setLetterLocked(false)
-          dispatchLettersUpdate('monthlyLetters')
-          dispatchLettersUpdate('openWhenLetters')
-          setBackupStatus({ type: 'success', text: 'Respaldo v1 importado: solo cartas tuyas.' })
-          return
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const content: any = (importedData as any).content
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const overrides: any = (importedData as any).overrides
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const hidden: any = (importedData as any).hidden
-        const safeC = content || {}
-        const safeO = overrides || {}
-        const safeH = hidden || {}
-        const hasPromisesBackup =
-          Object.prototype.hasOwnProperty.call(safeC, 'promises') ||
-          Object.prototype.hasOwnProperty.call(safeO, 'promises') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'promises')
-        const hasMonthlyBaseBackup =
-          Object.prototype.hasOwnProperty.call(safeO, 'monthlyLetters') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'monthlyLetters')
-        const hasOpenWhenBaseBackup =
-          Object.prototype.hasOwnProperty.call(safeO, 'openWhenLetters') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'openWhenLetters')
-        const hasImportantDatesBackup =
-          Object.prototype.hasOwnProperty.call(safeC, 'importantDates') ||
-          Object.prototype.hasOwnProperty.call(safeO, 'importantDates') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'importantDates')
-        const hasFutureDreamsBackup =
-          Object.prototype.hasOwnProperty.call(safeC, 'futureDreams') ||
-          Object.prototype.hasOwnProperty.call(safeO, 'futureDreams') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'futureDreams')
-        const hasTimelineBackup =
-          Object.prototype.hasOwnProperty.call(safeC, 'timeline') ||
-          Object.prototype.hasOwnProperty.call(safeO, 'timeline') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'timeline')
-        const hasBlackHoleGalleryBackup =
-          Object.prototype.hasOwnProperty.call(safeC, 'blackHoleGallery') ||
-          Object.prototype.hasOwnProperty.call(safeO, 'blackHoleGallery') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'blackHoleGallery')
-        const hasPlaylistBackup =
-          Object.prototype.hasOwnProperty.call(safeC, 'playlist') ||
-          Object.prototype.hasOwnProperty.call(safeO, 'playlist') ||
-          Object.prototype.hasOwnProperty.call(safeH, 'playlist')
-        const isValidV2 =
-          importedData?.version === 2 &&
-          isPlainObject(safeC) &&
-          Array.isArray(safeC.monthlyLetters) &&
-          Array.isArray(safeC.openWhenLetters) &&
-          Array.isArray(safeC.reasons) &&
-          isPlainObject(safeO) &&
-          isPlainObject(safeO.reasons) &&
-          isPlainObject(safeH) &&
-          (!hasMonthlyBaseBackup ||
-            (isPlainObject(safeO.monthlyLetters) &&
-              Array.isArray(safeH.monthlyLetters))) &&
-          (!hasOpenWhenBaseBackup ||
-            (isPlainObject(safeO.openWhenLetters) &&
-              Array.isArray(safeH.openWhenLetters))) &&
-          Array.isArray(safeH.reasons) &&
-          (!hasImportantDatesBackup ||
-            (Array.isArray(safeC.importantDates) &&
-              isPlainObject(safeO.importantDates) &&
-              Array.isArray(safeH.importantDates))) &&
-          (!hasFutureDreamsBackup ||
-            (Array.isArray(safeC.futureDreams) &&
-              isPlainObject(safeO.futureDreams) &&
-              Array.isArray(safeH.futureDreams))) &&
-          (!hasTimelineBackup ||
-            (Array.isArray(safeC.timeline) &&
-              isPlainObject(safeO.timeline) &&
-              Array.isArray(safeH.timeline))) &&
-          (!hasBlackHoleGalleryBackup ||
-            (Array.isArray(safeC.blackHoleGallery) &&
-              isPlainObject(safeO.blackHoleGallery) &&
-              Array.isArray(safeH.blackHoleGallery))) &&
-          (!hasPlaylistBackup ||
-            (Array.isArray(safeC.playlist) &&
-              isPlainObject(safeO.playlist) &&
-              Array.isArray(safeH.playlist))) &&
-          (!hasPromisesBackup ||
-            (Array.isArray(safeC.promises) &&
-              isPlainObject(safeO.promises) &&
-              Array.isArray(safeH.promises)))
-
-        if (!isValidV2) {
-          setBackupStatus({ type: 'error', text: 'El archivo no tiene un formato válido de respaldo v2.' })
-          return
-        }
-
-        const confirmed = window.confirm(
-          'Esto reemplazará el respaldo de cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist en este navegador. ¿Quieres continuar?'
-        )
-
-        if (!confirmed) {
-          setBackupStatus({ type: 'error', text: 'Importación cancelada. No se cambiaron tus datos.' })
-          return
-        }
-
-        saveLegacyMonthlyLetters(content.monthlyLetters)
-        saveLegacyOpenWhenLetters(content.openWhenLetters)
-        const savedReasons = saveLocalItems('reasons', content.reasons)
-        const savedOverrides = saveLocalOverrides('reasons', overrides.reasons)
-        const savedHiddenIds = saveHiddenItemIds('reasons', hidden.reasons)
-        const savedMonthlyOverrides = hasMonthlyBaseBackup
-          ? saveLocalOverrides('monthlyLetters', overrides.monthlyLetters)
-          : getLocalOverrides('monthlyLetters')
-        const savedHiddenMonthlyIds = hasMonthlyBaseBackup
-          ? saveHiddenItemIds('monthlyLetters', hidden.monthlyLetters)
-          : getHiddenItemIds('monthlyLetters')
-        const savedOpenWhenOverrides = hasOpenWhenBaseBackup
-          ? saveLocalOverrides('openWhenLetters', overrides.openWhenLetters)
-          : getLocalOverrides('openWhenLetters')
-        const savedHiddenOpenWhenIds = hasOpenWhenBaseBackup
-          ? saveHiddenItemIds('openWhenLetters', hidden.openWhenLetters)
-          : getHiddenItemIds('openWhenLetters')
-        const savedImportantDates = hasImportantDatesBackup
-          ? saveLocalItems('importantDates', content.importantDates)
-          : getLocalItems('importantDates')
-        const savedImportantDateOverrides = hasImportantDatesBackup
-          ? saveLocalOverrides('importantDates', overrides.importantDates)
-          : getLocalOverrides('importantDates')
-        const savedHiddenImportantDateIds = hasImportantDatesBackup
-          ? saveHiddenItemIds('importantDates', hidden.importantDates)
-          : getHiddenItemIds('importantDates')
-        const savedFutureDreams = hasFutureDreamsBackup
-          ? saveLocalItems('futureDreams', content.futureDreams)
-          : getLocalItems('futureDreams')
-        const savedFutureDreamOverrides = hasFutureDreamsBackup
-          ? saveLocalOverrides('futureDreams', overrides.futureDreams)
-          : getLocalOverrides('futureDreams')
-        const savedHiddenFutureDreamIds = hasFutureDreamsBackup
-          ? saveHiddenItemIds('futureDreams', hidden.futureDreams)
-          : getHiddenItemIds('futureDreams')
-        const savedTimelinePages = hasTimelineBackup
-          ? saveLocalItems('timeline', content.timeline)
-          : getLocalItems('timeline')
-        const savedTimelineOverrides = hasTimelineBackup
-          ? saveLocalOverrides('timeline', overrides.timeline)
-          : getLocalOverrides('timeline')
-        const savedHiddenTimelineIds = hasTimelineBackup
-          ? saveHiddenItemIds('timeline', hidden.timeline)
-          : getHiddenItemIds('timeline')
-        const savedBlackHoleGallery = hasBlackHoleGalleryBackup
-          ? saveLocalItems('blackHoleGallery', content.blackHoleGallery)
-          : getLocalItems('blackHoleGallery')
-        const savedBlackHoleGalleryOverrides = hasBlackHoleGalleryBackup
-          ? saveLocalOverrides('blackHoleGallery', overrides.blackHoleGallery)
-          : getLocalOverrides('blackHoleGallery')
-        const savedHiddenBlackHoleGalleryIds = hasBlackHoleGalleryBackup
-          ? saveHiddenItemIds('blackHoleGallery', hidden.blackHoleGallery)
-          : getHiddenItemIds('blackHoleGallery')
-        const savedPlaylist = hasPlaylistBackup
-          ? saveLocalItems('playlist', content.playlist)
-          : getLocalItems('playlist')
-        const savedPlaylistOverrides = hasPlaylistBackup
-          ? saveLocalOverrides('playlist', overrides.playlist)
-          : getLocalOverrides('playlist')
-        const savedHiddenPlaylistIds = hasPlaylistBackup
-          ? saveHiddenItemIds('playlist', hidden.playlist)
-          : getHiddenItemIds('playlist')
-        const savedPromises = hasPromisesBackup
-          ? saveLocalItems('promises', content.promises)
-          : getLocalItems('promises')
-        const savedPromiseOverrides = hasPromisesBackup
-          ? saveLocalOverrides('promises', overrides.promises)
-          : getLocalOverrides('promises')
-        const savedHiddenPromiseIds = hasPromisesBackup
-          ? saveHiddenItemIds('promises', hidden.promises)
-          : getHiddenItemIds('promises')
-
-        setLocalMonthly(content.monthlyLetters)
-        setLocalOpenWhen(content.openWhenLetters)
-        reasonsCrud.setLocalItems(savedReasons)
-        reasonsCrud.setOverrides(savedOverrides)
-        reasonsCrud.setHiddenIds(savedHiddenIds)
-        setMonthlyOverrides(savedMonthlyOverrides)
-        setHiddenMonthlyIds(savedHiddenMonthlyIds)
-        setOpenWhenOverrides(savedOpenWhenOverrides)
-        setHiddenOpenWhenIds(savedHiddenOpenWhenIds)
-        importantDatesCrud.setLocalItems(savedImportantDates)
-        importantDatesCrud.setOverrides(savedImportantDateOverrides)
-        importantDatesCrud.setHiddenIds(savedHiddenImportantDateIds)
-        futureDreamsCrud.setLocalItems(savedFutureDreams)
-        futureDreamsCrud.setOverrides(savedFutureDreamOverrides)
-        futureDreamsCrud.setHiddenIds(savedHiddenFutureDreamIds)
-        setLocalTimelinePages(savedTimelinePages)
-        setTimelineOverrides(savedTimelineOverrides)
-        setHiddenTimelineIds(savedHiddenTimelineIds)
-        setLocalBlackHoleGallery(savedBlackHoleGallery)
-        setBlackHoleGalleryOverrides(savedBlackHoleGalleryOverrides)
-        setHiddenBlackHoleGalleryIds(savedHiddenBlackHoleGalleryIds)
-        playlistCrud.setLocalItems(savedPlaylist)
-        playlistCrud.setOverrides(savedPlaylistOverrides)
-        playlistCrud.setHiddenIds(savedHiddenPlaylistIds)
-        promisesCrud.setLocalItems(savedPromises)
-        promisesCrud.setOverrides(savedPromiseOverrides)
-        promisesCrud.setHiddenIds(savedHiddenPromiseIds)
-        setEditingId(null)
-        setTitle('')
-        setPreview('')
-        setContentRaw('')
-        setTag('')
-        setLetterLocked(false)
-        reasonsCrud.resetForm()
-        reasonsCrud.resetBaseForm()
-        resetBaseMonthlyForm()
-        resetBaseOpenWhenForm()
-        importantDatesCrud.resetForm()
-        importantDatesCrud.resetBaseForm()
-        futureDreamsCrud.resetForm()
-        futureDreamsCrud.resetBaseForm()
-        resetTimelineForm()
-        resetBaseTimelineForm()
-        resetBlackHoleForm()
-        resetBaseBlackHoleForm()
-        playlistCrud.resetForm()
-        playlistCrud.resetBaseForm()
-        dispatchContentUpdate('all')
-        dispatchContentUpdate('reasons')
-        if (hasPromisesBackup) {
-          dispatchContentUpdate('promises')
-        }
-        if (hasImportantDatesBackup) {
-          dispatchContentUpdate('importantDates')
-        }
-        if (hasFutureDreamsBackup) {
-          dispatchContentUpdate('futureDreams')
-        }
-        if (hasTimelineBackup) {
-          dispatchContentUpdate('timeline')
-        }
-        if (hasBlackHoleGalleryBackup) {
-          dispatchContentUpdate('blackHoleGallery')
-        }
-        if (hasPlaylistBackup) {
-          dispatchContentUpdate('playlist')
-        }
-        dispatchLettersUpdate('monthlyLetters')
-        dispatchLettersUpdate('openWhenLetters')
-        setBackupStatus({ type: 'success', text: 'Respaldo v2 importado correctamente.' })
-      } catch (error) {
-        setBackupStatus({ type: 'error', text: 'No se pudo leer el JSON seleccionado.' })
-      } finally {
-        event.target.value = ''
-      }
-    }
-
-    reader.onerror = () => {
-      setBackupStatus({ type: 'error', text: 'No se pudo abrir el archivo seleccionado.' })
-      event.target.value = ''
-    }
-
-    reader.readAsText(file)
-  }
 
   const dispatchContentUpdate = (collection) => {
     window.dispatchEvent(
@@ -747,95 +411,6 @@ function CentroUniversoSection() {
 
 
 
-
-
-  const detailsToText = (details) => {
-    return Array.isArray(details) ? details.join('\n') : ''
-  }
-
-  const textToDetails = (detailsText) => {
-    return detailsText
-      .split('\n')
-      .map((detail) => detail.trim())
-      .filter((detail) => detail.length > 0)
-  }
-
-  const timelineMonthNames = [
-    'enero',
-    'febrero',
-    'marzo',
-    'abril',
-    'mayo',
-    'junio',
-    'julio',
-    'agosto',
-    'septiembre',
-    'octubre',
-    'noviembre',
-    'diciembre'
-  ]
-
-  const timelineMonthIndexes = {
-    enero: 0,
-    febrero: 1,
-    marzo: 2,
-    abril: 3,
-    mayo: 4,
-    junio: 5,
-    julio: 6,
-    agosto: 7,
-    septiembre: 8,
-    setiembre: 8,
-    octubre: 9,
-    noviembre: 10,
-    diciembre: 11
-  }
-
-  const formatTimelineDateForDisplay = (dateValue) => {
-    const match = String(dateValue || '').match(/^(\d{4})-(\d{2})-(\d{2})$/)
-    if (!match) return String(dateValue || '').trim()
-
-    const day = Number(match[3])
-    const monthName = timelineMonthNames[Number(match[2]) - 1]
-    return monthName ? `${day} de ${monthName} de ${match[1]}` : String(dateValue || '').trim()
-  }
-
-  const parseTimelineDateForInput = (dateValue) => {
-    const rawValue = String(dateValue || '').trim()
-    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
-
-    const match = rawValue.toLowerCase().match(/(\d{1,2})\s+de\s+([a-záéíóúñ]+)(?:\s+de\s+(\d{4}))?/)
-    if (!match) return ''
-
-    const normalizedMonth = match[2].normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    const monthIndex = timelineMonthIndexes[normalizedMonth]
-    if (monthIndex === undefined) return ''
-
-    if (!match[3]) return ''
-
-    const year = Number(match[3])
-    const month = String(monthIndex + 1).padStart(2, '0')
-    const day = String(Number(match[1])).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
-
-  const normalizeTimelineDateForStorage = (dateValue) => {
-    const rawValue = String(dateValue || '').trim()
-    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
-    return parseTimelineDateForInput(rawValue) || rawValue
-  }
-
-  const parseImportantDateForInput = (dateValue) => {
-    const rawValue = String(dateValue || '').trim()
-    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
-    return parseTimelineDateForInput(rawValue)
-  }
-
-  const normalizeImportantDateForStorage = (dateValue) => {
-    const rawValue = String(dateValue || '').trim()
-    if (/^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue
-    return parseImportantDateForInput(rawValue)
-  }
 
   const buildLegacyLetterCreateItem = (item) => ({
     ...item,
@@ -1712,73 +1287,13 @@ function CentroUniversoSection() {
         text="Rinconcito de administración local y depuración."
       />
 
-      {isSimUnlocked && (
-        <div className="simulation-active-banner">
-          <ShieldAlert size={18} />
-          <span>
-            <strong>Modo de pruebas activo</strong>: Se simula que todas las cartas están desbloqueadas.
-          </span>
-        </div>
-      )}
+      <SimulationBanner isSimUnlocked={isSimUnlocked} onToggle={toggleSimulation} />
 
       {/* Statistics Cards */}
-      <div className="control-grid">
-        <div className="control-card">
-          <h3>Cartas Mensuales</h3>
-          <div className="control-stats">
-            <div className="stat-item">
-              <span className="stat-label">Total (Base + Tuyas)</span>
-              <span className="stat-value">{totalMonthly}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label flex-label">
-                <BookOpen size={14} className="icon-available" /> Desbloqueadas
-              </span>
-              <span className="stat-value">{unlockedMonthly}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label flex-label">
-                <Lock size={14} className="icon-locked" /> Bloqueadas
-              </span>
-              <span className="stat-value">{lockedMonthly}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label flex-label">
-                <Check size={14} className="icon-opened" /> Abiertas / Leídas
-              </span>
-              <span className="stat-value text-pink">{openedMonthly}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="control-card">
-          <h3>Cartas Abrir Cuando</h3>
-          <div className="control-stats">
-            <div className="stat-item">
-              <span className="stat-label">Total (Base + Tuyas)</span>
-              <span className="stat-value">{totalOpenWhen}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label flex-label">
-                <BookOpen size={14} className="icon-available" /> Desbloqueadas
-              </span>
-              <span className="stat-value">{unlockedOpenWhen}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label flex-label">
-                <Lock size={14} className="icon-locked" /> Bloqueadas
-              </span>
-              <span className="stat-value">{lockedOpenWhen}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label flex-label">
-                <Check size={14} className="icon-opened" /> Abiertas / Leídas
-              </span>
-              <span className="stat-value text-pink">{openedOpenWhen}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <LetterStatsPanel
+        monthlyStats={{ total: totalMonthly, opened: openedMonthly, unlocked: unlockedMonthly, locked: lockedMonthly }}
+        openWhenStats={{ total: totalOpenWhen, opened: openedOpenWhen, unlocked: unlockedOpenWhen, locked: lockedOpenWhen }}
+      />
 
       {/* Global Actions */}
       <div className="control-actions">
@@ -1799,38 +1314,7 @@ function CentroUniversoSection() {
 
       <LocalIdentitySelector />
 
-      {/* Local letters backup */}
-      <div className="backup-card">
-        <div className="backup-header">
-          <h3>Respaldo del universo</h3>
-          <p>Exporta o restaura cartas, Abrir cuando, razones, promesas, fechas, wishlist, diario, galería y playlist con sus ediciones y elementos ocultos.</p>
-        </div>
-
-        <div className="backup-actions">
-          <button className="control-btn backup-export-btn" onClick={handleExportLocalLetters} type="button">
-            <Download size={18} />
-            Exportar respaldo
-          </button>
-
-          <label className="control-btn backup-import-label" htmlFor="localLettersImport">
-            <Upload size={18} />
-            Importar respaldo
-          </label>
-          <input
-            id="localLettersImport"
-            className="backup-file-input"
-            type="file"
-            accept=".json,application/json"
-            onChange={handleImportLocalBackup}
-          />
-        </div>
-
-        {backupStatus && (
-          <p className={`backup-status ${backupStatus.type}`}>
-            {backupStatus.text}
-          </p>
-        )}
-      </div>
+      <BackupPanel />
 
       <div className="crud-central-shell">
         <div className="crud-selector-block">
