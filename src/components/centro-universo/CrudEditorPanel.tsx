@@ -20,6 +20,8 @@ interface CrudEditorPanelProps {
   onBaseEdit?: (item: ContentItem) => void
   editorPanelId?: string
   baseEditorPanelId?: string
+  localFormExtras?: ReactNode
+  baseFormExtras?: ReactNode
 }
 
 /**
@@ -39,7 +41,9 @@ export default function CrudEditorPanel({
   renderItemInfo,
   onEdit,
   editorPanelId,
-  baseEditorPanelId
+  baseEditorPanelId,
+  localFormExtras,
+  baseFormExtras
 }: CrudEditorPanelProps) {
   const isActive = activeCrudModule === collectionName
   const showLocal = isActive && activeCrudAction === 'local'
@@ -105,6 +109,8 @@ export default function CrudEditorPanel({
                 )}
               </div>
             ))}
+
+            {localFormExtras}
 
             <div className="form-actions">
               {crud.editingId && (
@@ -204,6 +210,8 @@ export default function CrudEditorPanel({
                 )}
               </div>
             ))}
+            {baseFormExtras}
+
             <div className="form-actions">
               <button type="submit" className="control-btn submit-btn" disabled={!crud.editingBaseId}>
                 Guardar override

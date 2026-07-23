@@ -77,27 +77,6 @@ function CentroUniversoSection() {
   const [baseOpenWhenContent, setBaseOpenWhenContent] = useState('')
   const [baseOpenWhenLocked, setBaseOpenWhenLocked] = useState(false)
   const [editingBaseOpenWhenId, setEditingBaseOpenWhenId] = useState(null)
-  const [localBlackHoleGallery, setLocalBlackHoleGallery] = useState([])
-  const [blackHoleGalleryOverrides, setBlackHoleGalleryOverrides] = useState({})
-  const [hiddenBlackHoleGalleryIds, setHiddenBlackHoleGalleryIds] = useState([])
-  const [blackHoleDate, setBlackHoleDate] = useState('')
-  const [blackHoleTitle, setBlackHoleTitle] = useState('')
-  const [blackHoleDescription, setBlackHoleDescription] = useState('')
-  const [blackHoleImage, setBlackHoleImage] = useState('')
-  const [blackHoleAlt, setBlackHoleAlt] = useState('')
-  const [blackHoleTag, setBlackHoleTag] = useState('')
-  const [blackHoleVideoUrl, setBlackHoleVideoUrl] = useState('')
-  const [blackHoleImageStatus, setBlackHoleImageStatus] = useState('')
-  const [editingBlackHoleId, setEditingBlackHoleId] = useState(null)
-  const [baseBlackHoleDate, setBaseBlackHoleDate] = useState('')
-  const [baseBlackHoleTitle, setBaseBlackHoleTitle] = useState('')
-  const [baseBlackHoleDescription, setBaseBlackHoleDescription] = useState('')
-  const [baseBlackHoleImage, setBaseBlackHoleImage] = useState('')
-  const [baseBlackHoleAlt, setBaseBlackHoleAlt] = useState('')
-  const [baseBlackHoleTag, setBaseBlackHoleTag] = useState('')
-  const [baseBlackHoleVideoUrl, setBaseBlackHoleVideoUrl] = useState('')
-  const [baseBlackHoleImageStatus, setBaseBlackHoleImageStatus] = useState('')
-  const [editingBaseBlackHoleId, setEditingBaseBlackHoleId] = useState(null)
   // Form states
   const [title, setTitle] = useState('')
   const [preview, setPreview] = useState('')
@@ -191,6 +170,20 @@ function CentroUniversoSection() {
     })
   })
 
+  const blackHoleFields = [
+    { name: 'date', label: 'Fecha', placeholder: 'YYYY-MM-DD o "15 de enero de 2026"' },
+    { name: 'title', label: 'Título', required: true, placeholder: 'Nombre del recuerdo' },
+    { name: 'description', label: 'Descripción', type: 'textarea', rows: 3, placeholder: '¿Qué pasó ese día?' },
+    { name: 'image', label: 'Imagen (base64 o URL)', type: 'textarea', rows: 2, placeholder: 'Pega una URL o usa el botón de subir archivo' },
+    { name: 'alt', label: 'Texto alternativo', placeholder: 'Describe la imagen' },
+    { name: 'tag', label: 'Tag', placeholder: 'Ej. foto, concierto, viaje' },
+    { name: 'videoUrl', label: 'Video URL', placeholder: 'https://...' }
+  ]
+  const blackHoleCrud = useCrudCollection('blackHoleGallery', blackHoleGalleryData, {
+    fields: blackHoleFields,
+    idPrefix: 'local-blackhole-'
+  })
+
   const crudModules = [
     { id: 'monthlyLetters', label: 'Cartas', icon: Mail },
     { id: 'openWhenLetters', label: 'Abrir cuando', icon: BookOpen },
@@ -221,9 +214,7 @@ function CentroUniversoSection() {
     importantDatesCrud.loadData()
     futureDreamsCrud.loadData()
     timelineCrud.loadData()
-    setLocalBlackHoleGallery(getLocalItems('blackHoleGallery'))
-    setBlackHoleGalleryOverrides(getLocalOverrides('blackHoleGallery'))
-    setHiddenBlackHoleGalleryIds(getHiddenItemIds('blackHoleGallery'))
+    blackHoleCrud.loadData()
     playlistCrud.loadData()
   }, [])
 
@@ -317,18 +308,9 @@ function CentroUniversoSection() {
   const editedBaseTimelineCount = timelineCrud.editedBaseCount
   const hiddenBaseTimelineCount = timelineCrud.hiddenBaseCount
   const visibleBaseTimelinePages = timelineCrud.visibleBaseItems
-  const editedBaseBlackHoleGalleryCount = Object.keys(blackHoleGalleryOverrides).length
-  const hiddenBaseBlackHoleGalleryCount = hiddenBlackHoleGalleryIds.length
-  const visibleBaseBlackHoleGallery = blackHoleGalleryData.map((item) => {
-    const override = blackHoleGalleryOverrides[String(item.id)]
-    return {
-      ...item,
-      ...(override || {}),
-      id: item.id,
-      isOverridden: Boolean(override),
-      isHidden: hiddenBlackHoleGalleryIds.includes(String(item.id))
-    }
-  })
+  const editedBaseBlackHoleGalleryCount = blackHoleCrud.editedBaseCount
+  const hiddenBaseBlackHoleGalleryCount = blackHoleCrud.hiddenBaseCount
+  const visibleBaseBlackHoleGallery = blackHoleCrud.visibleBaseItems
   const filterBaseItemsByCrudFilter = (items) => {
     if (activeCrudFilter === 'base') return items.filter((item) => !item.isHidden && !item.isOverridden)
     if (activeCrudFilter === 'edited') return items.filter((item) => item.isOverridden)
@@ -424,118 +406,6 @@ function CentroUniversoSection() {
       spaceId: item.spaceId || updateMetadata.spaceId
     }
   }
-
-
-  const resetBlackHoleForm = () => {
-    setBlackHoleDate('')
-    setBlackHoleTitle('')
-    setBlackHoleDescription('')
-    setBlackHoleImage('')
-    setBlackHoleAlt('')
-    setBlackHoleTag('')
-    setBlackHoleVideoUrl('')
-    setBlackHoleImageStatus('')
-    setEditingBlackHoleId(null)
-  }
-
-  const resetBaseBlackHoleForm = () => {
-    setBaseBlackHoleDate('')
-    setBaseBlackHoleTitle('')
-    setBaseBlackHoleDescription('')
-    setBaseBlackHoleImage('')
-    setBaseBlackHoleAlt('')
-    setBaseBlackHoleTag('')
-    setBaseBlackHoleVideoUrl('')
-    setBaseBlackHoleImageStatus('')
-    setEditingBaseBlackHoleId(null)
-  }
-
-
-
-
-
-  const handleBlackHoleImageFile = (event, target = 'local') => {
-    const file = event.target.files?.[0]
-    event.target.value = ''
-    if (!file) return
-
-    if (!file.type.startsWith('image/')) {
-      const message = 'Selecciona un archivo de imagen válido.'
-      target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
-      return
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      const message = 'La imagen supera 2 MB. Elige una imagen mas ligera.'
-      target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
-      return
-    }
-
-    const reader = new FileReader()
-    reader.onload = () => {
-      const result = typeof reader.result === 'string' ? reader.result : ''
-      if (target === 'base') {
-        setBaseBlackHoleImage(result)
-        setBaseBlackHoleImageStatus('Imagen guardada como respaldo.')
-      } else {
-        setBlackHoleImage(result)
-        setBlackHoleImageStatus('Imagen guardada como respaldo.')
-      }
-    }
-    reader.onerror = () => {
-      const message = 'No se pudo leer la imagen seleccionada.'
-      target === 'base' ? setBaseBlackHoleImageStatus(message) : setBlackHoleImageStatus(message)
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const clearBlackHoleImage = (target = 'local') => {
-    if (target === 'base') {
-      setBaseBlackHoleImage('')
-      setBaseBlackHoleImageStatus('')
-      const fileInput = document.getElementById('baseBlackHoleImageFile')
-      if (fileInput) (fileInput as HTMLInputElement).value = ''
-      return
-    }
-
-    setBlackHoleImage('')
-    setBlackHoleImageStatus('')
-    const fileInput = document.getElementById('blackHoleImageFile')
-    if (fileInput) (fileInput as HTMLInputElement).value = ''
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const handleBaseMonthlyEdit = (letter) => {
     setEditingBaseMonthlyId(letter.id)
     setBaseMonthlyMonth(letter.month || '')
@@ -719,155 +589,6 @@ function CentroUniversoSection() {
 
 
 
-  const buildBlackHolePatch = ({
-    date,
-    title,
-    description,
-    image,
-    alt,
-    tag,
-    videoUrl
-  }) => ({
-    date: date.trim(),
-    title: title.trim(),
-    description: description.trim(),
-    image: image.trim(),
-    alt: alt.trim(),
-    tag: tag.trim(),
-    videoUrl: videoUrl.trim(),
-    updatedAt: new Date().toISOString()
-  })
-
-  const handleBlackHoleSubmit = (event) => {
-    event.preventDefault()
-
-    if (!blackHoleDate.trim() || !blackHoleTitle.trim() || !blackHoleDescription.trim()) {
-      alert('Por favor, completa fecha, titulo y descripcion del recuerdo.')
-      return
-    }
-
-    const patch = buildBlackHolePatch({
-      date: blackHoleDate,
-      title: blackHoleTitle,
-      description: blackHoleDescription,
-      image: blackHoleImage,
-      alt: blackHoleAlt,
-      tag: blackHoleTag,
-      videoUrl: blackHoleVideoUrl
-    })
-
-    const updatedItems = editingBlackHoleId
-      ? updateLocalItem('blackHoleGallery', editingBlackHoleId, patch)
-      : addLocalItem('blackHoleGallery', {
-          id: `local-blackhole-${Date.now()}`,
-          ...patch,
-          createdAt: new Date().toISOString()
-        })
-
-    setLocalBlackHoleGallery(updatedItems)
-    resetBlackHoleForm()
-    dispatchContentUpdate('blackHoleGallery')
-    showCrudNotice(editingBlackHoleId ? 'Se editó un recuerdo correctamente.' : 'Se agregó un recuerdo correctamente.')
-  }
-
-  const handleBlackHoleEdit = (item) => {
-    if (!item.isLocal) return
-    setActiveCrudAction('create')
-    setEditingBlackHoleId(item.id)
-    setBlackHoleDate(item.date || '')
-    setBlackHoleTitle(item.title || '')
-    setBlackHoleDescription(item.description || item.caption || '')
-    setBlackHoleImage(item.image || '')
-    setBlackHoleAlt(item.alt || '')
-    setBlackHoleTag(item.tag || '')
-    setBlackHoleVideoUrl(item.videoUrl || '')
-    setBlackHoleImageStatus('')
-  }
-
-  const handleBlackHoleDelete = (item) => {
-    if (!item.isLocal) return
-
-    if (window.confirm('¿Seguro que quieres eliminar este recuerdo tuyo?')) {
-      const updatedItems = deleteLocalItem('blackHoleGallery', item.id)
-      setLocalBlackHoleGallery(updatedItems)
-
-      if (editingBlackHoleId === item.id) {
-        resetBlackHoleForm()
-      }
-
-      dispatchContentUpdate('blackHoleGallery')
-      showCrudNotice('Se eliminó un recuerdo correctamente.')
-    }
-  }
-
-  const handleBaseBlackHoleEdit = (item) => {
-    setEditingBaseBlackHoleId(item.id)
-    setBaseBlackHoleDate(item.date || '')
-    setBaseBlackHoleTitle(item.title || '')
-    setBaseBlackHoleDescription(item.description || item.caption || '')
-    setBaseBlackHoleImage(item.image || '')
-    setBaseBlackHoleAlt(item.alt || '')
-    setBaseBlackHoleTag(item.tag || '')
-    setBaseBlackHoleVideoUrl(item.videoUrl || '')
-    setBaseBlackHoleImageStatus('')
-  }
-
-  const handleBaseBlackHoleSubmit = (event) => {
-    event.preventDefault()
-
-    if (!editingBaseBlackHoleId || !baseBlackHoleDate.trim() || !baseBlackHoleTitle.trim() || !baseBlackHoleDescription.trim()) {
-      alert('Selecciona un recuerdo base y completa fecha, titulo y descripcion.')
-      return
-    }
-
-    const updatedOverrides = setLocalOverride('blackHoleGallery', editingBaseBlackHoleId, buildBlackHolePatch({
-      date: baseBlackHoleDate,
-      title: baseBlackHoleTitle,
-      description: baseBlackHoleDescription,
-      image: baseBlackHoleImage,
-      alt: baseBlackHoleAlt,
-      tag: baseBlackHoleTag,
-      videoUrl: baseBlackHoleVideoUrl
-    }))
-
-    setBlackHoleGalleryOverrides(updatedOverrides)
-    resetBaseBlackHoleForm()
-    dispatchContentUpdate('blackHoleGallery')
-    showCrudNotice('Se editó un recuerdo correctamente.')
-  }
-
-  const handleBaseBlackHoleRestore = (itemId) => {
-    const updatedOverrides = deleteLocalOverride('blackHoleGallery', itemId)
-    setBlackHoleGalleryOverrides(updatedOverrides)
-
-    if (String(editingBaseBlackHoleId) === String(itemId)) {
-      resetBaseBlackHoleForm()
-    }
-
-    dispatchContentUpdate('blackHoleGallery')
-    showCrudNotice('Se restauró un recuerdo correctamente.')
-  }
-
-  const handleBaseBlackHoleHide = (item) => {
-    if (window.confirm('¿Seguro que quieres ocultar este recuerdo base? Podrás restaurarlo después.')) {
-      const updatedHiddenIds = hideDefaultItem('blackHoleGallery', item.id)
-      setHiddenBlackHoleGalleryIds(updatedHiddenIds)
-
-      if (String(editingBaseBlackHoleId) === String(item.id)) {
-        resetBaseBlackHoleForm()
-      }
-
-      dispatchContentUpdate('blackHoleGallery')
-      showCrudNotice('Se ocultó un recuerdo correctamente.')
-    }
-  }
-
-  const handleBaseBlackHoleUnhide = (itemId) => {
-    const updatedHiddenIds = restoreHiddenItem('blackHoleGallery', itemId)
-    setHiddenBlackHoleGalleryIds(updatedHiddenIds)
-    dispatchContentUpdate('blackHoleGallery')
-    showCrudNotice('Se restauró un recuerdo correctamente.')
-  }
 
   const buildPlaylistPatch = ({
     title,
@@ -1073,8 +794,8 @@ function CentroUniversoSection() {
     futureDreamsCrud.resetBaseForm()
     timelineCrud.resetForm()
     timelineCrud.resetBaseForm()
-    resetBlackHoleForm()
-    resetBaseBlackHoleForm()
+    blackHoleCrud.resetForm()
+    blackHoleCrud.resetBaseForm()
     playlistCrud.resetForm()
     playlistCrud.resetBaseForm()
   }
@@ -1559,378 +1280,51 @@ function CentroUniversoSection() {
         editorPanelId="local-timeline-editor"
         baseEditorPanelId="base-timeline-editor"
       />
-      <div className={`base-blackhole-editor ${activeCrudModule === 'blackHoleGallery' && activeCrudAction === 'originals' ? '' : 'crud-panel-hidden'}`} id="base-blackhole-editor">
-        <div className="base-reasons-panel">
-          <div className="crud-subsection-title">Originales / editadas / ocultas</div>
-          <div className="reasons-list-header">
-            <h3>Agujero negro original</h3>
-            <span>{blackHoleGalleryData.length} base</span>
+      <CrudEditorPanel
+        collectionLabel="Galería"
+        collectionName="blackHoleGallery"
+        activeCrudModule={activeCrudModule}
+        activeCrudAction={activeCrudAction}
+        activeCrudFilter={activeCrudFilter}
+        onCrudFilterClick={handleCrudFilterClick}
+        crud={blackHoleCrud}
+        fields={blackHoleFields}
+        listFields={["title", "date", "tag"]}
+        editorPanelId="local-blackhole-editor"
+        baseEditorPanelId="base-blackhole-editor"
+        localFormExtras={(
+          <div className="editor-field">
+            <label>Subir imagen desde archivo</label>
+            <input type="file" accept="image/*" className="control-btn" style={{width:'100%'}}
+              onChange={(e) => {
+                const file = (e.target as HTMLInputElement).files?.[0]
+                if (!file) return
+                if (!file.type.startsWith('image/')) { alert('Selecciona un archivo de imagen válido.'); return }
+                if (file.size > 2 * 1024 * 1024) { alert('La imagen supera 2 MB.'); return }
+                const reader = new FileReader()
+                reader.onload = () => { blackHoleCrud.setFormValue('image', String(reader.result || '')) }
+                reader.readAsDataURL(file)
+              }}
+            />
           </div>
-
-          <div className="reason-stats-grid">
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="base" value={getNormalBaseCount(visibleBaseBlackHoleGallery)} label="Base" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="edited" value={editedBaseBlackHoleGalleryCount} label="Editadas" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="hidden" value={hiddenBaseBlackHoleGalleryCount} label="Ocultas" />
-            <CrudStatButton activeFilter={activeCrudFilter} onClick={handleCrudFilterClick} filter="local" value={localBlackHoleGallery.length} label="Tuyos" />
+        )}
+        baseFormExtras={(
+          <div className="editor-field">
+            <label>Subir imagen desde archivo</label>
+            <input type="file" accept="image/*" className="control-btn" style={{width:'100%'}}
+              onChange={(e) => {
+                const file = (e.target as HTMLInputElement).files?.[0]
+                if (!file) return
+                if (!file.type.startsWith('image/')) { alert('Selecciona un archivo de imagen válido.'); return }
+                if (file.size > 2 * 1024 * 1024) { alert('La imagen supera 2 MB.'); return }
+                const reader = new FileReader()
+                reader.onload = () => { blackHoleCrud.setBaseFormValue('image', String(reader.result || '')) }
+                reader.readAsDataURL(file)
+              }}
+            />
           </div>
-
-          <div className="base-reasons-list">
-            {filteredBaseBlackHoleGallery.length === 0 ? (
-              <p className="no-items">No hay elementos en este filtro.</p>
-            ) : filteredBaseBlackHoleGallery.map((item) => (
-              <div
-                className={`base-reason-row ${item.isOverridden ? 'is-overridden' : ''} ${item.isHidden ? 'is-hidden' : ''}`}
-                key={item.id}
-              >
-                <div className="base-reason-copy">
-                  <strong>{item.date} · {item.title}</strong>
-                  <span>{item.description}</span>
-                  <small>{item.isHidden ? 'Oculto' : item.isOverridden ? 'Editado' : 'Original'}</small>
-                </div>
-
-                <div className="base-reason-actions">
-                  <button type="button" className="ghost-button" onClick={() => handleBaseBlackHoleEdit(item)}>
-                    Editar
-                  </button>
-
-                  {item.isOverridden && (
-                    <button type="button" className="ghost-button" onClick={() => handleBaseBlackHoleRestore(item.id)}>
-                      Restaurar
-                    </button>
-                  )}
-
-                  {item.isHidden ? (
-                    <button type="button" className="ghost-button" onClick={() => handleBaseBlackHoleUnhide(item.id)}>
-                      Mostrar
-                    </button>
-                  ) : (
-                    <button type="button" className="ghost-button danger-action" onClick={() => handleBaseBlackHoleHide(item)}>
-                      Ocultar
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {hiddenBaseBlackHoleGalleryCount > 0 && (
-            <div className="hidden-reasons-box">
-              <h4>Recuerdos ocultos</h4>
-              {visibleBaseBlackHoleGallery.filter((item) => item.isHidden).map((item) => (
-                <button type="button" className="ghost-button" key={item.id} onClick={() => handleBaseBlackHoleUnhide(item.id)}>
-                  Mostrar {item.title}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="base-reasons-panel">
-          <div className="crud-subsection-title">Editar original</div>
-          <h3>
-            <Edit2 size={18} />
-            Override del agujero negro
-          </h3>
-
-          <form className="editor-form" onSubmit={handleBaseBlackHoleSubmit}>
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleDate">Fecha / etiqueta *</label>
-              <input
-                id="baseBlackHoleDate"
-                type="text"
-                value={baseBlackHoleDate}
-                onChange={(event) => setBaseBlackHoleDate(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleTitle">Titulo *</label>
-              <input
-                id="baseBlackHoleTitle"
-                type="text"
-                value={baseBlackHoleTitle}
-                onChange={(event) => setBaseBlackHoleTitle(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleDescription">Descripcion *</label>
-              <textarea
-                id="baseBlackHoleDescription"
-                rows={4}
-                value={baseBlackHoleDescription}
-                onChange={(event) => setBaseBlackHoleDescription(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-                required
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleImage">Imagen / URL</label>
-              <input
-                id="baseBlackHoleImage"
-                type="text"
-                value={baseBlackHoleImage}
-                onChange={(event) => setBaseBlackHoleImage(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleImageFile">Cargar foto</label>
-              <input
-                id="baseBlackHoleImageFile"
-                type="file"
-                accept="image/*"
-                onChange={(event) => handleBlackHoleImageFile(event, 'base')}
-                disabled={!editingBaseBlackHoleId}
-              />
-              {baseBlackHoleImageStatus && <small className="editor-file-hint">{baseBlackHoleImageStatus}</small>}
-            </div>
-
-            {baseBlackHoleImage && (
-              <div className="editor-image-preview">
-                <button
-                  type="button"
-                  className="editor-image-remove"
-                  onClick={() => clearBlackHoleImage('base')}
-                  aria-label="Quitar imagen"
-                  title="Quitar imagen"
-                >
-                  ×
-                </button>
-                <img src={baseBlackHoleImage} alt={baseBlackHoleAlt || baseBlackHoleTitle || 'Preview'} />
-              </div>
-            )}
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleAlt">Texto alt</label>
-              <input
-                id="baseBlackHoleAlt"
-                type="text"
-                value={baseBlackHoleAlt}
-                onChange={(event) => setBaseBlackHoleAlt(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleTag">Etiqueta</label>
-              <input
-                id="baseBlackHoleTag"
-                type="text"
-                value={baseBlackHoleTag}
-                onChange={(event) => setBaseBlackHoleTag(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="baseBlackHoleVideoUrl">URL de video opcional</label>
-              <input
-                id="baseBlackHoleVideoUrl"
-                type="text"
-                value={baseBlackHoleVideoUrl}
-                onChange={(event) => setBaseBlackHoleVideoUrl(event.target.value)}
-                disabled={!editingBaseBlackHoleId}
-              />
-            </div>
-
-            <div className="form-actions">
-              {editingBaseBlackHoleId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={resetBaseBlackHoleForm}>
-                  Cancelar
-                </button>
-              )}
-              <button type="submit" className="control-btn submit-btn" disabled={!editingBaseBlackHoleId}>
-                Guardar override
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div className={`local-blackhole-editor ${activeCrudModule === 'blackHoleGallery' && ['local', 'create'].includes(activeCrudAction) ? `crud-show-${activeCrudAction}` : 'crud-panel-hidden'}`} id="local-blackhole-editor">
-        <div className="reasons-editor-card">
-          <div className="crud-subsection-title">Crear nueva</div>
-          <h3>
-            <Plus size={18} />
-            Editor del agujero negro
-          </h3>
-
-          <div className="editor-warning">
-            <AlertTriangle size={15} />
-            <span>Estos recuerdos son tuyos; el JSON original no se modifica.</span>
-          </div>
-
-          <form className="editor-form" onSubmit={handleBlackHoleSubmit}>
-            <div className="editor-field">
-              <label htmlFor="blackHoleDate">Fecha / etiqueta *</label>
-              <input
-                id="blackHoleDate"
-                type="text"
-                placeholder="Ej. Un recuerdo bonito"
-                value={blackHoleDate}
-                onChange={(event) => setBlackHoleDate(event.target.value)}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleTitle">Titulo *</label>
-              <input
-                id="blackHoleTitle"
-                type="text"
-                placeholder="Ej. Una foto que quiero guardar"
-                value={blackHoleTitle}
-                onChange={(event) => setBlackHoleTitle(event.target.value)}
-                required
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleDescription">Descripcion *</label>
-              <textarea
-                id="blackHoleDescription"
-                rows={4}
-                placeholder="Ej. Este recuerdo se queda orbitando aqui porque significa mucho."
-                value={blackHoleDescription}
-                onChange={(event) => setBlackHoleDescription(event.target.value)}
-                required
-              ></textarea>
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleImage">Imagen / URL</label>
-              <input
-                id="blackHoleImage"
-                type="text"
-                placeholder="/DistanciaCero/images/blackhole-gallery/foto.jpg"
-                value={blackHoleImage}
-                onChange={(event) => setBlackHoleImage(event.target.value)}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleImageFile">Cargar foto</label>
-              <input
-                id="blackHoleImageFile"
-                type="file"
-                accept="image/*"
-                onChange={(event) => handleBlackHoleImageFile(event, 'local')}
-              />
-              {blackHoleImageStatus && <small className="editor-file-hint">{blackHoleImageStatus}</small>}
-            </div>
-
-            {blackHoleImage && (
-              <div className="editor-image-preview">
-                <button
-                  type="button"
-                  className="editor-image-remove"
-                  onClick={() => clearBlackHoleImage('local')}
-                  aria-label="Quitar imagen"
-                  title="Quitar imagen"
-                >
-                  ×
-                </button>
-                <img src={blackHoleImage} alt={blackHoleAlt || blackHoleTitle || 'Preview'} />
-              </div>
-            )}
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleAlt">Texto alt</label>
-              <input
-                id="blackHoleAlt"
-                type="text"
-                placeholder="Ej. Recuerdo bonito"
-                value={blackHoleAlt}
-                onChange={(event) => setBlackHoleAlt(event.target.value)}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleTag">Etiqueta</label>
-              <input
-                id="blackHoleTag"
-                type="text"
-                placeholder="Ej. Mi lugar favorito"
-                value={blackHoleTag}
-                onChange={(event) => setBlackHoleTag(event.target.value)}
-              />
-            </div>
-
-            <div className="editor-field">
-              <label htmlFor="blackHoleVideoUrl">URL de video opcional</label>
-              <input
-                id="blackHoleVideoUrl"
-                type="text"
-                placeholder="Opcional, no se reproduce todavia"
-                value={blackHoleVideoUrl}
-                onChange={(event) => setBlackHoleVideoUrl(event.target.value)}
-              />
-            </div>
-
-            <div className="form-actions">
-              {editingBlackHoleId && (
-                <button type="button" className="ghost-button cancel-btn" onClick={resetBlackHoleForm}>
-                  Cancelar
-                </button>
-              )}
-              <button type="submit" className="control-btn submit-btn">
-                {editingBlackHoleId ? 'Actualizar recuerdo tuyo' : 'Guardar recuerdo tuyo'}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div className="reasons-list-card">
-          <div className="crud-subsection-title">Creadas por ti</div>
-          <div className="reasons-list-header">
-            <h3>Recuerdos creados por ti</h3>
-            <span>{localBlackHoleGallery.length} tuyas</span>
-          </div>
-
-          {localBlackHoleGallery.length === 0 ? (
-            <p className="no-items">No hay recuerdos tuyos creados.</p>
-          ) : (
-            <div className="reason-items-list">
-              {localBlackHoleGallery.map((item) => (
-                <div className="reason-item-row" key={item.id}>
-                  <div className="item-info">
-                    <strong>{item.date} · {item.title}</strong>
-                    <span>{item.description}</span>
-                    <LocalContentMeta item={item} />
-                  </div>
-
-                  <div className="item-actions">
-                    <button
-                      type="button"
-                      className="action-icon-btn edit"
-                      onClick={() => handleBlackHoleEdit(item)}
-                      title="Editar recuerdo tuyo"
-                    >
-                      <Edit2 size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      className="action-icon-btn delete"
-                      onClick={() => handleBlackHoleDelete(item)}
-                      title="Eliminar recuerdo tuyo"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
+        )}
+      />
       <CrudEditorPanel
         collectionLabel="Playlist"
         collectionName="playlist"
