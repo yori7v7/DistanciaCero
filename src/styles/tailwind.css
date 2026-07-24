@@ -74,10 +74,8 @@ html {
 
   /* Gradient text — pink to red */
   .text-gradient {
-    background: linear-gradient(135deg, #ff8ad4, #ff2d55);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--pink);
+    text-shadow: 0 0 18px rgba(255, 138, 212, 0.35);
   }
 
   /* Pill badge */
@@ -201,6 +199,11 @@ html {
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  h3 {
+    text-wrap: balance;
   }
 
   @media (prefers-reduced-motion: reduce) {

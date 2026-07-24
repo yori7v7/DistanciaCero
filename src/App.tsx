@@ -29,7 +29,7 @@ import Footer from './components/Footer'
 // ─── Shared Suspense skeleton ───
 const SectionSkeleton = () => (
   <div className="section" style={{ minHeight: '200px', display: 'grid', placeItems: 'center' }}>
-    <div className="small-pill" style={{ opacity: 0.6 }}>
+    <div className="small-pill animate-pulse" style={{ opacity: 0.5 }}>
       <span>Cargando sección...</span>
     </div>
   </div>

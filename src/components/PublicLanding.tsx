@@ -62,7 +62,7 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
 
         <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-display font-black leading-tight mb-6">
           <span className="block text-white-soft">{siteConfig.hero.titlePrefix}</span>
-          <span className="block bg-gradient-to-r from-pink via-red to-pink-soft bg-clip-text text-transparent">
+          <span className="block text-pink">
             {siteConfig.hero.titleName}
           </span>
         </h1>
