@@ -66,16 +66,16 @@ function App() {
         <ProposalSection />
         <CounterSection />
         <MainLetter />
-        <Suspense fallback={<SectionSkeleton />}><StoryTimeline timeline={timeline} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><UniverseSection universe={universe} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><MonthlyLetters letters={monthlyLetters} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><OpenWhenSection cards={openWhen} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><PlaylistSection playlist={playlist} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><ReasonsSection reasons={reasons} /></Suspense>
-        <ImportantDatesSection dates={importantDates} />
-        <Suspense fallback={<SectionSkeleton />}><BlackHoleGallerySection items={blackHoleGallery} /></Suspense>
-        <FutureDreamsSection dreams={futureDreams} />
-        <PromisesSection promises={promises} />
+        <Suspense fallback={<SectionSkeleton />}><StoryTimeline timeline={timeline as any} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><UniverseSection universe={universe as any} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><MonthlyLetters letters={monthlyLetters as any} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><OpenWhenSection cards={openWhen as any} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><PlaylistSection playlist={playlist as any} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><ReasonsSection reasons={reasons as any} /></Suspense>
+        <ImportantDatesSection dates={importantDates as any} />
+        <Suspense fallback={<SectionSkeleton />}><BlackHoleGallerySection items={blackHoleGallery as any} /></Suspense>
+        <FutureDreamsSection dreams={futureDreams as any} />
+        <PromisesSection promises={promises as any} />
         <DistanceMapSection />
         <Suspense fallback={<SectionSkeleton />}><CentroUniversoSection /></Suspense>
       </main>
@@ -90,7 +90,3 @@ function App() {
 }
 
 export default App
-
-
-
-

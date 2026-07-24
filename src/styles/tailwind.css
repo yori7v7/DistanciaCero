@@ -208,6 +208,7 @@ html {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
@@ -3264,18 +3265,6 @@ input {
   border-radius: 4px;
 }
 
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 .app {
   position: relative;
   min-height: 100vh;
@@ -3926,18 +3915,6 @@ input {
   border-color: rgba(255, 122, 200, 0.2);
 }
 
-/* Song delete button */
-.song-delete-btn {
-  color: #fca5a5 !important;
-  border-color: rgba(220, 38, 38, 0.3) !important;
-  padding: 6px 12px !important;
-  font-size: 0.78rem !important;
-}
-
-.song-delete-btn:hover {
-  background: rgba(220, 38, 38, 0.15) !important;
-}
-
 /* Memory thumb for videos */
 .memory-thumb--video {
   cursor: pointer;
@@ -4277,23 +4254,7 @@ input {
    AJUSTES FINALES: CONTADOR, CENTRO SOLAR, 100 RAZONES
 ========================================================= */
 
-/* Contador con 4 tarjetas */
-
-.counter-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-}
-
-@media (max-width: 980px) {
-  .counter-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
-@media (max-width: 620px) {
-  .counter-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
+/* Contador con 4 tarjetas — responsive overrides moved after base definition */
 
 /* 100 razones: animaciones activas */
 .reason-heart {
@@ -5142,8 +5103,20 @@ input {
 
 .counter-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
+}
+
+@media (max-width: 980px) {
+  .counter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .counter-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .counter-card {
@@ -7175,15 +7148,15 @@ input {
   margin-top: 4px;
 }
 
-.submit-btn {
+button.submit-btn {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(168, 85, 247, 0.18) 100%);
-  border-color: rgba(236, 72, 153, 0.4) !important;
-  color: var(--pink-soft, #f9a8d4) !important;
+  border-color: rgba(236, 72, 153, 0.4);
+  color: var(--pink-soft, #f9a8d4);
 }
 
-.submit-btn:hover {
+button.submit-btn:hover {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.28) 0%, rgba(168, 85, 247, 0.28) 100%);
-  border-color: rgba(236, 72, 153, 0.65) !important;
+  border-color: rgba(236, 72, 153, 0.65);
   box-shadow: 0 8px 25px rgba(236, 72, 153, 0.18);
   transform: translateY(-2px);
 }

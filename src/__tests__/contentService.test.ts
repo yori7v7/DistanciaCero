@@ -13,6 +13,7 @@ import {
   restoreCollectionItem,
   mergeCollectionWithLocal
 } from '../services/contentService'
+import type { ContentItem } from '../types/content'
 
 beforeEach(() => {
   localStorage.clear()
@@ -25,14 +26,14 @@ describe('contentService — CRUD operations', () => {
   })
 
   it('saveCollectionItems saves and retrieves items', () => {
-    const items = [{ id: '1', title: 'Test' }]
+    const items = [{ id: '1', title: 'Test' }] as ContentItem[]
     saveCollectionItems('reasons', items)
     const result = getCollectionItems('reasons')
     expect(result).toEqual(items)
   })
 
   it('addCollectionItem adds item with metadata', () => {
-    const item = { id: 'local-1', title: 'Nueva razón', text: 'Porque sí' }
+    const item = { id: 'local-1', title: 'Nueva razón', text: 'Porque sí' } as ContentItem
     const result = addCollectionItem('reasons', item)
     expect(result.length).toBe(1)
     expect(result[0].title).toBe('Nueva razón')
@@ -41,7 +42,7 @@ describe('contentService — CRUD operations', () => {
   })
 
   it('updateCollectionItem updates existing item', () => {
-    addCollectionItem('reasons', { id: 'local-1', title: 'Original' })
+    addCollectionItem('reasons', { id: 'local-1', title: 'Original' } as ContentItem)
     const updated = updateCollectionItem('reasons', 'local-1', { title: 'Actualizado', text: 'Nuevo texto' })
     expect(updated[0].title).toBe('Actualizado')
     expect(updated[0].text).toBe('Nuevo texto')
@@ -54,14 +55,14 @@ describe('contentService — CRUD operations', () => {
   })
 
   it('deleteCollectionItem removes item', () => {
-    addCollectionItem('reasons', { id: 'local-1', title: 'Borrable' })
+    addCollectionItem('reasons', { id: 'local-1', title: 'Borrable' } as ContentItem)
     expect(getCollectionItems('reasons').length).toBe(1)
     deleteCollectionItem('reasons', 'local-1')
     expect(getCollectionItems('reasons').length).toBe(0)
   })
 
   it('deleteCollectionItem does nothing for non-existent item', () => {
-    addCollectionItem('reasons', { id: 'local-1', title: 'X' })
+    addCollectionItem('reasons', { id: 'local-1', title: 'X' } as ContentItem)
     const result = deleteCollectionItem('reasons', 'no-existe')
     expect(result.length).toBe(1)
   })
@@ -109,18 +110,18 @@ describe('contentService — Hide/Restore', () => {
     hideCollectionItem('reasons', '5')
     hideCollectionItem('reasons', '5')
     const ids = getCollectionHiddenIds('reasons')
-    expect(ids.filter(id => id === '5').length).toBe(1)
+    expect(ids.filter((id: string) => id === '5').length).toBe(1)
   })
 })
 
 describe('contentService — mergeCollectionWithLocal', () => {
   it('merges defaults with overrides and local items', () => {
-    const defaults = [
+    const defaults: ContentItem[] = [
       { id: 1, title: 'Base 1', text: 'Texto base' },
       { id: 2, title: 'Base 2', text: 'Texto base 2' }
     ]
     // Add local item
-    addCollectionItem('reasons', { id: 'local-99', title: 'Local', text: 'Mi razón' })
+    addCollectionItem('reasons', { id: 'local-99', title: 'Local', text: 'Mi razón' } as ContentItem)
     // Add override
     setCollectionOverride('reasons', '1', { title: 'Base 1 editada' })
     // Hide item 2
@@ -129,9 +130,9 @@ describe('contentService — mergeCollectionWithLocal', () => {
     const merged = mergeCollectionWithLocal(defaults, 'reasons')
     // Should have: base 1 (overridden), local 99. Base 2 hidden.
     expect(merged.length).toBe(2)
-    expect(merged.find(i => i.id === 1).title).toBe('Base 1 editada')
-    expect(merged.find(i => i.id === 'local-99')).toBeDefined()
-    expect(merged.find(i => i.id === 2)).toBeUndefined()
+    expect(merged.find((i: ContentItem) => i.id === 1)!.title).toBe('Base 1 editada')
+    expect(merged.find((i: ContentItem) => i.id === 'local-99')).toBeDefined()
+    expect(merged.find((i: ContentItem) => i.id === 2)).toBeUndefined()
   })
 })
 

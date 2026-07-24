@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, type ReactNode, type FormEvent } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { LogIn, UserPlus, Heart, Mail, Lock, User, AlertCircle, Eye, EyeOff, Sparkles } from 'lucide-react'
 import {
   signInWithEmail,
@@ -67,6 +68,9 @@ function AuthGate({ children, onReady }: AuthGateProps) {
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const [busy, setBusy] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [remoteEnabled] = useState(() => isRemoteContentEnabled())
@@ -77,10 +81,10 @@ function AuthGate({ children, onReady }: AuthGateProps) {
   onReadyRef.current = onReady
 
   useEffect(() => {
-    const hash = window.location.hash
+    const hash = location.hash
     if (hash.includes('type=signup') || hash.includes('type=email_change')) {
       setVerified(true)
-      window.history.replaceState(null, '', window.location.pathname)
+      navigate(location.pathname, { replace: true })
     }
   }, [])
 

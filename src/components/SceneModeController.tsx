@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  BookHeart, ChevronLeft, ChevronRight, Compass, Heart, Home, Music2, Sparkles,
-  Settings, LogOut, ShieldAlert, X
+  ChevronLeft, ChevronRight, Clock, Heart, Home, Images, MapPin, MessageCircle,
+  Music2, Settings, ShieldAlert, Sparkles, Star, LogOut, X
 } from 'lucide-react'
 import scenesData from '../data/scenes.json'
 import { signOut as supabaseSignOut, isSupabaseAuthenticated } from '../services/supabaseAuthService'
@@ -10,25 +11,25 @@ import { isRemoteContentEnabled } from '../integrations/supabase/client'
 const SCENE_STORAGE_KEY = 'distancia-cero-active-scene'
 const CENTRO_VISIBLE_KEY = 'distancia-cero-centro-visible'
 
-const iconMap = {
+const iconMap: Record<string, any> = {
   inicio: Home,
   universo: Sparkles,
-  historia: BookHeart,
-  galeria: Compass,
+  historia: Clock,
+  galeria: Images,
   razones: Heart,
-  cartas: BookHeart,
+  cartas: MessageCircle,
   musica: Music2,
-  promesas: Heart,
-  distancia: Compass,
+  promesas: Star,
+  distancia: MapPin,
   'centro-universo': ShieldAlert
 }
 
-function getInitialSceneId(scenes) {
-  const hash = window.location.hash.replace('#/', '').replace('#', '').trim()
+function getInitialSceneId(scenes: any[], hash: string) {
+  const cleanHash = hash.replace('#/', '').replace('#', '').trim()
   const stored = _sG(SCENE_STORAGE_KEY)
-  if (hash && scenes.some((s) => s.id === hash && s.id !== 'centro-universo')) return hash
-  if (stored && scenes.some((s) => s.id === stored && s.id !== 'centro-universo')) return stored
-  return scenes.find((s) => s.id !== 'centro-universo')?.id || 'inicio'
+  if (cleanHash && scenes.some((s: any) => s.id === cleanHash && s.id !== 'centro-universo')) return cleanHash
+  if (stored && scenes.some((s: any) => s.id === stored && s.id !== 'centro-universo')) return stored
+  return scenes.find((s: any) => s.id !== 'centro-universo')?.id || 'inicio'
 }
 
 function getSectionElements() {
@@ -39,10 +40,13 @@ const _sG = (k: string) => { try { return localStorage.getItem(k) } catch { retu
 const _sS = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* degraded */ } }
 
 function SceneModeController() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const scenes = useMemo(() => Array.isArray(scenesData) ? scenesData : [], [])
   // Filter out centro-universo from main navigation
-  const navScenes = useMemo(() => scenes.filter((s) => s.id !== 'centro-universo'), [scenes])
-  const [activeSceneId, setActiveSceneId] = useState(() => getInitialSceneId(scenes))
+  const navScenes = useMemo(() => scenes.filter((s: any) => s.id !== 'centro-universo'), [scenes])
+  const [activeSceneId, setActiveSceneId] = useState(() => getInitialSceneId(scenes, location.hash))
   const [navPulse, setNavPulse] = useState(false)
   const [navDirection, setNavDirection] = useState('next')
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -87,16 +91,11 @@ function SceneModeController() {
     }
   }, [])
 
-  // Hash change listener
+  // Hash change via react-router location
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#/', '').replace('#', '').trim()
-      if (hash && navScenes.some((s) => s.id === hash)) setActiveSceneId(hash)
-    }
-    window.addEventListener('hashchange', handleHashChange)
-    handleHashChange()
-    return () => window.removeEventListener('hashchange', handleHashChange)
-  }, [navScenes])
+    const hash = location.hash.replace('#/', '').replace('#', '').trim()
+    if (hash && navScenes.some((s: any) => s.id === hash)) setActiveSceneId(hash)
+  }, [location.hash, navScenes])
 
   // Scene change effect
   useEffect(() => {
@@ -109,8 +108,8 @@ function SceneModeController() {
     const allSections = getSectionElements()
     _sS(SCENE_STORAGE_KEY, activeScene.id)
 
-    if (window.location.hash !== `#/${activeScene.id}`) {
-      window.history.replaceState(null, '', `#/${activeScene.id}`)
+    if (location.hash !== `#/${activeScene.id}`) {
+      navigate(`#/${activeScene.id}`, { replace: true })
     }
 
     allSections.forEach((el) => {

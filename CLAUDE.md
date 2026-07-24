@@ -10,7 +10,7 @@
 |---|---|
 | Framework | React 19 (TSX) |
 | Build | Vite 8 (`vite.config.js`, base: `/DistanciaCero/`) |
-| Router | react-router-dom v7 (instalado, sin activar) |
+| Router | react-router-dom v7 (activado: `/` landing, `/app` experiencia, hash scenes) |
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
 | Backend | Supabase (preparado, **NO activado**) |
 | Datos locales | JSON (`src/data/`) + localStorage |

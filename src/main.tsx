@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
-import App from './App.jsx'
+import App from './App'
 import PublicLanding from './components/PublicLanding'
-import { AudioProvider } from './context/AudioContext.jsx'
+import { AudioProvider } from './context/AudioContext'
 
 import './styles/tailwind.css'
 
@@ -39,7 +39,7 @@ function AppRoutes() {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter basename={import.meta.env.VITE_BASE || '/'}>
       <AppRoutes />
