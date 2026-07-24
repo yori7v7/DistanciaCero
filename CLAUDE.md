@@ -9,7 +9,7 @@
 | Capa | Tecnología |
 |---|---|
 | Framework | React 19 (TSX) |
-| Build | Vite 8 (`vite.config.js`, base: `/DistanciaCero/`) |
+| Build | Vite 8 (`vite.config.ts`, base: `/DistanciaCero/`) |
 | Router | react-router-dom v7 (activado: `/` landing, `/app` experiencia, hash scenes) |
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
 | Backend | Supabase (preparado, **NO activado**) |
@@ -180,7 +180,7 @@ npm run test:watch       # Tests en modo watch
 
 ## CSS
 
-- **1 archivo**: `src/styles/tailwind.css` (8,507 líneas, 96 `!important`)
+- **1 archivo**: `src/styles/tailwind.css` (7,680 líneas, 81 `!important`)
 - Tailwind CSS v4 con plugin `@tailwindcss/vite`
 - Design tokens en bloque `@theme` (colores, sombras, radios, fuentes)
 - Secciones merged: `clay-3d.css`, `global.css`, `blackhole-gallery.css`, etc.
