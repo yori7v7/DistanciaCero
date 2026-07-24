@@ -64,13 +64,13 @@ function Hero() {
 
         {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-          <a href="#carta" className="btn-primary">
+          <a href="#carta" className="main-button">
             {siteConfig.hero.primaryButton}
             <Heart size={18} />
           </a>
           <button
             onClick={toggleBackground}
-            className="btn-ghost"
+            className="ghost-button"
             title={backgroundPlaying ? 'Pausar música' : 'Activar música'}
             aria-label={backgroundPlaying ? 'Pausar música de fondo' : 'Activar música de fondo'}
           >
