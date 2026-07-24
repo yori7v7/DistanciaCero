@@ -17,7 +17,7 @@
 | Estilos | Tailwind CSS v4 (1 archivo: `src/styles/tailwind.css`) |
 | Deploy | GitHub Pages (`gh-pages -d dist`) |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (154 tests, 10 archivos) |
+| Tests | Vitest + @testing-library/react (162 tests, 11 archivos) |
 | CI/CD | GitHub Actions (tsc + build + test) |
 
 ## Estructura clave
@@ -180,7 +180,7 @@ npm run test:watch       # Tests en modo watch
 
 ## CSS
 
-- **1 archivo**: `src/styles/tailwind.css` (7,680 líneas, 81 `!important`)
+- **1 archivo**: `src/styles/tailwind.css` (7,161 líneas, 81 `!important`)
 - Tailwind CSS v4 con plugin `@tailwindcss/vite`
 - Design tokens en bloque `@theme` (colores, sombras, radios, fuentes)
 - Secciones merged: `clay-3d.css`, `global.css`, `blackhole-gallery.css`, etc.
@@ -217,5 +217,5 @@ El proyecto tiene **~50 documentos** detallando la migración a Supabase. Ya com
 - `siteConfig.json` tiene las contraseñas, nombres, fechas y config de audio
 - La `GUIA_PARA_EDITAR.md` explica cómo editar cada sección sin tocar código
 - Los docs en `docs/` y `docs/supabase/` son la fuente de verdad para el plan de migración
-- La rama activa es `arquitectura-content-service` (14 commits de refactor)
+- La rama activa es `arquitectura-content-service` (83 commits de refactor)
 - Memoria del proyecto en `C:\Users\dycs1\.claude\projects\C--Users-dycs1-Downloads-DistanciaCero\memory\`
