@@ -316,6 +316,9 @@ function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked }) {
               src={item.image}
               alt={item.alt || item.title}
               draggable="false"
+              loading="lazy"
+              width="200"
+              height="200"
               onError={(event) => {
                 event.currentTarget.style.display = 'none'
               }}
@@ -584,7 +587,7 @@ function BlackHoleGallerySection({ items = [] }) {
           <div className="portal-layout">
             <div className="portal-preview">
               {activeItem?.image ? (
-                <img src={activeItem.image as string} alt={(activeItem.alt || activeItem.title) as string} draggable="false" />
+                <img src={activeItem.image as string} alt={(activeItem.alt || activeItem.title) as string} draggable="false" width="400" height="300" />
               ) : (
                 <div className="portal-placeholder">
                   <ImageIcon size={42} />
@@ -615,7 +618,7 @@ function BlackHoleGallerySection({ items = [] }) {
               >
                 <div className="blackhole-photo-thumb">
                   {item.image ? (
-                    <img src={item.image} alt={item.alt || item.title} draggable="false" />
+                    <img src={item.image} alt={item.alt || item.title} draggable="false" loading="lazy" width="120" height="120" />
                   ) : (
                     <ImageIcon size={24} />
                   )}

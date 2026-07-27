@@ -156,7 +156,7 @@ html {
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 4px 0 rgba(160, 20, 60, 0.2), 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .clay-button:active {
     top: 3px;
@@ -1071,6 +1071,11 @@ html {
   outline: none;
   cursor: pointer;
 }
+.scene-music-progress input:focus-visible,
+.scene-music-volume input:focus-visible {
+  outline: 2px solid rgba(255, 122, 200, 0.6);
+  outline-offset: 2px;
+}
 
 .scene-music-progress input {
   background:
@@ -1251,7 +1256,7 @@ body.scene-mode-enabled section.hero {
   letter-spacing: 0.3px;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   flex-shrink: 0;
 }
 
@@ -1299,7 +1304,7 @@ body.scene-mode-enabled section.hero {
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.22s ease;
+  transition: transform 0.22s ease, opacity 0.22s ease, color 0.22s ease;
   flex: 0 0 auto;
 }
 
@@ -1337,7 +1342,7 @@ body.scene-mode-enabled section.hero {
   background: rgba(255, 122, 200, 0.07);
   color: var(--pink-soft);
   cursor: pointer;
-  transition: all 0.22s ease;
+  transition: transform 0.22s ease, opacity 0.22s ease, color 0.22s ease;
 }
 
 .scene-nav-arrow:hover {
@@ -1365,7 +1370,7 @@ body.scene-mode-enabled section.hero {
   background: rgba(255, 255, 255, 0.05);
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .scene-settings-gear:hover,
@@ -2114,7 +2119,7 @@ body.scene-mode-enabled section.hero {
     0 4px 0 rgba(0, 0, 0, 0.3),
     0 6px 14px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   top: 0;
 }
@@ -2159,7 +2164,7 @@ body.scene-mode-enabled section.hero {
     0 8px 18px rgba(0, 0, 0, 0.4),
     0 0 16px rgba(255, 122, 200, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scene-nav-arrow:hover,
@@ -2195,7 +2200,7 @@ body.scene-mode-enabled section.hero {
   padding: 10px 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.12s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease, color 0.12s ease;
 }
 .scene-settings-item:hover {
   background: rgba(255, 122, 200, 0.12);
@@ -2220,7 +2225,7 @@ button.submit-btn {
     0 10px 28px rgba(0, 0, 0, 0.5),
     0 0 30px rgba(255, 122, 200, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   top: 0;
 }
@@ -2344,7 +2349,7 @@ button.submit-btn:active {
     0 3px 0 rgba(80, 10, 40, 0.25),
     0 6px 14px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   top: 0;
 }
@@ -2406,7 +2411,7 @@ section.blackhole-section {
     0 14px 38px rgba(0, 0, 0, 0.42),
     0 0 25px rgba(255, 122, 200, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   top: 0;
   overflow: hidden;
@@ -2535,7 +2540,7 @@ section.blackhole-section {
     0 3px 0 rgba(100, 10, 50, 0.25),
     0 5px 12px rgba(0, 0, 0, 0.3),
     0 0 12px rgba(255, 122, 200, 0.1);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .scene-music-button:hover {
   transform: translateY(-2px);
@@ -2559,7 +2564,7 @@ input, textarea, select {
   box-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.5),
     0 1px 0 rgba(255, 255, 255, 0.03);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 input:focus, textarea:focus, select:focus {
   border-color: rgba(255, 122, 200, 0.5);
@@ -2582,7 +2587,7 @@ input:focus, textarea:focus, select:focus {
     0 4px 0 rgba(100, 10, 50, 0.3),
     0 10px 26px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(255, 122, 200, 0.12);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .back-to-top:hover {
   transform: translateY(-2px);
@@ -2606,7 +2611,7 @@ input:focus, textarea:focus, select:focus {
     0 3px 0 rgba(80, 10, 40, 0.2),
     0 8px 18px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
 .playlist-row:hover,
@@ -2637,7 +2642,7 @@ input:focus, textarea:focus, select:focus {
     0 3px 0 rgba(0, 0, 0, 0.25),
     0 5px 10px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -2682,7 +2687,7 @@ input:focus, textarea:focus, select:focus {
     0 4px 0 rgba(100, 10, 50, 0.25),
     0 6px 14px rgba(0, 0, 0, 0.35),
     0 0 16px rgba(255, 122, 200, 0.1);
-  transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hero-music-toggle:hover {
   transform: translateY(-2px);
@@ -2706,7 +2711,7 @@ input:focus, textarea:focus, select:focus {
   box-shadow:
     0 3px 0 rgba(100, 10, 50, 0.25),
     0 4px 10px rgba(0, 0, 0, 0.35);
-  transition: all 0.12s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease, color 0.12s ease;
 }
 
 /* === merged: global.css === */
@@ -2880,7 +2885,7 @@ input {
   background: rgba(255, 255, 255, 0.05);
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   margin-left: 8px;
 }
 
@@ -3242,7 +3247,7 @@ input {
   color: #fca5a5;
   cursor: pointer;
   opacity: 0;
-  transition: all 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s, color 0.2s;
   flex-shrink: 0;
 }
 
@@ -4072,7 +4077,7 @@ input {
   color: var(--muted);
   font-size: 0.82rem;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .hero-music-toggle:hover {
@@ -4359,7 +4364,7 @@ input {
     0 30px 70px rgba(0, 0, 0, 0.8),
     0 0 50px rgba(255, 46, 147, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
 }
@@ -4505,7 +4510,7 @@ input {
   border: 1px solid rgba(255, 46, 147, 0.3);
   color: #ffe0ef;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: 10px;
   position: relative;
   z-index: 2;
@@ -4815,7 +4820,7 @@ input {
   backdrop-filter: blur(15px);
   padding: 28px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   text-align: left;
 }
 
@@ -4906,7 +4911,7 @@ input {
   padding: 14px 28px;
   border-radius: 999px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   font-size: 0.95rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
@@ -5728,6 +5733,12 @@ input {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   resize: vertical;
 }
+.editor-field select:focus-visible,
+.editor-field textarea:focus-visible {
+  outline: 2px solid rgba(255, 122, 200, 0.5);
+  outline-offset: 2px;
+}
+}
 
 .editor-field input:focus,
 .editor-field select:focus,
@@ -5932,7 +5943,7 @@ button.submit-btn:hover {
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
 .action-icon-btn.edit {
