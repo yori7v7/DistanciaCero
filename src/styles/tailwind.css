@@ -2249,6 +2249,18 @@ button.submit-btn:active {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+.main-button:disabled,
+.main-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow:
+    0 2px 0 rgba(160, 20, 60, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
 /* Hero CTA — bigger, brighter */
 .hero-actions .main-button {
   border-radius: 20px;
