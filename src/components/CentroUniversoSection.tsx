@@ -268,7 +268,7 @@ function CentroUniversoSection() {
     localMonthly.filter((l: any) => isMonthlyLetterOpened(l.id)).length
   const unlockedMonthly = activeBaseMonthly.filter((l: any) => !l.locked).length +
     localMonthly.filter((l: any) => !l.locked).length
-  const lockedMonthly = activeBaseMonthly.length - activeBaseMonthly.filter((l: any) => !l.locked).length
+  const lockedMonthly = totalMonthly - unlockedMonthly
 
   const totalOpenWhen = activeBaseOpenWhen.length + localOpenWhen.length
   const openedOpenWhen = activeBaseOpenWhen.filter((c: any) => isOpenWhenLetterOpened(c.id)).length +

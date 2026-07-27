@@ -150,7 +150,11 @@ export function mergeCollectionWithLocal(defaultItems: ContentItem[], collection
 }
 
 export function getLegacyMonthlyLetters(): ContentItem[] {
-  return safeReadJsonArray(LEGACY_MONTHLY_LETTERS_KEY)
+  const legacy = safeReadJsonArray(LEGACY_MONTHLY_LETTERS_KEY)
+  const standard = getLocalItems('monthlyLetters')
+  const standardIds = new Set(standard.map(item => String(item.id)))
+  const legacyUnmerged = legacy.filter(item => !standardIds.has(String(item.id)))
+  return [...standard, ...legacyUnmerged]
 }
 
 export function saveLegacyMonthlyLetters(items: ContentItem[]): ContentItem[] {
@@ -158,7 +162,11 @@ export function saveLegacyMonthlyLetters(items: ContentItem[]): ContentItem[] {
 }
 
 export function getLegacyOpenWhenLetters(): ContentItem[] {
-  return safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
+  const legacy = safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
+  const standard = getLocalItems('openWhenLetters')
+  const standardIds = new Set(standard.map(item => String(item.id)))
+  const legacyUnmerged = legacy.filter(item => !standardIds.has(String(item.id)))
+  return [...standard, ...legacyUnmerged]
 }
 
 export function saveLegacyOpenWhenLetters(items: ContentItem[]): ContentItem[] {
@@ -229,10 +237,10 @@ export function migrateLegacyLettersIfNeeded(): boolean {
   const openWhenLetters = safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
 
   if (monthlyLetters.length > 0) {
-    saveLocalItems('monthlyLetters', monthlyLetters)
+    saveLocalItems('monthlyLetters', monthlyLetters.map(item => ({ ...item, isLocal: true })))
   }
   if (openWhenLetters.length > 0) {
-    saveLocalItems('openWhenLetters', openWhenLetters)
+    saveLocalItems('openWhenLetters', openWhenLetters.map(item => ({ ...item, isLocal: true })))
   }
 
   safeSetItem(LEGACY_MIGRATED_KEY, '1')

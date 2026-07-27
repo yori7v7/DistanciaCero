@@ -5,7 +5,9 @@ import { getProfileById } from './profileService'
 import { isSupabaseAuthenticated, getSupabaseSession, getSupabaseUserId } from './supabaseAuthService'
 
 function getDefaultUser(): LocalUser {
-  return getProfileById(DEFAULT_LOCAL_USER_ID)!
+  const user = getProfileById(DEFAULT_LOCAL_USER_ID)
+  if (!user) throw new Error(`Default local user '${DEFAULT_LOCAL_USER_ID}' not found in LOCAL_USERS`)
+  return user
 }
 
 export function getCurrentUserId(): string {

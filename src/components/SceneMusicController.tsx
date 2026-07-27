@@ -246,7 +246,7 @@ function SceneMusicController() {
       setIsUnlocked(true)
     }
 
-    if (!Number.isNaN(storedVolume) && storedVolume >= 0 && storedVolume <= 1) {
+    if (storedVolumeRaw !== null && !Number.isNaN(storedVolume) && storedVolume >= 0 && storedVolume <= 1) {
       setMasterVolume(storedVolume)
       masterVolumeRef.current = storedVolume
     } else {

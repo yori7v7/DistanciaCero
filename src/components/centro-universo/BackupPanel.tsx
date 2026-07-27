@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Download, Upload, AlertTriangle } from 'lucide-react'
 import {
   getLegacyMonthlyLetters,
@@ -28,6 +28,7 @@ import { isPlainObject } from '../../utils/helpers'
 
 export default function BackupPanel() {
   const [backupStatus, setBackupStatus] = useState<BackupStatus | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleExport = () => {
     const exportData = {
@@ -133,6 +134,11 @@ export default function BackupPanel() {
         // Restaurar contenido
         if (Array.isArray(content.monthlyLetters)) saveLegacyMonthlyLetters(content.monthlyLetters)
         if (Array.isArray(content.openWhenLetters)) saveLegacyOpenWhenLetters(content.openWhenLetters)
+        // Restaurar overrides y hidden de letters (no incluidos en COLLECTIONS)
+        if (isPlainObject(overrides?.monthlyLetters)) saveCollectionOverrides('monthlyLetters', overrides.monthlyLetters as any)
+        if (Array.isArray(hidden?.monthlyLetters)) saveCollectionHiddenIds('monthlyLetters', hidden.monthlyLetters)
+        if (isPlainObject(overrides?.openWhenLetters)) saveCollectionOverrides('openWhenLetters', overrides.openWhenLetters as any)
+        if (Array.isArray(hidden?.openWhenLetters)) saveCollectionHiddenIds('openWhenLetters', hidden.openWhenLetters)
 
         for (const col of COLLECTIONS) {
           if (Array.isArray(content?.[col])) saveCollectionItems(col, content[col])
@@ -144,7 +150,13 @@ export default function BackupPanel() {
         setBackupStatus({ type: 'success', text: 'Respaldo restaurado. Recarga la página para ver los cambios.' })
       } catch {
         setBackupStatus({ type: 'error', text: 'El archivo no es un JSON válido.' })
+      } finally {
+        if (fileInputRef.current) fileInputRef.current.value = ''
       }
+    }
+    reader.onerror = () => {
+      setBackupStatus({ type: 'error', text: 'No se pudo abrir el archivo seleccionado.' })
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
     reader.readAsText(file)
   }
@@ -161,6 +173,7 @@ export default function BackupPanel() {
         <label className="control-btn">
           <Upload size={16} /> Importar respaldo
           <input
+            ref={fileInputRef}
             type="file"
             accept=".json,application/json"
             style={{ display: 'none' }}

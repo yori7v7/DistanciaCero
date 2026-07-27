@@ -174,6 +174,7 @@ export default function useCrudCollection(
   const handleSubmit = (event: React.FormEvent): CrudFormSubmitResult => {
     event.preventDefault()
     const item = buildLocalItem()
+    if (editingId) delete (item as any).createdAt
     const updated = editingId
       ? updateCollectionItem(collectionName, editingId, { ...item, updatedAt: new Date().toISOString() })
       : addCollectionItem(collectionName, item)

@@ -75,7 +75,8 @@ export function addCollectionItem(collectionName: string, item: ContentItem): Co
 
 export function updateCollectionItem(collectionName: string, id: string, patch: Partial<ContentItem>): ContentItem[] {
   const result = contentRepository.updateCollectionItem(collectionName, id, patch)
-  syncUpdate(collectionName, id, patch)
+  const item = result.find(i => String(i.id) === String(id))
+  if (item?.isLocal) syncUpdate(collectionName, id, patch)
   return result
 }
 

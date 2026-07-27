@@ -134,8 +134,8 @@ export async function pullFromSupabase(): Promise<{ synced: number; error: strin
           id: item.base_id,
           _supabaseId: item.id
         }
-      } else if (item.kind === 'hidden') {
-        hiddenIds[col].push(item.base_id!)
+      } else if (item.kind === 'hidden' && item.base_id != null) {
+        hiddenIds[col].push(item.base_id)
       }
     }
 
@@ -220,7 +220,7 @@ export async function pushCreateToSupabase(collection: string, item: ContentItem
   const userId = getSupabaseUserId()
 
   try {
-    const { error } = await client.from('content_items').insert({
+    const { error, data } = await client.from('content_items').insert({
       space_id: spaceId,
       collection,
       local_id: String(item.id),
@@ -234,6 +234,9 @@ export async function pushCreateToSupabase(collection: string, item: ContentItem
 
     if (error) {
       console.warn('[sync] pushCreate failed:', error.message)
+    } else if (data && (data as any[]).length > 0 && (data as any[])[0]?.id) {
+      // Save the Supabase-generated ID back to the local item so updates don't create duplicates
+      localContentRepository.updateCollectionItem(collection, String(item.id), { _supabaseId: (data as any[])[0].id } as any)
     }
   } catch (err) {
     console.warn('[sync] pushCreate error:', (err as Error).message)
