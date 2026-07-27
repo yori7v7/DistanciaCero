@@ -1,0 +1,99 @@
+<!-- @dsCard group="Tokens" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typography — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #060010;
+    color: #fff5fa;
+    padding: 40px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 24px;
+    color: #ff8ad4;
+  }
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    margin: 28px 0 12px;
+  }
+  .type-row {
+    display: flex; align-items: baseline; gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .type-label {
+    font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.35);
+    min-width: 90px; text-align: right;
+  }
+  .type-preview { flex: 1; }
+  .type-spec {
+    font-size: 0.65rem; color: rgba(255,255,255,0.25); min-width: 120px;
+  }
+</style>
+</head>
+<body>
+
+<h2>🔤 Typography</h2>
+
+<h3>Font Families</h3>
+<div class="type-row">
+  <span class="type-label">Display</span>
+  <span class="type-preview" style="font-family:'Playfair Display',serif; font-size:2rem; font-weight:900;">Playfair Display</span>
+  <span class="type-spec">Headings, titles</span>
+</div>
+<div class="type-row">
+  <span class="type-label">Body</span>
+  <span class="type-preview" style="font-family:'Inter',sans-serif; font-size:1.2rem; font-weight:500;">Inter</span>
+  <span class="type-spec">Body text, UI</span>
+</div>
+
+<h3>Heading Scale (Playfair Display)</h3>
+<div class="type-row">
+  <span class="type-label">Hero h1</span>
+  <span class="type-preview" style="font-family:'Playfair Display',serif; font-size:clamp(2.8rem,8vw,5rem); font-weight:900; line-height:1.05;">Para ti, Nombre</span>
+  <span class="type-spec">900 black, tight</span>
+</div>
+<div class="type-row">
+  <span class="type-label">Section h2</span>
+  <span class="type-preview" style="font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:900;">Sección título</span>
+  <span class="type-spec">900 black</span>
+</div>
+<div class="type-row">
+  <span class="type-label">Card h3</span>
+  <span class="type-preview" style="font-family:'Playfair Display',serif; font-size:1.18rem; font-weight:800;">Nombre del item</span>
+  <span class="type-spec">800 extrabold</span>
+</div>
+
+<h3>Body Scale (Inter)</h3>
+<div class="type-row">
+  <span class="type-label">Lead</span>
+  <span class="type-preview" style="font-family:'Inter',sans-serif; font-size:1.125rem; color:#d4b8c8;">El universo digital para dos personas.</span>
+  <span class="type-spec">18px, muted</span>
+</div>
+<div class="type-row">
+  <span class="type-label">Body</span>
+  <span class="type-preview" style="font-family:'Inter',sans-serif; font-size:1rem;">Texto principal del cuerpo, legible y limpio.</span>
+  <span class="type-spec">16px, regular</span>
+</div>
+<div class="type-row">
+  <span class="type-label">Caption</span>
+  <span class="type-preview" style="font-family:'Inter',sans-serif; font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#ff8ad4;">ETIQUETA SUPERIOR</span>
+  <span class="type-spec">12px, 800, caps</span>
+</div>
+
+</body>
+</html>

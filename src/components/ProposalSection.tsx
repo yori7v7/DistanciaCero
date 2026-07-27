@@ -121,10 +121,7 @@ function ProposalSection() {
               {proposal.question}
             </div>
 
-            <div className="inline-block px-6 py-3 rounded-full bg-[rgba(255,122,200,0.08)]
-              border border-[rgba(255,122,200,0.2)] text-pink-soft font-semibold text-sm mb-8">
-              {countdownText}
-            </div>
+            <div className="soft-badge mb-8">{countdownText}</div>
 
             <div className="flex flex-wrap justify-center gap-4">
               <button className="main-button flex items-center gap-2" onClick={handleYes}>
@@ -158,10 +155,7 @@ function ProposalSection() {
             <h2 className="font-display text-[clamp(2rem,5vw,2.8rem)] mb-4">Entonces lo hablamos bonito</h2>
             <p className="text-muted mb-6 leading-relaxed">{proposal.talkMessage}</p>
 
-            <div className="inline-block px-6 py-3 rounded-full bg-[rgba(255,122,200,0.08)]
-              border border-[rgba(255,122,200,0.2)] text-pink-soft font-semibold text-sm mb-8">
-              El universo seguirá esperando aquí, sin desbloquearse todavía.
-            </div>
+            <div className="soft-badge mb-8">El universo seguirá esperando aquí, sin desbloquearse todavía.</div>
 
             <div className="flex flex-wrap justify-center gap-4">
               <button className="main-button flex items-center gap-2" onClick={handleYes}>

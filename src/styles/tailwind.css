@@ -78,8 +78,33 @@ html {
     text-shadow: 0 0 18px rgba(255, 138, 212, 0.35);
   }
 
+  /* Soft badge — larger, non-uppercase pill variant */
+  .soft-badge {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 999px;
+    background: rgba(255, 138, 212, 0.08);
+    border: 1px solid rgba(255, 138, 212, 0.2);
+    color: var(--color-pink-soft);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
   /* Pill badge */
   .pill {
+
+  /* Error alert — inline validation message */
+  .error-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 45, 85, 0.1);
+    border: 1px solid rgba(255, 45, 85, 0.25);
+    color: var(--color-red);
+    font-size: 0.875rem;
+  }
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -2948,39 +2973,7 @@ input {
   animation: pulseHeart 1.8s infinite;
 }
 
-.main-button,
-.ghost-button,
-.secret-form button {
-  border: 0;
-  cursor: pointer;
-  border-radius: 999px;
-  padding: 14px 28px;
-  font-weight: 800;
-  font-size: 0.95rem;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.main-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, var(--pink), var(--red));
-  color: white;
-  border-radius: 20px;
-  box-shadow: var(--clay-shadow-3d), var(--clay-highlight);
-  position: relative;
-  top: 0;
-}
-
-.main-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 0 rgba(160, 20, 60, 0.2), 0 14px 28px rgba(0, 0, 0, 0.4), var(--clay-highlight);
-}
-
-.main-button:active {
-  transform: translateY(3px);
-  box-shadow: var(--clay-pressed);
-}
+/* ⸻ main-button consolidated at line ~2182 */
 
 .section-title {
   max-width: 760px;
@@ -3175,21 +3168,7 @@ input {
   opacity: 0.72;
 }
 
-.ghost-button,
-.link-button {
-  display: inline-flex;
-  margin-top: 18px;
-  background: rgba(255, 122, 200, 0.1);
-  color: var(--pink-soft);
-  border: 1px solid var(--border);
-}
-
-.ghost-button:hover,
-.link-button:hover {
-  background: rgba(255, 23, 68, 0.18);
-  color: white;
-  transform: translateY(-2px);
-}
+/* ⸻ ghost-button consolidated at line ~2310 */
 
 .message-layout {
   display: grid;

@@ -132,17 +132,14 @@ function AuthGate({ children, onReady }: AuthGateProps) {
   if (verified) {
     return (
       <AuthBackground>
-        <div className="w-full max-w-md mx-4 rounded-[36px] p-10 text-center
-          border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
-          shadow-[0_0_60px_rgba(255,122,200,0.12)]">
+        <div className="glass-card w-full max-w-md mx-4 rounded-[36px] p-10 text-center
+          !bg-[rgba(12,0,18,0.82)] !shadow-[0_0_60px_rgba(255,122,200,0.12)]">
           <div className="mb-8">
             <div className="text-5xl mb-4">💖</div>
             <h1 className="font-display text-3xl font-black mb-3 text-white-soft">¡Email verificado!</h1>
             <p className="text-muted">Tu cuenta fue confirmada. Inicia sesión para entrar.</p>
           </div>
-          <button className="w-full py-3.5 rounded-full font-bold text-white
-            bg-gradient-to-r from-pink to-red shadow-[0_0_25px_rgba(255,122,200,0.25)]
-            hover:shadow-[0_0_40px_rgba(255,122,200,0.4)] transition-shadow flex items-center justify-center gap-2"
+          <button className="main-button w-full !rounded-full !py-3.5"
             onClick={() => { setVerified(false); setMode('login') }}>
             <LogIn size={18} /> Iniciar sesión
           </button>
@@ -155,9 +152,8 @@ function AuthGate({ children, onReady }: AuthGateProps) {
   if (mode === 'confirm') {
     return (
       <AuthBackground>
-        <div className="w-full max-w-md mx-4 rounded-[36px] p-10 text-center
-          border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
-          shadow-[0_0_60px_rgba(255,122,200,0.12)]">
+        <div className="glass-card w-full max-w-md mx-4 rounded-[36px] p-10 text-center
+          !bg-[rgba(12,0,18,0.82)] !shadow-[0_0_60px_rgba(255,122,200,0.12)]">
           <div className="mb-8">
             <Heart className="text-pink mx-auto mb-4" size={40} />
             <h1 className="font-display text-3xl font-black mb-3 text-white-soft">¡Revisa tu correo!</h1>
@@ -166,9 +162,7 @@ function AuthGate({ children, onReady }: AuthGateProps) {
               Haz click en el enlace y luego inicia sesión.
             </p>
           </div>
-          <button className="w-full py-3.5 rounded-full font-bold text-white
-            bg-gradient-to-r from-pink to-red shadow-[0_0_25px_rgba(255,122,200,0.25)]
-            hover:shadow-[0_0_40px_rgba(255,122,200,0.4)] transition-shadow flex items-center justify-center gap-2"
+          <button className="main-button w-full !rounded-full !py-3.5"
             onClick={() => setMode('login')}>
             <LogIn size={18} /> Ir al inicio de sesión
           </button>
@@ -220,9 +214,8 @@ function AuthGate({ children, onReady }: AuthGateProps) {
   }
 
   // Login/Signup form card
-  const cardClasses = `w-full max-w-md mx-4 rounded-[36px] p-10 text-center
-    border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
-    shadow-[0_24px_48px_rgba(0,0,0,0.4),0_0_60px_rgba(255,122,200,0.1)]
+  const cardClasses = `glass-card w-full max-w-md mx-4 rounded-[36px] p-10 text-center
+    !bg-[rgba(12,0,18,0.82)] !shadow-[0_24px_48px_rgba(0,0,0,0.4),0_0_60px_rgba(255,122,200,0.1)]
     animate-[authCardIn_0.5s_ease_both]`
 
   const inputClasses = `w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[rgba(255,255,255,0.05)]
@@ -275,15 +268,12 @@ function AuthGate({ children, onReady }: AuthGateProps) {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-[rgba(255,45,85,0.1)] border border-[rgba(255,45,85,0.25)] text-red text-sm">
+            <div className="error-alert">
               <AlertCircle size={16} /><span>{error}</span>
             </div>
           )}
 
-          <button className="w-full py-3.5 mt-2 rounded-full font-bold text-white
-            bg-gradient-to-r from-pink to-red shadow-[0_0_25px_rgba(255,122,200,0.25)]
-            hover:shadow-[0_0_40px_rgba(255,122,200,0.4)] transition-shadow
-            flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+          <button className="main-button w-full !rounded-full !py-3.5 mt-2"
             type="submit" disabled={busy}>
             {busy ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

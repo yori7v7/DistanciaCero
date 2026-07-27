@@ -1,0 +1,136 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Main Button — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: radial-gradient(circle at center, rgba(255,122,200,0.12), transparent 30%), #060010;
+    color: #fff5fa;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 28px;
+    color: #ff8ad4;
+    text-align: center;
+  }
+  p.sub {
+    color: #d4b8c8; font-size: 0.85rem; text-align: center; margin-bottom: 32px;
+  }
+
+  .main-button {
+    border-radius: 16px;
+    padding: 14px 28px;
+    font-weight: 800;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    border: 1.5px solid rgba(255, 122, 200, 0.4);
+    background: linear-gradient(135deg, rgba(255, 122, 200, 0.3), rgba(255, 45, 85, 0.22));
+    color: #fff;
+    cursor: pointer;
+    box-shadow:
+      0 5px 0 rgba(160, 20, 60, 0.35),
+      0 10px 28px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(255, 122, 200, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    top: 0;
+    user-select: none;
+  }
+  .main-button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, rgba(255, 122, 200, 0.4), rgba(255, 45, 85, 0.3));
+    border-color: rgba(255, 122, 200, 0.55);
+    box-shadow:
+      0 7px 0 rgba(160, 20, 60, 0.3),
+      0 14px 36px rgba(0, 0, 0, 0.55),
+      0 0 45px rgba(255, 122, 200, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+  .main-button:active {
+    transform: translateY(3px);
+    box-shadow:
+      0 2px 0 rgba(160, 20, 60, 0.25),
+      0 4px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .main-button.hero-size {
+    border-radius: 20px;
+    padding: 18px 40px;
+    font-size: 1.1rem;
+    box-shadow:
+      0 8px 0 rgba(160, 20, 60, 0.4),
+      0 18px 44px rgba(0, 0, 0, 0.6),
+      0 0 50px rgba(255, 122, 200, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 122, 200, 0.4);
+  }
+  .main-button.hero-size:hover {
+    box-shadow:
+      0 10px 0 rgba(160, 20, 60, 0.35),
+      0 24px 52px rgba(0, 0, 0, 0.65),
+      0 0 65px rgba(255, 122, 200, 0.45),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .states { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .state-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .state-label {
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.2px; color: rgba(255,255,255,0.35);
+  }
+  .specs {
+    margin-top: 32px; padding: 20px;
+    background: rgba(255,255,255,0.03); border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06); max-width: 600px;
+  }
+  .specs code { display: block; font-size: 0.75rem; color: #d4b8c8; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<h2>🔴 Main Button</h2>
+<p class="sub">Primary CTA — the most used button across the app (~25 instances)</p>
+
+<div class="states">
+  <div class="state-group">
+    <button class="main-button" style="pointer-events:none">♥ Entrar al universo</button>
+    <span class="state-label">Default</span>
+  </div>
+  <div class="state-group">
+    <button class="main-button" style="pointer-events:none; transform:translateY(-2px); background:linear-gradient(135deg, rgba(255,122,200,0.4), rgba(255,45,85,0.3)); border-color:rgba(255,122,200,0.55); box-shadow:0 7px 0 rgba(160,20,60,0.3), 0 14px 36px rgba(0,0,0,0.55), 0 0 45px rgba(255,122,200,0.35), inset 0 1px 0 rgba(255,255,255,0.25);">♥ Entrar al universo</button>
+    <span class="state-label">Hover</span>
+  </div>
+  <div class="state-group">
+    <button class="main-button" style="pointer-events:none; transform:translateY(3px); box-shadow:0 2px 0 rgba(160,20,60,0.25), 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);">♥ Entrar al universo</button>
+    <span class="state-label">Pressed</span>
+  </div>
+</div>
+
+<div style="margin-top: 24px; text-align: center;">
+  <button class="main-button hero-size" style="pointer-events:none">✦ Hero variant</button>
+  <div class="state-label" style="margin-top: 8px;">Hero size (.hero-actions .main-button)</div>
+</div>
+
+<div class="specs">
+  <code>Pink-to-red gradient background</code>
+  <code>border: 1.5px solid rgba(255, 122, 200, 0.4)</code>
+  <code>5px bottom shadow extrusion — 3D clay effect</code>
+  <code>Press: 3px travel, shadow compresses</code>
+  <code>Hero variant: 20px radius, bigger padding, stronger glow</code>
+</div>
+
+</body>
+</html>

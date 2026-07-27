@@ -1,0 +1,90 @@
+<!-- @dsCard group="Tokens" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colors — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #060010;
+    color: #fff5fa;
+    padding: 40px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 24px;
+    color: #ff8ad4;
+  }
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.45);
+    margin: 28px 0 12px;
+  }
+  .swatch-group { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+  .swatch {
+    width: 100px; height: 100px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .swatch:hover { transform: scale(1.08); }
+  .swatch-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.55);
+    margin-top: 6px;
+    text-align: center;
+    max-width: 100px;
+    word-break: break-all;
+  }
+  .swatch-hex {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+    max-width: 100px;
+  }
+</style>
+</head>
+<body>
+
+<h2>🎨 Color Palette</h2>
+
+<h3>Backgrounds</h3>
+<div class="swatch-group">
+  <div><div class="swatch" style="background:#060010"></div><div class="swatch-label">bg-main</div><div class="swatch-hex">#060010</div></div>
+  <div><div class="swatch" style="background:rgba(255,255,255,0.04)"></div><div class="swatch-label">bg-card</div><div class="swatch-hex">rgba(255,255,255,0.04)</div></div>
+  <div><div class="swatch" style="background:rgba(255,255,255,0.07)"></div><div class="swatch-label">bg-card-hover</div><div class="swatch-hex">rgba(255,255,255,0.07)</div></div>
+  <div><div class="swatch" style="background:rgba(12,2,20,0.65)"></div><div class="swatch-label">bg-glass</div><div class="swatch-hex">rgba(12,2,20,0.65)</div></div>
+  <div><div class="swatch" style="background:rgba(18,4,28,0.82)"></div><div class="swatch-label">bg-glass-strong</div><div class="swatch-hex">rgba(18,4,28,0.82)</div></div>
+</div>
+
+<h3>Pink / Red Palette</h3>
+<div class="swatch-group">
+  <div><div class="swatch" style="background:#ff8ad4"></div><div class="swatch-label">pink</div><div class="swatch-hex">#ff8ad4</div></div>
+  <div><div class="swatch" style="background:#ffc4e8"></div><div class="swatch-label">pink-soft</div><div class="swatch-hex">#ffc4e8</div></div>
+  <div><div class="swatch" style="background:rgba(255,138,212,0.25)"></div><div class="swatch-label">pink-glow</div><div class="swatch-hex">rgba(255,138,212,0.25)</div></div>
+  <div><div class="swatch" style="background:#ff2d55"></div><div class="swatch-label">red</div><div class="swatch-hex">#ff2d55</div></div>
+  <div><div class="swatch" style="background:#b30030"></div><div class="swatch-label">red-dark</div><div class="swatch-hex">#b30030</div></div>
+  <div><div class="swatch" style="background:#fff5fa"></div><div class="swatch-label">white-soft</div><div class="swatch-hex">#fff5fa</div></div>
+  <div><div class="swatch" style="background:#d4b8c8"></div><div class="swatch-label">muted</div><div class="swatch-hex">#d4b8c8</div></div>
+</div>
+
+<h3>Borders</h3>
+<div class="swatch-group">
+  <div><div class="swatch" style="background:rgba(255,255,255,0.1)"></div><div class="swatch-label">border</div><div class="swatch-hex">rgba(255,255,255,0.1)</div></div>
+  <div><div class="swatch" style="background:rgba(255,138,212,0.28)"></div><div class="swatch-label">border-glow</div><div class="swatch-hex">rgba(255,138,212,0.28)</div></div>
+</div>
+
+</body>
+</html>

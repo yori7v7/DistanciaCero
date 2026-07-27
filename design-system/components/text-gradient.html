@@ -1,0 +1,88 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Gradient — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #060010;
+    color: #fff5fa;
+    padding: 60px;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 28px;
+    color: #ff8ad4;
+    text-align: center;
+  }
+
+  .text-gradient {
+    color: #ff8ad4;
+    text-shadow: 0 0 18px rgba(255, 138, 212, 0.35);
+  }
+  .text-gradient-strong {
+    color: #ff8ad4;
+    text-shadow:
+      0 0 18px rgba(255, 138, 212, 0.5),
+      0 0 40px rgba(255, 138, 212, 0.2);
+  }
+
+  .variants { display: flex; flex-direction: column; gap: 32px; align-items: center; }
+  .variant-label {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 8px;
+  }
+  .specs {
+    margin-top: 32px;
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    max-width: 550px;
+  }
+  .specs code {
+    display: block;
+    font-size: 0.75rem;
+    color: #d4b8c8;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<h2>✨ Text Gradient</h2>
+
+<div class="variants">
+  <div style="text-align:center">
+    <span style="font-family:'Playfair Display',serif; font-size:3rem; font-weight:900;" class="text-gradient">Para ti, Estrella</span>
+    <div class="variant-label">Default glow</div>
+  </div>
+  <div style="text-align:center">
+    <span style="font-family:'Playfair Display',serif; font-size:3rem; font-weight:900;" class="text-gradient-strong">Te amo</span>
+    <div class="variant-label">Strong glow (double layer)</div>
+  </div>
+</div>
+
+<div class="specs">
+  <code>color: #ff8ad4 — var(--pink)</code>
+  <code>text-shadow: 0 0 18px rgba(255, 138, 212, 0.35)</code>
+  <code>Used for: highlighted names, special headings, romantic emphasis</code>
+  <code>Font: Playfair Display (display), 900 weight</code>
+</div>
+
+</body>
+</html>

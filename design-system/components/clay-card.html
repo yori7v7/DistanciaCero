@@ -1,0 +1,114 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clay Card — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: radial-gradient(circle at 30% 20%, rgba(255,122,200,0.12), transparent 40%), #060010;
+    color: #fff5fa;
+    padding: 60px;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 28px;
+    color: #ff8ad4;
+    text-align: center;
+  }
+
+  .clay-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 28px;
+    max-width: 300px;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .clay-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 0 rgba(160, 20, 60, 0.2),
+      0 10px 20px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+  .clay-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .clay-card p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .variants { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .variant-label {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 12px;
+  }
+  .specs {
+    margin-top: 32px;
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    max-width: 600px;
+  }
+  .specs code {
+    display: block;
+    font-size: 0.75rem;
+    color: #d4b8c8;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<h2>🧱 Clay Card</h2>
+
+<div class="variants">
+  <div>
+    <div class="clay-card">
+      <h3>Misión del día</h3>
+      <p>Tarjeta 3D con efecto "clay" extruido. El borde inferior crea profundidad física.</p>
+    </div>
+    <div class="variant-label">Default</div>
+  </div>
+  <div>
+    <div class="clay-card" style="border-color: rgba(255,138,212,0.28);">
+      <h3>⭐ Misión destacada</h3>
+      <p>Variante con borde rosa glow. Para tarjetas con contenido destacado o interactivo.</p>
+    </div>
+    <div class="variant-label">With glow border</div>
+  </div>
+</div>
+
+<div class="specs">
+  <code>background: rgba(255, 255, 255, 0.04)</code>
+  <code>border: 1.5px solid rgba(255, 255, 255, 0.1)</code>
+  <code>border-radius: 20px — radius-md</code>
+  <code>Hover: translateY(-2px) + shadow extrusion (6px bottom)</code>
+  <code>transition: cubic-bezier(0.16, 1, 0.3, 1)</code>
+</div>
+
+</body>
+</html>

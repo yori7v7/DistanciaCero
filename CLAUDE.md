@@ -1,4 +1,6 @@
-# CLAUDE.md — Distancia Cero
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## ¿Qué es?
 
@@ -9,23 +11,48 @@
 | Capa | Tecnología |
 |---|---|
 | Framework | React 19 (TSX) |
-| Build | Vite 8 (`vite.config.ts`, base: `/DistanciaCero/`) |
-| Router | react-router-dom v7 (activado: `/` landing, `/app` experiencia, hash scenes) |
+| Build | Vite 8 (`vite.config.ts`, base configurable vía `VITE_BASE`) |
+| Router | react-router-dom v7 (`/` landing, `/app` experiencia) |
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
 | Backend | Supabase (preparado, **NO activado**) |
 | Datos locales | JSON (`src/data/`) + localStorage |
 | Estilos | Tailwind CSS v4 (1 archivo: `src/styles/tailwind.css`) |
 | Deploy | GitHub Pages (`gh-pages -d dist`) |
+| PWA | vite-plugin-pwa (manifest, autoUpdate) |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (162 tests, 11 archivos) |
-| CI/CD | GitHub Actions (tsc + build + test) |
+| Tests | Vitest + @testing-library/react (11 archivos, 162 tests) |
+| CI/CD | GitHub Actions: tsc + build + test (Node 22, Ubuntu) |
+
+## Rutas
+
+| Ruta | Componente | Descripción |
+|---|---|---|
+| `/` | `PublicLanding` | Landing pública con botón "Entrar" |
+| `/app` | `App` | Experiencia principal (envuelta en `AudioProvider`) |
+
+`BrowserRouter` usa `basename` de `VITE_BASE` (por defecto `/`, en GitHub Pages `/DistanciaCero/`).
+
+**Reset**: Agregar `?reset=1` a cualquier URL limpia `localStorage`, `sessionStorage` y recarga.
+
+## Comandos
+
+```bash
+npm run dev              # Desarrollo en localhost:5173
+npm run build            # Build producción
+npm run preview          # Preview del build
+npm run deploy           # Deploy a GitHub Pages
+npm test                 # Todos los tests (vitest run)
+npm run test:watch       # Tests en modo watch
+npx vitest run src/__tests__/FileName.test.ts   # Un solo archivo de tests
+npx tsc --noEmit         # TypeScript check (lo mismo que CI)
+```
 
 ## Estructura clave
 
 ```
 src/
 ├── App.tsx                  # Componente raíz, lazy loading + Suspense
-├── main.tsx                 # Entry point, AudioProvider + StrictMode
+├── main.tsx                 # Entry point, BrowserRouter + AudioProvider + StrictMode
 ├── components/              # ~27 componentes React
 │   ├── centro-universo/     # CMS genérico (patrón useCrudCollection)
 │   │   ├── useCrudCollection.ts    # Hook CRUD genérico — 9 colecciones
@@ -46,8 +73,9 @@ src/
 │   ├── timeline.json        # Línea de tiempo de la relación
 │   └── ...                  # Cartas, canciones, razones, misiones, etc.
 ├── services/                # Lógica de negocio (fachada sync)
-│   ├── contentService.js    # CRUD genérico (API pública estable)
-│   ├── authService.js       # Auth local fake (local-user1 / local-user2)
+│   ├── contentService.ts    # CRUD genérico — API pública estable (NO async)
+│   ├── authService.ts       # Auth local fake (local-user1 / local-user2)
+│   ├── supabaseSyncService.ts # Hooks de sync fire-and-forget a Supabase
 │   └── ...
 ├── repositories/            # Acceso a datos
 │   ├── contentRepository.ts      # Re-export de localContentRepository
@@ -55,16 +83,21 @@ src/
 │   ├── remoteContentRepository.ts # Skeleton Supabase (INACTIVO)
 │   └── contentRepositoryContract.ts
 ├── integrations/
-│   └── supabase/client.js   # Factory aislado (validación estricta de env)
+│   └── supabase/client.ts   # Factory aislado (validación estricta de env)
 ├── utils/
 │   ├── helpers.ts           # isPlainObject, dateUtils, textUtils
 │   ├── localContentStore.ts # Bajo nivel localStorage
 │   └── localIdentityStore.ts
 ├── constants/
-│   └── localUsers.ts        # local-user1, local-user2
+│   └── localUsers.ts        # local-user1 (owner), local-user2 (partner)
 ├── types/                   # TypeScript type definitions
+│   ├── content.ts           # ContentItem, CollectionName, ContentRepository, etc.
+│   ├── identity.ts          # LocalUser, RelationshipSpace
+│   ├── audio.ts
+│   └── env.d.ts
+├── __tests__/               # 11 archivos de test (co-localizados con src/)
 └── styles/
-    └── tailwind.css         # Único archivo CSS (8,507 líneas, 96 !important)
+    └── tailwind.css         # Único archivo CSS (~8,500 líneas, design tokens + estilos)
 ```
 
 ## Arquitectura de datos
@@ -73,8 +106,50 @@ src/
 Componentes → contentService → contentRepository → localContentRepository → localContentStore → localStorage
 ```
 
-**Regla**: Los componentes NUNCA importan `localContentStore` directamente.
-**Feature flag**: `VITE_REMOTE_CONTENT_ENABLED=false` (el skeleton remoto está aislado)
+**Regla**: Los componentes NUNCA importan `localContentStore` directamente. Solo `localContentRepository` puede importarlo.
+
+**9 colecciones** soportadas por el CRUD (`CollectionName` en `types/content.ts`):
+`reasons`, `promises`, `importantDates`, `futureDreams`, `timeline`, `blackHoleGallery`, `playlist`, `monthlyLetters`, `openWhenLetters`
+
+### API pública de contentService (sync, estable)
+
+```ts
+// CRUD básico
+getCollectionItems(collectionName: string): ContentItem[]
+saveCollectionItems(collectionName: string, items: ContentItem[]): ContentItem[]
+addCollectionItem(collectionName: string, item: ContentItem): ContentItem[]
+updateCollectionItem(collectionName: string, id: string, patch: Partial<ContentItem>): ContentItem[]
+deleteCollectionItem(collectionName: string, id: string): ContentItem[]
+
+// Overrides (personalizaciones sobre datos base)
+getCollectionOverrides(collectionName: string): OverrideMap
+setCollectionOverride(collectionName: string, id: string, patch: Partial<ContentItem>): OverrideMap
+deleteCollectionOverride(collectionName: string, id: string): OverrideMap
+
+// Hidden (ocultar/mostrar items)
+getCollectionHiddenIds(collectionName: string): string[]
+hideCollectionItem(collectionName: string, id: string): string[]
+restoreCollectionItem(collectionName: string, id: string): string[]
+
+// Merge (combina datos base + overrides + items locales)
+mergeCollectionWithLocal(defaultItems: ContentItem[], collectionName: string): ContentItem[]
+```
+
+### Sync hooks a Supabase (lazy, fire-and-forget)
+
+`contentService.ts` importa `supabaseSyncService` dinámicamente con `import()`. Si falla (Supabase no configurado), `getSyncHooks()` retorna `null` y nunca se llama al backend. Los hooks de sync **nunca tiran errores ni bloquean el flujo local**.
+
+### ContentItem
+
+```ts
+interface ContentItem {
+  id: string | number
+  displayLabel?: string
+  isLocal?: boolean      // true = creado por el usuario
+  isOverridden?: boolean  // true = tiene override sobre dato base
+  [key: string]: any      // campos dinámicos (title, text, date, image, etc.)
+}
+```
 
 ## Patrón CRUD — `useCrudCollection`
 
@@ -130,16 +205,17 @@ LocalIdentitySelector → authService → localIdentityStore → localStorage
 Usuarios locales fake: `local-user1` (owner), `local-user2` (partner).
 `authService.isAuthenticated()` siempre retorna `true` en modo local.
 
-## Comandos
+## Variables de entorno
 
-```bash
-npm run dev              # Desarrollo en localhost:5173
-npm run build            # Build producción
-npm run preview          # Preview del build
-npm run deploy           # Deploy a GitHub Pages
-npm test                 # 154 tests (vitest run)
-npm run test:watch       # Tests en modo watch
-```
+| Variable | Default | Descripción |
+|---|---|---|
+| `VITE_BASE` | `/` | Base path (GitHub Pages: `/DistanciaCero/`) |
+| `VITE_SUPABASE_URL` | (vacío) | URL del proyecto Supabase |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | (vacío) | Publishable key de Supabase |
+| `VITE_SUPABASE_ANON_KEY` | (vacío) | Alias legacy (preferir PUBLISHABLE_KEY) |
+| `VITE_REMOTE_CONTENT_ENABLED` | `false` | Feature flag para activar modo remoto |
+
+Template seguro en `.env.example`. Valores reales van en `.env.local` (no commiteado).
 
 ## Reglas de desarrollo
 
@@ -162,36 +238,35 @@ npm run test:watch       # Tests en modo watch
 - ✅ Todo el contenido editable está en `src/data/` y localStorage
 - ✅ Usar `useCrudCollection` + `CrudEditorPanel` para toda colección CRUD
 
-### Estilo de código
-- TypeScript con TSX (strict: false)
-- Componentes funcionales con hooks
-- Tailwind CSS v4 + 1 archivo CSS para estilos custom
-- Comentarios en español
-- Nombres de variables en camelCase
-
 ### TypeScript
 - TypeScript 7.0.2 con `strict: false`
 - `JSON.parse()` devuelve `unknown` (cambio en TS 7.0)
 - Usar `as any` o interfaces tipadas para datos parseados de JSON
+- Los imports de JSON en componentes usan `as any` (ej. `import data from './data.json'` pasado como `{data as any}`)
 - Evitar `?.` + `??` encadenados en datos `unknown` (problemas de inferencia en TS 7.0)
 - `localContentRepository.ts` usa safe wrappers para localStorage
 - Utilidades compartidas en `src/utils/helpers.ts`
 - `isPlainObject()` está en `helpers.ts` (no duplicar en componentes)
 
-## CSS
+### Tests
+- 11 archivos en `src/__tests__/` con extensión `.test.ts` o `.test.tsx`
+- Entorno: jsdom, setup: `src/test-setup.ts` (importa `@testing-library/jest-dom/vitest`), globals: true
+- Cada test hace `beforeEach(() => localStorage.clear())`
+- Usar `describe`/`it`/`expect` de vitest (importados explícitamente)
+- Correr un archivo: `npx vitest run src/__tests__/contentService.test.ts`
 
-- **1 archivo**: `src/styles/tailwind.css` (7,161 líneas, 81 `!important`)
+### CSS
+- **1 archivo**: `src/styles/tailwind.css` (~8,500 líneas)
 - Tailwind CSS v4 con plugin `@tailwindcss/vite`
 - Design tokens en bloque `@theme` (colores, sombras, radios, fuentes)
-- Secciones merged: `clay-3d.css`, `global.css`, `blackhole-gallery.css`, etc.
-- Los `!important` restantes (96) son en su mayoría legítimos (cascada de secciones merged)
+- Secciones merged de archivos legacy (clay-3d, global, blackhole-gallery, etc.)
 - Nuevas clases de componente deben usar Tailwind utilities cuando sea posible
 - Al modificar estilos, verificar visualmente con `npm run dev`
 
 ## Plan de migración a Supabase (Fase S5)
 
-El proyecto tiene **~50 documentos** detallando la migración a Supabase. Ya completado:
-- ✅ S4.4: Factory Supabase aislado (`integrations/supabase/client.js`)
+El proyecto tiene **~50 documentos** en `docs/supabase/` detallando la migración. Ya completado:
+- ✅ S4.4: Factory Supabase aislado (`integrations/supabase/client.ts`)
 - ✅ S4.5.1: Scripts de verificación de aislamiento
 - ✅ S4.6.3.2.2: Schema aplicado manualmente en lab desechable (6 tablas)
 - ✅ S4.6.3.3.2: RLS aplicado manualmente en lab desechable
@@ -210,6 +285,8 @@ El proyecto tiene **~50 documentos** detallando la migración a Supabase. Ya com
 - Migración de contenido real
 
 **Gate actual**: Supabase NO activo — se reiniciará desde cero en fase futura.
+
+**Documentos clave**: `docs/CONTENT_CONTRACT.md` (contrato de API de contenido), `docs/IDENTITY_CONTRACT.md` (contrato de identidad local).
 
 ## Notas para Claude Code
 

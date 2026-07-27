@@ -1,0 +1,191 @@
+<!-- @dsCard group="Overview" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distancia Cero — Design System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: radial-gradient(circle at 50% 0%, rgba(255,122,200,0.12), transparent 50%), #060010;
+    color: #fff5fa;
+    min-height: 100vh;
+    padding: 60px 32px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  header .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    background: rgba(255, 138, 212, 0.1);
+    border: 1px solid rgba(255, 138, 212, 0.2);
+    color: #ff8ad4;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    color: #ff8ad4;
+    text-shadow: 0 0 18px rgba(255, 138, 212, 0.35);
+  }
+  header p {
+    color: #d4b8c8;
+    margin-top: 8px;
+    font-size: 0.95rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #ffc4e8;
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,138,212,0.15);
+  }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    text-decoration: none;
+    color: #fff5fa;
+    transition: all 0.2s;
+  }
+  .card:hover {
+    background: rgba(255,138,212,0.08);
+    border-color: rgba(255,138,212,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .card-icon { font-size: 1.5rem; width: 36px; text-align: center; flex-shrink: 0; }
+  .card-label { font-weight: 700; font-size: 0.9rem; }
+  .card-sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+  .stats {
+    display: flex; gap: 20px; flex-wrap: wrap; margin: 32px 0;
+  }
+  .stat {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 20px 28px;
+    text-align: center;
+    flex: 1; min-width: 120px;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900;
+    color: #ff8ad4;
+  }
+  .stat-label {
+    font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+
+  footer {
+    margin-top: 48px; padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+    font-size: 0.75rem; color: rgba(255,255,255,0.25);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <span class="pill">✦ Design System v1.0</span>
+    <h1>Distancia Cero</h1>
+    <p>Catálogo visual de tokens y componentes.<br>Todo lo que necesitás para entender y extender el lenguaje visual del proyecto.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">13</div><div class="stat-label">Design Tokens</div></div>
+    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Componentes</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">Font Families</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Sombras</div></div>
+  </div>
+
+  <div class="section-title">🎨 Design Tokens</div>
+  <div class="grid">
+    <a href="tokens/colors.html" class="card">
+      <span class="card-icon">🎨</span>
+      <div><div class="card-label">Colors</div><div class="card-sub">13 tokens · bg, pink/red, borders</div></div>
+    </a>
+    <a href="tokens/typography.html" class="card">
+      <span class="card-icon">🔤</span>
+      <div><div class="card-label">Typography</div><div class="card-sub">Playfair Display + Inter</div></div>
+    </a>
+    <a href="tokens/shadows.html" class="card">
+      <span class="card-icon">🔲</span>
+      <div><div class="card-label">Shadows</div><div class="card-sub">5 niveles · sm → glow-red</div></div>
+    </a>
+    <a href="tokens/radii.html" class="card">
+      <span class="card-icon">⭕</span>
+      <div><div class="card-label">Border Radii</div><div class="card-sub">5 escalas · 12px → 999px</div></div>
+    </a>
+  </div>
+
+  <div class="section-title">🧩 Componentes</div>
+  <div class="grid">
+    <a href="components/glass-card.html" class="card">
+      <span class="card-icon">🪟</span>
+      <div><div class="card-label">Glass Card</div><div class="card-sub">Frosted glass · blur(16px)</div></div>
+    </a>
+    <a href="components/clay-card.html" class="card">
+      <span class="card-icon">🧱</span>
+      <div><div class="card-label">Clay Card</div><div class="card-sub">3D extruded · hover lift</div></div>
+    </a>
+    <a href="components/main-button.html" class="card">
+      <span class="card-icon">🔴</span>
+      <div><div class="card-label">Main Button</div><div class="card-sub">Primary CTA · ~25 uses</div></div>
+    </a>
+    <a href="components/ghost-button.html" class="card">
+      <span class="card-icon">👻</span>
+      <div><div class="card-label">Ghost Button</div><div class="card-sub">Secondary · ~11 uses</div></div>
+    </a>
+    <a href="components/clay-button.html" class="card">
+      <span class="card-icon">🔘</span>
+      <div><div class="card-label">Clay Button</div><div class="card-sub">3D press · pill shape</div></div>
+    </a>
+    <a href="components/pill.html" class="card">
+      <span class="card-icon">💊</span>
+      <div><div class="card-label">Pill Badge</div><div class="card-sub">Capsule label · gradient variant</div></div>
+    </a>
+    <a href="components/text-gradient.html" class="card">
+      <span class="card-icon">✨</span>
+      <div><div class="card-label">Text Gradient</div><div class="card-sub">Pink glow · emphasis text</div></div>
+    </a>
+    <a href="components/glow-orb.html" class="card">
+      <span class="card-icon">🔮</span>
+      <div><div class="card-label">Glow Orb</div><div class="card-sub">Ambient · blur(80px)</div></div>
+    </a>
+    <a href="components/section.html" class="card">
+      <span class="card-icon">📐</span>
+      <div><div class="card-label">Section Layout</div><div class="card-sub">Container · max 1120px</div></div>
+    </a>
+  </div>
+
+  <footer>
+    Distancia Cero Design System · Generated from <code>src/styles/tailwind.css</code> @theme tokens
+  </footer>
+</div>
+
+</body>
+</html>
