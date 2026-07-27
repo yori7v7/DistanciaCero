@@ -90,9 +90,6 @@ html {
     font-size: 0.875rem;
   }
 
-  /* Pill badge */
-  .pill {
-
   /* Error alert — inline validation message */
   .error-alert {
     display: flex;
@@ -105,6 +102,9 @@ html {
     color: var(--color-red);
     font-size: 0.875rem;
   }
+
+  /* Pill badge */
+  .pill {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -5737,7 +5737,6 @@ input {
 .editor-field textarea:focus-visible {
   outline: 2px solid rgba(255, 122, 200, 0.5);
   outline-offset: 2px;
-}
 }
 
 .editor-field input:focus,
