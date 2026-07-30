@@ -47,6 +47,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #060010;
 }
 
 ::selection {
@@ -811,36 +812,35 @@ html {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
 }
 
 /* Nebula blobs — slow, dreamy movement */
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.4;
+  filter: blur(130px);
+  opacity: 0.35;
   animation: nebulaDrift 20s ease-in-out infinite alternate;
 }
 
 .orb-pink {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(255, 122, 200, 0.3), transparent 65%);
-  top: -15%; left: -8%;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(255, 122, 200, 0.28), transparent 70%);
+  top: -20%; left: -12%;
 }
 
 .orb-red {
-  width: 550px; height: 550px;
-  background: radial-gradient(circle, rgba(255, 23, 68, 0.22), transparent 65%);
-  right: -10%; bottom: -12%;
+  width: 650px; height: 650px;
+  background: radial-gradient(circle, rgba(255, 23, 68, 0.2), transparent 70%);
+  right: -15%; bottom: -18%;
   animation-delay: 5s;
   animation-duration: 25s;
 }
 
 .orb-soft {
-  width: 450px; height: 450px;
-  background: radial-gradient(circle, rgba(160, 100, 220, 0.2), transparent 65%);
-  top: 35%; left: 48%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(160, 100, 220, 0.18), transparent 70%);
+  top: 30%; left: 45%;
   animation-delay: 10s;
   animation-duration: 22s;
 }

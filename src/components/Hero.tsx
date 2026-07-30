@@ -27,26 +27,26 @@ function Hero() {
         <div className="glow-orb w-[300px] h-[300px] bg-pink-soft bottom-1/4 left-1/3 opacity-10" />
       </div>
 
-      <div className="relative z-10 text-center px-6 max-w-2xl mx-auto py-20">
+      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto py-36">
         {/* Eyebrow pill */}
-        <div className="pill mb-8 mx-auto">
+        <div className="pill mb-16 mx-auto">
           <Sparkles size={16} />
           <span>{siteConfig.hero.eyebrow}</span>
         </div>
 
         {/* Main title */}
-        <h1 className="font-display text-[clamp(2.8rem,8vw,5rem)] font-black leading-[1.05] mb-6">
-          <span className="text-white-soft">{siteConfig.hero.titlePrefix} </span>
-          <span className="text-gradient">{siteConfig.hero.titleName}</span>
+        <h1 className="font-display text-[clamp(2.8rem,8vw,5rem)] font-black leading-[1.2] mb-36">
+          <span className="block text-white-soft mb-4">{siteConfig.hero.titlePrefix}</span>
+          <span className="block text-gradient">{siteConfig.hero.titleName}</span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-muted text-lg max-w-lg mx-auto mb-10 leading-relaxed">
+        <p className="text-muted text-lg max-w-lg mx-auto mb-16 leading-relaxed mt-8">
           {siteConfig.hero.description}
         </p>
 
         {/* Couple names with heart */}
-        <div className="flex items-center justify-center gap-4 mb-10 text-xl font-semibold text-white-soft">
+        <div className="flex items-center justify-center gap-4 mb-16 text-xl font-semibold text-white-soft">
           <span className="text-pink-soft">{siteConfig.couple.yourName}</span>
           <Heart size={24} className="text-pink animate-[pulse-heart_2s_ease-in-out_infinite]" />
           <span className="text-pink-soft">{siteConfig.couple.herName}</span>
@@ -56,14 +56,14 @@ function Hero() {
         {dailyPhrase && (
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full
             bg-[rgba(255,138,212,0.06)] border border-[rgba(255,138,212,0.15)]
-            text-pink-soft text-sm mb-10">
+            text-pink-soft text-sm mb-16">
             <Sparkles size={14} />
             <span><strong>Mensaje del día:</strong> {dailyPhrase.text}</span>
           </div>
         )}
 
         {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
           <a href="#carta" className="main-button">
             {siteConfig.hero.primaryButton}
             <Heart size={18} />

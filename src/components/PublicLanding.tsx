@@ -25,9 +25,7 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
   }, [])
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center
-      bg-[radial-gradient(ellipse_at_center,rgba(3,0,8,0.94)_30%,rgba(3,0,8,0.82)_65%,rgba(3,0,8,0.55)_100%)]
-      overflow-hidden">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center">
       {/* Same background as main app */}
       <div className="background-orbs">
         <span className="orb orb-pink"></span>
@@ -54,27 +52,27 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg w-full">
-        <div className="small-pill mb-6">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-xl w-full py-12">
+        <div className="small-pill mb-8">
           <Sparkles size={14} />
           <span>{siteConfig.hero.eyebrow}</span>
         </div>
 
-        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-display font-black leading-tight mb-6">
+        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-display font-black leading-tight mb-8">
           <span className="block text-white-soft">{siteConfig.hero.titlePrefix}</span>
           <span className="block text-pink">
             {siteConfig.hero.titleName}
           </span>
         </h1>
 
-        <div className="hero-names mb-8">
+        <div className="hero-names mb-10">
           <span>{siteConfig.couple.yourName}</span>
           <Heart size={22} className="mx-3 inline-block text-pink animate-[pulse-heart_2s_ease-in-out_infinite]" />
           <span>{siteConfig.couple.herName}</span>
         </div>
 
         {/* Animated phrase */}
-        <div className="flex items-center gap-2 text-muted text-sm min-h-[24px] mb-10">
+        <div className="flex items-center gap-2 text-muted text-sm min-h-[24px] mb-12">
           <Music size={14} className="text-pink-soft shrink-0" />
           <span key={phraseIndex} className="animate-[fade-up_0.4s_ease_both]">
             {phrases[phraseIndex]}
@@ -82,14 +80,14 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
         </div>
 
         {/* CTA */}
-        <div className="flex flex-col items-center gap-3">
-          <button className="main-button flex items-center gap-3 text-lg px-8 py-4" onClick={onEnter}>
+        <div className="flex flex-col items-center gap-4">
+          <button className="main-button flex items-center gap-3 text-lg px-10 py-4" onClick={onEnter}>
             <span>{siteConfig.hero.primaryButton}</span>
             <ArrowRight size={20} />
           </button>
         </div>
 
-        <p className="mt-8 text-xs text-muted/60">
+        <p className="mt-10 text-xs text-muted/60">
           Solo {siteConfig.couple.herName} y {siteConfig.couple.yourName} pueden entrar.
         </p>
       </div>
