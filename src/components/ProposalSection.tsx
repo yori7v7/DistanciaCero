@@ -96,8 +96,7 @@ function ProposalSection() {
       {/* Glow background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,200,0.12),transparent_60%)] pointer-events-none" />
 
-      <article className={`relative max-w-xl mx-auto rounded-[24px] p-10 text-center
-        border border-[var(--color-border)] bg-[rgba(12,0,18,0.82)] backdrop-blur-md
+      <article className={`relative max-w-xl mx-auto glass-card rounded-[24px] p-10 text-center
         shadow-[0_0_60px_rgba(255,122,200,0.12),0_12px_34px_rgba(0,0,0,0.28)]
         ${accepted ? 'border-[rgba(255,122,200,0.35)]' : ''}`}>
 

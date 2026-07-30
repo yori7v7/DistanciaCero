@@ -168,7 +168,7 @@ export default function BackupPanel() {
 
       <div className="backup-actions">
         <button type="button" className="control-btn" onClick={handleExport}>
-          <Download size={16} /> Exportar respaldo local v2
+          <Download size={16} /> Exportar respaldo
         </button>
         <label className="control-btn">
           <Upload size={16} /> Importar respaldo

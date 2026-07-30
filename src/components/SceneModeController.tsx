@@ -171,6 +171,25 @@ function SceneModeController() {
     setSettingsOpen(false)
   }
 
+  // Scroll when Centro is toggled on/off
+  const prevCentroRef = useRef(centroVisible)
+  useEffect(() => {
+    if (prevCentroRef.current === centroVisible) return
+    prevCentroRef.current = centroVisible
+    setTimeout(() => {
+      if (centroVisible) {
+        const el = document.getElementById('centro-universo')
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } else {
+        const firstSectionId = activeScene?.sectionIds?.[0]
+        if (firstSectionId) {
+          const el = document.getElementById(firstSectionId)
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }
+    }, 150)
+  }, [centroVisible])
+
   const handleLogout = async () => {
     setLoggingOut(true)
     setSettingsOpen(false)

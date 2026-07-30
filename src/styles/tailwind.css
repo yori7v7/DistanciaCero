@@ -270,6 +270,13 @@ html {
     0 0 20px rgba(255, 90, 170, 0.08);
   min-height: 220px;
   overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.universe-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(255, 122, 200, 0.55);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.38), 0 0 35px rgba(255, 122, 200, 0.18);
 }
 
 .universe-card h3 {
@@ -3167,7 +3174,7 @@ input {
 .song-card:hover,
 .gallery-card:hover,
 .message-box:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) !important;
   border-color: rgba(255, 122, 200, 0.55);
   box-shadow: var(--shadow-pink);
 }
@@ -4721,7 +4728,7 @@ input {
   filter: grayscale(40%);
   background: rgba(9, 1, 14, 0.4);
   border-color: rgba(255, 255, 255, 0.06);
-  pointer-events: none;
+  cursor: default;
 }
 
 /* Tarjetas abiertas (leídas) */
@@ -4738,8 +4745,6 @@ input {
    Centro del Universo Section Styles (Dashboard)
    ========================================================================== */
 .centro-universo-section {
-  display: flex;
-  flex-direction: column;
   text-align: center;
 }
 
@@ -4966,8 +4971,8 @@ input {
 
 .backup-card {
   max-width: 900px;
-  margin: 28px auto 0;
-  padding: 24px 28px;
+  margin: 52px auto 36px;
+  padding: 28px 32px;
   border: 1px solid rgba(255, 46, 147, 0.28);
   border-radius: 24px;
   background:
@@ -4980,6 +4985,9 @@ input {
   text-align: left;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .backup-card::before {
@@ -4992,6 +5000,29 @@ input {
   background-size: 28px 28px;
   mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.65), transparent 80%);
   pointer-events: none;
+}
+
+.backup-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffc4e8;
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+}
+
+.backup-card h3 svg {
+  color: rgba(255, 46, 147, 0.78);
+  flex-shrink: 0;
+}
+
+.backup-card p {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .local-identity-card {
@@ -5108,7 +5139,7 @@ input {
 .crud-selector-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 14px;
 }
 
 .crud-selector-grid.compact {
@@ -5499,7 +5530,7 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.035);
-  padding: 10px;
+  padding: 12px 14px;
 }
 
 .crud-stat-button {
@@ -5523,6 +5554,13 @@ input {
   box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.12), 0 12px 28px rgba(236, 72, 153, 0.14);
 }
 
+.crud-stats-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
 .reason-stats-grid strong {
   display: block;
   color: #ffe0ef;
@@ -5535,6 +5573,111 @@ input {
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+.crud-stat-button strong {
+  display: block;
+  color: #ffe0ef;
+  font-size: 1.15rem;
+  margin-bottom: 2px;
+}
+
+.crud-stat-button span {
+  display: block;
+  color: rgba(255, 224, 239, 0.5);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.stat-card strong {
+  display: block;
+  color: #ffe0ef;
+  font-size: 1.15rem;
+  margin-bottom: 2px;
+}
+
+.stat-card span {
+  display: block;
+  color: rgba(255, 224, 239, 0.5);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.letter-stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: min(900px, calc(100% - 24px));
+  margin: 24px auto 28px;
+  text-align: left;
+}
+
+.stats-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stats-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffc4e8;
+}
+
+.stats-group-header h4 {
+  color: #ffc4e8;
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 122, 200, 0.55);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32), 0 0 22px rgba(255, 122, 200, 0.15);
+}
+
+.stat-card:active {
+  transform: translateY(-1px) scale(0.97);
+  border-color: rgba(255, 122, 200, 0.65);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 0 16px rgba(255, 122, 200, 0.12);
+}
+
+.stat-card svg {
+  color: rgba(255, 224, 239, 0.55);
+  transition: color 0.25s ease;
+}
+
+.stat-card:hover svg {
+  color: rgba(255, 122, 200, 0.82);
+}
+
+.stat-card-accent {
+  border-color: rgba(244, 114, 182, 0.4);
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(239, 68, 68, 0.06));
 }
 
 .base-reasons-list {
@@ -5827,7 +5970,7 @@ input {
   gap: 12px;
   justify-content: flex-end;
   flex-wrap: wrap;
-  margin-top: 4px;
+  margin-top: 12px;
 }
 
 button.submit-btn {
@@ -5913,7 +6056,7 @@ button.submit-btn:hover {
 .item-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
   flex: 1;
   min-width: 0;
 }
@@ -7028,12 +7171,12 @@ button.submit-btn:hover {
     radial-gradient(circle at 54% 48%, rgba(255, 20, 124, 0.24), transparent 30%),
     radial-gradient(circle at 22% 78%, rgba(201, 82, 255, 0.16), transparent 31%),
     radial-gradient(circle at 78% 24%, rgba(255, 130, 220, 0.11), transparent 28%),
-    #010003 !important;
+    #010003;
   box-shadow:
     inset 0 0 135px rgba(255, 79, 216, 0.16),
     inset 0 0 250px rgba(255, 20, 124, 0.11),
     0 0 72px rgba(255, 20, 124, 0.22),
-    0 0 120px rgba(255, 79, 216, 0.1) !important;
+    0 0 120px rgba(255, 79, 216, 0.1);
 }
 
 .blackhole-3d-stage::before {
@@ -7049,53 +7192,53 @@ button.submit-btn:hover {
       rgba(204, 80, 255, 0.12),
       rgba(255, 47, 184, 0.16),
       transparent
-    ) !important;
-  filter: blur(40px) saturate(1.25) !important;
-  opacity: 1 !important;
+    );
+  filter: blur(40px) saturate(1.25);
+  opacity: 1;
 }
 
 .blackhole-3d-stage::after {
   background:
     radial-gradient(circle at center, transparent 0 23%, rgba(255, 230, 250, 0.075) 25%, transparent 37%),
     radial-gradient(circle at center, rgba(255, 79, 216, 0.055), transparent 48%),
-    linear-gradient(to bottom, rgba(255, 225, 250, 0.04), transparent 20%, rgba(0, 0, 0, 0.34)) !important;
-  mix-blend-mode: screen !important;
+    linear-gradient(to bottom, rgba(255, 225, 250, 0.04), transparent 20%, rgba(0, 0, 0, 0.34));
+  mix-blend-mode: screen;
 }
 
 .blackhole-3d-core-label {
   transform: scale(0.88);
-  border-color: rgba(255, 210, 250, 0.48) !important;
+  border-color: rgba(255, 210, 250, 0.48);
   background:
     radial-gradient(circle at center, rgba(255, 79, 216, 0.2), transparent 54%),
-    rgba(0, 0, 0, 0.76) !important;
-  color: #ffd6ff !important;
+    rgba(0, 0, 0, 0.76);
+  color: #ffd6ff;
   box-shadow:
     0 0 38px rgba(255, 79, 216, 0.48),
     0 0 90px rgba(255, 20, 124, 0.18),
-    inset 0 0 28px rgba(255, 255, 255, 0.05) !important;
+    inset 0 0 28px rgba(255, 255, 255, 0.05);
 }
 
 .memory-3d-card {
   width: 70px !important;
   height: 92px !important;
   opacity: 0.92;
-  border-color: rgba(255, 214, 255, 0.6) !important;
+  border-color: rgba(255, 214, 255, 0.6);
   background:
     radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.18), transparent 24%),
     radial-gradient(circle at 70% 75%, rgba(255, 47, 184, 0.16), transparent 35%),
-    rgba(18, 5, 22, 0.92) !important;
+    rgba(18, 5, 22, 0.92);
   box-shadow:
     0 0 34px rgba(255, 79, 216, 0.42),
     0 0 78px rgba(255, 20, 124, 0.12),
-    0 18px 34px rgba(0, 0, 0, 0.38) !important;
+    0 18px 34px rgba(0, 0, 0, 0.38);
 }
 
 .memory-3d-card:hover {
-  border-color: rgba(255, 245, 255, 0.98) !important;
+  border-color: rgba(255, 245, 255, 0.98);
   box-shadow:
     0 0 46px rgba(255, 79, 216, 0.72),
     0 0 96px rgba(255, 20, 124, 0.2),
-    0 18px 34px rgba(0, 0, 0, 0.42) !important;
+    0 18px 34px rgba(0, 0, 0, 0.42);
 }
 
 .blackhole-transition {
@@ -7104,7 +7247,7 @@ button.submit-btn:hover {
     radial-gradient(circle at center, rgba(255, 79, 216, 0.32), transparent 28%),
     radial-gradient(circle at center, rgba(204, 80, 255, 0.14), transparent 38%),
     radial-gradient(circle at center, rgba(255, 20, 124, 0.26), transparent 50%),
-    rgba(4, 0, 8, 0.95) !important;
+    rgba(4, 0, 8, 0.95);
 }
 
 .blackhole-transition::before {
@@ -7120,32 +7263,32 @@ button.submit-btn:hover {
       rgba(204, 80, 255, 0.28),
       rgba(255, 47, 184, 0.42),
       transparent
-    ) !important;
-  filter: blur(22px) saturate(1.2) !important;
+    );
+  filter: blur(22px) saturate(1.2);
 }
 
 .blackhole-transition-core {
   background:
-    radial-gradient(circle at center, #000 0 38%, rgba(255, 20, 124, 0.98) 39% 47%, rgba(255, 79, 216, 0.92) 48% 55%, rgba(255, 246, 255, 0.94) 56% 58%, transparent 72%) !important;
+    radial-gradient(circle at center, #000 0 38%, rgba(255, 20, 124, 0.98) 39% 47%, rgba(255, 79, 216, 0.92) 48% 55%, rgba(255, 246, 255, 0.94) 56% 58%, transparent 72%);
   box-shadow:
     0 0 62px rgba(255, 79, 216, 0.58),
     0 0 105px rgba(255, 20, 124, 0.28),
-    0 0 120px rgba(204, 80, 255, 0.14) !important;
+    0 0 120px rgba(204, 80, 255, 0.14);
 }
 
 .blackhole-transition-ring {
-  border-color: rgba(255, 190, 245, 0.42) !important;
+  border-color: rgba(255, 190, 245, 0.42);
   box-shadow:
     0 0 42px rgba(255, 79, 216, 0.55),
     0 0 95px rgba(255, 20, 124, 0.18),
-    inset 0 0 28px rgba(255, 255, 255, 0.16) !important;
+    inset 0 0 28px rgba(255, 255, 255, 0.16);
 }
 
 .blackhole-warp-lines span {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(255, 79, 216, 0.76), transparent) !important;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(255, 79, 216, 0.76), transparent);
   filter:
     drop-shadow(0 0 12px rgba(255, 79, 216, 0.92))
-    drop-shadow(0 0 20px rgba(255, 20, 124, 0.3)) !important;
+    drop-shadow(0 0 20px rgba(255, 20, 124, 0.3));
 }
 
 @media (max-width: 620px) {

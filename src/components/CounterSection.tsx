@@ -78,7 +78,7 @@ function CounterSection() {
               bg-gradient-to-br from-pink/20 to-red/20 text-pink">
               {stat.icon}
             </div>
-            <h3 className="font-display text-4xl font-black text-white-soft mb-2">{stat.value}</h3>
+            <h3 className="font-display text-4xl font-black text-white-soft mb-4">{stat.value}</h3>
             <span className="inline-block text-pink-soft font-bold text-sm uppercase tracking-wider mb-3">
               {stat.label}
             </span>

@@ -482,6 +482,18 @@ function CentroUniversoSection() {
       <LetterStatsPanel
         monthlyStats={{ total: totalMonthly, opened: openedMonthly, unlocked: unlockedMonthly, locked: lockedMonthly }}
         openWhenStats={{ total: totalOpenWhen, opened: openedOpenWhen, unlocked: unlockedOpenWhen, locked: lockedOpenWhen }}
+        onNavigate={(moduleId) => {
+          const editorMap: Record<string, string> = {
+            monthlyLetters: 'local-monthly-editor',
+            openWhenLetters: 'local-openwhen-editor',
+          }
+          handleCrudModuleChange(moduleId)
+          handleCrudActionChange('local')
+          setTimeout(() => {
+            const el = document.getElementById(editorMap[moduleId] || '')
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }, 150)
+        }}
       />
 
       {/* Global Actions */}

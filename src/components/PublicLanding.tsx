@@ -26,8 +26,8 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center
-      bg-[radial-gradient(circle_at_center,rgba(255,122,200,0.18),transparent_28%),rgba(3,0,8,0.96)]
-      backdrop-blur-lg overflow-hidden">
+      bg-[radial-gradient(ellipse_at_center,rgba(3,0,8,0.94)_30%,rgba(3,0,8,0.82)_65%,rgba(3,0,8,0.55)_100%)]
+      overflow-hidden">
       {/* Same background as main app */}
       <div className="background-orbs">
         <span className="orb orb-pink"></span>
