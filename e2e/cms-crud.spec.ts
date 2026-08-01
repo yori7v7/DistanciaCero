@@ -1,6 +1,13 @@
 import { test, expect } from '@playwright/test'
 import { gotoApp, enableCentro } from './helpers'
 
+interface EvalArgs { key: string; id?: string }
+
+function safeGetItem(raw: string | null): unknown[] {
+  if (!raw) return []
+  try { return JSON.parse(raw) } catch { return [] }
+}
+
 /**
  * CMS CRUD tests using localStorage as the data layer.
  * The CMS UI toggle logic makes visual form testing fragile;
@@ -32,20 +39,20 @@ test.describe('CMS Data Layer (localStorage CRUD)', () => {
     expect(created).toContain('Razon Creada')
 
     // Parse and find the item id
-    const items = JSON.parse(created!)
-    const item = items.find((i: any) => i.title === 'Razon Creada')
+    const items = safeGetItem(created)
+    const item = items.find((i: Record<string, unknown>) => i.title === 'Razon Creada') as Record<string, unknown> | undefined
     expect(item).toBeTruthy()
 
     // UPDATE
-    await page.evaluate(({ key, id }: any) => {
+    await page.evaluate(({ key, id }: EvalArgs) => {
       const raw = localStorage.getItem(key)
       const items = raw ? JSON.parse(raw) : []
-      const idx = items.findIndex((i: any) => i.id === id)
+      const idx = items.findIndex((i: Record<string, unknown>) => i.id === id)
       if (idx >= 0) {
         items[idx].title = 'Razon Editada'
         localStorage.setItem(key, JSON.stringify(items))
       }
-    }, { key: STORAGE_KEY, id: item.id })
+    }, { key: STORAGE_KEY, id: item!.id as string })
 
     const updated = await page.evaluate((key) => {
       return localStorage.getItem(key)
@@ -54,11 +61,11 @@ test.describe('CMS Data Layer (localStorage CRUD)', () => {
     expect(updated).not.toContain('Razon Creada')
 
     // DELETE
-    await page.evaluate(({ key, id }: any) => {
+    await page.evaluate(({ key, id }: EvalArgs) => {
       const raw = localStorage.getItem(key)
       const items = raw ? JSON.parse(raw) : []
-      localStorage.setItem(key, JSON.stringify(items.filter((i: any) => i.id !== id)))
-    }, { key: STORAGE_KEY, id: item.id })
+      localStorage.setItem(key, JSON.stringify(items.filter((i: Record<string, unknown>) => i.id !== id)))
+    }, { key: STORAGE_KEY, id: item!.id as string })
 
     const deleted = await page.evaluate((key) => {
       return localStorage.getItem(key)

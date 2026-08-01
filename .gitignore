@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 
 .vercel
+.playwright/
 playwright-report/
 test-results/

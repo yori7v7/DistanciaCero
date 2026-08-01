@@ -21,9 +21,3 @@ export async function enableCentro(page: Page) {
   await page.getByRole('button', { name: 'Ajustes' }).click()
   await expect(page.locator('#centro-universo')).toBeVisible({ timeout: 20_000 })
 }
-
-/**
- * Read a localStorage key from the page context.
- */
-export const readStorage = (page: Page, key: string) =>
-  page.evaluate((k) => localStorage.getItem(k), key)

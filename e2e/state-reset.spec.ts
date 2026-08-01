@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test'
+import { gotoApp } from './helpers'
 
 test.describe('?reset=1', () => {
   test('clears all localStorage and sessionStorage', async ({ page }) => {
-    // Seed data
+    // Seed data without reset
     await page.goto('/app', { waitUntil: 'domcontentloaded' })
     await page.evaluate(() => {
       localStorage.setItem('distancia-cero-content-reasons', JSON.stringify([
