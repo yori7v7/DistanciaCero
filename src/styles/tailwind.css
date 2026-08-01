@@ -5180,6 +5180,10 @@ input {
   transform: translateY(-1px);
 }
 
+.crud-panel-hidden {
+  display: none;
+}
+
 .crud-show-local .reasons-editor-card,
 .crud-show-create .reasons-list-card,
 .crud-show-local .editor-card,
