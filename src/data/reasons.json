@@ -1,502 +1,102 @@
 [
-    {
-        "id":  1,
-        "title":  "Razón 1",
-        "text":  "Porque desde que llegaste, mi mundo se siente menos pesado."
-    },
-    {
-        "id":  2,
-        "title":  "Razón 2",
-        "text":  "Porque contigo la distancia no se siente como final, sino como reto."
-    },
-    {
-        "id":  3,
-        "title":  "Razón 3",
-        "text":  "Porque me gusta cómo existes en mis días."
-    },
-    {
-        "id":  4,
-        "title":  "Razón 4",
-        "text":  "Porque tu forma de hablarme me cambia el ánimo."
-    },
-    {
-        "id":  5,
-        "title":  "Razón 5",
-        "text":  "Porque eres mi Ale, y eso ya dice demasiado."
-    },
-    {
-        "id":  6,
-        "title":  "Razón 6",
-        "text":  "Porque me haces querer cuidar lo que estamos construyendo."
-    },
-    {
-        "id":  7,
-        "title":  "Razón 7",
-        "text":  "Porque tus mensajitos pueden arreglarme un día horrible."
-    },
-    {
-        "id":  8,
-        "title":  "Razón 8",
-        "text":  "Porque me nace hacerte cosas bonitas."
-    },
-    {
-        "id":  9,
-        "title":  "Razón 9",
-        "text":  "Porque me gusta imaginar un futuro donde estás tú."
-    },
-    {
-        "id":  10,
-        "title":  "Razón 10",
-        "text":  "Porque contigo hasta lo simple se siente especial."
-    },
-    {
-        "id":  11,
-        "title":  "Razón 11",
-        "text":  "Porque me gusta cómo haces que mi lado cursi salga sin pena."
-    },
-    {
-        "id":  12,
-        "title":  "Razón 12",
-        "text":  "Porque aunque estemos lejos, te siento cerca."
-    },
-    {
-        "id":  13,
-        "title":  "Razón 13",
-        "text":  "Porque tu nombre ya se volvió una parte bonita de mi rutina."
-    },
-    {
-        "id":  14,
-        "title":  "Razón 14",
-        "text":  "Porque me haces sonreír como menso."
-    },
-    {
-        "id":  15,
-        "title":  "Razón 15",
-        "text":  "Porque contigo puedo ser Yori sin esconderme."
-    },
-    {
-        "id":  16,
-        "title":  "Razón 16",
-        "text":  "Porque tienes una ternura que se queda en mí."
-    },
-    {
-        "id":  17,
-        "title":  "Razón 17",
-        "text":  "Porque me importas de una forma muy real."
-    },
-    {
-        "id":  18,
-        "title":  "Razón 18",
-        "text":  "Porque me gusta escucharte aunque sea por llamada."
-    },
-    {
-        "id":  19,
-        "title":  "Razón 19",
-        "text":  "Porque haces que quiera mejorar."
-    },
-    {
-        "id":  20,
-        "title":  "Razón 20",
-        "text":  "Porque contigo no quiero algo de ratito."
-    },
-    {
-        "id":  21,
-        "title":  "Razón 21",
-        "text":  "Porque me gusta tu forma de querer."
-    },
-    {
-        "id":  22,
-        "title":  "Razón 22",
-        "text":  "Porque me gusta cuando me dices cosas bonitas."
-    },
-    {
-        "id":  23,
-        "title":  "Razón 23",
-        "text":  "Porque tus apodos me dan demasiada vida."
-    },
-    {
-        "id":  24,
-        "title":  "Razón 24",
-        "text":  "Porque me gusta ser tu dieguito bbcito bblin."
-    },
-    {
-        "id":  25,
-        "title":  "Razón 25",
-        "text":  "Porque me haces sentir elegido."
-    },
-    {
-        "id":  26,
-        "title":  "Razón 26",
-        "text":  "Porque hay algo en ti que me da calma."
-    },
-    {
-        "id":  27,
-        "title":  "Razón 27",
-        "text":  "Porque incluso tus días raros me importan."
-    },
-    {
-        "id":  28,
-        "title":  "Razón 28",
-        "text":  "Porque me dan ganas de abrazarte aunque estés lejos."
-    },
-    {
-        "id":  29,
-        "title":  "Razón 29",
-        "text":  "Porque me gusta la historia que estamos empezando."
-    },
-    {
-        "id":  30,
-        "title":  "Razón 30",
-        "text":  "Porque cada fecha contigo empieza a significar algo."
-    },
-    {
-        "id":  31,
-        "title":  "Razón 31",
-        "text":  "Porque el 13 de marzo se volvió importante por ti."
-    },
-    {
-        "id":  32,
-        "title":  "Razón 32",
-        "text":  "Porque el primer te amo se quedó guardado en mí."
-    },
-    {
-        "id":  33,
-        "title":  "Razón 33",
-        "text":  "Porque me gusta pensarte antes de dormir."
-    },
-    {
-        "id":  34,
-        "title":  "Razón 34",
-        "text":  "Porque me gusta despertar y saber que existes."
-    },
-    {
-        "id":  35,
-        "title":  "Razón 35",
-        "text":  "Porque haces que una página web se vuelva carta de amor."
-    },
-    {
-        "id":  36,
-        "title":  "Razón 36",
-        "text":  "Porque contigo una canción puede volverse recuerdo."
-    },
-    {
-        "id":  37,
-        "title":  "Razón 37",
-        "text":  "Porque me dan nervios bonitos cuando pienso en ti."
-    },
-    {
-        "id":  38,
-        "title":  "Razón 38",
-        "text":  "Porque me gusta tu lado suave."
-    },
-    {
-        "id":  39,
-        "title":  "Razón 39",
-        "text":  "Porque me gusta tu lado intenso."
-    },
-    {
-        "id":  40,
-        "title":  "Razón 40",
-        "text":  "Porque me gusta tu forma de ser tú."
-    },
-    {
-        "id":  41,
-        "title":  "Razón 41",
-        "text":  "Porque no necesito que todo sea perfecto para quererte."
-    },
-    {
-        "id":  42,
-        "title":  "Razón 42",
-        "text":  "Porque me haces sentir que vale la pena esperar."
-    },
-    {
-        "id":  43,
-        "title":  "Razón 43",
-        "text":  "Porque me gusta la confianza que quiero construir contigo."
-    },
-    {
-        "id":  44,
-        "title":  "Razón 44",
-        "text":  "Porque quiero aprender a cuidarte mejor."
-    },
-    {
-        "id":  45,
-        "title":  "Razón 45",
-        "text":  "Porque me gusta cuando nos ponemos cursis."
-    },
-    {
-        "id":  46,
-        "title":  "Razón 46",
-        "text":  "Porque me gusta cuando nos ponemos mensos."
-    },
-    {
-        "id":  47,
-        "title":  "Razón 47",
-        "text":  "Porque contigo puedo hablar de cosas serias y de tonterías."
-    },
-    {
-        "id":  48,
-        "title":  "Razón 48",
-        "text":  "Porque haces que la palabra nosotros se sienta bonita."
-    },
-    {
-        "id":  49,
-        "title":  "Razón 49",
-        "text":  "Porque quiero que esta página crezca contigo."
-    },
-    {
-        "id":  50,
-        "title":  "Razón 50",
-        "text":  "Porque me importan tus emociones."
-    },
-    {
-        "id":  51,
-        "title":  "Razón 51",
-        "text":  "Porque me gusta saber de tu día."
-    },
-    {
-        "id":  52,
-        "title":  "Razón 52",
-        "text":  "Porque me gusta cuando me cuentas cosas random."
-    },
-    {
-        "id":  53,
-        "title":  "Razón 53",
-        "text":  "Porque hasta tus silencios me importan."
-    },
-    {
-        "id":  54,
-        "title":  "Razón 54",
-        "text":  "Porque me gusta que seas parte de mi vida."
-    },
-    {
-        "id":  55,
-        "title":  "Razón 55",
-        "text":  "Porque no eres una persona más para mí."
-    },
-    {
-        "id":  56,
-        "title":  "Razón 56",
-        "text":  "Porque me haces querer escribir cartas."
-    },
-    {
-        "id":  57,
-        "title":  "Razón 57",
-        "text":  "Porque me haces querer guardar recuerdos."
-    },
-    {
-        "id":  58,
-        "title":  "Razón 58",
-        "text":  "Porque me haces querer poner fechas en el calendario."
-    },
-    {
-        "id":  59,
-        "title":  "Razón 59",
-        "text":  "Porque me haces querer planear cosas contigo."
-    },
-    {
-        "id":  60,
-        "title":  "Razón 60",
-        "text":  "Porque contigo el futuro no se siente tan abstracto."
-    },
-    {
-        "id":  61,
-        "title":  "Razón 61",
-        "text":  "Porque me gusta imaginar nuestra primera foto bonita."
-    },
-    {
-        "id":  62,
-        "title":  "Razón 62",
-        "text":  "Porque me gusta imaginar una cita contigo."
-    },
-    {
-        "id":  63,
-        "title":  "Razón 63",
-        "text":  "Porque me gusta imaginar milanesas contigo, aunque ya quitamos el santuario."
-    },
-    {
-        "id":  64,
-        "title":  "Razón 64",
-        "text":  "Porque haces que los kilómetros se sientan menos crueles."
-    },
-    {
-        "id":  65,
-        "title":  "Razón 65",
-        "text":  "Porque me gusta cómo mi corazón te reconoce."
-    },
-    {
-        "id":  66,
-        "title":  "Razón 66",
-        "text":  "Porque me haces querer ser detallista."
-    },
-    {
-        "id":  67,
-        "title":  "Razón 67",
-        "text":  "Porque me gusta hacerte reír."
-    },
-    {
-        "id":  68,
-        "title":  "Razón 68",
-        "text":  "Porque me gusta cuando tú me haces reír."
-    },
-    {
-        "id":  69,
-        "title":  "Razón 69",
-        "text":  "Porque me gusta sentir que tenemos algo nuestro."
-    },
-    {
-        "id":  70,
-        "title":  "Razón 70",
-        "text":  "Porque tus playlists dicen cosas de ti que me encantan."
-    },
-    {
-        "id":  71,
-        "title":  "Razón 71",
-        "text":  "Porque me gusta descubrir tus gustos."
-    },
-    {
-        "id":  72,
-        "title":  "Razón 72",
-        "text":  "Porque me gusta que tengas tu propio mundo."
-    },
-    {
-        "id":  73,
-        "title":  "Razón 73",
-        "text":  "Porque quiero que nuestros mundos se mezclen bonito."
-    },
-    {
-        "id":  74,
-        "title":  "Razón 74",
-        "text":  "Porque me gusta cómo suena Ale y Yori."
-    },
-    {
-        "id":  75,
-        "title":  "Razón 75",
-        "text":  "Porque me gusta decirte Alecita."
-    },
-    {
-        "id":  76,
-        "title":  "Razón 76",
-        "text":  "Porque me gusta que me digas Yori."
-    },
-    {
-        "id":  77,
-        "title":  "Razón 77",
-        "text":  "Porque me gusta lo nuestro incluso cuando todavía está empezando."
-    },
-    {
-        "id":  78,
-        "title":  "Razón 78",
-        "text":  "Porque me haces sentir nervios de los buenos."
-    },
-    {
-        "id":  79,
-        "title":  "Razón 79",
-        "text":  "Porque me importas incluso cuando estoy ocupado."
-    },
-    {
-        "id":  80,
-        "title":  "Razón 80",
-        "text":  "Porque aunque tenga tareas, mi mente se acuerda de ti."
-    },
-    {
-        "id":  81,
-        "title":  "Razón 81",
-        "text":  "Porque me gusta que seas mi lugar bonito en días caóticos."
-    },
-    {
-        "id":  82,
-        "title":  "Razón 82",
-        "text":  "Porque quiero verte feliz."
-    },
-    {
-        "id":  83,
-        "title":  "Razón 83",
-        "text":  "Porque quiero acompañarte en lo que pueda."
-    },
-    {
-        "id":  84,
-        "title":  "Razón 84",
-        "text":  "Porque me gusta cuando confías en mí."
-    },
-    {
-        "id":  85,
-        "title":  "Razón 85",
-        "text":  "Porque quiero ser alguien seguro para ti."
-    },
-    {
-        "id":  86,
-        "title":  "Razón 86",
-        "text":  "Porque me gusta tu manera de dejar huella."
-    },
-    {
-        "id":  87,
-        "title":  "Razón 87",
-        "text":  "Porque haces que un detalle pequeño se sienta enorme."
-    },
-    {
-        "id":  88,
-        "title":  "Razón 88",
-        "text":  "Porque me dan ganas de presumirte sin hacerlo raro."
-    },
-    {
-        "id":  89,
-        "title":  "Razón 89",
-        "text":  "Porque me gusta cómo te has vuelto especial tan rápido."
-    },
-    {
-        "id":  90,
-        "title":  "Razón 90",
-        "text":  "Porque siento que contigo todavía hay muchísimo por vivir."
-    },
-    {
-        "id":  91,
-        "title":  "Razón 91",
-        "text":  "Porque me gusta que esto no se sienta genérico."
-    },
-    {
-        "id":  92,
-        "title":  "Razón 92",
-        "text":  "Porque nuestra historia tiene su propio idioma."
-    },
-    {
-        "id":  93,
-        "title":  "Razón 93",
-        "text":  "Porque nuestros apodos son ridículos y perfectos."
-    },
-    {
-        "id":  94,
-        "title":  "Razón 94",
-        "text":  "Porque quiero que tengas un rincón digital hecho para ti."
-    },
-    {
-        "id":  95,
-        "title":  "Razón 95",
-        "text":  "Porque me gusta pensar que esto apenas empieza."
-    },
-    {
-        "id":  96,
-        "title":  "Razón 96",
-        "text":  "Porque me haces creer en algo bonito."
-    },
-    {
-        "id":  97,
-        "title":  "Razón 97",
-        "text":  "Porque contigo quiero paciencia, confianza y amor."
-    },
-    {
-        "id":  98,
-        "title":  "Razón 98",
-        "text":  "Porque si el universo tiene centro, aquí eres tú conmigo."
-    },
-    {
-        "id":  99,
-        "title":  "Razón 99",
-        "text":  "Porque te amo de una forma que quiero cuidar."
-    },
-    {
-        "id":  100,
-        "title":  "Razón 100",
-        "text":  "Porque eres Ale, mi Ale, y eso para mí ya es razón suficiente."
-    }
+  { "id": 1, "title": "Tu sonrisa", "displayLabel": "1", "text": "Porque tu sonrisa ilumina hasta los días más oscuros." },
+  { "id": 2, "title": "Tu voz", "displayLabel": "2", "text": "Porque escuchar tu voz es mi sonido favorito del universo." },
+  { "id": 3, "title": "Tu mirada", "displayLabel": "3", "text": "Porque en tus ojos encuentro un universo entero." },
+  { "id": 4, "title": "Tu risa", "displayLabel": "4", "text": "Porque tu risa es contagiosa y hace que todo valga la pena." },
+  { "id": 5, "title": "Tu forma de ser", "displayLabel": "5", "text": "Porque ser tú es lo mejor que puedes ser." },
+  { "id": 6, "title": "Los buenos días", "displayLabel": "6", "text": "Porque despertar y saber de ti hace que mi día empiece bien." },
+  { "id": 7, "title": "Las buenas noches", "displayLabel": "7", "text": "Porque dormirme pensando en ti es el mejor final del día." },
+  { "id": 8, "title": "Tu paciencia", "displayLabel": "8", "text": "Porque tienes una paciencia infinita conmigo." },
+  { "id": 9, "title": "Tu ternura", "displayLabel": "9", "text": "Porque tienes una forma tan dulce de tratar a los demás." },
+  { "id": 10, "title": "Tu inteligencia", "displayLabel": "10", "text": "Porque me sorprendes con lo brillante que eres." },
+  { "id": 11, "title": "Tus abrazos", "displayLabel": "11", "text": "Porque en tus abrazos encuentro mi lugar seguro." },
+  { "id": 12, "title": "Tus besos", "displayLabel": "12", "text": "Porque cada beso tuyo es un viaje sin retorno." },
+  { "id": 13, "title": "Tu compañía", "displayLabel": "13", "text": "Porque a tu lado hasta el silencio es cómodo." },
+  { "id": 14, "title": "Tus mensajes", "displayLabel": "14", "text": "Porque cada notificación tuya me saca una sonrisa." },
+  { "id": 15, "title": "Tu apoyo", "displayLabel": "15", "text": "Porque siempre estás para levantarme cuando caigo." },
+  { "id": 16, "title": "Tu humildad", "displayLabel": "16", "text": "Porque siendo tan increíble, nunca presumes de nada." },
+  { "id": 17, "title": "Tu creatividad", "displayLabel": "17", "text": "Porque ves el mundo de una forma que nadie más ve." },
+  { "id": 18, "title": "Tus sueños", "displayLabel": "18", "text": "Porque tienes sueños grandes y yo quiero ayudarte a cumplirlos." },
+  { "id": 19, "title": "Tu valentía", "displayLabel": "19", "text": "Porque enfrentas tus miedos con una fuerza admirable." },
+  { "id": 20, "title": "Tu honestidad", "displayLabel": "20", "text": "Porque siempre me dices la verdad, aunque duela." },
+  { "id": 21, "title": "Tu sentido del humor", "displayLabel": "21", "text": "Porque me haces reír como nadie más puede." },
+  { "id": 22, "title": "Tus ocurrencias", "displayLabel": "22", "text": "Porque cada día inventas algo nuevo que me sorprende." },
+  { "id": 23, "title": "Tu generosidad", "displayLabel": "23", "text": "Porque das sin esperar nada a cambio." },
+  { "id": 24, "title": "Tu lealtad", "displayLabel": "24", "text": "Porque sé que puedo contar contigo pase lo que pase." },
+  { "id": 25, "title": "Tu forma de amar", "displayLabel": "25", "text": "Porque amas con una intensidad que transforma todo." },
+  { "id": 26, "title": "Tus detalles", "displayLabel": "26", "text": "Porque te fijas en las pequeñas cosas que a nadie más le importan." },
+  { "id": 27, "title": "Tu energía", "displayLabel": "27", "text": "Porque contagias una vibra bonita a donde sea que vayas." },
+  { "id": 28, "title": "Tus cambios de humor", "displayLabel": "28", "text": "Porque hasta cuando estás de malas, te quiero igual." },
+  { "id": 29, "title": "Tu forma de caminar", "displayLabel": "29", "text": "Porque hasta tu forma de caminar me parece especial." },
+  { "id": 30, "title": "Tu estilo", "displayLabel": "30", "text": "Porque tienes un estilo único que te hace ser tú." },
+  { "id": 31, "title": "Las canciones que compartes", "displayLabel": "31", "text": "Porque cada canción que me mandas se vuelve mi favorita." },
+  { "id": 32, "title": "Tus antojos", "displayLabel": "32", "text": "Porque me encanta consentirte con lo que se te antoje." },
+  { "id": 33, "title": "Tu forma de ver la vida", "displayLabel": "33", "text": "Porque tienes una filosofía de vida que admiro profundamente." },
+  { "id": 34, "title": "Tus logros", "displayLabel": "34", "text": "Porque cada cosa que logras me llena de orgullo." },
+  { "id": 35, "title": "Tus imperfecciones", "displayLabel": "35", "text": "Porque hasta lo que tú llamas defectos a mí me parece perfecto." },
+  { "id": 36, "title": "Tu fuerza", "displayLabel": "36", "text": "Porque eres más fuerte de lo que crees y yo lo veo." },
+  { "id": 37, "title": "Tu sensibilidad", "displayLabel": "37", "text": "Porque sientes las cosas profundamente y eso es hermoso." },
+  { "id": 38, "title": "Tus abrazos sorpresa", "displayLabel": "38", "text": "Porque cuando menos lo espero, me abrazas y el mundo se detiene." },
+  { "id": 39, "title": "Tu forma de dormir", "displayLabel": "39", "text": "Porque verte dormir es ver la paz hecha persona." },
+  { "id": 40, "title": "Tu ambición", "displayLabel": "40", "text": "Porque siempre quieres ser mejor y eso me inspira." },
+  { "id": 41, "title": "Tus historias", "displayLabel": "41", "text": "Porque cada anécdota tuya es un capítulo que quiero escuchar." },
+  { "id": 42, "title": "Tu infancia", "displayLabel": "42", "text": "Porque conocer de dónde vienes me hace amarte más." },
+  { "id": 43, "title": "Tus miedos", "displayLabel": "43", "text": "Porque compartes conmigo hasta lo que te da miedo." },
+  { "id": 44, "title": "Tus secretos", "displayLabel": "44", "text": "Porque confías en mí para guardar lo más valioso." },
+  { "id": 45, "title": "Tu forma de enojarte", "displayLabel": "45", "text": "Porque hasta cuando te enojas, se te nota lo buena persona que eres." },
+  { "id": 46, "title": "Tus locuras", "displayLabel": "46", "text": "Porque tus locuras y las mías combinan perfecto." },
+  { "id": 47, "title": "Tus silencios", "displayLabel": "47", "text": "Porque hasta en silencio nos decimos todo." },
+  { "id": 48, "title": "Tus palabras", "displayLabel": "48", "text": "Porque sabes exactamente qué decir en cada momento." },
+  { "id": 49, "title": "Tus gestos", "displayLabel": "49", "text": "Porque dices más con un gesto que muchos con mil palabras." },
+  { "id": 50, "title": "Tu cabello", "displayLabel": "50", "text": "Porque me encanta la forma en que cae tu cabello." },
+  { "id": 51, "title": "Tus manos", "displayLabel": "51", "text": "Porque tomar tu mano es mi forma favorita de viajar." },
+  { "id": 52, "title": "Tu esencia", "displayLabel": "52", "text": "Porque hay algo en ti que no se puede describir, solo sentir." },
+  { "id": 53, "title": "Tu recuerdo", "displayLabel": "53", "text": "Porque cuando no estás, tu recuerdo me acompaña." },
+  { "id": 54, "title": "Tus cumpleaños", "displayLabel": "54", "text": "Porque celebrar tu vida es de mis fechas favoritas." },
+  { "id": 55, "title": "Tus llamadas", "displayLabel": "55", "text": "Porque cada llamada tuya es un regalo inesperado." },
+  { "id": 56, "title": "Tus fotos", "displayLabel": "56", "text": "Porque puedo pasar horas viendo tus fotos sin aburrirme." },
+  { "id": 57, "title": "Tus videos", "displayLabel": "57", "text": "Porque grabar momentos contigo es de mis cosas favoritas." },
+  { "id": 58, "title": "Tu música", "displayLabel": "58", "text": "Porque tienes un playlist que es la banda sonora de nosotros." },
+  { "id": 59, "title": "Tu comida favorita", "displayLabel": "59", "text": "Porque me encanta verte disfrutar lo que te gusta comer." },
+  { "id": 60, "title": "Tus películas", "displayLabel": "60", "text": "Porque ver pelis contigo es plan perfecto." },
+  { "id": 61, "title": "Tu olor", "displayLabel": "61", "text": "Porque tu olor se queda conmigo aunque no estés." },
+  { "id": 62, "title": "Tu perseverancia", "displayLabel": "62", "text": "Porque nunca te rindes, y eso me motiva." },
+  { "id": 63, "title": "Tu bondad", "displayLabel": "63", "text": "Porque eres buena persona hasta cuando nadie te ve." },
+  { "id": 64, "title": "Tu curiosidad", "displayLabel": "64", "text": "Porque siempre quieres aprender algo nuevo." },
+  { "id": 65, "title": "Tu espontaneidad", "displayLabel": "65", "text": "Porque de la nada propones un plan y se vuelve inolvidable." },
+  { "id": 66, "title": "Tus preguntas", "displayLabel": "66", "text": "Porque me haces preguntas que me dejan pensando." },
+  { "id": 67, "title": "Tus respuestas", "displayLabel": "67", "text": "Porque tienes respuestas que me dejan sin palabras." },
+  { "id": 68, "title": "Tu empatía", "displayLabel": "68", "text": "Porque sientes el dolor ajeno como propio." },
+  { "id": 69, "title": "Tu gratitud", "displayLabel": "69", "text": "Porque agradeces hasta lo más simple y eso dice mucho de ti." },
+  { "id": 70, "title": "Tus metas", "displayLabel": "70", "text": "Porque verte cumplir metas es un privilegio." },
+  { "id": 71, "title": "Tu resiliencia", "displayLabel": "71", "text": "Porque después de cada caída, te levantas más fuerte." },
+  { "id": 72, "title": "Tus sorpresas", "displayLabel": "72", "text": "Porque me encanta cómo preparas sorpresas sin que me dé cuenta." },
+  { "id": 73, "title": "Tus disculpas", "displayLabel": "73", "text": "Porque sabes reconocer cuando te equivocas." },
+  { "id": 74, "title": "Tus perdones", "displayLabel": "74", "text": "Porque sabes perdonar con el corazón completo." },
+  { "id": 75, "title": "Tu tiempo", "displayLabel": "75", "text": "Porque eliges pasar tu tiempo conmigo entre millones de opciones." },
+  { "id": 76, "title": "Tus mañanas", "displayLabel": "76", "text": "Porque ver cómo empiezas el día es algo que atesoro." },
+  { "id": 77, "title": "Tus noches", "displayLabel": "77", "text": "Porque nuestras conversaciones nocturnas son las mejores." },
+  { "id": 78, "title": "Tus fines de semana", "displayLabel": "78", "text": "Porque un finde contigo vale por un mes entero." },
+  { "id": 79, "title": "Tu forma de bailar", "displayLabel": "79", "text": "Porque verte bailar, aunque sea poquito, me hace feliz." },
+  { "id": 80, "title": "Tu forma de cantar", "displayLabel": "80", "text": "Porque cantas bonito aunque digas que no." },
+  { "id": 81, "title": "Tus chistes", "displayLabel": "81", "text": "Porque tus chistes malos son los mejores chistes del mundo." },
+  { "id": 82, "title": "Tus memes", "displayLabel": "82", "text": "Porque los memes que me mandas siempre me hacen reír." },
+  { "id": 83, "title": "Tus stickers", "displayLabel": "83", "text": "Porque tienes un sticker para cada momento." },
+  { "id": 84, "title": "Tu voz en notas de audio", "displayLabel": "84", "text": "Porque guardo tus audios como tesoros." },
+  { "id": 85, "title": "Tus videollamadas", "displayLabel": "85", "text": "Porque verte en pantalla es mejor que no verte." },
+  { "id": 86, "title": "Tu amor propio", "displayLabel": "86", "text": "Porque te quieres a ti misma y eso es importantísimo." },
+  { "id": 87, "title": "Tu confianza", "displayLabel": "87", "text": "Porque confías en mí de una forma que no cambio por nada." },
+  { "id": 88, "title": "Tus promesas", "displayLabel": "88", "text": "Porque cuando prometes algo, lo cumples." },
+  { "id": 89, "title": "Tus recuerdos", "displayLabel": "89", "text": "Porque tienes una memoria increíble para nuestras fechas." },
+  { "id": 90, "title": "Tus cartas", "displayLabel": "90", "text": "Porque escribes cosas que me llegan directo al corazón." },
+  { "id": 91, "title": "Tus dibujos", "displayLabel": "91", "text": "Porque hasta un garabato tuyo es arte para mí." },
+  { "id": 92, "title": "Tus aventuras", "displayLabel": "92", "text": "Porque cada salida contigo es una aventura." },
+  { "id": 93, "title": "Tus tradiciones", "displayLabel": "93", "text": "Porque tenemos pequeñas tradiciones que solo nosotros entendemos." },
+  { "id": 94, "title": "Tus apodos", "displayLabel": "94", "text": "Porque tienes apodos para mí que nadie más usa." },
+  { "id": 95, "title": "Tu forma de despedirte", "displayLabel": "95", "text": "Porque hasta tu forma de decir adiós es especial." },
+  { "id": 96, "title": "Tus reencuentros", "displayLabel": "96", "text": "Porque volver a verte después de un tiempo es magia pura." },
+  { "id": 97, "title": "Tu futuro", "displayLabel": "97", "text": "Porque quiero ser parte de todo lo que está por venir en tu vida." },
+  { "id": 98, "title": "Tu presente", "displayLabel": "98", "text": "Porque el presente contigo es justo donde quiero estar." },
+  { "id": 99, "title": "Tu pasado", "displayLabel": "99", "text": "Porque todo lo que viviste te trajo hasta aquí, conmigo." },
+  { "id": 100, "title": "Simplemente tú", "displayLabel": "100", "text": "Porque no necesito una razón. Te amo porque eres tú." }
 ]

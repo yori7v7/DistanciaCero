@@ -1,119 +1,119 @@
-﻿[
-    {
-        "sectionId":  "inicio",
-        "label":  "Inicio",
-        "title":  "Wonderwall",
-        "artist":  "Oasis",
-        "src":  "audio/wonderwall.mp3",
-        "plannedSrc":  "audio/scenes/inicio.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "propuesta",
-        "label":  "La pregunta",
-        "title":  "Wonderwall",
-        "artist":  "Oasis",
-        "src":  "audio/wonderwall.mp3",
-        "plannedSrc":  "audio/scenes/propuesta.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "contadores",
-        "label":  "Nuestro tiempo",
-        "title":  "Wonderwall",
-        "artist":  "Oasis",
-        "src":  "audio/wonderwall.mp3",
-        "plannedSrc":  "audio/scenes/contadores.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "carta",
-        "label":  "Carta principal",
-        "title":  "Wonderwall",
-        "artist":  "Oasis",
-        "src":  "audio/wonderwall.mp3",
-        "plannedSrc":  "audio/scenes/carta.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "historia",
-        "label":  "Diario",
-        "title":  "El Tesoro",
-        "artist":  "El Mató a un Policía Motorizado",
-        "src":  "audio/scenes/diario.mp3",
-        "plannedSrc":  "audio/scenes/historia.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "universo",
-        "label":  "Sistema solar",
-        "title":  "Paraíso Lunar",
-        "artist":  "Siddhartha",
-        "src":  "audio/scenes/universo.mp3",
-        "plannedSrc":  "audio/scenes/universo.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "cartas",
-        "label":  "Cartas mensuales",
-        "title":  "Querer Querernos",
-        "artist":  "Canserbero",
-        "src":  "audio/scenes/cartas.mp3",
-        "plannedSrc":  "audio/scenes/cartas.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "abrir-cuando",
-        "label":  "Abrir cuando...",
-        "title":  "Wonderwall",
-        "artist":  "Oasis",
-        "src":  "audio/wonderwall.mp3",
-        "plannedSrc":  "audio/scenes/abrir-cuando.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "playlist",
-        "label":  "Banda sonora",
-        "title":  "Roi",
-        "artist":  "VIDEOCLUB",
-        "src":  "audio/scenes/playlist.mp3",
-        "plannedSrc":  "audio/scenes/playlist.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "razones",
-        "label":  "100 razones",
-        "title":  "My Kind of Woman",
-        "artist":  "Mac DeMarco",
-        "src":  "audio/scenes/razones.mp3",
-        "plannedSrc":  "audio/scenes/razones.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "galeria-agujero-negro",
-        "label":  "Agujero negro",
-        "title":  "Amor Completo",
-        "artist":  "Mon Laferte",
-        "src":  "audio/scenes/agujero-negro.mp3",
-        "plannedSrc":  "audio/scenes/agujero-negro.mp3",
-        "volume":  0.75
-    },
-    {
-        "sectionId":  "promesas",
-        "label":  "Promesas",
-        "title":  "Tú Sí Eres Real",
-        "artist":  "Kevin Kaarl",
-        "src":  "audio/scenes/promesas.mp3",
-        "plannedSrc":  "audio/scenes/promesas.mp3",
-        "volume":  0.7
-    },
-    {
-        "sectionId":  "distancia",
-        "label":  "Distancia cero",
-        "title":  "Ya No Vivo Por Vivir",
-        "artist":  "Juan Gabriel \u0026 Natalia Lafourcade",
-        "src":  "audio/scenes/distancia.mp3",
-        "plannedSrc":  "audio/scenes/distancia.mp3",
-        "volume":  0.72
-    }
+[
+  {
+    "sectionId": "inicio",
+    "label": "Inicio",
+    "title": "Tema principal",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "propuesta",
+    "label": "La pregunta",
+    "title": "Tema principal",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "contadores",
+    "label": "Nuestro tiempo",
+    "title": "Tema principal",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "carta",
+    "label": "Carta principal",
+    "title": "Tema principal",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "historia",
+    "label": "Diario",
+    "title": "Canción del diario",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "universo",
+    "label": "Sistema solar",
+    "title": "Canción del universo",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "cartas",
+    "label": "Cartas mensuales",
+    "title": "Canción de cartas",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "abrir-cuando",
+    "label": "Abrir cuando...",
+    "title": "Tema principal",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "playlist",
+    "label": "Banda sonora",
+    "title": "Canción de playlist",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "razones",
+    "label": "100 razones",
+    "title": "Canción de razones",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "galeria-agujero-negro",
+    "label": "Agujero negro",
+    "title": "Canción del agujero negro",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.75
+  },
+  {
+    "sectionId": "promesas",
+    "label": "Promesas",
+    "title": "Canción de promesas",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.7
+  },
+  {
+    "sectionId": "distancia",
+    "label": "Distancia cero",
+    "title": "Canción de distancia",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.72
+  }
 ]

@@ -1,0 +1,212 @@
+import { createClient as createSupabaseJsClient, SupabaseClient } from '@supabase/supabase-js'
+
+export const SUPABASE_CLIENT_FACTORY_IMPLEMENTED = true
+
+const STATUS_DISABLED = 'disabled'
+const STATUS_READY = 'ready'
+const STATUS_ENV_MISSING = 'env-missing'
+const STATUS_ENV_INVALID = 'env-invalid'
+
+const ERROR_MESSAGES: Record<string, string> = Object.freeze({
+  SUPABASE_REMOTE_DISABLED: 'Remote Supabase content is disabled. No client was created.',
+  SUPABASE_ENV_MISSING: 'Required public Supabase environment variables are missing. No client was created.',
+  SUPABASE_ENV_INVALID: 'Supabase environment configuration is invalid. No client was created.'
+})
+
+interface InspectedEnv {
+  status: string
+  remoteEnabled: boolean
+  missing: string[]
+  hasUrl: boolean
+  hasPublicKey: boolean
+  keySource: 'publishable' | 'anon' | null
+  url: string
+  key: string
+}
+
+interface EnvSummary {
+  status: string
+  remoteEnabled: boolean
+  missing: readonly string[]
+  hasUrl: boolean
+  hasPublicKey: boolean
+  keySource: 'publishable' | 'anon' | null
+}
+
+let defaultSupabaseClient: SupabaseClient | null = null
+
+function getDefaultEnv(): Record<string, unknown> {
+  return (import.meta as unknown as { env: Record<string, unknown> }).env || {}
+}
+
+function getSafeEnv(env?: Record<string, unknown>): Record<string, unknown> {
+  return env && typeof env === 'object' ? env : {}
+}
+
+function getTrimmedString(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+function isValidHttpsUrl(value: string): boolean {
+  try {
+    const parsedUrl = new URL(value)
+    return (
+      parsedUrl.protocol === 'https:' &&
+      Boolean(parsedUrl.hostname) &&
+      !parsedUrl.username &&
+      !parsedUrl.password
+    )
+  } catch {
+    return false
+  }
+}
+
+function inspectSupabaseEnv(env?: Record<string, unknown>): InspectedEnv {
+  const safeEnv = getSafeEnv(env)
+  const remoteEnabled = isRemoteContentEnabled(safeEnv)
+
+  if (!remoteEnabled) {
+    return {
+      status: STATUS_DISABLED,
+      remoteEnabled: false,
+      missing: [],
+      hasUrl: false,
+      hasPublicKey: false,
+      keySource: null,
+      url: '',
+      key: ''
+    }
+  }
+
+  const url = getTrimmedString(safeEnv.VITE_SUPABASE_URL)
+  const publishableKey = getTrimmedString(safeEnv.VITE_SUPABASE_PUBLISHABLE_KEY)
+  const anonKey = getTrimmedString(safeEnv.VITE_SUPABASE_ANON_KEY)
+  const key = publishableKey || anonKey
+  let keySource: 'publishable' | 'anon' | null = null
+  if (publishableKey) keySource = 'publishable'
+  else if (anonKey) keySource = 'anon'
+  const missing: string[] = []
+
+  if (!url) missing.push('VITE_SUPABASE_URL')
+  if (!key) {
+    missing.push('VITE_SUPABASE_PUBLISHABLE_KEY', 'VITE_SUPABASE_ANON_KEY')
+  }
+
+  if (missing.length > 0) {
+    return {
+      status: STATUS_ENV_MISSING,
+      remoteEnabled: true,
+      missing,
+      hasUrl: Boolean(url),
+      hasPublicKey: Boolean(key),
+      keySource,
+      url,
+      key
+    }
+  }
+
+  if (!isValidHttpsUrl(url)) {
+    return {
+      status: STATUS_ENV_INVALID,
+      remoteEnabled: true,
+      missing: [],
+      hasUrl: true,
+      hasPublicKey: true,
+      keySource,
+      url,
+      key
+    }
+  }
+
+  return {
+    status: STATUS_READY,
+    remoteEnabled: true,
+    missing: [],
+    hasUrl: true,
+    hasPublicKey: true,
+    keySource,
+    url,
+    key
+  }
+}
+
+function getErrorCode(status: string): string {
+  if (status === STATUS_DISABLED) return 'SUPABASE_REMOTE_DISABLED'
+  if (status === STATUS_ENV_MISSING) return 'SUPABASE_ENV_MISSING'
+  return 'SUPABASE_ENV_INVALID'
+}
+
+export class SupabaseEnvironmentError extends Error {
+  readonly code: string
+  readonly status: string
+  readonly missing: readonly string[]
+
+  constructor(code: string, status: string, missing: string[] = []) {
+    super(ERROR_MESSAGES[code] || ERROR_MESSAGES.SUPABASE_ENV_INVALID)
+    this.name = 'SupabaseEnvironmentError'
+    this.code = code
+    this.status = status
+    this.missing = Object.freeze(Array.isArray(missing) ? [...missing] : [])
+  }
+}
+
+/**
+ * Returns true only for the explicit remote opt-in string "true".
+ */
+export function isRemoteContentEnabled(env?: Record<string, unknown>): boolean {
+  return getSafeEnv(env).VITE_REMOTE_CONTENT_ENABLED === 'true'
+}
+
+/**
+ * Returns a safe environment summary without exposing URL or key values.
+ */
+export function getSupabaseEnvStatus(env?: Record<string, unknown>): EnvSummary {
+  const inspected = inspectSupabaseEnv(env)
+
+  return Object.freeze({
+    status: inspected.status,
+    remoteEnabled: inspected.remoteEnabled,
+    missing: Object.freeze([...inspected.missing]),
+    hasUrl: inspected.hasUrl,
+    hasPublicKey: inspected.hasPublicKey,
+    keySource: inspected.keySource
+  })
+}
+
+/**
+ * Creates a new passive Supabase client after explicit environment validation.
+ * It does not execute queries or start application listeners.
+ */
+export function createSupabaseClient(env?: Record<string, unknown>): SupabaseClient {
+  const inspected = inspectSupabaseEnv(env)
+
+  if (inspected.status !== STATUS_READY) {
+    throw new SupabaseEnvironmentError(
+      getErrorCode(inspected.status),
+      inspected.status,
+      inspected.missing
+    )
+  }
+
+  return createSupabaseJsClient(inspected.url, inspected.key, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  })
+}
+
+/**
+ * Lazily creates the default client. Custom env objects create isolated clients
+ * and never populate the default singleton, which keeps smoke tests contained.
+ */
+export function getSupabaseClient(env?: Record<string, unknown>): SupabaseClient {
+  if (env !== undefined) return createSupabaseClient(env)
+
+  if (!defaultSupabaseClient) {
+    defaultSupabaseClient = createSupabaseClient(getDefaultEnv())
+  }
+
+  return defaultSupabaseClient
+}

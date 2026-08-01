@@ -1,23 +1,5 @@
 [
-  {
-    "id": 1,
-    "date": "17 May",
-    "title": "Aniversario",
-    "description": "Hoy empieza oficialmente nuestra historia. Es la fecha que convierte todo este universo en algo todavía más nuestro.",
-    "tag": "Nuestra fecha"
-  },
-  {
-    "id": 2,
-    "date": "18 Nov",
-    "title": "Cumple de Yori",
-    "description": "Próximamente. Aquí después podrá aparecer una sorpresa, una carta o un detallito especial.",
-    "tag": "Próximamente"
-  },
-  {
-    "id": 3,
-    "date": "24 Nov",
-    "title": "Cumple de Ale",
-    "description": "Próximamente. Este espacio queda reservado para su día especial y todo lo bonito que venga con él.",
-    "tag": "Próximamente"
-  }
+  { "id": 1, "date": "2026-01-15", "title": "El día que nos conocimos", "description": "El universo conspiró para cruzar nuestros caminos.", "tag": "aniversario" },
+  { "id": 2, "date": "2026-02-14", "title": "Primer San Valentín", "description": "Nuestro primer 14 de febrero. La distancia no impidió que fuera especial.", "tag": "especial" },
+  { "id": 3, "date": "2026-06-01", "title": "Nuestro primer viaje juntos", "description": "El día que los kilómetros se rindieron ante nosotros.", "tag": "viaje" }
 ]

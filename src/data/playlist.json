@@ -1,47 +1,7 @@
 [
-  {
-    "id": 1,
-    "title": "Wonderwall",
-    "artist": "Oasis",
-    "description": "El tema principal del universo. La canción que abre este espacio y marca la vibra de fondo.",
-    "sourceType": "local",
-    "src": "/audio/wonderwall.mp3",
-    "tag": "Tema principal"
-  },
-  {
-    "id": 2,
-    "title": "Canción de Ale & Yori",
-    "artist": "Hecha con IA",
-    "description": "Un espacio para la canción creada especialmente para nosotros.",
-    "sourceType": "local",
-    "src": "/audio/cancion-ia.mp3",
-    "tag": "Local"
-  },
-  {
-    "id": 3,
-    "title": "Fusión del universo",
-    "artist": "Spotify",
-    "description": "La mezcla de nuestros mundos musicales en una sola fusión.",
-    "sourceType": "external",
-    "link": "https://open.spotify.com/playlist/37i9dQZF1EJt5TVYlLZXd9?si=a93209dac6d64b53",
-    "tag": "Spotify"
-  },
-  {
-    "id": 4,
-    "title": "Playlist 11:11",
-    "artist": "Ale & Yori",
-    "description": "Nuestra playlist de la relación. La que puede quedar como fondo emocional después del tema principal.",
-    "sourceType": "external",
-    "link": "https://open.spotify.com/playlist/53Iki42jhtUsuviE1yRNrh?si=4ef16584fe794ab6",
-    "tag": "Playlist principal"
-  },
-  {
-    "id": 5,
-    "title": "Playlist de Ale",
-    "artist": "Ale",
-    "description": "Una playlist con una vibra más oscura, gótica y muy de ella. Perfecta para otro rincón del universo.",
-    "sourceType": "external",
-    "link": "https://open.spotify.com/playlist/096TK1DBM3dSremSbIg2Qz?si=c21ec55cf7484d5e",
-    "tag": "Vibe de Ale"
-  }
+  { "id": "song-1", "title": "Nuestra canción", "artist": "Artista especial", "description": "La canción que define nuestro amor.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "romántica" },
+  { "id": "song-2", "title": "La que bailamos juntos", "artist": "Banda favorita", "description": "Esa noche que bailamos hasta el amanecer.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "bailable" },
+  { "id": "song-3", "title": "Para cuando me extrañes", "artist": "Cantautor", "description": "Para esos días en que la distancia pesa.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "nostalgia" },
+  { "id": "song-4", "title": "Nuestra canción de buenos días", "artist": "Grupo indie", "description": "El primer mensaje de cada mañana tiene esta canción de fondo.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "feliz" },
+  { "id": "song-5", "title": "La del futuro", "artist": "Por descubrir", "description": "Esta canción aún no la hemos vivido... pero la bailaremos juntos.", "sourceType": "external", "link": "https://open.spotify.com", "tag": "futuro" }
 ]

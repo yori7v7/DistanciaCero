@@ -1,11 +1,29 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" style="color-scheme: dark;">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Distancia Cero | Ale & Yori</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#060010" />
+    <title>Distancia Cero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <script>
+      // Restore SPA path after GitHub Pages 404 redirect
+      (function() {
+        var redirect = sessionStorage.getItem('redirect')
+        if (redirect) {
+          sessionStorage.removeItem('redirect')
+          var base = '/DistanciaCero/'
+          if (redirect.startsWith(base)) {
+            redirect = redirect.slice(base.length - 1)
+          }
+          window.history.replaceState(null, '', redirect)
+        }
+      })()
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

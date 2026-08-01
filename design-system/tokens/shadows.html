@@ -1,0 +1,74 @@
+<!-- @dsCard group="Tokens" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadows — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #060010;
+    color: #fff5fa;
+    padding: 40px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 24px;
+    color: #ff8ad4;
+  }
+  .shadow-cards { display: flex; flex-wrap: wrap; gap: 24px; }
+  .shadow-card {
+    width: 160px; height: 120px;
+    border-radius: 20px;
+    background: rgba(18,4,28,0.82);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: flex-end; padding: 14px;
+    transition: transform 0.2s;
+  }
+  .shadow-card:hover { transform: translateY(-4px); }
+  .shadow-label {
+    font-size: 0.7rem; font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.5);
+    padding: 4px 10px; border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h2>🔲 Shadow Scale</h2>
+
+<div class="shadow-cards">
+  <div class="shadow-card" style="box-shadow: 0 2px 8px rgba(0,0,0,0.3)">
+    <span class="shadow-label">shadow-sm</span>
+  </div>
+  <div class="shadow-card" style="box-shadow: 0 8px 24px rgba(0,0,0,0.4)">
+    <span class="shadow-label">shadow-md</span>
+  </div>
+  <div class="shadow-card" style="box-shadow: 0 0 40px rgba(255,138,212,0.25)">
+    <span class="shadow-label">shadow-glow</span>
+  </div>
+  <div class="shadow-card" style="box-shadow: 0 0 20px rgba(255,122,200,0.12)">
+    <span class="shadow-label">shadow-glow-soft</span>
+  </div>
+  <div class="shadow-card" style="box-shadow: 0 0 35px rgba(255,23,68,0.15)">
+    <span class="shadow-label">shadow-red</span>
+  </div>
+</div>
+
+<div style="margin-top: 32px">
+  <h2 style="font-size: 1.1rem">📐 Usage</h2>
+  <p style="color: #d4b8c8; font-size: 0.85rem; line-height: 1.7; margin-top: 8px;">
+    <code style="background:rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">shadow-sm</code> → cards, modals<br>
+    <code style="background:rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">shadow-glow</code> → pink accent elements<br>
+    <code style="background:rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">shadow-red</code> → danger, important highlights
+  </p>
+</div>
+
+</body>
+</html>

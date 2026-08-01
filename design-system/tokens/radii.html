@@ -1,0 +1,88 @@
+<!-- @dsCard group="Tokens" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Border Radii — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #060010;
+    color: #fff5fa;
+    padding: 40px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 24px;
+    color: #ff8ad4;
+  }
+  .radius-row {
+    display: flex; align-items: center; gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .radius-box {
+    background: rgba(255,138,212,0.15);
+    border: 1.5px solid rgba(255,138,212,0.28);
+    width: 80px; height: 80px;
+    transition: transform 0.2s;
+  }
+  .radius-box:hover { transform: scale(1.1); background: rgba(255,138,212,0.25); }
+  .radius-info { flex: 1; }
+  .radius-name { font-weight: 700; font-size: 0.9rem; }
+  .radius-value { font-size: 0.75rem; color: #d4b8c8; margin-top: 2px; }
+  .radius-use { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h2>⭕ Border Radius Scale</h2>
+
+<div class="radius-row">
+  <div class="radius-box" style="border-radius:12px"></div>
+  <div class="radius-info">
+    <div class="radius-name">radius-sm</div>
+    <div class="radius-value">12px</div>
+    <div class="radius-use">Small cards, inputs, badges</div>
+  </div>
+</div>
+<div class="radius-row">
+  <div class="radius-box" style="border-radius:20px"></div>
+  <div class="radius-info">
+    <div class="radius-name">radius-md</div>
+    <div class="radius-value">20px</div>
+    <div class="radius-use">Standard cards (clay-card)</div>
+  </div>
+</div>
+<div class="radius-row">
+  <div class="radius-box" style="border-radius:28px"></div>
+  <div class="radius-info">
+    <div class="radius-name">radius-lg</div>
+    <div class="radius-value">28px</div>
+    <div class="radius-use">Large panels, modals</div>
+  </div>
+</div>
+<div class="radius-row">
+  <div class="radius-box" style="border-radius:36px"></div>
+  <div class="radius-info">
+    <div class="radius-name">radius-xl</div>
+    <div class="radius-value">36px</div>
+    <div class="radius-use">Hero sections, featured cards</div>
+  </div>
+</div>
+<div class="radius-row">
+  <div class="radius-box" style="border-radius:999px"></div>
+  <div class="radius-info">
+    <div class="radius-name">radius-full</div>
+    <div class="radius-value">999px</div>
+    <div class="radius-use">Pills, buttons, badges</div>
+  </div>
+</div>
+
+</body>
+</html>

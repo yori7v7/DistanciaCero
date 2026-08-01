@@ -1,0 +1,114 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghost Button — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: radial-gradient(circle at center, rgba(255,122,200,0.12), transparent 30%), #060010;
+    color: #fff5fa;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 28px;
+    color: #ff8ad4;
+    text-align: center;
+  }
+  p.sub {
+    color: #d4b8c8; font-size: 0.85rem; text-align: center; margin-bottom: 32px;
+  }
+
+  .ghost-button {
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    border: 1.5px solid rgba(255, 122, 200, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    color: #ffc4e8;
+    cursor: pointer;
+    box-shadow:
+      0 3px 0 rgba(80, 10, 40, 0.25),
+      0 6px 14px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    top: 0;
+    user-select: none;
+  }
+  .ghost-button:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 122, 200, 0.12);
+    border-color: rgba(255, 122, 200, 0.35);
+    color: #fff;
+    box-shadow:
+      0 5px 0 rgba(120, 15, 50, 0.3),
+      0 10px 22px rgba(0, 0, 0, 0.45),
+      0 0 22px rgba(255, 122, 200, 0.15);
+  }
+  .ghost-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(80, 10, 40, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25);
+  }
+  .ghost-button:disabled {
+    opacity: 0.4; cursor: not-allowed; pointer-events: none;
+  }
+
+  .states { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .state-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .state-label {
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.2px; color: rgba(255,255,255,0.35);
+  }
+  .specs {
+    margin-top: 32px; padding: 20px;
+    background: rgba(255,255,255,0.03); border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06); max-width: 600px;
+  }
+  .specs code { display: block; font-size: 0.75rem; color: #d4b8c8; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<h2>👻 Ghost Button</h2>
+<p class="sub">Secondary action — subtle, transparent, used ~11 times across the app</p>
+
+<div class="states">
+  <div class="state-group">
+    <button class="ghost-button" style="pointer-events:none">♪ Pausar canción</button>
+    <span class="state-label">Default</span>
+  </div>
+  <div class="state-group">
+    <button class="ghost-button" style="pointer-events:none; transform:translateY(-2px); background:rgba(255,122,200,0.12); border-color:rgba(255,122,200,0.35); color:#fff; box-shadow:0 5px 0 rgba(120,15,50,0.3), 0 10px 22px rgba(0,0,0,0.45), 0 0 22px rgba(255,122,200,0.15);">♪ Pausar canción</button>
+    <span class="state-label">Hover</span>
+  </div>
+  <div class="state-group">
+    <button class="ghost-button" style="pointer-events:none; transform:translateY(2px); box-shadow:0 1px 0 rgba(80,10,40,0.2), 0 2px 4px rgba(0,0,0,0.25);">♪ Pausar canción</button>
+    <span class="state-label">Pressed</span>
+  </div>
+  <div class="state-group">
+    <button class="ghost-button" disabled>Deshabilitado</button>
+    <span class="state-label">Disabled</span>
+  </div>
+</div>
+
+<div class="specs">
+  <code>border-radius: 12px — slightly smaller than main-button</code>
+  <code>Subtle pink border + translucent bg</code>
+  <code>3px bottom shadow extrusion</code>
+  <code>Hover: pink tint + stronger border</code>
+  <code>Used for: secondary CTAs, cancel, back, music toggle</code>
+</div>
+
+</body>
+</html>

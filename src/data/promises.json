@@ -1,26 +1,6 @@
 [
-  {
-    "id": 1,
-    "title": "Prometo cuidar este espacio",
-    "description": "Ir agregando recuerdos, detalles y señales de amor para que nunca se sienta abandonado.",
-    "footer": "Promesa de Yori"
-  },
-  {
-    "id": 2,
-    "title": "Prometo no dejar que la distancia sea todo",
-    "description": "Porque aunque pese, también podemos construir formas bonitas de estar cerca.",
-    "footer": "Distancia cero"
-  },
-  {
-    "id": 3,
-    "title": "Prometo hacerte sentir querida",
-    "description": "Con palabras, detalles, tiempo, paciencia y mensadas nuestras.",
-    "footer": "Para Ale"
-  },
-  {
-    "id": 4,
-    "title": "Prometo seguir creando",
-    "description": "Cartas, canciones, recuerdos, bromas y pedacitos de universo para nosotros.",
-    "footer": "Ale & Yori"
-  }
+  { "id": 1, "title": "Siempre decirte la verdad", "text": "Prometo ser honesto siempre, incluso cuando sea difícil.", "tag": "eterna" },
+  { "id": 2, "title": "Cuidarte en la distancia", "text": "Prometo encontrar formas de estar presente aunque estemos lejos.", "tag": "diaria" },
+  { "id": 3, "title": "Nunca dormir enojados", "text": "Prometo resolver nuestras diferencias antes de que termine el día.", "tag": "diaria" },
+  { "id": 99, "title": "Proximamente", "text": "Más promesas por escribir...", "tag": "futuro", "isPlaceholder": true }
 ]

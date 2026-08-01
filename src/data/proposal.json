@@ -1,14 +1,14 @@
 {
-  "proposalDate": "2026-05-17T00:00:00",
-  "eyebrow": "Pregunta oficial",
-  "title": "Ale, tengo algo importante que preguntarte",
-  "intro": "Hice esta página porque quería darte algo que no se acabara en un solo día. Algo que pudiera crecer contigo, conmigo y con cada recuerdo que todavía nos falta vivir.",
-  "beforeQuestion": "Pero antes de que este universo siga expandiéndose mes con mes, necesito preguntarte algo de forma oficial:",
-  "question": "¿Puedo ser tu novio?",
-  "yesButton": "Sí, mi Yori",
-  "talkButton": "Te lo respondo en llamada",
+  "proposalDate": "2024-01-01T00:00:00",
+  "eyebrow": "Una pregunta importante",
+  "title": "Tengo algo importante que preguntarte",
+  "intro": "Hice este espacio porque quería darte algo que creciera con nosotros.",
+  "beforeQuestion": "Pero antes de que este universo siga expandiéndose, necesito preguntarte algo:",
+  "question": "¿Quieres ser parte de este universo conmigo?",
+  "yesButton": "Sí, quiero",
+  "talkButton": "Hablemos",
   "yesTitle": "Entonces este universo ya puede crecer oficialmente",
-  "yesMessage": "Gracias, mi Ale. Desde este momento, Distancia Cero deja de ser solo una página bonita y se vuelve nuestro lugar. Aquí voy a seguir guardando cartas, canciones, recuerdos, promesas, fotos, bromas internas, milanesas espirituales y pedacitos de todo lo que somos.",
-  "talkMessage": "Está bien, mi Ale. No quiero que esto se sienta como presión. Esta página nació para darte cariño, no prisa. Si quieres responderme en llamada, aquí voy a estar, todo nervioso pero feliz de haberte preguntado.",
-  "savedFooter": "Pregunta hecha por Yori para Ale el 17 de mayo de 2026."
+  "yesMessage": "Este espacio es para nosotros. Va a crecer, cambiar, llenarse de recuerdos y seguir mejorando. Bienvenida a este universo compartido.",
+  "talkMessage": "Tómate tu tiempo. Este universo no tiene prisa.",
+  "savedFooter": "Pregunta guardada en este universo digital."
 }

@@ -1,26 +1,5 @@
 [
-  {
-    "id": 1,
-    "category": "Cita",
-    "title": "Comer milanesas juntos",
-    "description": "Porque claramente esta es una misión principal, no secundaria."
-  },
-  {
-    "id": 2,
-    "category": "Viaje",
-    "title": "Vernos sin pantalla de por medio",
-    "description": "Un plan futuro para transformar la distancia en abrazo."
-  },
-  {
-    "id": 3,
-    "category": "Recuerdo",
-    "title": "Tomarnos fotos bonitas",
-    "description": "Fotos reales para llenar esta página con momentos de verdad."
-  },
-  {
-    "id": 4,
-    "category": "Vida",
-    "title": "Construir más historias",
-    "description": "Cosas pequeñas, días normales y momentos que luego se vuelven importantes."
-  }
+  { "id": 1, "category": "Viajes", "title": "Recorrer Japón juntos", "description": "Perdernos en las calles de Tokio, visitar templos antiguos y comer ramen auténtico." },
+  { "id": 2, "category": "Hogar", "title": "Nuestra casa", "description": "Un espacio que sea nuestro. Con cocina grande y un rincón de lectura con vista." },
+  { "id": 3, "category": "Aventuras", "title": "Ver las auroras boreales", "description": "Abrigarnos y mirar al cielo mientras las luces bailan sobre nosotros." }
 ]

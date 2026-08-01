@@ -1,0 +1,117 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pill — Distancia Cero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #060010;
+    color: #fff5fa;
+    padding: 60px;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 28px;
+    color: #ff8ad4;
+    text-align: center;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    background: rgba(255, 138, 212, 0.1);
+    border: 1px solid rgba(255, 138, 212, 0.2);
+    color: #ff8ad4;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .now-playing-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    color: white;
+    font-weight: 900;
+    font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #ff8ad4, #ff2d55);
+    box-shadow: 0 0 22px rgba(255, 122, 200, 0.28);
+    animation: audioPulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes audioPulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.04); filter: brightness(1.12); }
+  }
+
+  .variants { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: center; }
+  .variant-label {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 10px;
+  }
+  .specs {
+    margin-top: 32px;
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    max-width: 550px;
+  }
+  .specs code {
+    display: block;
+    font-size: 0.75rem;
+    color: #d4b8c8;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<h2>💊 Pill Badge</h2>
+
+<div class="variants">
+  <div>
+    <span class="pill">✦ Un universo para dos</span>
+    <div class="variant-label">Default pill</div>
+  </div>
+  <div>
+    <span class="pill" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15); color:#d4b8c8;">📅 14 de febrero</span>
+    <div class="variant-label">Muted variant</div>
+  </div>
+  <div>
+    <span class="now-playing-pill" style="animation:none">♪ Reproduciendo</span>
+    <div class="variant-label">Now Playing (gradient)</div>
+  </div>
+</div>
+
+<div class="specs">
+  <code>Default: rgba(255,138,212,0.1) bg + rgba(255,138,212,0.2) border</code>
+  <code>Now Playing: linear-gradient(135deg, pink, red) + glow shadow</code>
+  <code>border-radius: 999px — always pill-shaped</code>
+  <code>font: 12px, 800 weight, 1.5px letter-spacing, uppercase</code>
+</div>
+
+</body>
+</html>
