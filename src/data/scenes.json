@@ -13,7 +13,7 @@
     "title": "Sistema solar",
     "subtitle": "Los planetas que giran alrededor de lo que somos.",
     "musicSectionId": "universo",
-    "sectionIds": ["universo"]
+    "sectionIds": ["universo", "entrelazados"]
   },
   {
     "id": "historia",

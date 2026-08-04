@@ -15,6 +15,7 @@ const PlaylistSection = lazy(() => import('./components/PlaylistSection'))
 const ReasonsSection = lazy(() => import('./components/ReasonsSection'))
 const BlackHoleGallerySection = lazy(() => import('./components/BlackHoleGallerySection'))
 const CentroUniversoSection = lazy(() => import('./components/CentroUniversoSection'))
+const EntrelazadosSection = lazy(() => import('./components/EntrelazadosSection'))
 
 // ─── Light sections (eager, render fast) ───
 import ImportantDatesSection from './components/ImportantDatesSection'
@@ -68,6 +69,7 @@ function App() {
         <MainLetter />
         <Suspense fallback={<SectionSkeleton />}><StoryTimeline timeline={timeline as any} /></Suspense>
         <Suspense fallback={<SectionSkeleton />}><UniverseSection universe={universe as any} /></Suspense>
+        <Suspense fallback={<SectionSkeleton />}><EntrelazadosSection /></Suspense>
         <Suspense fallback={<SectionSkeleton />}><MonthlyLetters letters={monthlyLetters as any} /></Suspense>
         <Suspense fallback={<SectionSkeleton />}><OpenWhenSection cards={openWhen as any} /></Suspense>
         <Suspense fallback={<SectionSkeleton />}><PlaylistSection playlist={playlist as any} /></Suspense>
