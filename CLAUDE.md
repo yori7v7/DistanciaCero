@@ -97,7 +97,7 @@ src/
 │   └── env.d.ts
 ├── __tests__/               # 11 archivos de test (co-localizados con src/)
 └── styles/
-    └── tailwind.css         # Único archivo CSS (~8,500 líneas, design tokens + estilos)
+    └── tailwind.css         # Único archivo CSS (~6,444 líneas, design tokens + estilos)
 ```
 
 ## Arquitectura de datos
@@ -256,12 +256,13 @@ Template seguro en `.env.example`. Valores reales van en `.env.local` (no commit
 - Correr un archivo: `npx vitest run src/__tests__/contentService.test.ts`
 
 ### CSS
-- **1 archivo**: `src/styles/tailwind.css` (~8,500 líneas)
+- **1 archivo**: `src/styles/tailwind.css` (~6,444 líneas, limpieza de −929 líneas dead CSS)
 - Tailwind CSS v4 con plugin `@tailwindcss/vite`
 - Design tokens en bloque `@theme` (colores, sombras, radios, fuentes)
-- Secciones merged de archivos legacy (clay-3d, global, blackhole-gallery, etc.)
+- **⚠️ CSS custom DEBE ir en `@layer components` o `@layer utilities`**: CSS unlayered gana contra Tailwind utilities y rompe estilos de componentes
+- **⚠️ Siempre incluir `-webkit-backdrop-filter`** junto con `backdrop-filter` (Safari < 18)
 - Nuevas clases de componente deben usar Tailwind utilities cuando sea posible
-- Al modificar estilos, verificar visualmente con `npm run dev`
+- Al modificar estilos, verificar con grep que la clase no es dead code y con `npm run dev`
 
 ## Plan de migración a Supabase (Fase S5)
 
