@@ -275,7 +275,6 @@ function CenterStar({ center, activeId, onSelect }) {
       {/* Plain text label below the sun — no button, no sphere, just text */}
       <Html center distanceFactor={11} position={[0, -2.2, 0]} style={{ pointerEvents: 'none' }}>
         <div className="core-3d-label">
-          <Sparkles size={14} />
           <strong>Nosotros</strong>
           <span>El centro</span>
         </div>
