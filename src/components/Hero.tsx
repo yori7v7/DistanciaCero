@@ -28,10 +28,10 @@ function Hero() {
       </div>
 
       <div className="relative z-10 text-center px-6 max-w-3xl mx-auto py-36">
-        {/* Eyebrow pill */}
+        {/* Brand pill */}
         <div className="pill mb-16 mx-auto">
-          <Sparkles size={16} />
-          <span>{siteConfig.hero.eyebrow}</span>
+          <Heart size={16} />
+          <span>Distancia Cero</span>
         </div>
 
         {/* Main title */}

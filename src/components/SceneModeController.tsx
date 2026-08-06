@@ -254,17 +254,6 @@ function SceneModeController() {
 
   return (
     <nav className={`scene-portal scene-nav-${navDirection} ${navPulse ? 'scene-portal-pulse' : ''}`} aria-label="Navegación principal">
-      {/* Logo / Home */}
-      <button
-        className="scene-portal-logo"
-        onClick={() => goToScene('inicio', 'prev')}
-        title="Ir al inicio"
-        aria-label="Ir al inicio"
-      >
-        <Heart size={18} />
-        <span className="scene-portal-logo-text">Distancia Cero</span>
-      </button>
-
       {/* Scene links */}
       <div className="scene-portal-links">
         {navScenes.map((scene, index) => {

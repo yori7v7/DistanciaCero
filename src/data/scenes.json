@@ -16,22 +16,6 @@
     "sectionIds": ["universo"]
   },
   {
-    "id": "entrelazados",
-    "label": "Entrelazados",
-    "title": "Dos almas danzando",
-    "subtitle": "Como partículas entrelazadas, siempre conectados sin importar la distancia.",
-    "musicSectionId": "entrelazados",
-    "sectionIds": ["entrelazados"]
-  },
-  {
-    "id": "historia",
-    "label": "Diario",
-    "title": "Nuestra historia",
-    "subtitle": "El diario de nuestra historia.",
-    "musicSectionId": "historia",
-    "sectionIds": ["historia"]
-  },
-  {
     "id": "galeria",
     "label": "Agujero negro",
     "title": "Galería de recuerdos",
@@ -40,12 +24,28 @@
     "sectionIds": ["galeria-agujero-negro"]
   },
   {
+    "id": "entrelazados",
+    "label": "Entrelazados",
+    "title": "Dos almas danzando",
+    "subtitle": "Como partículas entrelazadas, siempre conectados sin importar la distancia.",
+    "musicSectionId": "entrelazados",
+    "sectionIds": ["entrelazados"]
+  },
+  {
     "id": "razones",
     "label": "100 razones",
     "title": "Razones por las que te quiero",
     "subtitle": "Razones vivas flotando por ti.",
     "musicSectionId": "razones",
     "sectionIds": ["razones"]
+  },
+  {
+    "id": "historia",
+    "label": "Diario",
+    "title": "Nuestra historia",
+    "subtitle": "El diario de nuestra historia.",
+    "musicSectionId": "historia",
+    "sectionIds": ["historia"]
   },
   {
     "id": "cartas",
