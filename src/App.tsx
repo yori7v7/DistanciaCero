@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import AuthGate from './components/AuthGate'
+import ErrorBoundary from './components/ErrorBoundary'
 import LoadingIntro from './components/LoadingIntro'
 import Hero from './components/Hero'
 import ProposalSection from './components/ProposalSection'
@@ -67,19 +68,19 @@ function App() {
         <ProposalSection />
         <CounterSection />
         <MainLetter />
-        <Suspense fallback={<SectionSkeleton />}><StoryTimeline timeline={timeline as any} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><UniverseSection universe={universe as any} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><EntrelazadosSection /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><MonthlyLetters letters={monthlyLetters as any} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><OpenWhenSection cards={openWhen as any} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><PlaylistSection playlist={playlist as any} /></Suspense>
-        <Suspense fallback={<SectionSkeleton />}><ReasonsSection reasons={reasons as any} /></Suspense>
+        <ErrorBoundary fallbackLabel="No se pudo cargar el Diario."><Suspense fallback={<SectionSkeleton />}><StoryTimeline timeline={timeline as any} /></Suspense></ErrorBoundary>
+        <ErrorBoundary fallbackLabel="No se pudo cargar el Universo 3D."><Suspense fallback={<SectionSkeleton />}><UniverseSection universe={universe as any} /></Suspense></ErrorBoundary>
+        <ErrorBoundary fallbackLabel="No se pudo cargar Entrelazados."><Suspense fallback={<SectionSkeleton />}><EntrelazadosSection /></Suspense></ErrorBoundary>
+        <ErrorBoundary fallbackLabel="No se pudieron cargar las Cartas Mensuales."><Suspense fallback={<SectionSkeleton />}><MonthlyLetters letters={monthlyLetters as any} /></Suspense></ErrorBoundary>
+        <ErrorBoundary fallbackLabel="No se pudieron cargar las cartas Abrir Cuando."><Suspense fallback={<SectionSkeleton />}><OpenWhenSection cards={openWhen as any} /></Suspense></ErrorBoundary>
+        <ErrorBoundary fallbackLabel="No se pudo cargar la Playlist."><Suspense fallback={<SectionSkeleton />}><PlaylistSection playlist={playlist as any} /></Suspense></ErrorBoundary>
+        <ErrorBoundary fallbackLabel="No se pudieron cargar las Razones."><Suspense fallback={<SectionSkeleton />}><ReasonsSection reasons={reasons as any} /></Suspense></ErrorBoundary>
         <ImportantDatesSection dates={importantDates as any} />
-        <Suspense fallback={<SectionSkeleton />}><BlackHoleGallerySection items={blackHoleGallery as any} /></Suspense>
+        <ErrorBoundary fallbackLabel="No se pudo cargar la Galería."><Suspense fallback={<SectionSkeleton />}><BlackHoleGallerySection items={blackHoleGallery as any} /></Suspense></ErrorBoundary>
         <FutureDreamsSection dreams={futureDreams as any} />
         <PromisesSection promises={promises as any} />
         <DistanceMapSection />
-        <Suspense fallback={<SectionSkeleton />}><CentroUniversoSection /></Suspense>
+        <ErrorBoundary fallbackLabel="No se pudo cargar el Centro del Universo."><Suspense fallback={<SectionSkeleton />}><CentroUniversoSection /></Suspense></ErrorBoundary>
       </main>
 
       <SceneModeController />

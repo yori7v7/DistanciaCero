@@ -198,6 +198,16 @@ export default function CrudEditorPanel({
                     onChange={(e) => crud.setBaseFormValue(field.name, e.target.value)}
                     required={field.required}
                   />
+                ) : field.type === 'select' ? (
+                  <select
+                    id={`base-${collectionName}-${field.name}`}
+                    value={crud.getBaseFormValue(field.name)}
+                    onChange={(e) => crud.setBaseFormValue(field.name, e.target.value)}
+                  >
+                    {(field.options || []).map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
                 ) : (
                   <input
                     id={`base-${collectionName}-${field.name}`}

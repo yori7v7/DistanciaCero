@@ -110,10 +110,12 @@ function StoryTimeline({ timeline = [] }) {
     }
   }, [currentPage, pages.length])
 
-  const page = pages[currentPage]
+  // Clamp before render: prevents crash when collection shrinks below current page
+  const safePage = Math.min(currentPage, Math.max(0, pages.length - 1))
+  const page = pages[safePage]
   const total = pages.length
-  const isFirst = currentPage === 0
-  const isLast = currentPage === total - 1
+  const isFirst = safePage === 0
+  const isLast = safePage === total - 1
 
   const changePage = (nextIndex, direction) => {
     if (nextIndex < 0 || nextIndex >= total || nextIndex === currentPage || isTurning) return
@@ -152,7 +154,7 @@ function StoryTimeline({ timeline = [] }) {
           </span>
 
           <strong>
-            Página {currentPage + 1} de {total}
+            Página {safePage + 1} de {total}
           </strong>
         </div>
 
@@ -217,9 +219,9 @@ function StoryTimeline({ timeline = [] }) {
           {pages.map((item, index) => (
             <button
               key={item.id}
-              className={`diary-index-dot ${index === currentPage ? 'active' : ''}`}
+              className={`diary-index-dot ${index === safePage ? 'active' : ''}`}
               type="button"
-              onClick={() => changePage(index, index > currentPage ? 'next' : 'prev')}
+              onClick={() => changePage(index, index > safePage ? 'next' : 'prev')}
               aria-label={`Ir a ${item.title}`}
             >
               <span>{item.date}</span>

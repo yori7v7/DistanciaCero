@@ -419,6 +419,7 @@ function BlackHoleGallerySection({ items = [] }) {
         setHasEntered(false)
         setNeedsGate(false)
         setIsOpen(false)
+        setIsEntering(false)
         if (blockedTimerRef.current) {
           clearTimeout(blockedTimerRef.current)
           blockedTimerRef.current = null
