@@ -5321,13 +5321,15 @@ button.submit-btn:hover {
 }
 
 .core-3d-label {
-  padding: 12px 20px;
+  padding: 8px 14px;
   border-radius: 999px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   color: white;
+  font-size: 0.82rem;
+  font-weight: 900;
+  white-space: nowrap;
   background:
     radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.25), transparent 30%),
     rgba(255, 23, 68, 0.22);
@@ -5335,12 +5337,12 @@ button.submit-btn:hover {
 }
 
 .core-3d-label strong {
-  font-size: 1.14rem;
+  font-size: 0.88rem;
 }
 
 .core-3d-label span {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.74rem;
 }
 
 .universe-selected-card {

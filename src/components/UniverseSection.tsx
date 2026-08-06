@@ -224,11 +224,13 @@ function CenterStar({ center, activeId, onSelect }) {
 
   useFrame(({ clock }) => {
     if (starRef.current) {
-      starRef.current.rotation.y += 0.005
+      starRef.current.rotation.y += 0.012
+      starRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.3) * 0.06
       starRef.current.scale.setScalar(1 + Math.sin(clock.elapsedTime * 1.25) * 0.018)
     }
 
     if (haloRef.current) {
+      haloRef.current.rotation.y -= 0.006
       haloRef.current.scale.setScalar(1.06 + Math.sin(clock.elapsedTime * 1.1) * 0.03)
     }
   })
@@ -271,13 +273,13 @@ function CenterStar({ center, activeId, onSelect }) {
         <meshBasicMaterial color="#ff84c8" transparent opacity={0.1} blending={THREE.AdditiveBlending} />
       </mesh>
 
-      <Html center distanceFactor={11} position={[0, 0, 0]}>
+      <Html center distanceFactor={10} position={[0, -2.2, 0]}>
         <button
           className={`core-3d-label ${activeId === 'center-core' ? 'core-3d-label-active' : ''}`}
           type="button"
           onClick={pickCenter}
         >
-          <Sparkles size={18} />
+          <Sparkles size={16} />
           <strong>Nosotros</strong>
           <span>El centro</span>
         </button>
