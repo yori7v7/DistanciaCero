@@ -18,6 +18,7 @@ const BACKGROUND_TRACK = resolvePublicPath(siteConfig.audio.backgroundTrackPath)
 export function AudioProvider({ children }: { children: ReactNode }) {
   const backgroundAudioRef = useRef<HTMLAudioElement | null>(null)
   const trackAudioRef = useRef<HTMLAudioElement | null>(null)
+  const backgroundWasPlayingRef = useRef(false)
 
   const [backgroundPlaying, setBackgroundPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState<AudioTrack | null>(null)
@@ -39,6 +40,10 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const handleBackgroundEnd = () => {
       setBackgroundPlaying(false)
       setInfoMessage('El tema principal terminó.')
+      // Reset to start so the play button works next time
+      if (backgroundAudioRef.current) {
+        backgroundAudioRef.current.currentTime = 0
+      }
     }
 
     const handleBackgroundError = () => {
@@ -49,6 +54,12 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const handleTrackEnd = () => {
       setCurrentTrack(null)
       setInfoMessage('La canción seleccionada terminó.')
+      // Resume background if it was playing before the track started
+      if (backgroundAudioRef.current && backgroundWasPlayingRef.current) {
+        backgroundAudioRef.current.currentTime = 0
+        backgroundAudioRef.current.play().catch(() => {})
+        setBackgroundPlaying(true)
+      }
     }
 
     background.addEventListener('ended', handleBackgroundEnd)
@@ -114,6 +125,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
     const resolvedTrackPath = resolvePublicPath(track.src)
 
+    backgroundWasPlayingRef.current = backgroundPlaying
     pauseBackground()
     trackAudioRef.current.pause()
     trackAudioRef.current.src = resolvedTrackPath

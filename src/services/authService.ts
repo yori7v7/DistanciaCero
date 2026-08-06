@@ -24,6 +24,11 @@ export function getCurrentUser(): LocalUser {
   if (isSupabaseAuthenticated()) {
     const session = getSupabaseSession()
     if (session?.user) {
+      // TODO(sync): try getProfileById(session.user.id) BEFORE building this
+      // synthetic member profile — the profiles table holds the real
+      // displayName/role/avatar (mirrored from auth user_metadata) and avoids
+      // hardcoding role 'member'. Fall back to the synthetic profile only when
+      // no profile row exists yet.
       return {
         id: session.user.id,
         slug: '',

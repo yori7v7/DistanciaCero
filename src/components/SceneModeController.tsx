@@ -301,6 +301,8 @@ function SceneModeController() {
             className={`scene-settings-gear ${settingsOpen ? 'active' : ''} ${centroVisible ? 'centro-active' : ''}`}
             onClick={() => setSettingsOpen((o) => !o)}
             aria-label="Ajustes"
+            aria-expanded={settingsOpen}
+            aria-haspopup="menu"
             title="Ajustes"
           >
             <Settings size={18} />

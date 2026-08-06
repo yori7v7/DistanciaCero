@@ -10,6 +10,8 @@ import type { Session, User } from '@supabase/supabase-js'
 import { getSupabaseClient, isRemoteContentEnabled } from '../integrations/supabase/client'
 import { getCurrentUser, setCurrentUser } from './authService'
 import { getProfileById } from './profileService'
+import { resetSpaceIdCache } from './supabaseSyncService'
+import { DEFAULT_LOCAL_USER_ID } from '../constants/localUsers'
 
 type SessionListener = (session: Session | null) => void
 
@@ -148,8 +150,13 @@ export async function signUpWithEmail(email: string, password: string, displayNa
  * Sign out. Clears Supabase session and resets to local identity.
  */
 export async function signOut(): Promise<void> {
+  // Drop the cached space id BEFORE anything else, so the next account that
+  // signs in can never resolve (and read) the previous account's space.
+  // Without this, the module-level cache leaks data across accounts.
+  resetSpaceIdCache()
+
   if (!isRemoteAvailable()) {
-    setCurrentUser('local-user1')
+    setCurrentUser(DEFAULT_LOCAL_USER_ID)
     return
   }
 
@@ -162,7 +169,7 @@ export async function signOut(): Promise<void> {
 
   supabaseSession = null
   notifyListeners()
-  setCurrentUser('local-user1')
+  setCurrentUser(DEFAULT_LOCAL_USER_ID)
 }
 
 /**

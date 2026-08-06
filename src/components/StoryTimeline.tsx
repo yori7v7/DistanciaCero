@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import SectionTitle from './SectionTitle'
 import { BookOpen, ChevronLeft, ChevronRight, Feather, Heart, MoonStar, Sparkles } from 'lucide-react'
 import { mergeCollectionWithLocal } from '../services/contentService'
@@ -117,19 +117,26 @@ function StoryTimeline({ timeline = [] }) {
   const isFirst = safePage === 0
   const isLast = safePage === total - 1
 
+  const flipTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+
+  useEffect(() => {
+    return () => flipTimersRef.current.forEach(clearTimeout)
+  }, [])
+
   const changePage = (nextIndex, direction) => {
     if (nextIndex < 0 || nextIndex >= total || nextIndex === currentPage || isTurning) return
 
     setTurnDirection(direction)
     setIsTurning(true)
 
-    setTimeout(() => {
-      setCurrentPage(nextIndex)
-    }, 230)
-
-    setTimeout(() => {
-      setIsTurning(false)
-    }, 620)
+    flipTimersRef.current.push(
+      setTimeout(() => {
+        setCurrentPage(nextIndex)
+      }, 230),
+      setTimeout(() => {
+        setIsTurning(false)
+      }, 620)
+    )
   }
 
   const nextPage = () => changePage(currentPage + 1, 'next')

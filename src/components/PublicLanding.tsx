@@ -65,7 +65,7 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
           </span>
         </h1>
 
-        <div className="hero-names mb-10">
+        <div className="flex items-center justify-center gap-3.5 text-pink-soft font-bold text-lg mb-10">
           <span>{siteConfig.couple.yourName}</span>
           <Heart size={22} className="mx-3 inline-block text-pink animate-[pulse-heart_2s_ease-in-out_infinite]" />
           <span>{siteConfig.couple.herName}</span>

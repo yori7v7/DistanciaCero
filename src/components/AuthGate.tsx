@@ -244,20 +244,22 @@ function AuthGate({ children, onReady }: AuthGateProps) {
             <div className="relative">
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={18} />
               <input className={inputClasses} type="text" placeholder="Tu nombre"
-                value={displayName} onChange={(e) => setDisplayName(e.target.value)}
+                aria-label="Tu nombre" value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
                 disabled={busy} autoComplete="name" />
             </div>
           )}
           <div className="relative">
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={18} />
             <input className={inputClasses} type="email" placeholder="Correo electrónico"
-              value={email} onChange={(e) => setEmail(e.target.value)}
+              aria-label="Correo electrónico" value={email}
+              onChange={(e) => setEmail(e.target.value)}
               disabled={busy} autoComplete="email" />
           </div>
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={18} />
             <input className={inputClasses} type={showPassword ? 'text' : 'password'}
-              placeholder="Contraseña" value={password}
+              placeholder="Contraseña" aria-label="Contraseña" value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={busy} autoComplete={isLogin ? 'current-password' : 'new-password'} />
             <button type="button" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-white-soft"

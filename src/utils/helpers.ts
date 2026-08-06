@@ -59,7 +59,13 @@ export function parseTimelineDateForInput(dateValue: unknown): string {
 
   const year = Number(match[3])
   const month = String(monthIndex + 1).padStart(2, '0')
-  const day = String(Number(match[1])).padStart(2, '0')
+  const dayNum = Number(match[1])
+  const day = String(dayNum).padStart(2, '0')
+
+  // Validate day range for the given month/year (e.g., reject "32 de enero")
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate()
+  if (dayNum < 1 || dayNum > daysInMonth) return ''
+
   return `${year}-${month}-${day}`
 }
 

@@ -9,7 +9,7 @@ export default function SimulationBanner({ isSimUnlocked, onToggle }: Simulation
   if (!isSimUnlocked) return null
 
   return (
-    <div className="simulation-banner">
+    <div className="simulation-active-banner">
       <div className="sim-banner-content">
         <ShieldAlert size={20} />
         <div>

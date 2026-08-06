@@ -359,8 +359,14 @@ function ReasonsSection({ reasons = [] }) {
 
       {selectedReason && (
         <div className="reason-modal-backdrop" onPointerDown={() => setSelectedReason(null)}>
-          <article className="reason-modal reason-modal-true-3d" onPointerDown={(event) => event.stopPropagation()}>
-            <button className="reason-close" type="button" onPointerDown={() => setSelectedReason(null)}>
+          <article
+            className="reason-modal reason-modal-true-3d"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reason-modal-title"
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            <button className="reason-close" type="button" onPointerDown={() => setSelectedReason(null)} aria-label="Cerrar">
               <X size={18} />
             </button>
 
@@ -369,7 +375,7 @@ function ReasonsSection({ reasons = [] }) {
             </div>
 
             <span>{selectedReason.title}</span>
-            <h3>{selectedReason.text}</h3>
+            <h3 id="reason-modal-title">{selectedReason.text}</h3>
 
             <button className="main-button" type="button" onPointerDown={() => setSelectedReason(null)}>
               Cerrar

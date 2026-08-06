@@ -72,7 +72,13 @@ export function saveLocalItems(collectionName: string, items: ContentItem[]): Co
   if (!canUseLocalStorage()) return []
 
   const safeItems = Array.isArray(items) ? items : []
-  window.localStorage.setItem(getStorageKey(collectionName), JSON.stringify(safeItems))
+  try {
+    window.localStorage.setItem(getStorageKey(collectionName), JSON.stringify(safeItems))
+  } catch (err) {
+    // QuotaExceededError (private browsing / full quota) must not crash the app.
+    // The in-memory result is still returned so the UI keeps working this session.
+    console.warn(`[store] saveLocalItems failed for '${collectionName}':`, (err as Error).message)
+  }
   return safeItems
 }
 
@@ -135,7 +141,12 @@ export function saveLocalOverrides(collectionName: string, overrides: OverrideMa
   if (!canUseLocalStorage()) return {}
 
   const safeOverrides = overrides && !Array.isArray(overrides) && typeof overrides === 'object' ? overrides : {}
-  window.localStorage.setItem(getOverrideStorageKey(collectionName), JSON.stringify(safeOverrides))
+  try {
+    window.localStorage.setItem(getOverrideStorageKey(collectionName), JSON.stringify(safeOverrides))
+  } catch (err) {
+    // QuotaExceededError (private browsing / full quota) must not crash the app.
+    console.warn(`[store] saveLocalOverrides failed for '${collectionName}':`, (err as Error).message)
+  }
   return safeOverrides
 }
 
@@ -179,7 +190,12 @@ export function saveHiddenItemIds(collectionName: string, ids: string[]): string
   if (!canUseLocalStorage()) return []
 
   const safeIds = Array.isArray(ids) ? ids.map((id) => String(id)) : []
-  window.localStorage.setItem(getHiddenStorageKey(collectionName), JSON.stringify(safeIds))
+  try {
+    window.localStorage.setItem(getHiddenStorageKey(collectionName), JSON.stringify(safeIds))
+  } catch (err) {
+    // QuotaExceededError (private browsing / full quota) must not crash the app.
+    console.warn(`[store] saveHiddenItemIds failed for '${collectionName}':`, (err as Error).message)
+  }
   return safeIds
 }
 
