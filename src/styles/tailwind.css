@@ -5321,18 +5321,16 @@ button.submit-btn:hover {
 }
 
 .core-3d-label {
-  padding: 8px 14px;
+  padding: 7px 13px;
   border-radius: 999px;
   display: flex;
   align-items: center;
   gap: 6px;
-  color: white;
-  font-size: 0.82rem;
+  color: var(--pink-soft);
+  font-size: 0.8rem;
   font-weight: 900;
   white-space: nowrap;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.25), transparent 30%),
-    rgba(255, 23, 68, 0.22);
+  background: rgba(8, 0, 14, 0.55);
   pointer-events: auto;
 }
 
