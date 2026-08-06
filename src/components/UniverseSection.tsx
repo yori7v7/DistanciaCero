@@ -221,28 +221,17 @@ function Planet3D({ planet, index, activeId, onSelect }) {
 function CenterStar({ center, activeId, onSelect }) {
   const starRef = useRef(null)
   const haloRef = useRef(null)
-  const ring1Ref = useRef(null)
-  const ring2Ref = useRef(null)
-  const ring3Ref = useRef(null)
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime
 
     if (starRef.current) {
-      starRef.current.rotation.y += 0.012
-      starRef.current.rotation.x = Math.sin(t * 0.3) * 0.06
       starRef.current.scale.setScalar(1 + Math.sin(t * 1.25) * 0.018)
     }
 
     if (haloRef.current) {
-      haloRef.current.rotation.y -= 0.006
       haloRef.current.scale.setScalar(1.06 + Math.sin(t * 1.1) * 0.03)
     }
-
-    // Visible orbital rings — make rotation obvious
-    if (ring1Ref.current) ring1Ref.current.rotation.z += 0.018
-    if (ring2Ref.current) ring2Ref.current.rotation.x += 0.014
-    if (ring3Ref.current) ring3Ref.current.rotation.y -= 0.022
   })
 
   const pickCenter = (event) => {
@@ -278,49 +267,18 @@ function CenterStar({ center, activeId, onSelect }) {
         />
       </mesh>
 
-      {/* Surface detail spots — make rotation visible on the sphere */}
-      {[[0.6, 0.8, 1.0], [-0.9, -0.3, 0.7], [0.2, -1.1, 0.5], [-0.5, 0.9, -0.8], [1.0, -0.1, -0.6]].map((pos, i) => (
-        <mesh key={i} position={[pos[0] * 1.42, pos[1] * 1.42, pos[2] * 1.42]}>
-          <sphereGeometry args={[0.08 + i * 0.02, 16, 16]} />
-          <meshBasicMaterial color="#fff6fb" transparent opacity={0.45} />
-        </mesh>
-      ))}
-
       <mesh ref={haloRef}>
         <sphereGeometry args={[2.2, 48, 48]} />
         <meshBasicMaterial color="#ff84c8" transparent opacity={0.1} blending={THREE.AdditiveBlending} />
       </mesh>
 
-      {/* Orbital rings — visible rotation */}
-      <group ref={ring1Ref}>
-        <mesh rotation={[Math.PI / 2.6, 0.3, 0]}>
-          <torusGeometry args={[2.05, 0.025, 12, 160]} />
-          <meshBasicMaterial color="#ffb8da" transparent opacity={0.32} />
-        </mesh>
-      </group>
-      <group ref={ring2Ref}>
-        <mesh rotation={[Math.PI / 1.8, -0.5, 0.4]}>
-          <torusGeometry args={[2.18, 0.018, 10, 140]} />
-          <meshBasicMaterial color="#ff84c8" transparent opacity={0.22} />
-        </mesh>
-      </group>
-      <group ref={ring3Ref}>
-        <mesh rotation={[Math.PI / 3.2, 0.7, -0.3]}>
-          <torusGeometry args={[1.92, 0.02, 10, 150]} />
-          <meshBasicMaterial color="#ffd6f0" transparent opacity={0.26} />
-        </mesh>
-      </group>
-
-      <Html center distanceFactor={10} position={[0, -2.2, 0]}>
-        <button
-          className={`core-3d-label ${activeId === 'center-core' ? 'core-3d-label-active' : ''}`}
-          type="button"
-          onClick={pickCenter}
-        >
-          <Sparkles size={16} />
+      {/* Plain text label below the sun — no button, no sphere, just text */}
+      <Html center distanceFactor={11} position={[0, -2.2, 0]} style={{ pointerEvents: 'none' }}>
+        <div className="core-3d-label">
+          <Sparkles size={14} />
           <strong>Nosotros</strong>
           <span>El centro</span>
-        </button>
+        </div>
       </Html>
     </group>
   )

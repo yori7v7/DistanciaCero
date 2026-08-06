@@ -5285,8 +5285,7 @@ button.submit-btn:hover {
   box-shadow: 0 0 18px rgba(255, 122, 200, 0.1);
 }
 
-.planet-3d-label,
-.core-3d-label {
+.planet-3d-label {
   border: 1px solid rgba(255, 122, 200, 0.34);
   background: rgba(8, 0, 14, 0.72);
   color: var(--pink-soft);
@@ -5308,9 +5307,7 @@ button.submit-btn:hover {
 }
 
 .planet-3d-label:hover,
-.planet-3d-label-active,
-.core-3d-label:hover,
-.core-3d-label-active {
+.planet-3d-label-active {
   color: white;
   border-color: rgba(255, 218, 240, 0.86);
   box-shadow: 0 0 28px rgba(255, 122, 200, 0.38);
@@ -5321,26 +5318,28 @@ button.submit-btn:hover {
 }
 
 .core-3d-label {
-  padding: 7px 13px;
-  border-radius: 999px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  color: var(--pink-soft);
-  font-size: 0.8rem;
-  font-weight: 900;
-  white-space: nowrap;
-  background: rgba(8, 0, 14, 0.55);
-  pointer-events: auto;
+  gap: 1px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(255, 122, 200, 0.5);
+  pointer-events: none;
+  user-select: none;
 }
 
 .core-3d-label strong {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--pink-soft);
 }
 
 .core-3d-label span {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.68rem;
 }
 
 .universe-selected-card {
