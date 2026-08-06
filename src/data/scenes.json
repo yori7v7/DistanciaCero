@@ -13,7 +13,15 @@
     "title": "Sistema solar",
     "subtitle": "Los planetas que giran alrededor de lo que somos.",
     "musicSectionId": "universo",
-    "sectionIds": ["universo", "entrelazados"]
+    "sectionIds": ["universo"]
+  },
+  {
+    "id": "entrelazados",
+    "label": "Entrelazados",
+    "title": "Dos almas danzando",
+    "subtitle": "Como partículas entrelazadas, siempre conectados sin importar la distancia.",
+    "musicSectionId": "entrelazados",
+    "sectionIds": ["entrelazados"]
   },
   {
     "id": "historia",

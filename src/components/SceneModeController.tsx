@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ChevronLeft, ChevronRight, Clock, Heart, Home, Images, MapPin, MessageCircle,
+  ChevronLeft, ChevronRight, Clock, Heart, Home, Images, Infinity, MapPin, MessageCircle,
   Music2, Settings, ShieldAlert, Sparkles, Star, LogOut, X
 } from 'lucide-react'
 import scenesData from '../data/scenes.json'
@@ -14,6 +14,7 @@ const CENTRO_VISIBLE_KEY = 'distancia-cero-centro-visible'
 const iconMap: Record<string, any> = {
   inicio: Home,
   universo: Sparkles,
+  entrelazados: Infinity,
   historia: Clock,
   galeria: Images,
   razones: Heart,

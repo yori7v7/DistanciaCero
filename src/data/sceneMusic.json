@@ -36,6 +36,15 @@
     "volume": 0.7
   },
   {
+    "sectionId": "entrelazados",
+    "label": "Entrelazados",
+    "title": "Canción de entrelazados",
+    "artist": "Artista",
+    "src": "",
+    "plannedSrc": "",
+    "volume": 0.72
+  },
+  {
     "sectionId": "historia",
     "label": "Diario",
     "title": "Canción del diario",
