@@ -33,8 +33,8 @@ function CameraRig({ focus, controlsRef }) {
       target.lerp(focusPoint, 0.07)
     } else {
       desired.set(0, 10, 38)
-      camera.position.lerp(desired, 0.034)
-      target.lerp(new THREE.Vector3(0, 0, 0), 0.04)
+      camera.position.lerp(desired, 0.08)
+      target.lerp(new THREE.Vector3(0, 0, 0), 0.09)
     }
 
     if (controlsRef.current) {
@@ -247,7 +247,7 @@ function CenterStar({ center, activeId, onSelect }) {
         features: center.features || [],
       },
       [0, 0, 0],
-      [0, 2, 6.8],
+      [0, 2.4, 9.2],
     )
   }
 
@@ -434,7 +434,7 @@ function UniverseSection({ universe }) {
 
             <button className="main-button planet-back-button" type="button" onClick={closePlanet}>
               <ArrowLeft size={18} />
-              Cerrar planeta
+              {activeWorld.isCenter ? 'Cerrar centro' : 'Cerrar planeta'}
             </button>
           </div>
         </article>
