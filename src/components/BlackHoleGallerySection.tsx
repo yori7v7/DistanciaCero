@@ -481,7 +481,7 @@ function BlackHoleGallerySection({ items = [] }) {
 
   return (
     <section
-      className={`section blackhole-section ${isEntering ? 'blackhole-entering' : ''} ${needsGate ? 'blackhole-needs-gate' : ''} ${hasEntered ? 'blackhole-entered' : ''}`}
+      className="section blackhole-section"
       id="galeria-agujero-negro"
       style={(isEntering || hasEntered) ? { display: 'block', minHeight: '100vh' } : undefined}
     >
