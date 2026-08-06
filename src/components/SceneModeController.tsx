@@ -67,6 +67,14 @@ function SceneModeController() {
   const activeScene = navScenes[activeIndex] || navScenes[0]
   const ActiveIcon = iconMap[activeScene?.id] || Sparkles
 
+  // Stable refs for MutationObserver (avoids stale closures)
+  const activeSceneRef = useRef(activeScene)
+  activeSceneRef.current = activeScene
+  const centroVisibleRef = useRef(centroVisible)
+  centroVisibleRef.current = centroVisible
+  const centroSceneRef = useRef(centroScene)
+  centroSceneRef.current = centroScene
+
   // Close settings on outside click
   useEffect(() => {
     if (!settingsOpen) return
@@ -138,6 +146,46 @@ function SceneModeController() {
     const timer = setTimeout(() => setNavPulse(false), 520)
     return () => clearTimeout(timer)
   }, [activeScene, centroVisible])
+
+  // Re-apply visibility when lazy sections mount (e.g., direct URL access to /app#/universo)
+  // The initial scene-change effect only finds eagerly-loaded sections; lazy sections
+  // mount later via React.Suspense and need their visibility class applied then.
+  useEffect(() => {
+    const main = document.querySelector('main')
+    if (!main) return
+
+    const applyVisibility = () => {
+      const scene = activeSceneRef.current
+      if (!scene) return
+      const activeIds = new Set(scene.sectionIds || [])
+      if (centroVisibleRef.current && centroSceneRef.current) {
+        centroSceneRef.current.sectionIds?.forEach((id: string) => activeIds.add(id))
+      }
+      getSectionElements().forEach((el) => {
+        const shouldShow = activeIds.has(el.id)
+        el.classList.toggle('scene-visible', shouldShow)
+        el.classList.toggle('scene-hidden', !shouldShow)
+        el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+      })
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (node instanceof HTMLElement) {
+            if (node.matches?.('section.section, section.hero') ||
+                node.querySelector?.('section.section, section.hero')) {
+              applyVisibility()
+              return
+            }
+          }
+        }
+      }
+    })
+
+    observer.observe(main, { childList: true, subtree: true })
+    return () => observer.disconnect()
+  }, [])
 
   // Persist centro visibility preference
   useEffect(() => {

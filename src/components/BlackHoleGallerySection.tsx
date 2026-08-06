@@ -381,9 +381,10 @@ function BlackHoleGallerySection({ items = [] }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
-  const [needsGate, setNeedsGate] = useState(true)
+  const [needsGate, setNeedsGate] = useState(false)
   const [activeItem, setActiveItem] = useState(visibleItems[0] || null)
   const portalRef = useRef(null)
+  const blockedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const warpLines = useMemo(() => Array.from({ length: 32 }, (_, index) => index), [])
 
@@ -416,8 +417,12 @@ function BlackHoleGallerySection({ items = [] }) {
     const handler = (e) => {
       if (e.detail?.appSceneId !== 'galeria') {
         setHasEntered(false)
-        setNeedsGate(true)
+        setNeedsGate(false)
         setIsOpen(false)
+        if (blockedTimerRef.current) {
+          clearTimeout(blockedTimerRef.current)
+          blockedTimerRef.current = null
+        }
       }
     }
     window.addEventListener('distancia-cero-scene-change', handler)
@@ -458,10 +463,13 @@ function BlackHoleGallerySection({ items = [] }) {
   }
 
   const blockedMemory = () => {
+    if (hasEntered || needsGate) return
     setNeedsGate(true)
 
-    setTimeout(() => {
+    if (blockedTimerRef.current) clearTimeout(blockedTimerRef.current)
+    blockedTimerRef.current = setTimeout(() => {
       setNeedsGate(false)
+      blockedTimerRef.current = null
     }, 1150)
   }
 
