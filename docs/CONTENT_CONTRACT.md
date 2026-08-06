@@ -5,29 +5,29 @@
 El CRUD editable actual de Distancia Cero esta centralizado con esta ruta:
 
 ```txt
-Componentes visibles -> src/services/contentService.js -> src/repositories/contentRepository.js -> src/repositories/localContentRepository.js -> src/utils/localContentStore.js -> LocalStorage
+Componentes visibles -> src/services/contentService.ts -> src/repositories/contentRepository.ts -> src/repositories/localContentRepository.ts -> src/utils/localContentStore.ts -> LocalStorage
 ```
 
-Los componentes no deben leer ni escribir `src/utils/localContentStore.js` directamente. La fachada publica para contenido editable es `src/services/contentService.js`.
+Los componentes no deben leer ni escribir `src/utils/localContentStore.ts` directamente. La fachada publica para contenido editable es `src/services/contentService.ts`.
 
 El comportamiento actual es local, sin backend, sin Supabase y sin Auth. Este documento fija el contrato para poder preparar una implementacion remota futura sin reescribir componentes.
 
 ## 2. Capas repository actuales
 
-### `src/services/contentService.js`
+### `src/services/contentService.ts`
 
-`contentService.js` es la fachada publica estable para componentes visibles y para el Centro del Universo.
+`contentService.ts` es la fachada publica estable para componentes visibles y para el Centro del Universo.
 
 Reglas:
 
 - Conserva la API publica sync.
-- No debe importar `src/utils/localContentStore.js` directamente.
+- No debe importar `src/utils/localContentStore.ts` directamente.
 - Debe mantener nombres, firmas y return types mientras sea posible.
 - Debe mantener el evento `distancia-cero-content-updated`.
 
-### `src/repositories/contentRepository.js`
+### `src/repositories/contentRepository.ts`
 
-`contentRepository.js` es el selector/fachada de repository.
+`contentRepository.ts` es el selector/fachada de repository.
 
 Estado actual:
 
@@ -40,20 +40,20 @@ Rol futuro:
 - Puede convertirse en el punto de entrada para elegir repository local o remoto.
 - Permite cambiar la implementacion debajo de `contentService` sin tocar componentes.
 
-### `src/repositories/localContentRepository.js`
+### `src/repositories/localContentRepository.ts`
 
-`localContentRepository.js` contiene la implementacion local actual.
+`localContentRepository.ts` contiene la implementacion local actual.
 
 Reglas:
 
-- Es el unico archivo que debe importar `src/utils/localContentStore.js`.
+- Es el unico archivo que debe importar `src/utils/localContentStore.ts`.
 - Mantiene CRUD, overrides, hidden, legacy letters, opened/read y simulation unlocked.
 - Debe conservar comportamiento local actual mientras exista modo local.
 
 ### Regla futura para Supabase
 
 - No meter Supabase directo en componentes.
-- No meter Supabase directo en `contentService.js` si puede evitarse.
+- No meter Supabase directo en `contentService.ts` si puede evitarse.
 - Supabase futuro deberia entrar mediante un repository remoto o selector de repository.
 - No cambiar la API sync a async sin un plan de compatibilidad.
 
@@ -403,8 +403,8 @@ Reglas de compatibilidad:
 
 - `contentService` debe conservar su API publica mientras sea posible.
 - No meter Supabase directo en componentes visibles.
-- No meter Supabase directo en `CentroUniversoSection.jsx`.
-- No meter Supabase directo en `contentService.js` si puede evitarse.
+- No meter Supabase directo en `CentroUniversoSection.tsx`.
+- No meter Supabase directo en `contentService.ts` si puede evitarse.
 - Un repository remoto futuro debe vivir debajo de `contentService`.
 - La implementacion local del repository debe seguir disponible y no cambiar comportamiento.
 - Supabase debe entrar despues de fijar Auth, ownership y RLS.
@@ -416,7 +416,7 @@ Reglas de compatibilidad:
 
 ### Metadata de autoria local actual
 
-`src/services/contentMetadataService.js` existe como helper sync de metadata local/dev.
+`src/services/contentMetadataService.ts` existe como helper sync de metadata local/dev.
 
 La metadata actual aplica solo a items locales genericos creados o editados por:
 

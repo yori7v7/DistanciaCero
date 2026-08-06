@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Build | Vite 8 (`vite.config.ts`, base configurable vía `VITE_BASE`) |
 | Router | react-router-dom v7 (`/` landing, `/app` experiencia) |
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
-| Backend | Supabase (preparado, **NO activado**) |
+| Backend | Supabase (preparado, sync engine implementado en `supabaseSyncService.ts`, **NO activado** — feature flag off) |
 | Datos locales | JSON (`src/data/`) + localStorage |
 | Estilos | Tailwind CSS v4 (1 archivo: `src/styles/tailwind.css`) |
 | Deploy | GitHub Pages (`gh-pages -d dist`) |
@@ -294,5 +294,5 @@ El proyecto tiene **~50 documentos** en `docs/supabase/` detallando la migració
 - `siteConfig.json` tiene las contraseñas, nombres, fechas y config de audio
 - La `GUIA_PARA_EDITAR.md` explica cómo editar cada sección sin tocar código
 - Los docs en `docs/` y `docs/supabase/` son la fuente de verdad para el plan de migración
-- La rama activa es `arquitectura-content-service` (83 commits de refactor)
+- La rama activa es `main` (86 commits, `arquitectura-content-service` ya mergeada)
 - Memoria del proyecto en `C:\Users\dycs1\.claude\projects\C--Users-dycs1-Downloads-DistanciaCero\memory\`

@@ -13,7 +13,7 @@ npm install
 npm run dev        # http://localhost:5173
 npm run build      # Build producción
 npm run deploy     # Deploy a GitHub Pages
-npm test           # 154 tests
+npm test           # 162 tests
 ```
 
 ---
@@ -53,7 +53,7 @@ Luego cada sección tiene su propio JSON:
 | 3D | Three.js + @react-three/fiber + @react-three/drei |
 | Datos | JSON locales + localStorage |
 | Estilos | Tailwind CSS v4 |
-| Tests | Vitest + @testing-library/react (154 tests) |
+| Tests | Vitest + @testing-library/react (162 tests) |
 | CI/CD | GitHub Actions |
 | Deploy | GitHub Pages |
 
