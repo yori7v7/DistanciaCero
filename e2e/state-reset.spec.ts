@@ -25,7 +25,8 @@ test.describe('?reset=1', () => {
     expect(before.scene).toBe('musica')
     expect(before.session).toBe('alive')
 
-    // Navigate with ?reset=1
+    // Navigate with ?reset=1 — accept the confirm dialog so storage is cleared
+    page.once('dialog', dialog => dialog.accept())
     await page.goto('/?reset=1', { waitUntil: 'domcontentloaded' })
 
     // All storage should be empty
@@ -44,7 +45,8 @@ test.describe('?reset=1', () => {
       localStorage.setItem('distancia-cero-active-scene', 'musica')
     })
 
-    // Reset
+    // Reset — accept the confirm dialog so storage is cleared
+    page.once('dialog', dialog => dialog.accept())
     await page.goto('/?reset=1', { waitUntil: 'domcontentloaded' })
 
     // Should land on landing page (route /), not /app
