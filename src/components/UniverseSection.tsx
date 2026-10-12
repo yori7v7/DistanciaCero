@@ -1,9 +1,14 @@
-﻿import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+﻿import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { MutableRefObject } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Html, OrbitControls, Stars } from '@react-three/drei'
 import * as THREE from 'three'
 import SectionTitle from './SectionTitle'
 import { ArrowLeft, MousePointer2, Sparkles, ZoomIn } from 'lucide-react'
+import useDialogFocus from '../hooks/useDialogFocus'
+import { getScrollBehavior } from '../utils/motion'
+import useSceneActivity from '../hooks/useSceneActivity'
+import CanvasActivityController from './CanvasActivityController'
 
 const ORBIT_CONFIGS = [
   { radius: 6.4, speed: 0.105, flatten: 0.78, incline: 0.18, phase: 0.25, ring: false, moon: false },
@@ -15,12 +20,48 @@ const ORBIT_CONFIGS = [
   { radius: 28.2, speed: 0.047, flatten: 0.86, incline: 0.2, phase: 2.08, ring: true, moon: false },
 ]
 
-function CameraRig({ focus, controlsRef }) {
-  const { camera } = useThree()
+type UniverseSelectionAction = (trigger: HTMLElement | null) => void
+
+type UniverseActionRegistry = MutableRefObject<Map<string, UniverseSelectionAction>>
+
+function useUniverseSelectionAction(
+  registry: UniverseActionRegistry,
+  id: string,
+  select: UniverseSelectionAction,
+) {
+  useEffect(() => {
+    const actions = registry.current
+    actions.set(id, select)
+    return () => {
+      if (actions.get(id) === select) actions.delete(id)
+    }
+  }, [id, registry, select])
+}
+
+function CameraRig({ focus, controlsRef, reducedMotion }) {
+  const { camera, invalidate } = useThree()
   const desired = useRef(new THREE.Vector3(0, 10, 38)).current
   const target = useRef(new THREE.Vector3(0, 0, 0)).current
 
+  useEffect(() => {
+    if (!reducedMotion) return
+    if (focus) {
+      desired.set(focus.position[0] + focus.offset[0], focus.position[1] + focus.offset[1], focus.position[2] + focus.offset[2])
+      target.set(focus.position[0], focus.position[1], focus.position[2])
+    } else {
+      desired.set(0, 10, 38)
+      target.set(0, 0, 0)
+    }
+    camera.position.copy(desired)
+    if (controlsRef.current) {
+      controlsRef.current.target.copy(target)
+      controlsRef.current.update()
+    }
+    invalidate()
+  }, [camera, controlsRef, desired, focus, invalidate, reducedMotion, target])
+
   useFrame(() => {
+    if (reducedMotion) return
     if (focus) {
       const focusPoint = new THREE.Vector3(focus.position[0], focus.position[1], focus.position[2])
       desired.set(
@@ -66,12 +107,13 @@ function PlanetAtmosphere({ size, color }) {
   )
 }
 
-function PlanetVisual({ planet, size, config, active }) {
+function PlanetVisual({ planet, size, config, active, reducedMotion }) {
   const spinRef = useRef(null)
   const moonRef = useRef(null)
   const shimmerRef = useRef(null)
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     if (spinRef.current) {
       spinRef.current.rotation.y += 0.01
       spinRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.5) * 0.035
@@ -154,7 +196,7 @@ function PlanetVisual({ planet, size, config, active }) {
   )
 }
 
-function Planet3D({ planet, index, activeId, onSelect }) {
+function Planet3D({ planet, index, activeId, onSelect, reducedMotion, actionRegistry }) {
   const orbitRef = useRef(null)
   const config = ORBIT_CONFIGS[index] || {
     radius: 7 + index * 3.2,
@@ -169,6 +211,7 @@ function Planet3D({ planet, index, activeId, onSelect }) {
   const size = Math.max(0.42, Math.min(0.78, planet.size / 88))
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     const t = clock.elapsedTime * config.speed + config.phase
     const flatZ = Math.sin(t) * config.radius * config.flatten
 
@@ -181,13 +224,18 @@ function Planet3D({ planet, index, activeId, onSelect }) {
     }
   })
 
+  const selectAtCurrentPosition = useCallback((trigger: HTMLElement | null) => {
+    if (!orbitRef.current) return
+    const world = new THREE.Vector3()
+    orbitRef.current.getWorldPosition(world)
+    onSelect(planet, [world.x, world.y, world.z], [0, 1.4, 5.2], trigger)
+  }, [onSelect, planet])
+
+  useUniverseSelectionAction(actionRegistry, String(planet.id), selectAtCurrentPosition)
+
   const pickPlanet = (event) => {
     event.stopPropagation()
-
-    const world = new THREE.Vector3()
-    orbitRef.current?.getWorldPosition(world)
-
-    onSelect(planet, [world.x, world.y, world.z], [0, 1.4, 5.2])
+    selectAtCurrentPosition(event.currentTarget instanceof HTMLElement ? event.currentTarget : null)
   }
 
   return (
@@ -199,9 +247,13 @@ function Planet3D({ planet, index, activeId, onSelect }) {
         opacity={activeId === planet.id ? 0.32 : 0.12}
       />
 
-      <group ref={orbitRef}>
+      <group ref={orbitRef} position={[
+        Math.cos(config.phase) * config.radius,
+        Math.sin(config.phase) * config.radius * config.flatten * Math.sin(config.incline),
+        Math.sin(config.phase) * config.radius * config.flatten * Math.cos(config.incline),
+      ]}>
         <group onClick={pickPlanet}>
-          <PlanetVisual planet={planet} size={size} config={config} active={activeId === planet.id} />
+          <PlanetVisual planet={planet} size={size} config={config} active={activeId === planet.id} reducedMotion={reducedMotion} />
         </group>
 
         <Html center distanceFactor={9.2} position={[0, -size - 0.42, 0]}>
@@ -218,11 +270,12 @@ function Planet3D({ planet, index, activeId, onSelect }) {
   )
 }
 
-function CenterStar({ center, activeId, onSelect }) {
+function CenterStar({ center, activeId, onSelect, reducedMotion, actionRegistry }) {
   const starRef = useRef(null)
   const haloRef = useRef(null)
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     const t = clock.elapsedTime
 
     if (starRef.current) {
@@ -234,9 +287,7 @@ function CenterStar({ center, activeId, onSelect }) {
     }
   })
 
-  const pickCenter = (event) => {
-    event.stopPropagation()
-
+  const selectCenter = useCallback((trigger: HTMLElement | null) => {
     onSelect(
       {
         ...center,
@@ -249,7 +300,15 @@ function CenterStar({ center, activeId, onSelect }) {
       },
       [0, 0, 0],
       [0, 2.4, 9.2],
+      trigger,
     )
+  }, [center, onSelect])
+
+  useUniverseSelectionAction(actionRegistry, 'center-core', selectCenter)
+
+  const pickCenter = (event) => {
+    event.stopPropagation()
+    selectCenter(event.currentTarget instanceof HTMLElement ? event.currentTarget : null)
   }
 
   return (
@@ -272,21 +331,26 @@ function CenterStar({ center, activeId, onSelect }) {
         <meshBasicMaterial color="#ff84c8" transparent opacity={0.1} blending={THREE.AdditiveBlending} />
       </mesh>
 
-      {/* Plain text label below the sun — no button, no sphere, just text */}
-      <Html center distanceFactor={11} position={[0, -2.2, 0]} style={{ pointerEvents: 'none' }}>
-        <div className="core-3d-label">
+      <Html center distanceFactor={11} position={[0, -2.2, 0]}>
+        <button type="button" className="core-3d-label" onClick={pickCenter} aria-pressed={activeId === 'center-core'}>
           <strong>Nosotros</strong>
           <span>El centro</span>
-        </div>
+        </button>
       </Html>
     </group>
   )
 }
 
-function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
+function UniverseScene({ universe, activeWorld, cameraFocus, onSelect, reducedMotion, actionRegistry, onReady }) {
   const controlsRef = useRef(null)
   const planets = useMemo(() => universe.planets || [], [universe])
   const center = universe.center || {}
+
+  useEffect(() => {
+    // Child effects register their selection actions before the scene becomes ready.
+    onReady(true)
+    return () => onReady(false)
+  }, [onReady])
 
   return (
     <>
@@ -300,7 +364,7 @@ function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
 
       <Stars radius={135} depth={70} count={2200} factor={4.8} saturation={0} fade speed={0.18} />
 
-      <CenterStar center={center} activeId={activeWorld?.id} onSelect={onSelect} />
+      <CenterStar center={center} activeId={activeWorld?.id} onSelect={onSelect} reducedMotion={reducedMotion} actionRegistry={actionRegistry} />
 
       {planets.map((planet, index) => (
         <Planet3D
@@ -309,10 +373,12 @@ function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
           index={index}
           activeId={activeWorld?.id}
           onSelect={onSelect}
+          reducedMotion={reducedMotion}
+          actionRegistry={actionRegistry}
         />
       ))}
 
-      <CameraRig focus={cameraFocus} controlsRef={controlsRef} />
+      <CameraRig focus={cameraFocus} controlsRef={controlsRef} reducedMotion={reducedMotion} />
 
       <OrbitControls
         ref={controlsRef}
@@ -323,38 +389,75 @@ function UniverseScene({ universe, activeWorld, cameraFocus, onSelect }) {
         rotateSpeed={0.55}
         zoomSpeed={0.72}
         dampingFactor={0.08}
-        enableDamping
+        enableDamping={!reducedMotion}
       />
     </>
   )
 }
 
 function UniverseSection({ universe }) {
+  const { reducedMotion } = useSceneActivity('universo')
   const [activeWorld, setActiveWorld] = useState(null)
   const [cameraFocus, setCameraFocus] = useState(null)
   const [showDetails, setShowDetails] = useState(false)
-  const detailsRef = useRef(null)
-  const systemRef = useRef(null)
-  const timerRef = useRef(null)
+  const [actionsReady, setActionsReady] = useState(false)
+  const actionRegistry = useRef<Map<string, UniverseSelectionAction>>(new Map())
+  const detailsRef = useRef<HTMLElement>(null)
+  const detailsTitleRef = useRef<HTMLHeadingElement>(null)
+  const systemRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const returnFocusRef = useRef<HTMLElement>(null)
+  const activeWorldRef = useRef(null)
+  const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const cancelTimers = () => {
+    if (revealTimerRef.current) clearTimeout(revealTimerRef.current)
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current)
+    revealTimerRef.current = null
+    scrollTimerRef.current = null
+  }
+  const isVisible = () => Boolean(sectionRef.current &&
+    !sectionRef.current.closest('.scene-hidden, [inert], [aria-hidden="true"]'))
+
+  useDialogFocus({
+    isOpen: showDetails, dialogRef: detailsRef, initialFocusRef: detailsTitleRef,
+    returnFocusRef, trapFocus: false, onClose: () => closePlanet(),
+  })
 
   useEffect(() => {
+    const handleSceneChange = (event: CustomEvent) => {
+      const sceneId = event.detail?.appSceneId || event.detail?.sceneId
+      if (!sceneId || sceneId === 'universo') return
+      cancelTimers()
+      // Preserve the selected world when leaving during its reveal, without deferred focus/scroll.
+      if (activeWorldRef.current) setShowDetails(true)
+    }
+    window.addEventListener('distancia-cero-scene-change', handleSceneChange)
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
+      cancelTimers()
+      window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
     }
   }, [])
 
-  const selectPlanet = (planet, position, offset) => {
-    if (timerRef.current) clearTimeout(timerRef.current)
+  const selectPlanet = (planet, position, offset, trigger: HTMLElement | null = null) => {
+    cancelTimers()
+    returnFocusRef.current = trigger || systemRef.current
+    activeWorldRef.current = planet
 
     setShowDetails(false)
     setActiveWorld(planet)
     setCameraFocus({ position, offset })
 
-    timerRef.current = setTimeout(() => {
+    revealTimerRef.current = setTimeout(() => {
+      revealTimerRef.current = null
+      if (!isVisible()) return
       setShowDetails(true)
-      setTimeout(() => {
+      scrollTimerRef.current = setTimeout(() => {
+        scrollTimerRef.current = null
+        if (!isVisible()) return
         detailsRef.current?.scrollIntoView({
-          behavior: 'smooth',
+          behavior: getScrollBehavior(),
           block: 'center',
         })
       }, 140)
@@ -362,29 +465,39 @@ function UniverseSection({ universe }) {
   }
 
   const closePlanet = () => {
-    if (timerRef.current) clearTimeout(timerRef.current)
+    cancelTimers()
+    // Cancel a smooth scroll towards the detail before removing its target.
+    window.scrollTo({ top: window.scrollY, behavior: 'instant' })
+    activeWorldRef.current = null
 
     setShowDetails(false)
     setActiveWorld(null)
     setCameraFocus(null)
 
-    setTimeout(() => {
-      systemRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
+    scrollTimerRef.current = setTimeout(() => {
+      scrollTimerRef.current = null
+      if (!isVisible()) return
+      const trigger = returnFocusRef.current
+      // A newer action owns the focus and scroll destination.
+      if (!trigger?.isConnected || document.activeElement !== trigger) return
+      const fromExplorer = trigger?.isConnected && trigger.matches('.universe-explorer-button')
+      const destination = fromExplorer ? trigger : systemRef.current
+      destination?.scrollIntoView({
+        behavior: fromExplorer ? 'instant' : getScrollBehavior(),
+        block: fromExplorer ? 'nearest' : 'center',
       })
     }, 140)
   }
 
   return (
-    <section className="section" id="universo">
+    <section className="section" id="universo" ref={sectionRef}>
       <SectionTitle
         eyebrow="Universo"
         title="Este es el sistema solar que imaginé para nosotros"
         text="Quise que cada planeta se sintiera más vivo, más bonito y más nuestro, como si realmente existiera allá afuera."
       />
 
-      <div className="true-3d-card universe-3d-shell fade-up" ref={systemRef}>
+      <div className="true-3d-card universe-3d-shell fade-up" ref={systemRef} tabIndex={-1}>
         <div className="true-3d-hud">
           <span>
             <ZoomIn size={16} />
@@ -400,27 +513,60 @@ function UniverseSection({ universe }) {
           </span>
         </div>
 
-        <Canvas className="true-3d-canvas" shadows camera={{ position: [0, 10, 38], fov: 42 }}>
+        <Canvas className="true-3d-canvas" frameloop="demand" shadows camera={{ position: [0, 10, 38], fov: 42 }}>
           <Suspense fallback={null}>
+            <CanvasActivityController sectionId="universo" />
             <UniverseScene
               universe={universe}
               activeWorld={activeWorld}
               cameraFocus={cameraFocus}
               onSelect={selectPlanet}
+              reducedMotion={reducedMotion}
+              actionRegistry={actionRegistry}
+              onReady={setActionsReady}
             />
           </Suspense>
         </Canvas>
       </div>
 
+      <div className="universe-explorer" role="group" aria-labelledby="universe-explorer-title" aria-busy={!actionsReady}>
+        <p id="universe-explorer-title">Explorar el universo</p>
+        <div className="universe-explorer-buttons">
+          <button
+            type="button"
+            className="universe-explorer-button"
+            aria-label="Explorar Nosotros"
+            aria-pressed={activeWorld?.id === 'center-core'}
+            disabled={!actionsReady}
+            onClick={event => actionRegistry.current.get('center-core')?.(event.currentTarget)}
+          >
+            Nosotros
+          </button>
+          {(universe.planets || []).map(planet => (
+            <button
+              key={planet.id}
+              type="button"
+              className="universe-explorer-button"
+              aria-label={`Explorar ${planet.name}`}
+              aria-pressed={activeWorld?.id === planet.id}
+              disabled={!actionsReady}
+              onClick={event => actionRegistry.current.get(String(planet.id))?.(event.currentTarget)}
+            >
+              {planet.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {activeWorld && showDetails && (
-        <article className="universe-selected-card fade-up" ref={detailsRef}>
+        <article className="universe-selected-card fade-up" ref={detailsRef} tabIndex={-1}>
           <div className="universe-selected-orb" style={{ '--planet-a': activeWorld.colorA, '--planet-b': activeWorld.colorB } as React.CSSProperties}>
             <span></span>
           </div>
 
           <div className="universe-selected-content">
             <span>{activeWorld.type}</span>
-            <h3>{activeWorld.name}</h3>
+            <h3 ref={detailsTitleRef} tabIndex={-1}>{activeWorld.name}</h3>
             <p>{activeWorld.description}</p>
 
             <ul>

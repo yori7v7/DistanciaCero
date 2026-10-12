@@ -4,6 +4,8 @@ import { Stars } from '@react-three/drei'
 import * as THREE from 'three'
 import SectionTitle from './SectionTitle'
 import { Heart } from 'lucide-react'
+import useSceneActivity from '../hooks/useSceneActivity'
+import CanvasActivityController from './CanvasActivityController'
 
 // ─── Parámetros de animación para cada cubito ───
 
@@ -48,12 +50,13 @@ const RED_CUBE: CubitoParams = {
 
 // ─── Cubito individual ───
 
-function Cubito({ params }: { params: CubitoParams }) {
+function Cubito({ params, reducedMotion }: { params: CubitoParams, reducedMotion: boolean }) {
   const groupRef = useRef<THREE.Group>(null!)
   const glowRef = useRef<THREE.Mesh>(null!)
   const innerGlowRef = useRef<THREE.Mesh>(null!)
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     const t = clock.elapsedTime
 
     // Flotación suave (bobbing)
@@ -84,7 +87,7 @@ function Cubito({ params }: { params: CubitoParams }) {
   })
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} position={params.basePosition}>
       {/* Aura exterior — halo grande y difuso */}
       <mesh ref={glowRef}>
         <boxGeometry args={[params.size * 2.2, params.size * 2.2, params.size * 2.2]} />
@@ -126,7 +129,7 @@ function Cubito({ params }: { params: CubitoParams }) {
 
 // ─── Conexión luminosa entre los cubitos ───
 
-function ConnectionLine() {
+function ConnectionLine({ reducedMotion }: { reducedMotion: boolean }) {
   const lineRef = useRef<THREE.Line>(null!)
 
   // Crear la geometría y material una vez con useMemo
@@ -153,6 +156,7 @@ function ConnectionLine() {
   }, [])
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     const t = clock.elapsedTime
     const pulse = 0.25 + Math.sin(t * 1.1) * 0.12
     material.opacity = pulse
@@ -163,7 +167,7 @@ function ConnectionLine() {
 
 // ─── Partículas flotantes decorativas ───
 
-function FloatingParticles() {
+function FloatingParticles({ reducedMotion }: { reducedMotion: boolean }) {
   const particlesRef = useRef<THREE.Points>(null!)
   const count = 60
   const positions = useMemo(() => {
@@ -180,6 +184,7 @@ function FloatingParticles() {
   }, [])
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     const t = clock.elapsedTime
     particlesRef.current.rotation.y += 0.0008
     particlesRef.current.rotation.x = Math.sin(t * 0.2) * 0.001
@@ -211,7 +216,7 @@ function FloatingParticles() {
 
 // ─── Escena 3D completa ───
 
-function EntrelazadosScene() {
+function EntrelazadosScene({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <>
       {/* Fondo espacio profundo */}
@@ -228,14 +233,14 @@ function EntrelazadosScene() {
       <Stars radius={30} depth={20} count={800} factor={3} saturation={0} fade speed={0.1} />
 
       {/* Partículas decorativas */}
-      <FloatingParticles />
+      <FloatingParticles reducedMotion={reducedMotion} />
 
       {/* Línea de conexión */}
-      <ConnectionLine />
+      <ConnectionLine reducedMotion={reducedMotion} />
 
       {/* Cubitos */}
-      <Cubito params={PINK_CUBE} />
-      <Cubito params={RED_CUBE} />
+      <Cubito params={PINK_CUBE} reducedMotion={reducedMotion} />
+      <Cubito params={RED_CUBE} reducedMotion={reducedMotion} />
     </>
   )
 }
@@ -243,6 +248,7 @@ function EntrelazadosScene() {
 // ─── Componente principal (wrapper con título y canvas) ───
 
 function EntrelazadosSection() {
+  const { reducedMotion } = useSceneActivity('entrelazados')
   return (
     <section className="section" id="entrelazados">
       <SectionTitle
@@ -263,11 +269,13 @@ function EntrelazadosSection() {
 
         <Canvas
           className="entrelazados-canvas"
+          frameloop="demand"
           camera={{ position: [0, 1.2, 9], fov: 45 }}
           gl={{ antialias: true, alpha: false }}
           dpr={[1, 2]}
         >
-          <EntrelazadosScene />
+          <CanvasActivityController sectionId="entrelazados" />
+          <EntrelazadosScene reducedMotion={reducedMotion} />
         </Canvas>
       </div>
     </section>

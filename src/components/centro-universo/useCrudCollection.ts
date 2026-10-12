@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ContentItem, OverrideMap } from '../../types/content'
 import {
   addCollectionItem,
@@ -8,10 +8,8 @@ import {
   getCollectionItems,
   getCollectionOverrides,
   hideCollectionItem,
+  notifyContentUpdated,
   restoreCollectionItem,
-  saveCollectionHiddenIds,
-  saveCollectionItems,
-  saveCollectionOverrides,
   setCollectionOverride,
   updateCollectionItem
 } from '../../services/contentService'
@@ -22,7 +20,7 @@ export interface CrudField {
   name: string
   label: string
   required?: boolean
-  type?: string  // 'text' | 'textarea' | 'date' | 'select'
+  type?: 'text' | 'textarea' | 'date' | 'select'
   rows?: number
   placeholder?: string
   options?: { value: string; label: string }[]
@@ -68,6 +66,7 @@ export interface CrudCollectionAPI {
   getBaseFormValue: (fieldName: string) => string
   setBaseFormValue: (fieldName: string, value: string) => void
   editingBaseId: string | null
+  notice: { type: 'success' | 'error'; message: string } | null
   // Handlers
   handleSubmit: (event: React.FormEvent) => CrudFormSubmitResult
   handleEdit: (item: ContentItem) => ContentItem | undefined
@@ -113,13 +112,27 @@ export default function useCrudCollection(
   const initialBaseForm: Record<string, string> = Object.fromEntries(fields.map(f => [`base_${f.name}`, '']))
   const [baseForm, setBaseForm] = useState<Record<string, string>>(initialBaseForm)
   const [editingBaseId, setEditingBaseId] = useState<string | null>(null)
+  const [notice, setNotice] = useState<CrudCollectionAPI['notice']>(null)
 
   // --- Load from localStorage on init ---
-  const loadData = () => {
+  const loadData = useCallback(() => {
     setLocalItems(getCollectionItems(collectionName))
     setOverrides(getCollectionOverrides(collectionName))
     setHiddenIds(getCollectionHiddenIds(collectionName))
-  }
+  }, [collectionName])
+
+  useEffect(() => {
+    loadData()
+    const handleContentUpdate = (event: Event) => {
+      const detail = (event as CustomEvent).detail
+      const name = detail?.collection ?? detail?.collectionName
+      const isLetterUpdate = name === 'letters' &&
+        (collectionName === 'monthlyLetters' || collectionName === 'openWhenLetters')
+      if (name === collectionName || name === 'all' || isLetterUpdate) loadData()
+    }
+    window.addEventListener('distancia-cero-content-updated', handleContentUpdate)
+    return () => window.removeEventListener('distancia-cero-content-updated', handleContentUpdate)
+  }, [collectionName, loadData])
 
   // --- Derived: visible base items ---
   const visibleBaseItems = defaultData.map((item) => {
@@ -134,7 +147,7 @@ export default function useCrudCollection(
   })
 
   const editedBaseCount = visibleBaseItems.filter(i => i.isOverridden).length
-  const hiddenBaseCount = hiddenIds.length
+  const hiddenBaseCount = visibleBaseItems.filter(i => i.isHidden).length
   const localCount = localItems.length
   const totalCount = visibleBaseItems.filter(i => !i.isHidden).length + localCount
 
@@ -149,9 +162,30 @@ export default function useCrudCollection(
   }
 
   const dispatchContentUpdate = (name?: string) => {
-    window.dispatchEvent(new CustomEvent('distancia-cero-content-updated', {
-      detail: { collection: name || collectionName }
-    }))
+    notifyContentUpdated(name || collectionName)
+  }
+
+  const reportError = (error: unknown): CrudFormSubmitResult => {
+    const message = error instanceof Error ? error.message : 'No se pudieron guardar los cambios. Inténtalo de nuevo.'
+    setNotice({ type: 'error', message })
+    return { success: false, error: message }
+  }
+
+  const validateForm = (getValue: (name: string) => string): string | null => {
+    const values = Object.fromEntries(fields.map(field => [field.name, getValue(field.name).trim()]))
+    const missing = fields.find(field => field.required && !values[field.name])
+    return missing ? `Completa el campo «${missing.label}».` : fieldSchema.validate?.(values) || null
+  }
+
+  const runMutation = (mutation: () => void, message: string): CrudFormSubmitResult => {
+    try {
+      mutation()
+      dispatchContentUpdate()
+      setNotice({ type: 'success', message })
+      return { success: true }
+    } catch (error) {
+      return reportError(error)
+    }
   }
 
   // Ref-based counter survives re-renders — avoids id collisions across submissions
@@ -173,19 +207,27 @@ export default function useCrudCollection(
   // --- Handlers ---
   const handleSubmit = (event: React.FormEvent): CrudFormSubmitResult => {
     event.preventDefault()
-    const item = buildLocalItem()
-    if (editingId) delete (item as any).createdAt
-    const updated = editingId
-      ? updateCollectionItem(collectionName, editingId, { ...item, updatedAt: new Date().toISOString() })
-      : addCollectionItem(collectionName, item)
-    setLocalItems(updated)
-    resetForm()
-    dispatchContentUpdate()
-    return { success: true, isEdit: Boolean(editingId) }
+    const validationError = validateForm(getFormValue)
+    if (validationError) return reportError(new Error(validationError))
+    if (editingId && !localItems.some(item => String(item.id) === editingId)) {
+      return reportError(new Error('Este elemento ya no existe. Cancela la edición para crear uno nuevo.'))
+    }
+    const isEdit = Boolean(editingId)
+    const result = runMutation(() => {
+      const item = buildLocalItem()
+      if (editingId) delete item.createdAt
+      const updated = editingId
+        ? updateCollectionItem(collectionName, editingId, { ...item, updatedAt: new Date().toISOString() })
+        : addCollectionItem(collectionName, item)
+      setLocalItems(updated)
+      resetForm()
+    }, isEdit ? 'Cambios guardados.' : 'Elemento creado.')
+    return { ...result, isEdit }
   }
 
   const handleEdit = (item: ContentItem): ContentItem | undefined => {
     if (!item.isLocal) return
+    setNotice(null)
     setEditingId(String(item.id))
     const data = transformForEdit ? transformForEdit(item) : item
     const newForm = { ...initialForm }
@@ -197,14 +239,15 @@ export default function useCrudCollection(
   const handleDelete = (item: ContentItem): CrudFormSubmitResult | undefined => {
     if (!item.isLocal) return
     if (!window.confirm('¿Seguro que quieres eliminar este elemento?')) return
-    const updated = deleteCollectionItem(collectionName, String(item.id))
-    setLocalItems(updated)
-    if (editingId === String(item.id)) resetForm()
-    dispatchContentUpdate()
-    return { success: true }
+    return runMutation(() => {
+      const updated = deleteCollectionItem(collectionName, String(item.id))
+      setLocalItems(updated)
+      if (editingId === String(item.id)) resetForm()
+    }, 'Elemento eliminado.')
   }
 
   const handleBaseEdit = (item: ContentItem) => {
+    setNotice(null)
     setEditingBaseId(String(item.id))
     const data = transformForEdit ? transformForEdit(item) : item
     const newForm = { ...initialBaseForm }
@@ -214,44 +257,51 @@ export default function useCrudCollection(
 
   const handleBaseSubmit = (event: React.FormEvent): CrudFormSubmitResult => {
     event.preventDefault()
-    if (!editingBaseId) return { success: false, error: 'No item selected' }
-    const patch = buildOverridePatch()
-    const updatedOverrides = setCollectionOverride(collectionName, editingBaseId, patch)
-    setOverrides(updatedOverrides)
-    resetBaseForm()
-    dispatchContentUpdate()
-    return { success: true }
+    if (!editingBaseId) return reportError(new Error('Selecciona un original para editarlo.'))
+    const validationError = validateForm(getBaseFormValue)
+    if (validationError) return reportError(new Error(validationError))
+    return runMutation(() => {
+      const patch = buildOverridePatch()
+      const updatedOverrides = setCollectionOverride(collectionName, editingBaseId, patch)
+      setOverrides(updatedOverrides)
+      resetBaseForm()
+    }, 'Cambios del original guardados.')
   }
 
   const handleBaseRestore = (itemId: string) => {
-    const updatedOverrides = deleteCollectionOverride(collectionName, itemId)
-    setOverrides(updatedOverrides)
-    if (String(editingBaseId) === String(itemId)) resetBaseForm()
-    dispatchContentUpdate()
+    runMutation(() => {
+      const updatedOverrides = deleteCollectionOverride(collectionName, itemId)
+      setOverrides(updatedOverrides)
+      if (String(editingBaseId) === String(itemId)) resetBaseForm()
+    }, 'Original restaurado.')
   }
 
   const handleBaseHide = (item: ContentItem) => {
     if (!window.confirm('¿Seguro que quieres ocultar este elemento?')) return
-    const updatedHiddenIds = hideCollectionItem(collectionName, String(item.id))
-    setHiddenIds(updatedHiddenIds)
-    if (String(editingBaseId) === String(item.id)) resetBaseForm()
-    dispatchContentUpdate()
+    runMutation(() => {
+      const updatedHiddenIds = hideCollectionItem(collectionName, String(item.id))
+      setHiddenIds(updatedHiddenIds)
+      if (String(editingBaseId) === String(item.id)) resetBaseForm()
+    }, 'Original oculto.')
   }
 
   const handleBaseUnhide = (itemId: string) => {
-    const updatedHiddenIds = restoreCollectionItem(collectionName, itemId)
-    setHiddenIds(updatedHiddenIds)
-    dispatchContentUpdate()
+    runMutation(() => {
+      const updatedHiddenIds = restoreCollectionItem(collectionName, itemId)
+      setHiddenIds(updatedHiddenIds)
+    }, 'Original visible de nuevo.')
   }
 
   const resetForm = () => {
     setForm(initialForm)
     setEditingId(null)
+    setNotice(null)
   }
 
   const resetBaseForm = () => {
     setBaseForm(initialBaseForm)
     setEditingBaseId(null)
+    setNotice(null)
   }
 
   return {
@@ -265,6 +315,7 @@ export default function useCrudCollection(
     // Form state
     form, getFormValue, setFormValue, editingId,
     baseForm, getBaseFormValue, setBaseFormValue, editingBaseId,
+    notice,
     // Handlers
     handleSubmit, handleEdit, handleDelete,
     handleBaseEdit, handleBaseSubmit, handleBaseRestore, handleBaseHide, handleBaseUnhide,

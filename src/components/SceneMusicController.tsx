@@ -1,6 +1,10 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Music2, Pause, Play, Sparkles, Volume2, VolumeX } from 'lucide-react'
 import sceneMusic from '../data/sceneMusic.json'
+import scenesData from '../data/scenes.json'
+import type { SceneMusicConfig } from '../types/audio'
+import { resolveAudioSource } from '../utils/audioSource'
+import { claimAudio, isCurrentAudio, registerAudio, releaseAudio } from '../utils/audioCoordinator'
 
 const UNLOCK_KEY = 'distancia-cero-scene-music-unlocked'
 const VOLUME_KEY = 'distancia-cero-scene-music-volume'
@@ -30,63 +34,30 @@ const SECTION_ALIASES = {
   distancia: ['distancia', 'distancia-cero']
 }
 
-function resolveAudioSrc(src) {
-  if (!src) return ''
-
-  if (src.startsWith('http://') || src.startsWith('https://')) {
-    return src
-  }
-
-  const base = import.meta.env.BASE_URL || '/'
-
-  if (src.startsWith('/')) {
-    return `${base}${src.slice(1)}`
-  }
-
-  return `${base}${src}`
-}
-
-function pauseOtherAudios(currentAudio) {
-  document.querySelectorAll('audio').forEach((audio) => {
-    if (audio !== currentAudio && !audio.paused) {
-      audio.pause()
-    }
-  })
-}
-
 function getSceneVolume(scene, masterVolume) {
-  const sceneVolume = typeof scene?.volume === 'number' ? scene.volume : 0.68
+  const sceneVolume = Number.isFinite(scene?.volume) ? scene.volume : 0.68
   return Math.max(0, Math.min(1, sceneVolume * masterVolume))
 }
 
-function fadeAudio(audio, targetVolume, duration = 650) {
-  return new Promise<void>((resolve) => {
-    if (!audio) {
-      resolve()
-      return
-    }
-
-    const startVolume = audio.volume
-    const startTime = performance.now()
-
-    const step = (now) => {
-      const progress = Math.min((now - startTime) / duration, 1)
-      const eased = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2
-
-      audio.volume = startVolume + (targetVolume - startVolume) * eased
-
-      if (progress < 1) {
-        requestAnimationFrame(step)
-      } else {
-        audio.volume = targetVolume
-        resolve()
-      }
-    }
-
-    requestAnimationFrame(step)
-  })
+function fadeAudio(audio: HTMLAudioElement, targetVolume: number, duration = 760): () => void {
+  const startVolume = audio.volume
+  const startTime = performance.now()
+  let cancelled = false
+  let frame = 0
+  const step = (now: number) => {
+    if (cancelled) return
+    const progress = Math.max(0, Math.min((now - startTime) / duration, 1))
+    const eased = progress < 0.5
+      ? 2 * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2
+    audio.volume = startVolume + (targetVolume - startVolume) * eased
+    if (progress < 1) frame = requestAnimationFrame(step)
+  }
+  frame = requestAnimationFrame(step)
+  return () => {
+    cancelled = true
+    cancelAnimationFrame(frame)
+  }
 }
 
 function getElementForScene(scene) {
@@ -157,243 +128,244 @@ function formatTime(seconds) {
 const _safeGet = (k: string) => { try { return localStorage.getItem(k) } catch { return null } }
 const _safeSet = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* degraded */ } }
 
-function SceneMusicController() {
-  const scenes = useMemo(() => Array.isArray(sceneMusic) ? sceneMusic : [], [])
-  const [activeSectionId, setActiveSectionId] = useState(scenes[0]?.sectionId || '')
+function getInitialMusicSection(scenes: SceneMusicConfig[]): string {
+  const hash = window.location.hash.replace(/^#\/?/, '').trim()
+  const storedScene = _safeGet('distancia-cero-active-scene')
+  const appScene = scenesData.find((scene) => scene.id !== 'centro-universo' && scene.id === hash)
+    || scenesData.find((scene) => scene.id !== 'centro-universo' && scene.id === storedScene)
+  const sectionId = appScene?.musicSectionId || appScene?.id || hash
+  return scenes.find((scene) => scene.sectionId === sectionId)?.sectionId || scenes[0]?.sectionId || ''
+}
+
+function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: SceneMusicConfig[] } = {}) {
+  const scenes = useMemo(() => Array.isArray(sceneConfig) ? sceneConfig : [], [sceneConfig])
+  const [activeSectionId, setActiveSectionId] = useState(() => getInitialMusicSection(scenes))
   const [isUnlocked, setIsUnlocked] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isStarting, setIsStarting] = useState(false)
   const [audioError, setAudioError] = useState('')
   const [masterVolume, setMasterVolume] = useState(DEFAULT_VOLUME)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
 
-  const audioRef = useRef(null)
-  const isPlayingRef = useRef(false)
-  const activeSceneRef = useRef(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const playbackRequestedRef = useRef(false)
+  const requestRef = useRef(0)
+  const mountedRef = useRef(false)
+  const activeSceneRef = useRef<SceneMusicConfig | undefined>(undefined)
   const masterVolumeRef = useRef(DEFAULT_VOLUME)
-  const transitionRef = useRef(Promise.resolve())
-  const switchTimerRef = useRef(null)
+  const cancelFadeRef = useRef<(() => void) | null>(null)
+  const switchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pendingSectionRef = useRef('')
-  const rafRef = useRef(null)
+  const rafRef = useRef<number | null>(null)
 
-  const activeScene = useMemo(() => {
-    return scenes.find((scene) => scene.sectionId === activeSectionId) || scenes[0]
-  }, [activeSectionId, scenes])
+  const activeScene = scenes.find((scene) => scene.sectionId === activeSectionId) || scenes[0]
+  activeSceneRef.current = activeScene
+  masterVolumeRef.current = masterVolume
 
-  useEffect(() => {
-    activeSceneRef.current = activeScene
-  }, [activeScene])
+  const clearPendingSwitch = useCallback(() => {
+    if (switchTimerRef.current !== null) clearTimeout(switchTimerRef.current)
+    switchTimerRef.current = null
+    pendingSectionRef.current = ''
+  }, [])
 
-  useEffect(() => {
-    isPlayingRef.current = isPlaying
-  }, [isPlaying])
+  const pauseMusic = useCallback(() => {
+    requestRef.current += 1
+    playbackRequestedRef.current = false
+    cancelFadeRef.current?.()
+    cancelFadeRef.current = null
+    clearPendingSwitch()
+    const audio = audioRef.current
+    if (audio) {
+      releaseAudio(audio)
+      audio.pause()
+    }
+    setIsPlaying(false)
+    setIsStarting(false)
+  }, [clearPendingSwitch])
 
-  useEffect(() => {
-    masterVolumeRef.current = masterVolume
-  }, [masterVolume])
+  const playScene = useCallback(async (scene: SceneMusicConfig | undefined, restart = false) => {
+    const audio = audioRef.current
+    if (!audio) return
+    const nextSrc = resolveAudioSource(scene?.src)
+    if (!nextSrc) {
+      pauseMusic()
+      setAudioError(scene?.src?.trim()
+        ? 'Esta escena tiene una ruta de audio no válida.'
+        : 'Esta escena aún no tiene audio. Añade su ruta en sceneMusic.json.')
+      return
+    }
+
+    const request = ++requestRef.current
+    playbackRequestedRef.current = true
+    setIsStarting(true)
+    cancelFadeRef.current?.()
+    cancelFadeRef.current = null
+    setAudioError('')
+    if (audio.getAttribute('data-scene-src') !== nextSrc || restart) {
+      // Switch immediately so play() stays within the user's gesture. A fade
+      // from an old scene must never queue a later playback after a pause.
+      releaseAudio(audio)
+      audio.pause()
+      audio.src = nextSrc
+      audio.loop = true
+      audio.volume = 0
+      audio.currentTime = 0
+      audio.setAttribute('data-scene-src', nextSrc)
+      setCurrentTime(0)
+      setDuration(0)
+      setIsPlaying(false)
+    }
+    claimAudio(audio)
+
+    try {
+      await audio.play()
+      if (!mountedRef.current || request !== requestRef.current || !isCurrentAudio(audio)) return
+      setIsPlaying(true)
+      setIsStarting(false)
+      cancelFadeRef.current = fadeAudio(audio, getSceneVolume(scene, masterVolumeRef.current))
+    } catch (error) {
+      if (!mountedRef.current || request !== requestRef.current) return
+      pauseMusic()
+      const blocked = error instanceof DOMException && error.name === 'NotAllowedError'
+      setAudioError(blocked
+        ? 'El navegador bloqueó la música. Toca reproducir para intentarlo de nuevo.'
+        : 'No se pudo reproducir esta escena. Comprueba que su archivo de audio exista.')
+    }
+  }, [pauseMusic])
 
   useEffect(() => {
     const audio = audioRef.current
-
     if (!audio) return
-
-    const updateTime = () => {
-      setCurrentTime(audio.currentTime || 0)
-    }
-
-    const updateDuration = () => {
-      setDuration(Number.isFinite(audio.duration) ? audio.duration : 0)
-    }
-
+    mountedRef.current = true
+    const unregister = registerAudio(audio, pauseMusic)
+    const updateTime = () => setCurrentTime(audio.currentTime || 0)
+    const updateDuration = () => setDuration(Number.isFinite(audio.duration) ? audio.duration : 0)
     const resetProgress = () => {
       setCurrentTime(0)
       setDuration(0)
     }
-
+    const handlePause = () => {
+      if (audio.paused && isCurrentAudio(audio)) pauseMusic()
+    }
+    const handleEnded = () => {
+      pauseMusic()
+      setAudioError('La canción de esta escena terminó.')
+    }
+    const handleError = () => {
+      pauseMusic()
+      setAudioError('No se pudo cargar esta escena. Comprueba que su archivo de audio exista.')
+    }
     audio.addEventListener('timeupdate', updateTime)
     audio.addEventListener('loadedmetadata', updateDuration)
     audio.addEventListener('durationchange', updateDuration)
     audio.addEventListener('emptied', resetProgress)
-
+    audio.addEventListener('pause', handlePause)
+    audio.addEventListener('ended', handleEnded)
+    audio.addEventListener('error', handleError)
     return () => {
+      mountedRef.current = false
+      requestRef.current += 1
+      playbackRequestedRef.current = false
+      cancelFadeRef.current?.()
+      cancelFadeRef.current = null
+      clearPendingSwitch()
+      unregister()
       audio.removeEventListener('timeupdate', updateTime)
       audio.removeEventListener('loadedmetadata', updateDuration)
       audio.removeEventListener('durationchange', updateDuration)
       audio.removeEventListener('emptied', resetProgress)
+      audio.removeEventListener('pause', handlePause)
+      audio.removeEventListener('ended', handleEnded)
+      audio.removeEventListener('error', handleError)
+      audio.pause()
     }
-  }, [])
+  }, [pauseMusic, clearPendingSwitch])
 
   useEffect(() => {
-    const handleSceneChange = (event) => {
+    const handleSceneChange = (event: CustomEvent<{ sceneId?: string }>) => {
       const nextSceneId = event.detail?.sceneId
-
-      if (!nextSceneId) return
-
-      setActiveSectionId(nextSceneId)
+      if (!scenes.some((scene) => scene.sectionId === nextSceneId)) return
+      clearPendingSwitch()
+      setActiveSectionId(nextSceneId!)
     }
-
-    window.addEventListener('distancia-cero-scene-change', handleSceneChange)
-
-    return () => window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
-  }, [])
+    window.addEventListener('distancia-cero-scene-change', handleSceneChange as EventListener)
+    return () => window.removeEventListener('distancia-cero-scene-change', handleSceneChange as EventListener)
+  }, [scenes, clearPendingSwitch])
 
   useEffect(() => {
-    const storedUnlock = _safeGet(UNLOCK_KEY)
     const storedVolumeRaw = _safeGet(VOLUME_KEY)
     const storedVolume = Number(storedVolumeRaw)
-
-    if (storedUnlock === '1') {
-      setIsUnlocked(true)
-    }
-
-    if (storedVolumeRaw !== null && !Number.isNaN(storedVolume) && storedVolume >= 0 && storedVolume <= 1) {
+    if (_safeGet(UNLOCK_KEY) === '1') setIsUnlocked(true)
+    if (storedVolumeRaw !== null && Number.isFinite(storedVolume) && storedVolume >= 0 && storedVolume <= 1) {
       setMasterVolume(storedVolume)
       masterVolumeRef.current = storedVolume
     } else {
-      setMasterVolume(DEFAULT_VOLUME)
-      masterVolumeRef.current = DEFAULT_VOLUME
       _safeSet(VOLUME_KEY, String(DEFAULT_VOLUME))
     }
   }, [])
 
   useEffect(() => {
     if (!scenes.length) return
-
     const scheduleDetection = () => {
-      if (document.body.classList.contains('scene-mode-enabled')) return
-      if (rafRef.current) return
-
+      if (document.body.classList.contains('scene-mode-enabled')) {
+        clearPendingSwitch()
+        return
+      }
+      if (rafRef.current !== null) return
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = null
-
         const detectedScene = findActiveSceneByViewport(scenes)
-
         if (!detectedScene?.sectionId) return
-
         const nextSectionId = detectedScene.sectionId
-
-        if (nextSectionId === activeSceneRef.current?.sectionId) return
-        if (nextSectionId === pendingSectionRef.current) return
-
-        pendingSectionRef.current = nextSectionId
-
-        if (switchTimerRef.current) {
-          clearTimeout(switchTimerRef.current)
+        if (nextSectionId === activeSceneRef.current?.sectionId) {
+          clearPendingSwitch()
+          return
         }
-
+        if (nextSectionId === pendingSectionRef.current) return
+        clearPendingSwitch()
+        pendingSectionRef.current = nextSectionId
         switchTimerRef.current = setTimeout(() => {
-          setActiveSectionId((current) => {
-            if (current === pendingSectionRef.current) return current
-            return pendingSectionRef.current
-          })
+          switchTimerRef.current = null
+          setActiveSectionId(nextSectionId)
+          pendingSectionRef.current = ''
         }, SWITCH_DELAY_MS)
       })
     }
-
     scheduleDetection()
-
     window.addEventListener('scroll', scheduleDetection, { passive: true })
     window.addEventListener('resize', scheduleDetection, { passive: true })
-
     return () => {
       window.removeEventListener('scroll', scheduleDetection)
       window.removeEventListener('resize', scheduleDetection)
-
-      if (switchTimerRef.current) {
-        clearTimeout(switchTimerRef.current)
-      }
-
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
+      clearPendingSwitch()
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
-  }, [scenes])
-
-  const playScene = async (scene, force = false) => {
-    const audio = audioRef.current
-    if (!audio || !scene?.src) return
-
-    const nextSrc = resolveAudioSrc(scene.src)
-    const nextVolume = getSceneVolume(scene, masterVolumeRef.current)
-    const currentSrc = audio.getAttribute('data-scene-src')
-
-    transitionRef.current = transitionRef.current.then(async () => {
-      try {
-        setAudioError('')
-
-        if (currentSrc !== nextSrc || force) {
-          await fadeAudio(audio, 0, 420)
-          audio.pause()
-          audio.src = nextSrc
-          audio.loop = true
-          audio.volume = 0
-          audio.currentTime = 0
-          audio.setAttribute('data-scene-src', nextSrc)
-          setCurrentTime(0)
-          setDuration(0)
-        }
-
-        pauseOtherAudios(audio)
-
-        await audio.play()
-        setIsPlaying(true)
-        isPlayingRef.current = true
-
-        await fadeAudio(audio, nextVolume, 760)
-      } catch (error) {
-        setIsPlaying(false)
-        isPlayingRef.current = false
-        setAudioError('Toca play para desbloquear la música.')
-      }
-    })
-
-    return transitionRef.current
-  }
+  }, [scenes, clearPendingSwitch])
 
   useEffect(() => {
-    if (!isUnlocked || !activeScene) return
-    if (!isPlayingRef.current) return
-
-    playScene(activeScene)
-  }, [activeScene, isUnlocked])
+    if (playbackRequestedRef.current) void playScene(activeScene)
+    else setAudioError('')
+  }, [activeScene, playScene])
 
   useEffect(() => {
+    cancelFadeRef.current?.()
+    cancelFadeRef.current = null
     const audio = audioRef.current
-    if (!audio || !isPlayingRef.current) return
-
-    audio.volume = getSceneVolume(activeSceneRef.current, masterVolume)
+    if (audio && isCurrentAudio(audio)) audio.volume = getSceneVolume(activeSceneRef.current, masterVolume)
   }, [masterVolume])
 
-  const unlockAndPlay = async () => {
-    _safeSet(UNLOCK_KEY, '1')
-    _safeSet(VOLUME_KEY, String(masterVolumeRef.current || DEFAULT_VOLUME))
-    setIsUnlocked(true)
-
-    await playScene(activeSceneRef.current || activeScene, true)
-  }
-
-  const pauseMusic = async () => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    await fadeAudio(audio, 0, 420)
-    audio.pause()
-    setIsPlaying(false)
-    isPlayingRef.current = false
-  }
-
-  const resumeMusic = async () => {
+  const resumeMusic = () => {
     setIsUnlocked(true)
     _safeSet(UNLOCK_KEY, '1')
-    _safeSet(VOLUME_KEY, String(masterVolumeRef.current || DEFAULT_VOLUME))
-
-    await playScene(activeSceneRef.current || activeScene, false)
+    _safeSet(VOLUME_KEY, String(masterVolumeRef.current))
+    void playScene(activeSceneRef.current)
   }
 
-  const changeVolume = (event) => {
+  const changeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value) / 100
     const safeValue = Math.max(0, Math.min(1, value))
-
     setMasterVolume(safeValue)
     masterVolumeRef.current = safeValue
     _safeSet(VOLUME_KEY, String(safeValue))
@@ -401,28 +373,34 @@ function SceneMusicController() {
 
   const toggleMute = () => {
     const nextVolume = masterVolume > 0 ? 0 : DEFAULT_VOLUME
-
     setMasterVolume(nextVolume)
     masterVolumeRef.current = nextVolume
     _safeSet(VOLUME_KEY, String(nextVolume))
   }
 
-  const seekSong = (event) => {
+  const seekSong = (event: React.ChangeEvent<HTMLInputElement>) => {
     const audio = audioRef.current
     const nextTime = Number(event.target.value)
-
-    if (!audio || !Number.isFinite(nextTime)) return
-
-    audio.currentTime = nextTime
-    setCurrentTime(nextTime)
+    if (!audio || !Number.isFinite(nextTime) || !duration) return
+    const safeTime = Math.max(0, Math.min(nextTime, duration))
+    audio.currentTime = safeTime
+    setCurrentTime(safeTime)
   }
 
-  const buttonText = isPlaying ? 'Pausar' : isUnlocked ? 'Reproducir' : 'Iniciar banda sonora'
+  const hasAudio = Boolean(resolveAudioSource(activeScene?.src))
+  const message = audioError || (!hasAudio
+    ? activeScene?.src?.trim()
+      ? 'Esta escena tiene una ruta de audio no válida.'
+      : 'Esta escena aún no tiene audio.'
+    : '')
+
+  const canPause = isPlaying || isStarting
+  const buttonText = canPause ? 'Pausar' : isUnlocked ? 'Reproducir' : 'Iniciar banda sonora'
   const volumePercent = Math.round(masterVolume * 100)
   const progressPercent = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0
 
   return (
-    <div className={`scene-music-controller ${isPlaying ? 'is-playing' : ''}`}>
+    <div id="scene-music" role="region" aria-label="Banda sonora" tabIndex={-1} className={`scene-music-controller ${isPlaying ? 'is-playing' : ''}`}>
       <audio ref={audioRef} preload="metadata" />
 
       <div className="scene-music-main">
@@ -443,15 +421,16 @@ function SceneMusicController() {
             {activeScene?.artist || 'Artista'}
           </p>
 
-          {audioError && <small>{audioError}</small>}
+          {message && <small role="status">{message}</small>}
         </div>
 
         <button
           className="scene-music-button"
           type="button"
-          onClick={isPlaying ? pauseMusic : isUnlocked ? resumeMusic : unlockAndPlay}
+          onClick={canPause ? pauseMusic : resumeMusic}
+          disabled={!hasAudio}
         >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+          {canPause ? <Pause size={16} /> : <Play size={16} />}
           {buttonText}
         </button>
       </div>

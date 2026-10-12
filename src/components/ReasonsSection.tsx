@@ -1,7 +1,10 @@
 ﻿import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import SectionTitle from './SectionTitle'
 import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
 import { mergeCollectionWithLocal } from '../services/contentService'
+import useDialogFocus from '../hooks/useDialogFocus'
+import useSceneActivity from '../hooks/useSceneActivity'
 
 const BALL_SIZE = 62
 const RADIUS = BALL_SIZE / 2
@@ -33,13 +36,30 @@ function shuffleArray(array) {
 function ReasonsSection({ reasons = [] }) {
   const [allReasons, setAllReasons] = useState(() => mergeCollectionWithLocal(reasons, 'reasons'))
   const [selectedReason, setSelectedReason] = useState(null)
-  const selectedReasonRef = useRef(null)
+  const [isPausedByFocus, setIsPausedByFocus] = useState(false)
+  const { isActive, reducedMotion } = useSceneActivity('razones')
   const containerRef = useRef(null)
-  const sectionRef = useRef(null)
   const itemRefs = useRef([])
   const animationRef = useRef(null)
   const objectsRef = useRef([])
   const hasInitializedRef = useRef(false)
+  const boundsRef = useRef<{ width: number; height: number } | null>(null)
+  const dialogRef = useRef<HTMLElement>(null)
+  const reasonTriggerRef = useRef<HTMLElement>(null)
+
+  useDialogFocus({
+    isOpen: Boolean(selectedReason), dialogRef, returnFocusRef: reasonTriggerRef,
+    onClose: () => setSelectedReason(null),
+  })
+
+  useEffect(() => {
+    const closeOnSceneChange = (event: CustomEvent) => {
+      const sceneId = event.detail?.appSceneId || event.detail?.sceneId
+      if (sceneId && sceneId !== 'razones') setSelectedReason(null)
+    }
+    window.addEventListener('distancia-cero-scene-change', closeOnSceneChange)
+    return () => window.removeEventListener('distancia-cero-scene-change', closeOnSceneChange)
+  }, [])
 
   useEffect(() => {
     setAllReasons(mergeCollectionWithLocal(reasons, 'reasons'))
@@ -47,7 +67,7 @@ function ReasonsSection({ reasons = [] }) {
 
   useEffect(() => {
     const handleContentUpdate = (event) => {
-      if (event.detail?.collection !== 'reasons') return
+      if (!['reasons', 'all'].includes(event.detail?.collection)) return
       setAllReasons(mergeCollectionWithLocal(reasons, 'reasons'))
       hasInitializedRef.current = false
     }
@@ -60,29 +80,54 @@ function ReasonsSection({ reasons = [] }) {
   }, [reasons])
 
   useEffect(() => {
-    selectedReasonRef.current = selectedReason
-  }, [selectedReason])
+    setSelectedReason(current => current
+      ? allReasons.find(reason => String(reason.id) === String(current.id)) || null
+      : null)
+  }, [allReasons])
+
+  useEffect(() => {
+    hasInitializedRef.current = false
+  }, [allReasons])
 
   useEffect(() => {
     const container = containerRef.current
-    const section = sectionRef.current
 
-    if (!container || !section || !allReasons?.length) return
+    if (!container || !allReasons?.length) return
+
+    if (reducedMotion) {
+      itemRefs.current.forEach(element => {
+        if (!element) return
+        for (const property of ['transform', 'z-index', 'filter', 'opacity']) {
+          element.style.removeProperty(property)
+        }
+      })
+      hasInitializedRef.current = false
+      return
+    }
+
+    if (!isActive) {
+      hasInitializedRef.current = false
+      return
+    }
+    if (selectedReason || isPausedByFocus) return
 
     const getBounds = () => {
       const rect = container.getBoundingClientRect()
-      const width = Math.max(rect.width || container.clientWidth, 720)
+      const width = Math.max(rect.width || container.clientWidth, BALL_SIZE)
       const height = Math.max(rect.height || container.clientHeight, 1120)
+      const padding = Math.min(PADDING, Math.max(24, width * 0.1), (width - BALL_SIZE) / 2)
 
       return {
         width,
         height,
-        minX: PADDING,
+        minX: padding,
         minY: PADDING,
-        maxX: width - BALL_SIZE - PADDING,
+        maxX: width - BALL_SIZE - padding,
         maxY: height - BALL_SIZE - PADDING,
       }
     }
+
+    let bounds = getBounds()
 
     const applyObjectStyle = (obj) => {
       if (!obj.el) return
@@ -99,7 +144,7 @@ function ReasonsSection({ reasons = [] }) {
     }
 
     const createObjects = () => {
-      const bounds = getBounds()
+      bounds = getBounds()
       const usableWidth = Math.max(1, bounds.maxX - bounds.minX)
       const usableHeight = Math.max(1, bounds.maxY - bounds.minY)
 
@@ -153,6 +198,7 @@ function ReasonsSection({ reasons = [] }) {
       })
 
       objectsRef.current = objects
+      boundsRef.current = bounds
       objects.forEach(applyObjectStyle)
       hasInitializedRef.current = true
     }
@@ -200,15 +246,8 @@ function ReasonsSection({ reasons = [] }) {
     }
 
     const animate = () => {
-      if (selectedReasonRef.current) {
-        animationRef.current = requestAnimationFrame(animate)
-        return
-      }
-
-      const isHidden = section.classList.contains('scene-hidden') || section.offsetParent === null
-
-      if (isHidden) {
-        animationRef.current = requestAnimationFrame(animate)
+      animationRef.current = null
+      if (document.hidden) {
         return
       }
 
@@ -216,7 +255,6 @@ function ReasonsSection({ reasons = [] }) {
         createObjects()
       }
 
-      const bounds = getBounds()
       const objects = objectsRef.current
 
       objects.forEach((obj) => {
@@ -263,70 +301,55 @@ function ReasonsSection({ reasons = [] }) {
       })
 
       resolveCollisions(objects)
-      objects.forEach(applyObjectStyle)
+      objects.forEach(obj => {
+        // A collision near an edge must not push a heart outside the actual mobile box.
+        obj.x = Math.max(bounds.minX, Math.min(bounds.maxX, obj.x))
+        obj.y = Math.max(bounds.minY, Math.min(bounds.maxY, obj.y))
+        applyObjectStyle(obj)
+      })
 
       animationRef.current = requestAnimationFrame(animate)
     }
 
-    const resetWhenVisible = () => {
-      if (section.classList.contains('scene-hidden') || section.offsetParent === null) return
-
-      hasInitializedRef.current = false
-
-      setTimeout(() => {
-        if (!section.classList.contains('scene-hidden')) {
-          createObjects()
-        }
-      }, 80)
-    }
-
-    const handleSceneChange = (event) => {
-      if (event.detail?.sceneId === 'razones' || event.detail?.appSceneId === 'razones') {
-        resetWhenVisible()
-      }
-    }
-
     const handleResize = () => {
-      resetWhenVisible()
+      createObjects()
     }
 
-    window.addEventListener('distancia-cero-scene-change', handleSceneChange)
     window.addEventListener('resize', handleResize)
 
+    if (!hasInitializedRef.current || boundsRef.current?.width !== bounds.width ||
+        boundsRef.current?.height !== bounds.height) createObjects()
     animationRef.current = requestAnimationFrame(animate)
 
-    setTimeout(() => {
-      if (!section.classList.contains('scene-hidden')) {
-        createObjects()
-      }
-    }, 120)
-
     return () => {
-      cancelAnimationFrame(animationRef.current)
-      window.removeEventListener('distancia-cero-scene-change', handleSceneChange)
+      if (animationRef.current !== null) cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
       window.removeEventListener('resize', handleResize)
     }
-  }, [allReasons])
+  }, [allReasons, isActive, reducedMotion, selectedReason, isPausedByFocus])
 
   const openReason = (event, reason) => {
     event.preventDefault()
     event.stopPropagation()
+    reasonTriggerRef.current = event.currentTarget
     setSelectedReason(reason)
   }
 
   return (
-    <section className="section reasons-section" id="razones" ref={sectionRef}>
+    <section className="section reasons-section" id="razones">
       <SectionTitle
         eyebrow="100 razones"
         title="Aquí dejé flotando 100 razones por las que te amo"
-        text="Las dejé libres, rebotando y chocando entre sí, porque ni mis razones para amarte saben quedarse quietas."
+        text={reducedMotion
+          ? 'Elige un corazón para leer una razón. Aquí están todas, sin movimiento.'
+          : 'Las dejé libres, rebotando y chocando entre sí, porque ni mis razones para amarte saben quedarse quietas.'}
       />
 
       <div className="reasons-3d-chaos-shell fade-up">
         <div className="true-3d-hud reasons-chaos-hud">
           <span>
             <ZoomIn size={16} />
-            Profundidad 3D
+            {reducedMotion ? 'Todas las razones' : 'Profundidad 3D'}
           </span>
           <span>
             <MousePointer2 size={16} />
@@ -334,19 +357,30 @@ function ReasonsSection({ reasons = [] }) {
           </span>
           <span>
             <Heart size={16} />
-            Se mueven solitas
+            {reducedMotion ? 'Corazones en calma' : 'Se mueven solitas'}
           </span>
         </div>
 
-        <div className="reasons-3d-chaos-box" ref={containerRef}>
+        <div
+          className={reducedMotion ? 'reasons-static-grid' : 'reasons-3d-chaos-box'}
+          ref={containerRef}
+          onFocusCapture={() => setIsPausedByFocus(true)}
+          onBlurCapture={event => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsPausedByFocus(false)
+          }}
+        >
           {allReasons.map((reason, index) => (
             <button
-              className="reason-heart chaotic-heart hyper-chaotic-heart reason-depth-heart"
+              className={reducedMotion
+                ? 'reason-heart reason-static-heart'
+                : 'reason-heart chaotic-heart hyper-chaotic-heart reason-depth-heart'}
+              style={{ animation: 'none' }}
               key={reason.id}
               ref={(el) => {
                 itemRefs.current[index] = el
               }}
-              onPointerDown={(event) => openReason(event, reason)}
+              onClick={(event) => openReason(event, reason)}
+              aria-label={`Abrir razón: ${reason.title || reason.displayLabel || reason.id}`}
               title={reason.title}
               type="button"
             >
@@ -357,16 +391,19 @@ function ReasonsSection({ reasons = [] }) {
         </div>
       </div>
 
-      {selectedReason && (
-        <div className="reason-modal-backdrop" onPointerDown={() => setSelectedReason(null)}>
+      {selectedReason && createPortal(
+        <div className="reason-modal-backdrop" onClick={() => setSelectedReason(null)}>
           <article
+            ref={dialogRef}
             className="reason-modal reason-modal-true-3d"
             role="dialog"
             aria-modal="true"
             aria-labelledby="reason-modal-title"
-            onPointerDown={(event) => event.stopPropagation()}
+            aria-describedby="reason-modal-description"
+            tabIndex={-1}
+            onClick={(event) => event.stopPropagation()}
           >
-            <button className="reason-close" type="button" onPointerDown={() => setSelectedReason(null)} aria-label="Cerrar">
+            <button className="reason-close" type="button" onClick={() => setSelectedReason(null)} aria-label="Cerrar">
               <X size={18} />
             </button>
 
@@ -374,14 +411,14 @@ function ReasonsSection({ reasons = [] }) {
               <Heart size={34} />
             </div>
 
-            <span>{selectedReason.title}</span>
-            <h3 id="reason-modal-title">{selectedReason.text}</h3>
+            <span id="reason-modal-title">{selectedReason.title}</span>
+            <h3 id="reason-modal-description">{selectedReason.text}</h3>
 
-            <button className="main-button" type="button" onPointerDown={() => setSelectedReason(null)}>
+            <button className="main-button" type="button" onClick={() => setSelectedReason(null)}>
               Cerrar
             </button>
           </article>
-        </div>
+        </div>, document.body
       )}
     </section>
   )

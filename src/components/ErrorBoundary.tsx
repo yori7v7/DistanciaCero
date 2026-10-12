@@ -4,6 +4,7 @@ import { AlertTriangle, RefreshCw } from 'lucide-react'
 interface Props {
   children: ReactNode
   fallbackLabel?: string
+  sectionId: string
 }
 
 interface State {
@@ -31,13 +32,18 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   handleRetry = () => {
+    // A rejected lazy import is cached by React; retry it in a fresh document.
+    if (/fetch dynamically imported|importing a module script|loading.*module|chunkloaderror/i.test(this.state.error?.message || '')) {
+      window.location.reload()
+      return
+    }
     this.setState({ hasError: false, error: null })
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="section" style={{ minHeight: '200px', display: 'grid', placeItems: 'center' }}>
+        <section id={this.props.sectionId} className="section section-placeholder">
           <div
             className="small-pill"
             style={{
@@ -50,7 +56,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             }}
           >
             <AlertTriangle size={22} style={{ color: 'var(--color-pink)' }} />
-            <span style={{ textAlign: 'center', fontSize: '0.95rem' }}>
+            <span role="alert" style={{ textAlign: 'center', fontSize: '0.95rem' }}>
               {this.props.fallbackLabel || 'Esta sección no pudo cargarse.'}
             </span>
             <button
@@ -60,10 +66,10 @@ export default class ErrorBoundary extends Component<Props, State> {
               style={{ marginTop: 4, fontSize: '0.85rem' }}
             >
               <RefreshCw size={14} />
-              Reintentar
+              {/fetch dynamically imported|importing a module script|loading.*module|chunkloaderror/i.test(this.state.error?.message || '') ? 'Recargar página' : 'Reintentar'}
             </button>
           </div>
-        </div>
+        </section>
       )
     }
 

@@ -46,7 +46,8 @@ function AppRoutes() {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter basename={import.meta.env.VITE_BASE || '/'}>
+    {/* Hash changes control visibility through effects; commit them promptly. */}
+    <BrowserRouter basename={import.meta.env.VITE_BASE || '/'} useTransitions={false}>
       <AppRoutes />
     </BrowserRouter>
   </React.StrictMode>,

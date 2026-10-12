@@ -7,9 +7,8 @@ import {
 import scenesData from '../data/scenes.json'
 import { signOut as supabaseSignOut, isSupabaseAuthenticated } from '../services/supabaseAuthService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
-
-const SCENE_STORAGE_KEY = 'distancia-cero-active-scene'
-const CENTRO_VISIBLE_KEY = 'distancia-cero-centro-visible'
+import { getScrollBehavior } from '../utils/motion'
+import { CENTRO_VISIBLE_KEY, SCENE_STORAGE_KEY, resolveSceneId } from '../utils/sceneSelection'
 
 const iconMap: Record<string, any> = {
   inicio: Home,
@@ -23,14 +22,6 @@ const iconMap: Record<string, any> = {
   promesas: Star,
   distancia: MapPin,
   'centro-universo': ShieldAlert
-}
-
-function getInitialSceneId(scenes: any[], hash: string) {
-  const cleanHash = hash.replace('#/', '').replace('#', '').trim()
-  const stored = _sG(SCENE_STORAGE_KEY)
-  if (cleanHash && scenes.some((s: any) => s.id === cleanHash && s.id !== 'centro-universo')) return cleanHash
-  if (stored && scenes.some((s: any) => s.id === stored && s.id !== 'centro-universo')) return stored
-  return scenes.find((s: any) => s.id !== 'centro-universo')?.id || 'inicio'
 }
 
 function getSectionElements() {
@@ -47,7 +38,7 @@ function SceneModeController() {
   const scenes = useMemo(() => Array.isArray(scenesData) ? scenesData : [], [])
   // Filter out centro-universo from main navigation
   const navScenes = useMemo(() => scenes.filter((s: any) => s.id !== 'centro-universo'), [scenes])
-  const [activeSceneId, setActiveSceneId] = useState(() => getInitialSceneId(scenes, location.hash))
+  const activeSceneId = useMemo(() => resolveSceneId(location.hash), [location.hash])
   const [navPulse, setNavPulse] = useState(false)
   const [navDirection, setNavDirection] = useState('next')
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -58,7 +49,9 @@ function SceneModeController() {
 
   const firstRunRef = useRef(true)
   const linkRefs = useRef({})
-  const settingsRef = useRef(null)
+  const settingsRef = useRef<HTMLDivElement>(null)
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
+  const portalRef = useRef<HTMLElement>(null)
 
   const remoteEnabled = isRemoteContentEnabled()
   const isLoggedIn = remoteEnabled && isSupabaseAuthenticated()
@@ -66,7 +59,6 @@ function SceneModeController() {
 
   const activeIndex = Math.max(0, navScenes.findIndex((s) => s.id === activeSceneId))
   const activeScene = navScenes[activeIndex] || navScenes[0]
-  const ActiveIcon = iconMap[activeScene?.id] || Sparkles
 
   // Stable refs for MutationObserver (avoids stale closures)
   const activeSceneRef = useRef(activeScene)
@@ -84,9 +76,54 @@ function SceneModeController() {
         setSettingsOpen(false)
       }
     }
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      setSettingsOpen(false)
+      settingsButtonRef.current?.focus({ preventScroll: true })
+    }
+    settingsRef.current?.querySelector<HTMLButtonElement>('.scene-settings-dropdown button')?.focus({ preventScroll: true })
     document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
+    document.addEventListener('keydown', onEscape)
+    return () => {
+      document.removeEventListener('mousedown', handler)
+      document.removeEventListener('keydown', onEscape)
+    }
   }, [settingsOpen])
+
+  useEffect(() => {
+    const portal = portalRef.current
+    if (!portal) return
+    const previousHeight = document.body.style.getPropertyValue('--scene-navigation-height')
+    const measure = () => document.body.style.setProperty('--scene-navigation-height', `${portal.getBoundingClientRect().height}px`)
+    measure()
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    observer?.observe(portal)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', measure)
+      if (previousHeight) document.body.style.setProperty('--scene-navigation-height', previousHeight)
+      else document.body.style.removeProperty('--scene-navigation-height')
+    }
+  }, [])
+
+  // Scene mode init
+  useEffect(() => {
+    const revealFocus = (event: FocusEvent) => {
+      const target = event.target
+      const portal = portalRef.current
+      if (!(target instanceof HTMLElement) || !portal || !target.closest('.app') ||
+        target.closest('.scene-portal, .scene-hidden, [inert]')) return
+      const rect = target.getBoundingClientRect()
+      const safeTop = portal.getBoundingClientRect().bottom + 12
+      if (rect.height > 0 && rect.top < safeTop) {
+        window.scrollBy({ top: rect.top - safeTop, behavior: 'instant' })
+      }
+    }
+    document.addEventListener('focusin', revealFocus)
+    return () => document.removeEventListener('focusin', revealFocus)
+  }, [])
 
   // Scene mode init
   useEffect(() => {
@@ -96,15 +133,17 @@ function SceneModeController() {
       getSectionElements().forEach((el) => {
         el.classList.remove('scene-hidden', 'scene-visible')
         el.removeAttribute('aria-hidden')
+        el.removeAttribute('inert')
       })
     }
   }, [])
 
-  // Hash change via react-router location
+  // The URL selects the scene directly; normalize aliases and invalid hashes.
   useEffect(() => {
-    const hash = location.hash.replace('#/', '').replace('#', '').trim()
-    if (hash && navScenes.some((s: any) => s.id === hash)) setActiveSceneId(hash)
-  }, [location.hash, navScenes])
+    if (activeScene && location.hash !== `#/${activeScene.id}`) {
+      navigate(`#/${activeScene.id}`, { replace: true })
+    }
+  }, [activeScene, location.hash, navigate])
 
   // Scene change effect
   useEffect(() => {
@@ -115,37 +154,44 @@ function SceneModeController() {
       centroScene.sectionIds?.forEach((id) => activeIds.add(id))
     }
     const allSections = getSectionElements()
+    const focusWasHidden = allSections.some(el => !activeIds.has(el.id) && el.contains(document.activeElement))
+    const focusedDialog = document.activeElement?.closest('[role="dialog"]')
     _sS(SCENE_STORAGE_KEY, activeScene.id)
-
-    if (location.hash !== `#/${activeScene.id}`) {
-      navigate(`#/${activeScene.id}`, { replace: true })
-    }
 
     allSections.forEach((el) => {
       const shouldShow = activeIds.has(el.id)
       el.classList.toggle('scene-visible', shouldShow)
       el.classList.toggle('scene-hidden', !shouldShow)
       el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+      el.toggleAttribute('inert', !shouldShow)
     })
+    if (focusWasHidden) linkRefs.current[activeScene.id]?.focus({ preventScroll: true })
 
     window.dispatchEvent(new CustomEvent('distancia-cero-scene-change', {
-      detail: { sceneId: activeScene.musicSectionId || activeScene.id, appSceneId: activeScene.id }
+      detail: { sceneId: activeScene.musicSectionId || activeScene.id, appSceneId: activeScene.id, centroVisible }
     }))
 
-    const firstVisible = allSections.find((el) => activeIds.has(el.id))
-    setTimeout(() => {
+    const scrollTimer = setTimeout(() => {
       centerActiveLink(!firstRunRef.current)
+      if (focusedDialog && !focusedDialog.isConnected && document.activeElement === document.body) {
+        linkRefs.current[activeScene.id]?.focus({ preventScroll: true })
+      }
+      // A lazy section can replace its placeholder before this timer fires.
+      const firstVisible = getSectionElements().find(el => activeIds.has(el.id))
       if (firstVisible) {
-        firstVisible.scrollIntoView({ behavior: firstRunRef.current ? 'auto' : 'smooth', block: 'start' })
+        firstVisible.scrollIntoView({ behavior: getScrollBehavior(!firstRunRef.current), block: 'start' })
       } else {
-        window.scrollTo({ top: 0, behavior: firstRunRef.current ? 'auto' : 'smooth' })
+        window.scrollTo({ top: 0, behavior: getScrollBehavior(!firstRunRef.current) })
       }
       firstRunRef.current = false
     }, 90)
 
     setNavPulse(true)
     const timer = setTimeout(() => setNavPulse(false), 520)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      clearTimeout(scrollTimer)
+    }
   }, [activeScene, centroVisible])
 
   // Re-apply visibility when lazy sections mount (e.g., direct URL access to /app#/universo)
@@ -167,6 +213,7 @@ function SceneModeController() {
         el.classList.toggle('scene-visible', shouldShow)
         el.classList.toggle('scene-hidden', !shouldShow)
         el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true')
+        el.toggleAttribute('inert', !shouldShow)
       })
     }
 
@@ -196,13 +243,14 @@ function SceneModeController() {
   const centerActiveLink = (smooth = true) => {
     const btn = linkRefs.current[activeScene?.id]
     if (!btn) return
-    btn.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', inline: 'center', block: 'nearest' })
+    btn.scrollIntoView({ behavior: getScrollBehavior(smooth), inline: 'center', block: 'nearest' })
   }
 
   const goToScene = (sceneId, direction = 'next') => {
-    if (!navScenes.some((s) => s.id === sceneId)) return
+    if (sceneId === activeSceneId || !navScenes.some((s) => s.id === sceneId)) return
     setNavDirection(direction)
-    setActiveSceneId(sceneId)
+    // User navigation adds history; initialization only normalizes the hash.
+    navigate(`#/${sceneId}`)
   }
 
   const goPrev = () => {
@@ -218,6 +266,7 @@ function SceneModeController() {
   const toggleCentro = () => {
     setCentroVisible((v) => !v)
     setSettingsOpen(false)
+    settingsButtonRef.current?.focus({ preventScroll: true })
   }
 
   // Scroll when Centro is toggled on/off
@@ -225,18 +274,19 @@ function SceneModeController() {
   useEffect(() => {
     if (prevCentroRef.current === centroVisible) return
     prevCentroRef.current = centroVisible
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (centroVisible) {
         const el = document.getElementById('centro-universo')
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        if (el) el.scrollIntoView({ behavior: getScrollBehavior(), block: 'start' })
       } else {
         const firstSectionId = activeScene?.sectionIds?.[0]
         if (firstSectionId) {
           const el = document.getElementById(firstSectionId)
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          if (el) el.scrollIntoView({ behavior: getScrollBehavior(), block: 'start' })
         }
       }
     }, 150)
+    return () => clearTimeout(timer)
   }, [centroVisible])
 
   const handleLogout = async () => {
@@ -244,7 +294,8 @@ function SceneModeController() {
     setSettingsOpen(false)
     try {
       await supabaseSignOut()
-      window.location.reload()
+      // Leaving /app unmounts its AuthGate and AudioProvider.
+      navigate('/', { replace: true })
     } catch (_) {
       setLoggingOut(false)
     }
@@ -253,7 +304,8 @@ function SceneModeController() {
   if (!activeScene) return null
 
   return (
-    <nav className={`scene-portal scene-nav-${navDirection} ${navPulse ? 'scene-portal-pulse' : ''}`} aria-label="Navegación principal">
+    <nav ref={portalRef} className={`scene-portal scene-nav-${navDirection} ${navPulse ? 'scene-portal-pulse' : ''}`} aria-label="Navegación principal">
+      <span className="sr-only" role="status">{activeScene.title}</span>
       {/* Scene links */}
       <div className="scene-portal-links">
         {navScenes.map((scene, index) => {
@@ -265,6 +317,7 @@ function SceneModeController() {
               ref={(el) => { linkRefs.current[scene.id] = el }}
               className={`scene-link ${scene.id === activeSceneId ? 'active' : ''}`}
               type="button"
+              aria-current={scene.id === activeSceneId ? 'page' : undefined}
               onClick={() => goToScene(scene.id, direction)}
             >
               <Icon size={15} />
@@ -276,6 +329,15 @@ function SceneModeController() {
 
       {/* Right side: settings + prev/next */}
       <div className="scene-portal-actions">
+        <button type="button" className="scene-nav-arrow" aria-label="Ir a la banda sonora" onClick={() => {
+          const player = document.getElementById('scene-music')
+          window.scrollTo({ top: window.scrollY, behavior: 'instant' })
+          player?.focus({ preventScroll: true })
+          // Finish the focus correction and replace any in-flight reader scroll.
+          if (player) window.scrollTo({ top: 0, behavior: 'instant' })
+        }}>
+          <Music2 size={18} />
+        </button>
         <button type="button" onClick={goPrev} aria-label="Escena anterior" className="scene-nav-arrow">
           <ChevronLeft size={18} />
         </button>
@@ -287,27 +349,30 @@ function SceneModeController() {
         {/* Settings gear */}
         <div className="scene-settings-wrapper" ref={settingsRef}>
           <button
+            ref={settingsButtonRef}
             type="button"
             className={`scene-settings-gear ${settingsOpen ? 'active' : ''} ${centroVisible ? 'centro-active' : ''}`}
             onClick={() => setSettingsOpen((o) => !o)}
             aria-label="Ajustes"
             aria-expanded={settingsOpen}
-            aria-haspopup="menu"
+            aria-controls="scene-settings"
             title="Ajustes"
           >
             <Settings size={18} />
           </button>
 
           {settingsOpen && (
-            <div className="scene-settings-dropdown">
+            <div id="scene-settings" className="scene-settings-dropdown">
               <div className="scene-settings-dropdown__header">
                 <span>Ajustes</span>
-                <button onClick={() => setSettingsOpen(false)} aria-label="Cerrar">
+                <button type="button" onClick={() => { setSettingsOpen(false); settingsButtonRef.current?.focus({ preventScroll: true }) }} aria-label="Cerrar">
                   <X size={14} />
                 </button>
               </div>
 
               <button
+                type="button"
+                aria-pressed={centroVisible}
                 className={`scene-settings-item ${centroVisible ? 'scene-settings-item--active' : ''}`}
                 onClick={toggleCentro}
               >

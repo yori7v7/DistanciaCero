@@ -12,6 +12,18 @@ export type CollectionName =
   | 'monthlyLetters'
   | 'openWhenLetters'
 
+export const CONTENT_COLLECTIONS: readonly CollectionName[] = [
+  'reasons', 'promises', 'importantDates', 'futureDreams', 'timeline',
+  'blackHoleGallery', 'playlist', 'monthlyLetters', 'openWhenLetters'
+]
+
+/** Ausente conserva el valor actual; un contenedor vacío lo reemplaza. */
+export interface ContentSnapshot {
+  content: Partial<Record<CollectionName, ContentItem[]>>
+  overrides: Partial<Record<CollectionName, OverrideMap>>
+  hidden: Partial<Record<CollectionName, string[]>>
+}
+
 /** Item genérico de contenido (antes del merge) */
 export interface ContentItem {
   id: string | number
@@ -23,6 +35,18 @@ export interface ContentItem {
   // text, description, date, image, tag, etc. vary by collection.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
+}
+
+/** Campos compartidos por las cartas mensuales y las de "Abrir cuando". */
+export interface LetterContent extends ContentItem {
+  month?: string
+  mood?: string
+  title?: string
+  preview?: string
+  content?: string[]
+  locked?: boolean
+  unlockHint?: string
+  availableLabel?: string
 }
 
 /** Payload de metadata de creación */

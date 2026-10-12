@@ -1,4 +1,4 @@
-import type { ContentItem, OverrideMap } from '../types/content'
+import { CONTENT_COLLECTIONS, type ContentItem, type ContentSnapshot, type OverrideMap } from '../types/content'
 import {
   addLocalItem,
   deleteLocalItem,
@@ -13,13 +13,23 @@ import {
   saveLocalItems,
   saveLocalOverrides,
   setLocalOverride,
-  updateLocalItem
+  updateLocalItem,
+  ContentStorageError,
+  getStorageKey,
+  getOverrideStorageKey,
+  getHiddenStorageKey,
+  writeStorageTransaction
 } from '../utils/localContentStore'
 import { buildUpdateMetadata, withCreateMetadata } from '../services/contentMetadataService'
 
 const LEGACY_MONTHLY_LETTERS_KEY = 'distancia-cero-local-monthly-letters'
 const LEGACY_OPEN_WHEN_LETTERS_KEY = 'distancia-cero-local-open-when'
 const SIMULATION_UNLOCKED_KEY = 'distancia-cero-sim-unlocked'
+const LEGACY_MIGRATED_KEY = 'distancia-cero-legacy-migrated-v2'
+const LEGACY_KEYS: Record<string, string> = {
+  monthlyLetters: LEGACY_MONTHLY_LETTERS_KEY,
+  openWhenLetters: LEGACY_OPEN_WHEN_LETTERS_KEY
+}
 
 function canUseLocalStorage(): boolean {
   if (typeof window === 'undefined') return false
@@ -61,20 +71,16 @@ function safeRemoveItem(key: string): void {
   }
 }
 
-function safeReadJsonArray(key: string): ContentItem[] {
+function safeReadJsonArray(key: string, strict = false): ContentItem[] {
   try {
-    const rawValue = safeGetItem(key)
+    const rawValue = strict ? window.localStorage.getItem(key) : safeGetItem(key)
     const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : []
+    if (!Array.isArray(parsedValue) && strict) throw new ContentStorageError()
     return Array.isArray(parsedValue) ? parsedValue : []
   } catch {
+    if (strict) throw new ContentStorageError()
     return []
   }
-}
-
-function safeSaveJsonArray(key: string, items: ContentItem[]): ContentItem[] {
-  const safeItems = Array.isArray(items) ? items : []
-  safeSetItem(key, JSON.stringify(safeItems))
-  return safeItems
 }
 
 function getSafeIdSegment(id: string | number | null | undefined): string {
@@ -83,18 +89,41 @@ function getSafeIdSegment(id: string | number | null | undefined): string {
 }
 
 export function getCollectionItems(collectionName: string): ContentItem[] {
-  return getLocalItems(collectionName)
+  return readCollectionItems(collectionName)
+}
+
+function readCollectionItems(collectionName: string, strict = false): ContentItem[] {
+  const standard = getLocalItems(collectionName, strict)
+  if (!Object.hasOwn(LEGACY_KEYS, collectionName) || safeGetItem(LEGACY_MIGRATED_KEY) === '1') return standard
+  const seen = new Set<string>()
+  return [...standard, ...safeReadJsonArray(LEGACY_KEYS[collectionName], strict)].filter(item => {
+    const id = String(item.id)
+    if (seen.has(id)) return false
+    seen.add(id)
+    return true
+  }).map(item => ({ ...item, isLocal: true }))
+}
+
+function prepareLetterMutation(collectionName: string): void {
+  if (Object.hasOwn(LEGACY_KEYS, collectionName)) migrateLegacyLettersIfNeeded()
 }
 
 export function saveCollectionItems(collectionName: string, items: ContentItem[]): ContentItem[] {
+  if (Object.hasOwn(LEGACY_KEYS, collectionName)) {
+    const safeItems = Array.isArray(items) ? items.map(item => ({ ...item, isLocal: true })) : []
+    restoreContentSnapshot({ content: { [collectionName]: safeItems }, overrides: {}, hidden: {} })
+    return safeItems
+  }
   return saveLocalItems(collectionName, items)
 }
 
 export function addCollectionItem(collectionName: string, item: ContentItem): ContentItem[] {
+  prepareLetterMutation(collectionName)
   return addLocalItem(collectionName, withCreateMetadata(item))
 }
 
 export function updateCollectionItem(collectionName: string, id: string, patch: Partial<ContentItem>): ContentItem[] {
+  prepareLetterMutation(collectionName)
   const currentItem = getLocalItems(collectionName).find(
     (item) => String(item.id) === String(id) && item.isLocal
   )
@@ -110,6 +139,7 @@ export function updateCollectionItem(collectionName: string, id: string, patch: 
 }
 
 export function deleteCollectionItem(collectionName: string, id: string): ContentItem[] {
+  prepareLetterMutation(collectionName)
   return deleteLocalItem(collectionName, id)
 }
 
@@ -150,27 +180,19 @@ export function mergeCollectionWithLocal(defaultItems: ContentItem[], collection
 }
 
 export function getLegacyMonthlyLetters(): ContentItem[] {
-  const legacy = safeReadJsonArray(LEGACY_MONTHLY_LETTERS_KEY)
-  const standard = getLocalItems('monthlyLetters')
-  const standardIds = new Set(standard.map(item => String(item.id)))
-  const legacyUnmerged = legacy.filter(item => !standardIds.has(String(item.id)))
-  return [...standard, ...legacyUnmerged]
+  return getCollectionItems('monthlyLetters')
 }
 
 export function saveLegacyMonthlyLetters(items: ContentItem[]): ContentItem[] {
-  return safeSaveJsonArray(LEGACY_MONTHLY_LETTERS_KEY, items)
+  return saveCollectionItems('monthlyLetters', items)
 }
 
 export function getLegacyOpenWhenLetters(): ContentItem[] {
-  const legacy = safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
-  const standard = getLocalItems('openWhenLetters')
-  const standardIds = new Set(standard.map(item => String(item.id)))
-  const legacyUnmerged = legacy.filter(item => !standardIds.has(String(item.id)))
-  return [...standard, ...legacyUnmerged]
+  return getCollectionItems('openWhenLetters')
 }
 
 export function saveLegacyOpenWhenLetters(items: ContentItem[]): ContentItem[] {
-  return safeSaveJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY, items)
+  return saveCollectionItems('openWhenLetters', items)
 }
 
 export function isMonthlyLetterOpened(id: string | number): boolean {
@@ -223,26 +245,36 @@ export function setSimulationUnlocked(value: boolean): void {
   }
 }
 
-const LEGACY_MIGRATED_KEY = 'distancia-cero-legacy-migrated-v1'
-
-/**
- * Migra cartas legacy (monthlyLetters y openWhenLetters) al sistema
- * estándar de colecciones. Solo se ejecuta una vez.
- * Retorna true si se migró algo, false si ya estaba migrado.
- */
+/** Conserva la unión visible, con prioridad estándar. Las claves antiguas quedan archivadas. */
 export function migrateLegacyLettersIfNeeded(): boolean {
   if (safeGetItem(LEGACY_MIGRATED_KEY) === '1') return false
+  restoreContentSnapshot({ content: {}, overrides: {}, hidden: {} })
+  return true
+}
 
-  const monthlyLetters = safeReadJsonArray(LEGACY_MONTHLY_LETTERS_KEY)
-  const openWhenLetters = safeReadJsonArray(LEGACY_OPEN_WHEN_LETTERS_KEY)
-
-  if (monthlyLetters.length > 0) {
-    saveLocalItems('monthlyLetters', monthlyLetters.map(item => ({ ...item, isLocal: true })))
+/** Incluye la migración y el respaldo en una sola escritura recuperable. */
+export function restoreContentSnapshot(snapshot: ContentSnapshot): void {
+  const values: Record<string, unknown> = {}
+  if (safeGetItem(LEGACY_MIGRATED_KEY) !== '1') {
+    for (const name of ['monthlyLetters', 'openWhenLetters'] as const) {
+      if (!Object.hasOwn(snapshot.content, name)) values[getStorageKey(name)] = readCollectionItems(name, true)
+    }
+    values[LEGACY_MIGRATED_KEY] = 1
   }
-  if (openWhenLetters.length > 0) {
-    saveLocalItems('openWhenLetters', openWhenLetters.map(item => ({ ...item, isLocal: true })))
+  for (const name of CONTENT_COLLECTIONS) {
+    if (Object.hasOwn(snapshot.content, name)) values[getStorageKey(name)] = snapshot.content[name]
+    if (Object.hasOwn(snapshot.overrides, name)) values[getOverrideStorageKey(name)] = snapshot.overrides[name]
+    if (Object.hasOwn(snapshot.hidden, name)) values[getHiddenStorageKey(name)] = snapshot.hidden[name]
   }
+  writeStorageTransaction(values)
+}
 
-  safeSetItem(LEGACY_MIGRATED_KEY, '1')
-  return monthlyLetters.length > 0 || openWhenLetters.length > 0
+export function getContentSnapshot(): ContentSnapshot {
+  const snapshot: ContentSnapshot = { content: {}, overrides: {}, hidden: {} }
+  for (const name of CONTENT_COLLECTIONS) {
+    snapshot.content[name] = readCollectionItems(name, true)
+    snapshot.overrides[name] = getLocalOverrides(name, true)
+    snapshot.hidden[name] = getHiddenItemIds(name, true)
+  }
+  return snapshot
 }

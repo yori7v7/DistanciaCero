@@ -74,7 +74,13 @@ export default function CrudEditorPanel({
             <span><strong>Aviso</strong>: Estos elementos son tuyos; los originales no se modifican.</span>
           </div>
 
-          <form className="editor-form" onSubmit={(e) => { crud.handleSubmit(e); onEdit?.(null) }}>
+          {showLocal && crud.notice && (
+            <div className={`crud-notice ${crud.notice.type}`} role={crud.notice.type === 'error' ? 'alert' : 'status'}>
+              {crud.notice.message}
+            </div>
+          )}
+
+          <form className="editor-form" onSubmit={(e) => { if (crud.handleSubmit(e).success) onEdit?.(null) }}>
             {fields.map((field) => (
               <div className="editor-field" key={field.name}>
                 <label htmlFor={`${collectionName}-${field.name}`}>{field.label}{field.required ? ' *' : ''}</label>
@@ -92,6 +98,7 @@ export default function CrudEditorPanel({
                     id={`${collectionName}-${field.name}`}
                     value={crud.getFormValue(field.name)}
                     onChange={(e) => crud.setFormValue(field.name, e.target.value)}
+                    required={field.required}
                   >
                     {(field.options || []).map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -179,11 +186,17 @@ export default function CrudEditorPanel({
           <h3><Edit2 size={18} /> Editor de {collectionLabel} originales</h3>
 
           <div className="crud-stats-bar">
-            <CrudStatButton filter="all" value={crud.totalCount} label="Total" activeFilter={activeCrudFilter} onClick={onCrudFilterClick} />
+            <CrudStatButton filter="all" value={crud.visibleBaseItems.length} label="Total" activeFilter={activeCrudFilter} onClick={onCrudFilterClick} />
             <CrudStatButton filter="overridden" value={crud.editedBaseCount} label="Editados" activeFilter={activeCrudFilter} onClick={onCrudFilterClick} />
             <CrudStatButton filter="hidden" value={crud.hiddenBaseCount} label="Ocultos" activeFilter={activeCrudFilter} onClick={onCrudFilterClick} />
-            <CrudStatButton filter="visible" value={crud.totalCount - crud.hiddenBaseCount} label="Visibles" activeFilter={activeCrudFilter} onClick={onCrudFilterClick} />
+            <CrudStatButton filter="visible" value={crud.visibleBaseItems.length - crud.hiddenBaseCount} label="Visibles" activeFilter={activeCrudFilter} onClick={onCrudFilterClick} />
           </div>
+
+          {showBase && crud.notice && (
+            <div className={`crud-notice ${crud.notice.type}`} role={crud.notice.type === 'error' ? 'alert' : 'status'}>
+              {crud.notice.message}
+            </div>
+          )}
 
           <form className="editor-form" onSubmit={(e) => { crud.handleBaseSubmit(e) }}>
             {fields.map((field) => (
@@ -203,6 +216,7 @@ export default function CrudEditorPanel({
                     id={`base-${collectionName}-${field.name}`}
                     value={crud.getBaseFormValue(field.name)}
                     onChange={(e) => crud.setBaseFormValue(field.name, e.target.value)}
+                    required={field.required}
                   >
                     {(field.options || []).map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -238,7 +252,7 @@ export default function CrudEditorPanel({
         <div className="reasons-list-card">
           <div className="reasons-list-header">
             <h3>{collectionLabel} originales</h3>
-            <span>{crud.totalCount} items</span>
+            <span>{filteredBaseItems.length} items</span>
           </div>
 
           {filteredBaseItems.length === 0 ? (

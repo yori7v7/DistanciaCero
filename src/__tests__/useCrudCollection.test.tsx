@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import useCrudCollection from '../components/centro-universo/useCrudCollection'
+import useCrudCollection, { type CrudField } from '../components/centro-universo/useCrudCollection'
 import type { ContentItem } from '../types/content'
+import * as contentService from '../services/contentService'
 
-const testFields = [
+const testFields: CrudField[] = [
   { name: 'title', label: 'Título', required: true },
   { name: 'text', label: 'Texto', type: 'textarea', rows: 3 }
 ]
@@ -15,6 +16,10 @@ const defaultData: ContentItem[] = [
 
 beforeEach(() => {
   localStorage.clear()
+})
+
+afterEach(() => {
+  vi.restoreAllMocks()
 })
 
 function setup(overrides = {}) {
@@ -297,5 +302,155 @@ describe('useCrudCollection — loadData', () => {
 
     expect(hook2.result.current.localItems).toHaveLength(1)
     expect(hook2.result.current.localItems[0].title).toBe('Saved')
+  })
+})
+
+describe('useCrudCollection — validation and failed persistence', () => {
+  const submitEvent = () => ({ preventDefault: vi.fn() } as any)
+
+  it('rejects required fields containing only whitespace without losing the draft', () => {
+    const { result } = setup()
+    const save = vi.spyOn(contentService, 'addCollectionItem')
+    act(() => result.current.setFormValue('title', '   '))
+    act(() => {
+      expect(result.current.handleSubmit(submitEvent()).success).toBe(false)
+    })
+    expect(save).not.toHaveBeenCalled()
+    expect(result.current.getFormValue('title')).toBe('   ')
+    expect(result.current.notice).toEqual({ type: 'error', message: 'Completa el campo «Título».' })
+  })
+
+  it('applies custom validation to trimmed values for local and original forms', () => {
+    const validate = vi.fn(() => 'Este título ya existe.')
+    const { result } = renderHook(() => useCrudCollection('test-collection', defaultData, {
+      fields: testFields, validate
+    }))
+    act(() => result.current.setFormValue('title', ' Duplicado '))
+    act(() => { expect(result.current.handleSubmit(submitEvent()).success).toBe(false) })
+    expect(validate).toHaveBeenLastCalledWith({ title: 'Duplicado', text: '' })
+
+    act(() => result.current.handleBaseEdit(defaultData[0]))
+    act(() => result.current.setBaseFormValue('title', ' Duplicado '))
+    act(() => { expect(result.current.handleBaseSubmit(submitEvent()).success).toBe(false) })
+    expect(validate).toHaveBeenLastCalledWith({ title: 'Duplicado', text: 'Texto base 1' })
+    expect(result.current.editingBaseId).toBe('base-1')
+    expect(result.current.overrides).toEqual({})
+  })
+
+  it('keeps a new draft and publishes no update when saving fails, then allows retry', () => {
+    const { result } = setup()
+    act(() => result.current.setFormValue('title', 'Conservar borrador'))
+    const updateListener = vi.fn()
+    window.addEventListener('distancia-cero-content-updated', updateListener)
+    const save = vi.spyOn(contentService, 'addCollectionItem').mockImplementationOnce(() => {
+      throw new Error('Almacenamiento lleno.')
+    })
+    try {
+      act(() => { expect(result.current.handleSubmit(submitEvent()).success).toBe(false) })
+      expect(result.current.getFormValue('title')).toBe('Conservar borrador')
+      expect(result.current.localItems).toEqual([])
+      expect(result.current.notice).toEqual({ type: 'error', message: 'Almacenamiento lleno.' })
+      expect(updateListener).not.toHaveBeenCalled()
+
+      save.mockRestore()
+      act(() => { expect(result.current.handleSubmit(submitEvent()).success).toBe(true) })
+      expect(result.current.localItems[0].title).toBe('Conservar borrador')
+      expect(result.current.notice?.type).toBe('success')
+      expect(updateListener).toHaveBeenCalledTimes(1)
+      expect(updateListener.mock.calls[0][0].detail).toEqual({
+        collection: 'test-collection', collectionName: 'test-collection'
+      })
+    } finally {
+      window.removeEventListener('distancia-cero-content-updated', updateListener)
+    }
+  })
+
+  it('keeps the edited item and unsaved changes when updating fails', () => {
+    const { result } = setup()
+    act(() => result.current.setFormValue('title', 'Guardado'))
+    act(() => { result.current.handleSubmit(submitEvent()) })
+    const original = result.current.localItems[0]
+    act(() => result.current.handleEdit(original))
+    act(() => result.current.setFormValue('title', 'Pendiente'))
+    vi.spyOn(contentService, 'updateCollectionItem').mockImplementation(() => {
+      throw new Error('No se pudo guardar.')
+    })
+    act(() => { expect(result.current.handleSubmit(submitEvent()).success).toBe(false) })
+    expect(result.current.localItems[0]).toEqual(original)
+    expect(result.current.editingId).toBe(String(original.id))
+    expect(result.current.getFormValue('title')).toBe('Pendiente')
+  })
+
+  it.each(['delete', 'override', 'restore', 'hide', 'show'] as const)(
+    'reports a failed %s without changing collection state', action => {
+      const { result } = setup()
+      act(() => result.current.setFormValue('title', 'Guardado'))
+      act(() => { result.current.handleSubmit(submitEvent()) })
+      act(() => result.current.handleBaseEdit(defaultData[0]))
+      const previous = {
+        localItems: result.current.localItems,
+        overrides: result.current.overrides,
+        hiddenIds: result.current.hiddenIds
+      }
+      const method = {
+        delete: 'deleteCollectionItem', override: 'setCollectionOverride',
+        restore: 'deleteCollectionOverride', hide: 'hideCollectionItem', show: 'restoreCollectionItem'
+      } as const
+      vi.spyOn(contentService, method[action]).mockImplementation(() => { throw new Error('Escritura bloqueada.') })
+      vi.spyOn(window, 'confirm').mockReturnValue(true)
+      act(() => {
+        if (action === 'delete') result.current.handleDelete(result.current.localItems[0])
+        if (action === 'override') result.current.handleBaseSubmit(submitEvent())
+        if (action === 'restore') result.current.handleBaseRestore('base-1')
+        if (action === 'hide') result.current.handleBaseHide(defaultData[0])
+        if (action === 'show') result.current.handleBaseUnhide('base-1')
+      })
+      expect(result.current.localItems).toEqual(previous.localItems)
+      expect(result.current.overrides).toEqual(previous.overrides)
+      expect(result.current.hiddenIds).toEqual(previous.hiddenIds)
+      expect(result.current.editingBaseId).toBe('base-1')
+      expect(result.current.notice).toEqual({ type: 'error', message: 'Escritura bloqueada.' })
+    }
+  )
+})
+
+describe('useCrudCollection — updates while the CMS stays open', () => {
+  it('reloads its own collection and backup updates, preserving the current draft', () => {
+    const { result } = setup()
+    act(() => result.current.setFormValue('title', 'Borrador sin guardar'))
+    contentService.saveCollectionItems('test-collection', [{ id: 'importado', title: 'Respaldo', isLocal: true }])
+    act(() => contentService.notifyContentUpdated('unrelated'))
+    expect(result.current.localItems).toEqual([])
+    act(() => contentService.notifyContentUpdated('test-collection'))
+    expect(result.current.localItems[0].title).toBe('Respaldo')
+    expect(result.current.getFormValue('title')).toBe('Borrador sin guardar')
+
+    contentService.saveCollectionItems('test-collection', [])
+    act(() => contentService.notifyContentUpdated('all'))
+    expect(result.current.localItems).toEqual([])
+    expect(result.current.getFormValue('title')).toBe('Borrador sin guardar')
+  })
+
+  it('reloads both letter collections for a letters event', () => {
+    const monthly = renderHook(() => useCrudCollection('monthlyLetters', [], { fields: testFields }))
+    const openWhen = renderHook(() => useCrudCollection('openWhenLetters', [], { fields: testFields }))
+    contentService.saveCollectionItems('monthlyLetters', [{ id: 'mes', title: 'Mes', isLocal: true }])
+    contentService.saveCollectionItems('openWhenLetters', [{ id: 'cuando', title: 'Cuando', isLocal: true }])
+    act(() => contentService.notifyContentUpdated('letters'))
+    expect(monthly.result.current.localItems[0].id).toBe('mes')
+    expect(openWhen.result.current.localItems[0].id).toBe('cuando')
+  })
+
+  it('does not discard an edited draft when a backup removed its item', () => {
+    const { result } = setup()
+    act(() => result.current.setFormValue('title', 'Creado'))
+    act(() => { result.current.handleSubmit({ preventDefault() {} } as any) })
+    act(() => result.current.handleEdit(result.current.localItems[0]))
+    act(() => result.current.setFormValue('title', 'Edición pendiente'))
+    contentService.saveCollectionItems('test-collection', [])
+    act(() => contentService.notifyContentUpdated('all'))
+    act(() => { expect(result.current.handleSubmit({ preventDefault() {} } as any).success).toBe(false) })
+    expect(result.current.getFormValue('title')).toBe('Edición pendiente')
+    expect(result.current.notice?.message).toContain('ya no existe')
   })
 })

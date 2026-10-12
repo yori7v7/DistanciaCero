@@ -12,6 +12,8 @@ function PlaylistSection({ playlist = [] }) {
   const {
     backgroundPlaying,
     currentTrack,
+    pendingTrack,
+    infoMessage,
     toggleBackground,
     playLocalTrack,
     stopTrack,
@@ -83,11 +85,12 @@ function PlaylistSection({ playlist = [] }) {
   }]
 
   const isCurrentTrack = (item) => currentTrack?.id === item.id
+  const isPendingTrack = (item) => pendingTrack?.id === item.id
 
   const handleItem = (item) => {
     if (item.sourceType === 'placeholder') return
     if (item.sourceType === 'local') {
-      isCurrentTrack(item) ? stopTrack() : playLocalTrack(item)
+      isCurrentTrack(item) || isPendingTrack(item) ? stopTrack() : playLocalTrack(item)
       return
     }
     openExternalLink(item)
@@ -100,6 +103,8 @@ function PlaylistSection({ playlist = [] }) {
         title="La banda sonora de nuestro universo"
         text="Sube canciones, usa el audio de ambiente o agrega playlists de Spotify."
       />
+
+      {infoMessage && <p role="status" className="text-sm text-center mb-4">{infoMessage}</p>}
 
       {canUpload && (
         <div className="gallery-upload-wrapper">
@@ -144,14 +149,14 @@ function PlaylistSection({ playlist = [] }) {
                 {item.sourceType === 'placeholder' ? (
                   <Sparkles size={20} />
                 ) : item.sourceType === 'local' ? (
-                  isCurrentTrack(item) ? <Square size={20} /> : <Music size={20} />
+                  isCurrentTrack(item) || isPendingTrack(item) ? <Square size={20} /> : <Music size={20} />
                 ) : (
                   <ExternalLink size={20} />
                 )}
                 <div>
                   <span>{item.tag || (item.isUpload ? 'Subido' : '')}</span>
                   <h4>{item.title}</h4>
-                  <p>{isCurrentTrack(item) ? 'Sonando ahora.' : item.description}</p>
+                  <p>{isPendingTrack(item) ? 'Cargando canción. Toca para cancelar.' : isCurrentTrack(item) ? 'Sonando ahora.' : item.description}</p>
                 </div>
               </button>
               {item.isUpload && (

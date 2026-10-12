@@ -1,6 +1,7 @@
 import { Heart, Sparkles, Stars, ArrowRight, Music } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import siteConfig from '../data/siteConfig.json'
+import { useReducedMotion } from '../hooks/useSceneActivity'
 
 interface PublicLandingProps {
   onEnter: () => void
@@ -8,6 +9,7 @@ interface PublicLandingProps {
 
 function PublicLanding({ onEnter }: PublicLandingProps) {
   const [phraseIndex, setPhraseIndex] = useState(0)
+  const reducedMotion = useReducedMotion()
 
   const phrases = [
     'Un universo donde la distancia no existe',
@@ -18,14 +20,15 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
   ]
 
   useEffect(() => {
+    if (reducedMotion) return
     const timer = setInterval(() => {
       setPhraseIndex((i) => (i + 1) % phrases.length)
     }, 3000)
     return () => clearInterval(timer)
-  }, [])
+  }, [reducedMotion])
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center">
+    <div className="public-landing fixed inset-0 z-50 overflow-y-auto">
       {/* Same background as main app */}
       <div className="background-orbs">
         <span className="orb orb-pink"></span>
@@ -52,7 +55,7 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-xl w-full py-12">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-xl w-full mx-auto py-12 min-h-full justify-center">
         <div className="small-pill mb-8">
           <Sparkles size={14} />
           <span>{siteConfig.hero.eyebrow}</span>
@@ -93,7 +96,7 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-6 flex items-center gap-2 text-muted text-xs">
+      <div className="relative z-10 pb-6 flex items-center justify-center gap-2 text-muted text-xs">
         <Stars size={12} />
         <span>{siteConfig.project.name} • Desde {siteConfig.dates.metDate?.split('-')[0] || '2026'}</span>
         <Heart size={10} />

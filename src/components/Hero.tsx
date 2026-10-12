@@ -10,7 +10,7 @@ interface RandomPhrase {
 }
 
 function Hero() {
-  const { backgroundPlaying, toggleBackground } = useAudio()
+  const { backgroundPlaying, toggleBackground, infoMessage } = useAudio()
 
   const dailyPhrase: RandomPhrase | null = useMemo(() => {
     if (!randomPhrases.length) return null
@@ -78,6 +78,7 @@ function Hero() {
             <span>{backgroundPlaying ? 'Pausar canción' : 'Activar canción'}</span>
           </button>
         </div>
+        {infoMessage && <p role="status" className="text-sm text-muted">{infoMessage}</p>}
       </div>
     </section>
   )

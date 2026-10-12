@@ -28,6 +28,7 @@ export interface SceneMusicConfig {
 export interface AudioContextValue {
   backgroundPlaying: boolean
   currentTrack: AudioTrack | null
+  pendingTrack: AudioTrack | null
   infoMessage: string | null
   backgroundVolume: number
   setBackgroundVolume: (volume: number) => void

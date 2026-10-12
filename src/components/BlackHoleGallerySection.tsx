@@ -5,6 +5,10 @@ import * as THREE from 'three'
 import SectionTitle from './SectionTitle'
 import { Aperture, Heart, Image as ImageIcon, MousePointer2, Orbit, Sparkles, X, ZoomIn } from 'lucide-react'
 import { mergeCollectionWithLocal } from '../services/contentService'
+import useDialogFocus from '../hooks/useDialogFocus'
+import { getScrollBehavior } from '../utils/motion'
+import useSceneActivity from '../hooks/useSceneActivity'
+import CanvasActivityController from './CanvasActivityController'
 
 function AccretionDiskLayer({
   inner = 1.15,
@@ -14,10 +18,18 @@ function AccretionDiskLayer({
   warm = 0.5,
   speed = 1,
   colorShift = 0,
+  reducedMotion = false,
 }) {
   const materialRef = useRef(null)
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uOpacity: { value: opacity },
+    uWarm: { value: warm },
+    uShift: { value: colorShift },
+  }), [opacity, warm, colorShift])
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = clock.elapsedTime * speed
     }
@@ -33,12 +45,7 @@ function AccretionDiskLayer({
         depthWrite={false}
         side={THREE.DoubleSide}
         blending={THREE.AdditiveBlending}
-        uniforms={{
-          uTime: { value: 0 },
-          uOpacity: { value: opacity },
-          uWarm: { value: warm },
-          uShift: { value: colorShift },
-        }}
+        uniforms={uniforms}
         vertexShader={`
           varying vec2 vUv;
           void main() {
@@ -109,11 +116,12 @@ function AccretionDiskLayer({
   )
 }
 
-function LensingHalo() {
+function LensingHalo({ reducedMotion }) {
   const ring1 = useRef(null)
   const ring2 = useRef(null)
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     if (ring1.current) {
       ring1.current.rotation.z = clock.elapsedTime * 0.14
     }
@@ -137,7 +145,7 @@ function LensingHalo() {
   )
 }
 
-function BlackHoleDustField() {
+function BlackHoleDustField({ reducedMotion }) {
   const pointsRef = useRef(null)
 
   const particlePositions = useMemo(() => {
@@ -159,6 +167,7 @@ function BlackHoleDustField() {
   }, [])
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     if (pointsRef.current) {
       pointsRef.current.rotation.y = clock.elapsedTime * 0.05
       pointsRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.25) * 0.05
@@ -186,11 +195,12 @@ function BlackHoleDustField() {
   )
 }
 
-function BlackHoleCore3D() {
+function BlackHoleCore3D({ reducedMotion }) {
   const coreRef = useRef(null)
   const glowRef = useRef(null)
 
   useFrame(({ clock }) => {
+    if (reducedMotion) return
     if (coreRef.current) {
       coreRef.current.rotation.y += 0.0035
     }
@@ -203,7 +213,7 @@ function BlackHoleCore3D() {
 
   return (
     <group>
-      <BlackHoleDustField />
+      <BlackHoleDustField reducedMotion={reducedMotion} />
 
       <AccretionDiskLayer
         inner={1.15}
@@ -213,6 +223,7 @@ function BlackHoleCore3D() {
         warm={0.9}
         speed={1}
         colorShift={0.1}
+        reducedMotion={reducedMotion}
       />
 
       <AccretionDiskLayer
@@ -223,6 +234,7 @@ function BlackHoleCore3D() {
         warm={0.48}
         speed={1.5}
         colorShift={0}
+        reducedMotion={reducedMotion}
       />
 
       <AccretionDiskLayer
@@ -233,9 +245,10 @@ function BlackHoleCore3D() {
         warm={0.64}
         speed={0.7}
         colorShift={0.18}
+        reducedMotion={reducedMotion}
       />
 
-      <LensingHalo />
+      <LensingHalo reducedMotion={reducedMotion} />
 
       <mesh ref={coreRef}>
         <sphereGeometry args={[1.08, 84, 84]} />
@@ -267,7 +280,7 @@ function BlackHoleCore3D() {
   )
 }
 
-function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked }) {
+function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked, reducedMotion }) {
   const groupRef = useRef(null)
 
   const config = useMemo(() => {
@@ -281,13 +294,13 @@ function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked }) {
 
   useFrame(({ clock, camera }) => {
     if (!groupRef.current) return
-
-    const t = clock.elapsedTime * config.speed + config.offset
-    const x = Math.cos(t) * config.radius
-    const z = Math.sin(t) * config.radius * 0.72
-    const y = config.y + Math.sin(t * 1.45) * 0.12
-
-    groupRef.current.position.set(x, y, z)
+    if (!reducedMotion) {
+      const t = clock.elapsedTime * config.speed + config.offset
+      const x = Math.cos(t) * config.radius
+      const z = Math.sin(t) * config.radius * 0.72
+      const y = config.y + Math.sin(t * 1.45) * 0.12
+      groupRef.current.position.set(x, y, z)
+    }
     groupRef.current.lookAt(camera.position)
   })
 
@@ -299,16 +312,21 @@ function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked }) {
       return
     }
 
-    onPick(item)
+    onPick(item, event.currentTarget)
   }
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} position={[
+      Math.cos(config.offset) * config.radius,
+      config.y + Math.sin(config.offset * 1.45) * 0.12,
+      Math.sin(config.offset) * config.radius * 0.72,
+    ]}>
       <Html center transform distanceFactor={8.4}>
         <button
           className={`memory-3d-card ${!hasEntered ? 'memory-3d-card-locked' : ''}`}
           type="button"
           onClick={clickMemory}
+          aria-label={hasEntered ? `Abrir recuerdo: ${item.title}` : `Recuerdo bloqueado: ${item.title}`}
           title={hasEntered ? item.title : 'Primero entra al agujero negro'}
         >
           {item.image ? (
@@ -332,7 +350,7 @@ function MemoryOrbit3D({ item, index, total, hasEntered, onPick, onBlocked }) {
   )
 }
 
-function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
+function BlackHoleScene({ items, hasEntered, onPick, onBlocked, reducedMotion }) {
   return (
     <>
       <color attach="background" args={['#010003']} />
@@ -345,7 +363,7 @@ function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
 
       <Stars radius={92} depth={48} count={1600} factor={4.2} saturation={0} fade speed={0.28} />
 
-      <BlackHoleCore3D />
+      <BlackHoleCore3D reducedMotion={reducedMotion} />
 
       {items.slice(0, 12).map((item, index) => (
         <MemoryOrbit3D
@@ -356,6 +374,7 @@ function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
           hasEntered={hasEntered}
           onPick={onPick}
           onBlocked={onBlocked}
+          reducedMotion={reducedMotion}
         />
       ))}
 
@@ -367,13 +386,14 @@ function BlackHoleScene({ items, hasEntered, onPick, onBlocked }) {
         rotateSpeed={0.52}
         zoomSpeed={0.7}
         dampingFactor={0.08}
-        enableDamping
+        enableDamping={!reducedMotion}
       />
     </>
   )
 }
 
 function BlackHoleGallerySection({ items = [] }) {
+  const { reducedMotion } = useSceneActivity('galeria-agujero-negro')
   const [localVersion, setLocalVersion] = useState(0)
   const visibleItems = useMemo(() => {
     return mergeCollectionWithLocal(Array.isArray(items) ? items : [], 'blackHoleGallery').filter(Boolean)
@@ -382,23 +402,31 @@ function BlackHoleGallerySection({ items = [] }) {
   const [isEntering, setIsEntering] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
   const [needsGate, setNeedsGate] = useState(false)
-  const [activeItem, setActiveItem] = useState(visibleItems[0] || null)
-  const portalRef = useRef(null)
+  const [activeItemId, setActiveItemId] = useState(visibleItems[0]?.id ?? null)
+  const activeItem = visibleItems.find(item => String(item.id) === String(activeItemId)) || visibleItems[0] || null
+  const portalRef = useRef<HTMLDivElement>(null)
+  const portalTitleRef = useRef<HTMLHeadingElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const enterButtonRef = useRef<HTMLButtonElement>(null)
+  const returnFocusRef = useRef<HTMLElement>(null)
   const blockedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useDialogFocus({
+    isOpen, dialogRef: portalRef, initialFocusRef: portalTitleRef, returnFocusRef,
+    trapFocus: false, onClose: () => setIsOpen(false),
+  })
+
+  useEffect(() => () => {
+    if (blockedTimerRef.current) clearTimeout(blockedTimerRef.current)
+  }, [])
 
   const warpLines = useMemo(() => Array.from({ length: 32 }, (_, index) => index), [])
 
   useEffect(() => {
-    const activeStillExists = activeItem && visibleItems.some((item) => String(item.id) === String(activeItem.id))
-    if (activeItem && !activeStillExists) {
-      setActiveItem(visibleItems[0] || null)
-      return
+    if (!visibleItems.some(item => String(item.id) === String(activeItemId))) {
+      setActiveItemId(visibleItems[0]?.id ?? null)
     }
-
-    if (!activeItem && visibleItems.length > 0) {
-      setActiveItem(visibleItems[0])
-    }
-  }, [activeItem, visibleItems])
+  }, [activeItemId, visibleItems])
 
   useEffect(() => {
     const handleContentUpdate = (event) => {
@@ -434,10 +462,11 @@ function BlackHoleGallerySection({ items = [] }) {
     if (!isEntering) return
 
     const timer = setTimeout(() => {
+      if (!sectionRef.current || sectionRef.current.closest('.scene-hidden, [inert], [aria-hidden="true"]')) return
       setIsEntering(false)
       setHasEntered(true)
       setIsOpen(true)
-      setActiveItem((current) => current || visibleItems[0] || null)
+      setActiveItemId((current) => current ?? visibleItems[0]?.id ?? null)
     }, 2850)
 
     return () => clearTimeout(timer)
@@ -447,8 +476,9 @@ function BlackHoleGallerySection({ items = [] }) {
     if (!isOpen || isEntering) return
 
     const timer = setTimeout(() => {
+      if (sectionRef.current?.closest('.scene-hidden, [inert], [aria-hidden="true"]')) return
       portalRef.current?.scrollIntoView({
-        behavior: 'smooth',
+        behavior: getScrollBehavior(),
         block: 'start',
       })
     }, 220)
@@ -458,8 +488,9 @@ function BlackHoleGallerySection({ items = [] }) {
 
   const enterBlackHole = () => {
     if (isEntering) return
+    returnFocusRef.current = enterButtonRef.current
     setNeedsGate(false)
-    setActiveItem(visibleItems[0] || null)
+    setActiveItemId(visibleItems[0]?.id ?? null)
     setIsEntering(true)
   }
 
@@ -474,15 +505,21 @@ function BlackHoleGallerySection({ items = [] }) {
     }, 1150)
   }
 
-  const pickMemory = (item) => {
+  const pickMemory = (item, trigger: HTMLElement | null = null) => {
+    returnFocusRef.current = trigger || enterButtonRef.current
     setIsOpen(true)
-    setActiveItem(item)
+    setActiveItemId(item.id)
+    if (isOpen) {
+      portalTitleRef.current?.focus({ preventScroll: true })
+      portalRef.current?.scrollIntoView({ behavior: getScrollBehavior(), block: 'start' })
+    }
   }
 
   return (
     <section
       className="section blackhole-section"
       id="galeria-agujero-negro"
+      ref={sectionRef}
       style={(isEntering || hasEntered) ? { display: 'block', minHeight: '100vh' } : undefined}
     >
       <SectionTitle
@@ -509,13 +546,13 @@ function BlackHoleGallerySection({ items = [] }) {
           </p>
 
           {needsGate && (
-            <p className="blackhole-gate-message">
+            <p className="blackhole-gate-message" role="status">
               Primero entra conmigo al agujero negro. Después sí te enseño lo que vive ahí dentro.
             </p>
           )}
 
           <div className="blackhole-actions">
-            <button className="main-button blackhole-enter-button" type="button" onClick={enterBlackHole}>
+            <button ref={enterButtonRef} className="main-button blackhole-enter-button" type="button" onClick={enterBlackHole}>
               <Aperture size={18} />
               Entrar al agujero negro
             </button>
@@ -545,13 +582,15 @@ function BlackHoleGallerySection({ items = [] }) {
             </div>
           )}
 
-          <Canvas className="true-3d-canvas" camera={{ position: [0, 3.4, 10], fov: 45 }}>
+          <Canvas className="true-3d-canvas" frameloop="demand" camera={{ position: [0, 3.4, 10], fov: 45 }}>
             <Suspense fallback={null}>
+              <CanvasActivityController sectionId="galeria-agujero-negro" />
               <BlackHoleScene
                 items={visibleItems}
                 hasEntered={hasEntered}
                 onPick={pickMemory}
                 onBlocked={blockedMemory}
+                reducedMotion={reducedMotion}
               />
             </Suspense>
           </Canvas>
@@ -581,11 +620,11 @@ function BlackHoleGallerySection({ items = [] }) {
       )}
 
       {isOpen && (
-        <div ref={portalRef} className="blackhole-portal fade-up">
+        <div ref={portalRef} className="blackhole-portal fade-up" tabIndex={-1}>
           <div className="portal-header">
             <div>
               <span>Dentro del horizonte de sucesos</span>
-              <h3>Estos pedacitos de nosotros se quedaron viviendo en mí.</h3>
+              <h3 ref={portalTitleRef} tabIndex={-1}>Estos pedacitos de nosotros se quedaron viviendo en mí.</h3>
             </div>
 
             <button className="portal-close" type="button" onClick={() => setIsOpen(false)} aria-label="Cerrar galería">
@@ -623,7 +662,8 @@ function BlackHoleGallerySection({ items = [] }) {
                 className={`blackhole-photo-card ${activeItem?.id === item.id ? 'blackhole-photo-card-active' : ''}`}
                 key={item.id}
                 type="button"
-                onClick={() => setActiveItem(item)}
+                aria-pressed={String(activeItem?.id) === String(item.id)}
+                onClick={() => setActiveItemId(item.id)}
               >
                 <div className="blackhole-photo-thumb">
                   {item.image ? (

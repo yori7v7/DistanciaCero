@@ -1,5 +1,25 @@
 import type { ContentItem, OverrideMap } from '../types/content'
-import * as contentRepository from '../repositories/contentRepository'
+import * as contentRepository from '../repositories/localContentRepository'
+import { validateContentBackup } from '../utils/contentBackup'
+
+export { validateContentBackup } from '../utils/contentBackup'
+
+export function exportContentBackup() {
+  const backup = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    source: 'Distancia Cero - Centro del Universo',
+    ...contentRepository.getContentSnapshot()
+  }
+  validateContentBackup(backup)
+  return backup
+}
+
+export function restoreContentBackup(input: unknown): void {
+  const snapshot = validateContentBackup(input)
+  contentRepository.restoreContentSnapshot(snapshot)
+  notifyContentUpdated('all')
+}
 
 // Sync hooks: fire-and-forget to Supabase on every write.
 // These never throw and never block the local flow.
@@ -151,19 +171,19 @@ export function saveLegacyOpenWhenLetters(items: ContentItem[]): ContentItem[] {
   return contentRepository.saveLegacyOpenWhenLetters(items)
 }
 
-export function isMonthlyLetterOpened(id: string): boolean {
+export function isMonthlyLetterOpened(id: string | number): boolean {
   return contentRepository.isMonthlyLetterOpened(id)
 }
 
-export function setMonthlyLetterOpened(id: string, value = true): void {
+export function setMonthlyLetterOpened(id: string | number, value = true): void {
   return contentRepository.setMonthlyLetterOpened(id, value)
 }
 
-export function isOpenWhenLetterOpened(id: string): boolean {
+export function isOpenWhenLetterOpened(id: string | number): boolean {
   return contentRepository.isOpenWhenLetterOpened(id)
 }
 
-export function setOpenWhenLetterOpened(id: string, value = true): void {
+export function setOpenWhenLetterOpened(id: string | number, value = true): void {
   return contentRepository.setOpenWhenLetterOpened(id, value)
 }
 

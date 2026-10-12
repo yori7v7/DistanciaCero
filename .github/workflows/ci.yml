@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: TypeScript check
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Build
         run: npm run build
@@ -51,7 +51,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: npx playwright test
+        run: npm run test:e2e
 
       - name: Upload Playwright report
         if: failure()

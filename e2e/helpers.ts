@@ -18,11 +18,15 @@ export async function gotoApp(page: Page, path = '/app') {
 
 /**
  * Enable CMS "Centro del Universo" via settings menu.
- * Toggles: Ajustes → Centro del Universo ON → close
+ * Ajustes → Centro del Universo ON; the controller closes the disclosure itself.
  */
 export async function enableCentro(page: Page) {
-  await page.getByRole('button', { name: 'Ajustes' }).click()
-  await page.getByRole('button', { name: /Centro del Universo/ }).click()
-  await page.getByRole('button', { name: 'Ajustes' }).click()
-  await expect(page.locator('#centro-universo')).toBeVisible({ timeout: 20_000 })
+  const cms = page.locator('#centro-universo')
+  if (!await cms.isVisible()) {
+    await page.getByRole('button', { name: 'Ajustes' }).click()
+    await page.getByRole('button', { name: /Centro del Universo/ }).click()
+    await expect(page.locator('.scene-settings-dropdown')).toBeHidden()
+  }
+  // The lazy-loading placeholder has the same section ID as the real editor.
+  await expect(cms.getByRole('heading', { name: 'Centro del Universo', exact: true })).toBeVisible({ timeout: 20_000 })
 }
