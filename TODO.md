@@ -1,74 +1,41 @@
-# TODO — DistanciaCero
+# Pendientes — Distancia Cero
 
-Backlog vivo del proyecto. Se actualiza con cada feature, bug, o idea. Claude lee esto al iniciar sesión.
+Estado del 10 de octubre de 2026. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) están cerrados. Los resultados y las copias de recuperación están en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md).
 
-**Leyenda**: `🔥 urgente` · `🔨 en progreso` · `💡 idea` · `🐛 bug` · `✅ hecho`
+## Trabajo local terminado
 
----
+- [x] **Paso 1 — refactor pendiente de Claude:** lector compartido, tipos, simulación/progreso y cambios previos comprobados.
+- [x] **Paso 2 — contenido y respaldos:** migración v2, restauración validada/recuperable, nueve colecciones y errores de persistencia comprobados.
+- [x] **Paso 3 — recorridos locales:** hash/historial, audio exclusivo y cancelable, archivos ausentes y preview/offline comprobados.
+- [x] **Paso 4 — refactor focalizado:** configuración tipada del CMS, conversiones compartidas, cancelación de timers, limpieza y comandos reproducibles.
+- [x] **Paso 5 — experiencia existente:** reproductor en flujo, cinco tamaños, teclado/foco, cargas/errores, selectores de planetas y movimiento reducido. Comparación medida de carga y animaciones ocultas.
+- [x] TypeScript y **338 unitarias en 22 archivos**, junto con build/PWA, aprobados en la validación final del paso 7.
+- [x] Nombres `openWhen.json` / `openWhenLetters` documentados: archivo base y colección persistida respectivamente; se conservan por compatibilidad.
+- [x] Revisadas responsabilidades de CMS/lectores/controladores dentro del alcance. La auditoría de agosto se conserva como histórica.
+- [x] **Paso 6 — documentación:** README, contexto de agentes, guía, contratos y pendientes alineados; 13 documentos sin enlaces locales rotos. Revisión independiente y reglas de recuperación documentadas.
+- [x] **Paso 7 — entrega final:** 338 unitarias, tipos/build, **50 E2E en una sola corrida y 1 preview/offline**, sin reintentos. Scrolls de foco corregidos y comprobados, diff revisado y copia final de recuperación guardada.
 
-## 🔨 En progreso
+## Trabajo local pendiente
 
-- [ ] **Entrelazados Phase 2+** — expandir los dos cubos conscientes (visión completa en mi cabeza)
-- [ ] **Polish UI/UX incremental** — mejoras orgánicas que voy detectando al usar la app
+No quedan tareas abiertas dentro del alcance acordado de los pasos 1–7. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
----
+## Límites y deuda visible
 
-## 🚀 Features planeadas
+- La cobertura visual/teclado se comprobó en Chromium y cinco tamaños; queda una revisión futura en navegadores y dispositivos reales, sin declarar certificación WCAG completa.
+- La PWA se comprobó con el build actual previamente cargado. Falta probar una actualización entre releases; medios externos no tienen garantía offline.
+- Se conservan avisos de tamaño de chunks/import dinámico y de `THREE.Clock`. No impidieron los recorridos locales; valorar su limpieza en un bloque acotado posterior.
+- Algunas estructuras de contenido conservan campos dinámicos y casts históricos; el CMS y el lector compartido tienen tipos concretos. Ampliar tipado solo con un alcance y regresiones claros.
+- `siteConfig.secret` conserva campos de plantilla sin una sección consumidora actual; no hay autenticación privada mediante esas claves.
+- El inventario Git de septiembre es histórico. `main`, los tags y el stash WIP se preservaron; no hace falta aplicarlos ni eliminarlos para cerrar el trabajo local. Cualquier decisión de limpieza requiere un encargo posterior.
 
-- [ ] **Migrar deploy a Vercel** — `vercel.json` ya existe, base path ya es `/` por defecto. Quitar dependencia de `gh-pages`
-- [ ] **Push integral del repo** — 289+ commits locales sin push. Sincronizar `origin/main` con todo el historial real
-- [ ] **Reescribir `GUIA_PARA_EDITAR.md`** — actualizarla a estado actual: CMS-first para la usuaria final, quitar referencias a JSONs inexistentes, enfoque no-técnico
-- [ ] **Activar Supabase (Fase S5)** — cuando haya datos reales de la relación. Gate: tener pareja y contenido real que sincronizar
-  - [ ] Crear proyecto Supabase real (no lab desechable)
-  - [ ] Implementar `remoteContentRepository` (actualmente es skeleton)
-  - [ ] Mapping de UUIDs locales → Auth real
-  - [ ] Storage para media (fotos, audio)
-  - [ ] Activar feature flag `VITE_REMOTE_CONTENT_ENABLED=true`
+## Ideas para otra etapa
 
----
+Estas propuestas no forman parte del cierre local y no están activadas:
 
-## 🎨 UI/UX — Ideas de polish
+- Ampliar Entrelazados y sus interacciones después de acordar su concepto.
+- Rediseñar el CMS o las transiciones por una dirección visual nueva; el pulido funcional actual ya está comprobado.
+- Añadir onboarding, revelado gradual o generación asistida de contenido.
+- Revisar infraestructura remota: repositorio, Auth/UUIDs, aislamiento, sincronización, archivos y migración. El código existente no acredita preparación de producción; habilitar Supabase requiere otra etapa solicitada.
+- Elegir y preparar una publicación futura. Los scripts de GitHub Pages y la configuración Vercel existentes no acreditan un despliegue actual.
 
-*Ideas que van surgiendo al usar la app. Sin urgencia — se priorizan cuando hay inspiración.*
-
-- [ ] **CMS (CrudEditorPanel)** — pulir para que sea intuitivo y bonito (es lo que usará la usuaria final)
-- [ ] **Animaciones de transición entre secciones** — más fluidez tipo "apple keynote"
-- [ ] **Universo 3D** — más magia visual, partículas, interactividad en los planetas
-- [ ] **Landing (`/`)** — primera impresión wow, blur/sizing optimizado
-- [ ] **Responsive/mobile** — verificar que todo funcione en móvil (ella probablemente lo abrirá en el teléfono)
-
----
-
-## 🐛 Bugs conocidos
-
-*Reportar aquí cuando algo no funcione como esperas.*
-
-- *(vacío por ahora — agregar según surjan)*
-
----
-
-## 🧱 Deuda técnica
-
-- [ ] **Limpiar branches locales** — 43 branches, todos mergeados a `main`. Se pueden borrar para reducir ruido
-- [ ] **Alinear `GUIA_PARA_EDITAR.md` con datos reales** — referencia ~10 JSONs que ya no existen
-- [ ] **`openWhen.json` vs `openWhenLetters`** — el archivo y la colección tienen nombres distintos. Unificar o documentar
-- [ ] **Stash WIP** — hay un stash sin aplicar ("debug: temporarily remove lazy loading to isolate crash"). Resolver o descartar
-- [x] TypeScript 0 errores ✅
-- [x] 162 tests pasando ✅
-- [x] Clean Architecture implementada ✅
-- [x] Design system con catálogo visual ✅
-
----
-
-## 💡 Ideas a futuro
-
-*Parking lot de ideas que pueden o no hacerse. Sin compromiso.*
-
-- [ ] **Generación de contenido con IA** — Claude ayuda a crear cartas, razones, misiones en lote (yo curo, él escribe JSONs)
-- [ ] **Onboarding interactivo** — tutorial para la usuaria final la primera vez que entra
-- [ ] **Modo "sorpresa"** — revelar secciones gradualmente (gamificación de la experiencia)
-- [ ] **Más metáforas cuánticas** — entrelazados, superposición, observador... como narrativa visual
-
----
-
-*Última actualización: 2026-08-06 · Formato inspirado en el grill session 🔥*
+Las propuestas futuras no se consideran realizadas ni forman parte de la validación del cierre local.

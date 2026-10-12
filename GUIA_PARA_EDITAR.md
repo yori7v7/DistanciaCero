@@ -1,18 +1,18 @@
 # Guía para editar Distancia Cero
 
-Esta guía es para ti — la persona que va a llenar este universo con contenido real. **No necesitas saber programar.** Todo se hace desde el Centro del Universo, un panel visual dentro de la página.
+Esta guía explica cómo llenar el universo con contenido real. Las nueve colecciones se editan desde el **Centro del Universo**, un panel visual. Los nombres, la configuración, los planetas y algunos textos se cambian en los archivos indicados abajo. Guía contrastada con la versión local el 7 de octubre de 2026.
 
 ---
 
 ## El Centro del Universo (CMS)
 
-El **Centro del Universo** es el panel de administración donde puedes editar TODO el contenido sin tocar código. Se accede desde el botón **"Centro"** en la navegación de la app.
+Entrar a `/app`, abrir **Ajustes** (el engrane de la navegación) y activar **Centro del Universo**. El panel aparece debajo de la escena seleccionada y puede tardar un momento en cargar la primera vez. El ajuste se conserva al recargar; desactivarlo oculta el panel y conserva tus datos.
 
 ### ¿Qué puedes editar?
 
 | Sección | Qué contiene |
 |---|---|
-| Cartas Mensuales | Cartas que se desbloquean mes a mes |
+| Cartas Mensuales | Cartas organizadas por mes, con bloqueo manual opcional |
 | Abrir Cuando | Cartas temáticas (cuando me extrañes, cuando estés triste, etc.) |
 | 100 Razones | Razones para amar (corazones flotantes) |
 | Promesas | Promesas de la relación |
@@ -24,29 +24,42 @@ El **Centro del Universo** es el panel de administración donde puedes editar TO
 
 ### Cómo funciona
 
-Cada sección tiene dos pestañas:
+Elegir la colección y después **Originales** o **Tus creaciones**:
 
 **1. Originales** — El contenido base que viene incluido. Puedes:
 - **Editar** (crea una copia personalizada sin modificar el original)
 - **Ocultar** (esconder items que no quieras mostrar)
-- **Restaurar** (volver al valor original si editaste algo)
+- **Restaurar** (quitar la personalización y volver al contenido base)
+- **Mostrar** (volver a mostrar un original oculto, conservando su personalización)
 
 **2. Tus creaciones** — Contenido que agregas tú. Puedes:
 - **Crear** nuevos items
 - **Editar** los que ya creaste
 - **Eliminar** los que ya no quieras
 
+Estas ediciones pertenecen al navegador y a la dirección donde abriste la app. No cambian los archivos JSON del proyecto ni se comparten automáticamente con otra persona. Cambiar de navegador, puerto o de `localhost` a `127.0.0.1` utiliza otro almacenamiento. Exporta un respaldo para trasladarlas. Borrar los datos del sitio o aceptar el reset elimina lo guardado en ese origen.
+
 ### Respaldo Local
 
 En la parte superior del CMS hay un panel de **Respaldo Local**:
-- **Exportar**: Descarga todo tu contenido en un archivo `.json`
-- **Importar**: Restaura un respaldo anterior
+- **Exportar**: Descarga un respaldo v2 `.json` con tus creaciones, ediciones de originales y elementos ocultos de las nueve colecciones.
+- **Importar**: Valida el archivo antes de pedir confirmación. Después reemplaza los apartados incluidos y actualiza las secciones sin recargar. También acepta respaldos v1 de cartas.
+- Si el respaldo es parcial, los apartados ausentes conservan su contenido actual. Un apartado explícitamente vacío borra sus creaciones, ediciones u ocultos, según corresponda; no modifica los archivos originales del proyecto.
+- Se conservan los IDs, etiquetas y datos de autoría compatibles. Restaurar una carta con el mismo ID reemplaza su contenido actual.
+- El archivo no incluye progreso de lectura, Modo Prueba, identidad ni ajustes de música/escenas. Tampoco incluye archivos físicos de audio o video: sus rutas/enlaces necesitan seguir disponibles. Las fotos pegadas como base64 sí quedan dentro del JSON.
+- Si el navegador no puede guardar por espacio o permisos, aparece un error. Una restauración fallida intenta recuperar el estado previo y avisa expresamente si esa recuperación también falla. Conserva el archivo de respaldo para poder reintentar.
+
+Los formularios muestran errores sin vaciar lo que estabas escribiendo. Los campos obligatorios deben contener algo más que espacios.
 
 💡 **Recomendación**: Exporta un respaldo antes de hacer cambios grandes.
 
 ### Modo Prueba
 
-El botón **"Activar Modo Prueba"** desbloquea temporalmente todas las cartas para que puedas previsualizar cómo se verían sin esperar a las fechas reales. Al desactivarlo, todo vuelve a la normalidad.
+El botón **"Activar Modo Prueba"** permite abrir temporalmente todas las cartas sin cambiar su campo de bloqueo. Al desactivarlo, vuelve a aplicarse el bloqueo guardado. Los lectores y las estadísticas se actualizan sin recargar; si estabas viendo una carta que vuelve a quedar bloqueada, se cierra su lector.
+
+Las cartas **no se desbloquean automáticamente por fecha**. Su disponibilidad depende de **Bloqueada** en el formulario (o `locked` en el JSON); el mes es una etiqueta. Para habilitar una carta definitivamente, editar su bloqueo y guardar.
+
+Abrir una carta marca su progreso en ese navegador. **Resetear Progreso** borra las marcas de lectura de ambas colecciones y actualiza las estadísticas; conserva el contenido, las personalizaciones y los borradores del CMS.
 
 ---
 
@@ -63,8 +76,9 @@ Aquí puedes cambiar:
 - Nombre del proyecto
 - Nombres de la pareja y apodos
 - Fechas importantes (cuándo se conocieron, aniversario, próxima fecha para verse)
-- Contraseñas secretas para acceder a secciones bloqueadas
 - Canción de fondo y su volumen
+
+La carta principal de Inicio se edita en `src/components/MainLetter.tsx`. No forma parte de las nueve colecciones del CMS. `openWhen.json` es el contenido base de «Abrir cuando»; su nombre de colección interna es `openWhenLetters`.
 
 ---
 
@@ -85,6 +99,12 @@ La ruta y el volumen se configuran en `src/data/siteConfig.json`:
 }
 ```
 
+La plantilla referencia ese archivo, pero no lo incluye: debes copiarlo al proyecto para poder escucharlo. El botón inicia la canción; si la ruta falta o falla, aparece un mensaje.
+
+La música por escena se configura aparte en `src/data/sceneMusic.json`; sus rutas están vacías en la plantilla. Puedes guardar los archivos en `public/audio/scenes/` y asignar sus rutas. Iniciar una canción de playlist pausa la música de escena; cambiar de escena conserva esa canción hasta que pulses Reproducir en la banda sonora. Durante la carga puedes cancelar desde la misma fila de la playlist.
+
+Consulta [Recorridos y funcionamiento local](docs/RECORRIDOS_LOCALES.md) para las reglas de audio, navegación y alcance sin conexión. El respaldo JSON conserva las rutas; no contiene los archivos físicos.
+
 ---
 
 ## Planetas del universo 3D
@@ -104,7 +124,7 @@ Ahí puedes cambiar:
 
 ---
 
-## Contraseñas secretas
+## Campos de secretos de la plantilla
 
 En `src/data/siteConfig.json`, busca la sección `"secret"`:
 
@@ -116,13 +136,13 @@ En `src/data/siteConfig.json`, busca la sección `"secret"`:
 }
 ```
 
-Agrega o quita contraseñas. La pista que aparece en pantalla se configura en el mismo archivo.
+Estos campos se conservan en la configuración, pero la versión local actual no tiene una sección que solicite esas contraseñas. No cambian el bloqueo de cartas ni restringen la entrada a la app. Las identidades del panel son locales y no son cuentas privadas con contraseña.
 
 ---
 
 ## Correr localmente
 
-Si quieres ver la página en tu computadora antes de subirla:
+Con Node.js y las dependencias instalados según [README.md](README.md):
 
 ```powershell
 npm run dev
@@ -132,16 +152,16 @@ Abre `http://localhost:5173/` en tu navegador.
 
 ---
 
-## Subir a internet (deploy)
+## Comprobar la versión compilada
 
-Cuando quieras publicar los cambios:
+Para revisar el build en tu computadora:
 
 ```powershell
-git add .
-git commit -m "Actualización de contenido"
-git push
-npm run deploy
+npm run build
+npm run preview
 ```
+
+Preview normalmente abre en `http://localhost:4173/`, un origen distinto del servidor de desarrollo. Importa tu respaldo si necesitas llevar allí tus ediciones. La publicación y la activación de servicios remotos quedan para una etapa posterior.
 
 ---
 

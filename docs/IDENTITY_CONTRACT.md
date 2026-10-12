@@ -1,23 +1,24 @@
 # Distancia Cero - Identity Contract
 
+Contrato local contrastado con la fuente el 7 de octubre de 2026. Resultados y alcance de verificación en [AVANCE_PULIDO_LOCAL.md](AVANCE_PULIDO_LOCAL.md); las fases históricas se conservan como antecedentes.
+
 ## 1. Resumen
 
-Este documento define el contrato de identidad local fake/dev para Distancia Cero antes de introducir Supabase Auth, Postgres, RLS o backend real.
+Este documento describe la identidad local fake/dev implementada en Distancia Cero y conserva las reglas para una identidad remota futura. En esta etapa se valida y utiliza el modo local; los adaptadores remotos preparados permanecen desactivados y su funcionamiento remoto no se acredita aqui.
 
 La arquitectura actual de contenido sigue siendo:
 
 ```txt
-Componentes -> src/services/contentService.js -> src/repositories/contentRepository.js -> src/repositories/localContentRepository.js -> src/utils/localContentStore.js -> LocalStorage
+Componentes -> src/services/contentService.ts -> src/repositories/localContentRepository.ts -> src/utils/localContentStore.ts -> LocalStorage
 ```
 
-La identidad local fake/dev debe servir para simular quienes son Usuario 1 y Usuario 2, sin cambiar todavia el runtime del CRUD.
+La identidad local fake/dev simula quienes son Usuario 1 y Usuario 2. Ya se puede seleccionar desde el Centro del Universo y se utiliza al crear o editar items locales mediante la API generica del CRUD. No es login real ni control de acceso: ambos usuarios comparten el contenido del navegador.
 
 ## 2. Objetivos
 
-- Preparar un concepto de `currentUser`.
-- Preparar `role` y `displayName`.
-- Preparar `spaceId` / `universeId`.
-- Preparar metadata futura: `createdBy`, `updatedBy`, `createdAt`, `updatedAt`.
+- Mantener `currentUser`, `role` y `displayName` locales.
+- Mantener `spaceId` / `universeId` local.
+- Mantener metadata opcional: `createdBy`, `updatedBy`, `createdAt`, `updatedAt`.
 - Preparar un mapping futuro hacia Supabase Auth.
 - Mantener compatibilidad con el modo local actual.
 - Evitar reescribir componentes cuando exista identidad real.
@@ -28,16 +29,16 @@ La identidad local fake/dev debe servir para simular quienes son Usuario 1 y Usu
 - No integrar Supabase Auth.
 - No implementar RLS.
 - No crear backend.
-- No crear selector UI todavia.
+- No usar el selector local como login real ni como barrera de permisos.
 - No agregar Auth, Supabase, RLS ni metadata remota real al CRUD.
-- No aplicar metadata a JSON base, overrides, hidden, legacy monthly/openWhen, opened/read, simulation unlocked ni contenido existente no migrado.
+- No asignar autoria automaticamente a JSON base, overrides, hidden, legacy monthly/openWhen, opened/read, simulation unlocked ni contenido existente sin editar.
 - No migrar contenido existente.
 - No cambiar export/import v2.
 - No cambiar la API publica de `contentService`.
 
 ## 4. Modelo de usuarios locales
 
-Propuesta futura para `src/constants/localUsers.js`:
+Modelo actual en `src/constants/localUsers.ts`:
 
 ```js
 export const LOCAL_USERS = [
@@ -68,7 +69,7 @@ Reglas:
 
 ## 5. Modelo relationship space / universe
 
-Propuesta futura:
+Modelo local actual, tambien definido en `src/constants/localUsers.ts`:
 
 ```js
 export const LOCAL_RELATIONSHIP_SPACE = {
@@ -83,7 +84,7 @@ Conceptos:
 
 - `spaceId` o `universeId` representa el universo compartido.
 - Todo contenido remoto futuro deberia pertenecer a un space.
-- `members` define quienes pueden ver o editar ese universo.
+- En el modelo remoto propuesto, `members` define quienes pueden ver o editar ese universo. En modo local, esta lista es informativa y no aplica permisos.
 - En Supabase, este concepto sera clave para RLS.
 
 Uso futuro:
@@ -119,7 +120,7 @@ Reglas:
 
 Implementacion actual:
 
-- `src/services/contentMetadataService.js` construye metadata de autoria en modo local/dev.
+- `src/services/contentMetadataService.ts` construye metadata de autoria en modo local/dev.
 - `localContentRepository.addCollectionItem` aplica metadata de creacion a nuevos items locales genericos.
 - `localContentRepository.updateCollectionItem` aplica metadata de actualizacion a items locales genericos editados.
 - `LocalContentMeta` muestra autoria opcional en listas locales genericas del Centro del Universo.
@@ -151,7 +152,7 @@ Al editar un item local generico:
 - `source` y `spaceId` se preservan si ya existian.
 - No se agrega `createdBy` ni `createdAt` durante update.
 
-No aplica todavia a:
+Los helpers de autoria no agregan metadata a:
 
 - JSON base.
 - Overrides.
@@ -160,6 +161,8 @@ No aplica todavia a:
 - Opened/read.
 - Simulation unlocked.
 - Contenido local existente que no se edite.
+
+Los overrides guardados desde el formulario del CMS pueden incluir `updatedAt`, pero no reciben autoria del helper. El JSON base permanece intacto.
 
 ## 7. Compatibilidad
 
@@ -195,14 +198,16 @@ Reglas:
 - Import v2 debe tolerar items con o sin metadata.
 - Export/import debe seguir funcionando como respaldo offline.
 
-## 9. Servicios futuros
+## 9. Servicios locales actuales
 
-### `src/constants/localUsers.js`
+Las rutas siguientes ya existen en TypeScript. Describen el comportamiento local vigente; las funciones remotas preparadas no sustituyen el mapping de IDs ni acreditan autenticacion, autorizacion o RLS real.
+
+### `src/constants/localUsers.ts`
 
 Responsabilidad:
 
 - Definir usuarios locales fake/dev.
-- Definir el space local por defecto si conviene.
+- Definir `DEFAULT_LOCAL_USER_ID`, `DEFAULT_SPACE_ID`, los dos usuarios locales y el space local por defecto.
 
 No debe:
 
@@ -210,15 +215,15 @@ No debe:
 - Guardar contenido.
 - Importar Supabase.
 
-### `src/utils/localIdentityStore.js`
+### `src/utils/localIdentityStore.ts`
 
 Responsabilidad:
 
 - Persistir identidad local fake/dev.
 - Leer y escribir el usuario local seleccionado.
-- Leer y escribir el space local seleccionado si hace falta.
+- Leer y escribir el ID del space local.
 
-Funciones posibles:
+Funciones actuales:
 
 - `getLocalCurrentUserId()`
 - `setLocalCurrentUserId(userId)`
@@ -226,64 +231,71 @@ Funciones posibles:
 - `setLocalSpaceId(spaceId)`
 - `clearLocalIdentity()`
 
+Usa las claves `distancia-cero-local-current-user` y `distancia-cero-local-current-space`. Las lecturas devuelven los valores por defecto si falta un valor util o falla localStorage; las escrituras y el borrado toleran fallos sin lanzar. `clearLocalIdentity()` solo elimina esas dos claves, sin borrar contenido.
+
 No debe:
 
 - Manejar CRUD de contenido.
 - Conocer campos de cartas, razones o modulos.
 - Importar Supabase.
 
-### `src/services/authService.js`
+### `src/services/authService.ts`
 
 Responsabilidad:
 
 - Exponer identidad actual para el resto de la app.
 - Mantener una API preparada para Auth futura.
 
-Funciones posibles:
+Funciones actuales:
 
 - `getCurrentUser()`
 - `getCurrentUserId()`
 - `setCurrentUser(userId)` para modo local/dev.
 - `isAuthenticated()`
-- Futuro: `signIn()`, `signOut()`, `getSession()`.
+- `getSession()`
+
+En modo local, `isAuthenticated()` devuelve `true` y `getSession()` devuelve `{ mode: 'local-dev', user: getCurrentUser() }`. `getCurrentUserId()` resuelve el ID guardado mediante `getProfileById()` y vuelve a `local-user1` si no reconoce ese ID. `setCurrentUser()` acepta un perfil que pueda resolver ese servicio y devuelve el usuario resultante; no borra ni separa el contenido por usuario.
 
 No debe:
 
 - Guardar contenido editable.
 - Modificar JSON base.
-- Importar Supabase antes de la fase correspondiente.
+- Activar o validar la integracion remota como parte del pulido local. El servicio ya contiene adaptadores condicionales para una sesion remota futura; ese modo queda fuera de esta etapa.
 
-### `src/services/profileService.js`
+### `src/services/profileService.ts`
 
 Responsabilidad:
 
 - Resolver perfiles visibles.
 - Resolver nombres, slugs, roles y avatars.
 
-Funciones posibles:
+Funciones actuales:
 
 - `getProfiles()`
 - `getProfileById(id)`
 - `getDisplayName(userId)`
-- `getRole(userId)`
+
+`getProfiles()` devuelve los dos perfiles locales. El rol se consulta en el perfil; no existe un export `getRole()`. Un ID de autor desconocido conserva un texto de fallback sin crear un usuario nuevo.
 
 No debe:
 
 - Manejar sesion.
 - Manejar CRUD de contenido.
 
-### `src/services/universeService.js`
+### `src/services/universeService.ts`
 
 Responsabilidad:
 
 - Resolver el relationship space actual.
 - Resolver miembros del universo.
 
-Funciones posibles:
+Funciones actuales:
 
 - `getCurrentSpace()`
 - `getCurrentSpaceId()`
 - `getSpaceMembers()`
+
+`getCurrentSpaceId()` usa el ID local almacenado; `getCurrentSpace()` conserva el modelo del space por defecto con ese ID. `getSpaceMembers()` resuelve los dos miembros del modelo local por defecto. Cambiar el ID almacenado no crea otro universo ni modifica sus miembros o permisos.
 
 No debe:
 
@@ -291,9 +303,11 @@ No debe:
 - Escribir contenido editable.
 - Aplicar RLS en cliente como sustituto de RLS real.
 
-## 10. Fases
+## 10. Historial local y propuesta remota
 
-### Fase 2.0: documentar identity contract
+Las fases 2.0 a 2.4 ya estan reflejadas en el codigo local actual. Los objetivos, restricciones y rollback siguientes conservan el contexto del plan original; no son pendientes ni instrucciones para eliminar hoy los servicios o este contrato. La fase 2.5 mantiene una propuesta futura sin activacion remota.
+
+### Fase 2.0: documentar identity contract (historica)
 
 Objetivo:
 
@@ -309,7 +323,7 @@ Rollback:
 
 - Eliminar `docs/IDENTITY_CONTRACT.md`.
 
-### Fase 2.1: authService fake/dev sin CRUD
+### Fase 2.1: authService fake/dev sin CRUD (historica)
 
 Objetivo:
 
@@ -317,11 +331,11 @@ Objetivo:
 
 Archivos probables:
 
-- `src/constants/localUsers.js`
-- `src/utils/localIdentityStore.js`
-- `src/services/authService.js`
-- opcional `src/services/profileService.js`
-- opcional `src/services/universeService.js`
+- `src/constants/localUsers.ts`
+- `src/utils/localIdentityStore.ts`
+- `src/services/authService.ts`
+- `src/services/profileService.ts`
+- `src/services/universeService.ts`
 
 No tocar:
 
@@ -339,7 +353,7 @@ Rollback:
 
 - Eliminar archivos nuevos.
 
-### Fase 2.2: selector local de usuarios
+### Fase 2.2: selector local de usuarios (historica)
 
 Objetivo:
 
@@ -347,7 +361,8 @@ Objetivo:
 
 Archivos probables:
 
-- `src/components/CentroUniversoSection.jsx`
+- `src/components/LocalIdentitySelector.tsx`
+- `src/components/CentroUniversoSection.tsx`
 - estilos solo si es necesario.
 
 No tocar:
@@ -363,7 +378,7 @@ Rollback:
 
 - Quitar selector y volver al default local.
 
-### Fase 2.3: metadata solo nuevos items
+### Fase 2.3: metadata solo nuevos items y ediciones locales (historica)
 
 Objetivo:
 
@@ -371,7 +386,7 @@ Objetivo:
 
 Archivos probables:
 
-- `src/repositories/localContentRepository.js`
+- `src/repositories/localContentRepository.ts`
 
 No tocar:
 
@@ -393,7 +408,7 @@ Rollback:
 
 - Dejar de agregar metadata en create/update generico.
 
-### Fase 2.4: mostrar autor opcional en Centro
+### Fase 2.4: mostrar autor opcional en Centro (historica)
 
 Objetivo:
 
@@ -401,7 +416,8 @@ Objetivo:
 
 Archivos probables:
 
-- `src/components/CentroUniversoSection.jsx`.
+- `src/components/LocalContentMeta.tsx`.
+- `src/components/centro-universo/CrudEditorPanel.tsx`.
 
 No tocar:
 
@@ -417,7 +433,7 @@ Rollback:
 
 - Quitar labels visuales.
 
-### Fase 2.5: mapping futuro a Supabase
+### Fase 2.5: mapping futuro a Supabase (propuesta pendiente)
 
 Objetivo:
 
@@ -478,7 +494,7 @@ La identidad fake/dev local no debe borrar ni reescribir keys de contenido actua
 ## 12. Reglas de oro
 
 - No meter Supabase directo en componentes.
-- No meter Supabase directo en `CentroUniversoSection.jsx`.
+- No meter Supabase directo en `CentroUniversoSection.tsx`.
 - No cambiar la API de `contentService` sin plan.
 - No volver async el CRUD sin compatibilidad.
 - No modificar JSON base.

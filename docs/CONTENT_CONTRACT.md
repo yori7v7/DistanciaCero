@@ -1,16 +1,18 @@
 # Distancia Cero - Content Contract
 
+Contrato local contrastado con la fuente el 7 de octubre de 2026. Resultados y alcance de verificación en [AVANCE_PULIDO_LOCAL.md](AVANCE_PULIDO_LOCAL.md); la preparación remota descrita aquí no acredita una integración activa.
+
 ## 1. Resumen
 
 El CRUD editable actual de Distancia Cero esta centralizado con esta ruta:
 
 ```txt
-Componentes visibles -> src/services/contentService.ts -> src/repositories/contentRepository.ts -> src/repositories/localContentRepository.ts -> src/utils/localContentStore.ts -> LocalStorage
+Componentes visibles -> src/services/contentService.ts -> src/repositories/localContentRepository.ts -> src/utils/localContentStore.ts -> LocalStorage
 ```
 
 Los componentes no deben leer ni escribir `src/utils/localContentStore.ts` directamente. La fachada publica para contenido editable es `src/services/contentService.ts`.
 
-El comportamiento actual es local, sin backend, sin Supabase y sin Auth. Este documento fija el contrato para poder preparar una implementacion remota futura sin reescribir componentes.
+El modo validado en esta etapa es local, sin backend ni autenticacion real. El repositorio contiene adaptadores remotos preparados, pero la integracion esta desactivada y no se ha validado en esta etapa. La identidad fake/dev ya aporta autoria opcional al CRUD local. Este documento fija el contrato actual y conserva las reglas para una implementacion remota futura sin reescribir componentes.
 
 ## 2. Capas repository actuales
 
@@ -25,20 +27,9 @@ Reglas:
 - Debe mantener nombres, firmas y return types mientras sea posible.
 - Debe mantener el evento `distancia-cero-content-updated`.
 
-### `src/repositories/contentRepository.ts`
+### Import del repositorio local
 
-`contentRepository.ts` es el selector/fachada de repository.
-
-Estado actual:
-
-- Por ahora re-exporta la implementacion local.
-- No contiene Supabase.
-- No contiene logica async.
-
-Rol futuro:
-
-- Puede convertirse en el punto de entrada para elegir repository local o remoto.
-- Permite cambiar la implementacion debajo de `contentService` sin tocar componentes.
+El refactor local elimina `src/repositories/contentRepository.ts`, que solo re-exportaba el repositorio local. `contentService.ts` importa ahora directamente `localContentRepository.ts`; los componentes siguen usando la fachada publica del servicio. No cambian las claves de almacenamiento ni la API sincronica por esta simplificacion. Un selector remoto futuro requiere su propia etapa.
 
 ### `src/repositories/localContentRepository.ts`
 
@@ -61,7 +52,7 @@ Reglas:
 
 ### CRUD generico
 
-Estas funciones trabajan con una `collectionName` y delegan hoy en `contentRepository`.
+Estas funciones trabajan con una `collectionName` y delegan hoy en `localContentRepository`.
 
 - `getCollectionItems(collectionName)`
 - `saveCollectionItems(collectionName, items)`
@@ -127,6 +118,7 @@ Contrato actual de eventos:
 
 - `notifyContentUpdated(collectionName)` dispara `distancia-cero-content-updated`.
 - El evento incluye `detail.collection` y `detail.collectionName`.
+- Los lectores de cartas notifican su coleccion despues de guardar progreso de lectura. El CMS notifica `letters` al alternar simulacion o reiniciar progreso; ambos lectores y las estadisticas actualizan su estado sin recargar la pagina ni remontar el formulario del CMS.
 - `notifyAllContentUpdated()` usa la coleccion `all`.
 
 ### Cartas legacy monthly/openWhen
@@ -140,9 +132,12 @@ Estas funciones centralizan keys historicas que deben mantenerse por compatibili
 
 Contrato actual:
 
-- Leen y guardan arrays.
-- Si LocalStorage falla o el JSON esta corrupto, la lectura debe devolver `[]`.
-- No deben cambiar las keys existentes.
+- Conservan sus nombres públicos, pero ahora leen y guardan en las colecciones estándar de cartas.
+- Antes del marcador `distancia-cero-legacy-migrated-v2`, la lectura combina estándar y legacy por `String(id)`: gana estándar y se conservan las cartas exclusivas de legacy. La migración preserva IDs, etiquetas y metadata, y marca los elementos como locales.
+- El marcador v1 no demuestra que legacy esté obsoleto: las versiones anteriores aún importaban ahí. Se conserva la unión visible al migrar; no se puede deducir cuáles ausencias fueron borrados históricos.
+- Tras v2, las claves legacy permanecen como archivo, pero ya no se mezclan. Borrar o reemplazar cartas en estándar no recupera copias antiguas.
+- El CMS intenta migrar al montar. Las escrituras de cartas también preparan la migración; una restauración incluye migración y contenido en la misma operación recuperable.
+- Las lecturas habituales conservan sus valores vacíos de fallback cuando falla el acceso/JSON. La migración, exportación y mutaciones que necesitan leer el estado previo usan lecturas estrictas para no sustituirlo por un vacío ante un fallo.
 
 ### Opened/read
 
@@ -191,8 +186,8 @@ El contrato actual reconoce estas colecciones:
 
 Notas:
 
-- `monthlyLetters` y `openWhenLetters` tienen contenido local legacy en keys antiguas, pero sus overrides y hidden ya usan el sistema generico.
-- `reasons`, `promises`, `importantDates`, `futureDreams`, `timeline`, `blackHoleGallery` y `playlist` usan el sistema generico para contenido local, overrides y hidden.
+- Las nueve colecciones usan claves estándar `distancia-cero-content-<collection>` y sus sufijos `-overrides` y `-hidden`. Las cartas también pueden leerse desde legacy antes de completar la migración v2.
+- Las nueve colecciones usan el sistema generico para contenido local, overrides y hidden. Los helpers legacy de cartas conservan compatibilidad sobre sus colecciones estandar.
 
 ## 5. Shapes conceptuales
 
@@ -294,10 +289,7 @@ Estas keys existen por compatibilidad y no deben borrarse sin migracion explicit
 distancia-cero-local-monthly-letters
 ```
 
-Usada por:
-
-- `getLegacyMonthlyLetters()`
-- `saveLegacyMonthlyLetters(items)`
+Leída por compatibilidad antes de v2; después queda archivada. El helper `saveLegacyMonthlyLetters` escribe en la colección estándar.
 
 ### Cartas "Abrir cuando" locales
 
@@ -305,10 +297,7 @@ Usada por:
 distancia-cero-local-open-when
 ```
 
-Usada por:
-
-- `getLegacyOpenWhenLetters()`
-- `saveLegacyOpenWhenLetters(items)`
+Leída por compatibilidad antes de v2; después queda archivada. El helper `saveLegacyOpenWhenLetters` escribe en la colección estándar.
 
 ### Opened/read mensual
 
@@ -393,11 +382,28 @@ El respaldo local v2 mantiene este shape conceptual:
 
 Reglas de compatibilidad:
 
-- Import v1 solo debe reemplazar cartas locales legacy.
+- Import v1 reemplaza las cartas locales incluidas en `monthlyLetters` y/o `openWhenLetters` en la raíz del documento. Escribe en estándar, incluso si ya existe un elemento con el mismo ID.
 - Import v1 no debe borrar razones, promesas, fechas, wishlist, timeline, galeria, playlist, overrides ni hidden.
-- Import v2 incompleto no debe borrar datos existentes de colecciones que no vengan en el archivo.
+- Import v2 incompleto conserva los apartados ausentes de `content`, `overrides` y `hidden`, por colección. Un `[]` o `{}` explícito reemplaza ese apartado por vacío; no elimina los JSON base.
+- Debe existir al menos un apartado de una colección reconocida. Se rechazan versiones desconocidas, contenedores incorrectos, elementos sin ID válido, IDs duplicados por `String(id)`, overrides cuyo ID no coincide con su clave, tipos incorrectos en campos renderizados y claves de prototipo peligrosas. Los campos extra compatibles y la metadata opcional se preservan.
+- `validateContentBackup(input)` valida sin escribir; `restoreContentBackup(input)` vuelve a validar, restaura y notifica `all` solo al tener éxito. `exportContentBackup()` devuelve un documento v2 completo y comprueba que sea restaurable.
+- La restauración conserva IDs/metadata, normaliza `isLocal: true` en creaciones y los IDs ocultos a strings. No regenera autoría ni fechas.
 - Si la validacion falla, no se debe borrar ni reemplazar nada.
 - Export/import debe seguir sirviendo como backup offline incluso cuando exista backend.
+
+Alcance del archivo:
+
+- Incluye creaciones de las nueve colecciones, overrides y ocultos; enlaces/rutas multimedia y fotos pegadas como Data URL viajan dentro de esos elementos.
+- No incluye los JSON base, progreso de cartas/misiones, simulación, identidad, configuración de escenas/audio ni otros ajustes fuera de esas tres áreas.
+- No contiene los archivos físicos de audio/video ni imágenes referenciadas por URL/ruta. Esas referencias siguen necesitando el archivo o servicio de origen.
+
+Errores de persistencia:
+
+- Las escrituras de contenido ya no devuelven un éxito aparente cuando localStorage falla: lanzan `ContentStorageError`, que los formularios y BackupPanel muestran al usuario. El borrador y la selección se conservan si guardar falla.
+- Se serializan los valores y se captura el estado anterior de todas las claves antes de escribir. Ante una escritura fallida, se eliminan las nuevas escrituras y se recuperan los valores anteriores, incluida la ausencia original de una clave. Las claves ajenas a la operación permanecen intactas.
+- Si también falla la recuperación, el error indica recuperación incompleta. localStorage no ofrece transacciones: este rollback cubre errores capturados durante la operación, no un cierre abrupto del navegador ni escrituras concurrentes de otra pestaña.
+- Los helpers históricos de progreso/simulación conservan su tolerancia previa a fallos; el cambio de errores afecta contenido, migración y respaldos.
+- Cada hook CRUD escucha su colección, `all` y (para cartas) `letters`, refrescando datos sin borrar borradores ni remontar formularios.
 
 ## 9. Reglas para futura migracion
 
@@ -449,7 +455,7 @@ Al editar un item local generico:
 - `source` y `spaceId` se preservan si ya existian.
 - No se agrega `createdBy` ni `createdAt` durante update.
 
-La metadata no aplica a:
+Los helpers de autoria no agregan metadata a:
 
 - Contenido existente que no se edite.
 - JSON base.
@@ -458,6 +464,8 @@ La metadata no aplica a:
 - Cartas legacy monthly/openWhen si no pasan por `addCollectionItem`.
 - Opened/read.
 - Simulation unlocked.
+
+Los overrides creados desde el CMS pueden incluir `updatedAt`, generado por el formulario. Esto no asigna `createdBy`, `updatedBy`, `source` ni `spaceId` al contenido base ni cambia el JSON original.
 
 Export/import v2 no cambia de version. La metadata viaja como campos extra opcionales dentro de items locales; backups viejos sin metadata siguen funcionando e import v2 debe tolerar items con o sin metadata.
 
@@ -473,7 +481,7 @@ Sin Auth no hay identidad real de autor. Con Auth se debe definir sesion, perfil
 
 ### `createdBy` / `updatedBy`
 
-Los nuevos items locales genericos ya registran `createdBy` / `updatedBy` en modo local/dev. El contenido existente, JSON base, overrides, hidden, cartas legacy, opened/read y simulation unlocked no reciben metadata automaticamente.
+Los nuevos items locales genericos ya registran `createdBy` / `updatedBy` en modo local/dev. El contenido existente sin editar, JSON base, overrides, hidden, cartas legacy, opened/read y simulation unlocked no reciben autoria automaticamente.
 
 ### RLS
 
@@ -497,9 +505,11 @@ Antes y despues de cambios sobre esta capa:
 
 ```txt
 git status
-npm.cmd run build
+npm.cmd run verify:local
 git diff --stat
 ```
+
+`verify:local` comprueba tipos, unitarias y build con la integracion remota desactivada. Los recorridos de navegador se ejecutan por separado con `npm.cmd run test:e2e`; la comprobacion de preview/PWA usa `npm.cmd run test:e2e:preview` despues del build. No editar fuentes, configuracion, pruebas ni documentacion mientras se ejecutan recorridos contra el servidor de desarrollo: Tailwind observa documentos y puede provocar una recarga que invalide las comprobaciones de persistencia del documento.
 
 Pruebas manuales recomendadas:
 
@@ -511,7 +521,7 @@ Pruebas manuales recomendadas:
 - Abrir cartas y confirmar progreso opened/read.
 - Activar/desactivar modo prueba.
 
-## 7. Patrón useCrudCollection (Refactor 2026-07-23)
+## 12. Patrón useCrudCollection (Refactor 2026-07-23)
 
 ### Propósito
 
@@ -527,7 +537,7 @@ Pruebas manuales recomendadas:
 function useCrudCollection(
   collectionName: string,
   defaultData: ContentItem[],
-  fieldSchema: CrudFieldSchema,
+  fieldSchema?: CrudFieldSchema,
   options?: CrudOptions
 ): CrudCollectionAPI
 ```
@@ -575,6 +585,7 @@ interface CrudCollectionAPI {
   form, getFormValue, setFormValue, editingId
   // Form state (base)
   baseForm, getBaseFormValue, setBaseFormValue, editingBaseId
+  notice: { type: 'success' | 'error'; message: string } | null
   // Handlers
   handleSubmit, handleEdit, handleDelete
   handleBaseEdit, handleBaseSubmit, handleBaseRestore, handleBaseHide, handleBaseUnhide
@@ -595,13 +606,15 @@ Componente que renderiza ambos paneles (local + base) para un `useCrudCollection
 
 `migrateLegacyLettersIfNeeded()` en `localContentRepository.ts`:
 - Lee cartas de llaves legacy (`distancia-cero-local-monthly-letters`, `distancia-cero-local-open-when`)
-- Escribe en llaves estándar de colección
-- Marca flag `distancia-cero-legacy-migrated-v1` para no repetir
-- Se llama UNA vez al iniciar el CMS desde el `useEffect` de inicialización
+- Combina con las cartas estándar por ID, con prioridad estándar, y escribe la unión conservando metadata.
+- Marca `distancia-cero-legacy-migrated-v2` solo dentro de la operación completada; v1 queda como referencia histórica.
+- Se intenta al iniciar el CMS; las escrituras de cartas y los respaldos también cubren la migración pendiente. Es idempotente tras v2.
 
 ### Colecciones migradas
 
 Las 9 colecciones usan `useCrudCollection`:
+
+`src/components/centro-universo/cmsCollections.ts` contiene sus campos, prefijos de ID, validaciones y transformaciones. `CentroUniversoSection.tsx` mantiene los nueve hooks explicitos y renderiza los paneles con esa configuracion.
 
 | Colección | Campos destacados | Transform |
 |---|---|---|
@@ -611,7 +624,7 @@ Las 9 colecciones usan `useCrudCollection`:
 | futureDreams | category, title, description | — |
 | playlist | title, artist, description, sourceType, src, link, tag | — |
 | timeline | chapter, date, title, subtitle, description, quote, details, mood | date ↔ normalize/parse, details ↔ array/text |
-| blackHoleGallery | date, title, description, image, alt, tag, videoUrl | image upload vía localFormExtras |
+| blackHoleGallery | date, title, description, image, alt, tag, videoUrl | image upload vía localFormExtras y baseFormExtras |
 | monthlyLetters | month, title, preview, content, tag, locked | content ↔ array/text, locked ↔ boolean/select |
 | openWhenLetters | mood, title, preview, content, tag, locked | content ↔ array/text, locked ↔ boolean/select |
 - Validar que los componentes visibles refrescan con `distancia-cero-content-updated`.
