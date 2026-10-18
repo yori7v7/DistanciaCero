@@ -39,6 +39,33 @@ afterEach(() => {
 })
 
 describe('historial y estado de escenas', () => {
+  it.each(['pointerUp', 'pointerCancel'] as const)('conserva el clic al enfocar con puntero y vuelve a revelar foco tras %s', (release) => {
+    render(<MemoryRouter initialEntries={['/app#/inicio']}>
+      <div className="app"><button>Control bajo la navegación</button><SceneModeController /></div>
+    </MemoryRouter>)
+    const control = screen.getByRole('button', { name: 'Control bajo la navegación' })
+    const portal = screen.getByRole('navigation')
+    vi.spyOn(control, 'getBoundingClientRect').mockReturnValue({ top: 0, height: 44 } as DOMRect)
+    vi.spyOn(portal, 'getBoundingClientRect').mockReturnValue({ bottom: 80 } as DOMRect)
+    const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => {})
+
+    fireEvent.pointerDown(control)
+    control.focus()
+    expect(control).toHaveFocus()
+    expect(scrollBy).not.toHaveBeenCalled()
+
+    fireEvent[release](control)
+    control.blur()
+    control.focus()
+    expect(scrollBy).toHaveBeenCalledExactlyOnceWith({ top: -92, behavior: 'instant' })
+
+    fireEvent.pointerDown(control)
+    control.blur()
+    fireEvent.keyDown(document.body, { key: 'Tab' })
+    control.focus()
+    expect(scrollBy).toHaveBeenCalledTimes(2)
+  })
+
   it('desplaza la sección vigente si el placeholder se reemplaza antes del timer', () => {
     renderNavigation()
     const placeholder = document.getElementById('inicio')!

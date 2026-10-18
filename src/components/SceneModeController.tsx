@@ -108,9 +108,17 @@ function SceneModeController() {
     }
   }, [])
 
-  // Scene mode init
+  // Reveal focus without moving a control between pointer press and click.
   useEffect(() => {
+    const pressedPointers = new Set<number>()
+    let mousePressed = false
+    const beginPointer = (event: PointerEvent) => { pressedPointers.add(event.pointerId) }
+    const endPointer = (event: PointerEvent) => { pressedPointers.delete(event.pointerId) }
+    const beginMouse = () => { mousePressed = true }
+    const endMouse = () => { mousePressed = false }
+    const resetPointer = () => { pressedPointers.clear(); mousePressed = false }
     const revealFocus = (event: FocusEvent) => {
+      if (pressedPointers.size || mousePressed) return
       const target = event.target
       const portal = portalRef.current
       if (!(target instanceof HTMLElement) || !portal || !target.closest('.app') ||
@@ -121,8 +129,25 @@ function SceneModeController() {
         window.scrollBy({ top: rect.top - safeTop, behavior: 'instant' })
       }
     }
+    document.addEventListener('pointerdown', beginPointer, true)
+    document.addEventListener('pointerup', endPointer, true)
+    document.addEventListener('pointercancel', resetPointer, true)
+    // Touch can emit compatibility mouse events after pointerup.
+    document.addEventListener('mousedown', beginMouse, true)
+    document.addEventListener('mouseup', endMouse, true)
+    document.addEventListener('keydown', resetPointer, true)
     document.addEventListener('focusin', revealFocus)
-    return () => document.removeEventListener('focusin', revealFocus)
+    window.addEventListener('blur', resetPointer)
+    return () => {
+      document.removeEventListener('pointerdown', beginPointer, true)
+      document.removeEventListener('pointerup', endPointer, true)
+      document.removeEventListener('pointercancel', resetPointer, true)
+      document.removeEventListener('mousedown', beginMouse, true)
+      document.removeEventListener('mouseup', endMouse, true)
+      document.removeEventListener('keydown', resetPointer, true)
+      document.removeEventListener('focusin', revealFocus)
+      window.removeEventListener('blur', resetPointer)
+    }
   }, [])
 
   // Scene mode init
