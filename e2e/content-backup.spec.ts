@@ -169,6 +169,8 @@ test.describe('Respaldos locales desde la interfaz', () => {
   })
 
   test('v2 descarga y restaura las nueve colecciones, IDs y metadata sin recargar el CMS', async ({ page }, testInfo) => {
+    // Three complete CMS snapshots plus real downloads/readers/reload need more time in Firefox.
+    test.setTimeout(240_000)
     const original = backupFixture('Versión guardada')
     const replacement = backupFixture('Versión reemplazada')
     const navigationRequests: string[] = []

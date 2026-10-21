@@ -16,7 +16,8 @@ async function expectReachable(control: Locator) {
   })).toBe(true)
 }
 
-test('Universo pausa oculto, conserva selección y permite girar con movimiento reducido', async ({ page }) => {
+test('Universo pausa oculto, conserva selección y permite girar con movimiento reducido', async ({ page, browserName }) => {
+  if (browserName === 'webkit') test.setTimeout(300_000)
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   await page.addInitScript(() => {
@@ -37,6 +38,8 @@ test('Universo pausa oculto, conserva selección y permite girar con movimiento 
   const draws = () => page.evaluate(() => window.__dcSceneDraws.universo || 0)
   await page.goto('/app#/universo')
   const canvas = page.locator('#universo canvas')
+  await canvas.scrollIntoViewIfNeeded()
+  await expect(canvas).toBeInViewport()
   await expect.poll(draws).toBeGreaterThan(0)
   const canvasNode = await canvas.elementHandle()
   const nav = page.getByRole('navigation', { name: 'Navegación principal' })
@@ -47,6 +50,8 @@ test('Universo pausa oculto, conserva selección y permite girar con movimiento 
   await page.waitForTimeout(650)
   expect(await draws()).toBe(paused)
   await nav.getByRole('button', { name: 'Universo', exact: true }).click()
+  await canvas.scrollIntoViewIfNeeded()
+  await expect(canvas).toBeInViewport()
   await expect.poll(draws).toBeGreaterThan(paused)
 
   await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -87,9 +92,9 @@ for (const viewport of [
   { width: 320, height: 568 }, { width: 375, height: 812 },
   { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1440, height: 900 },
 ]) {
-  test(`cartas, reproductor y formulario alcanzables en ${viewport.width}×${viewport.height}`, async ({ page }) => {
+  test(`cartas, reproductor y formulario alcanzables en ${viewport.width}×${viewport.height}`, async ({ page, browserName }) => {
     // This journey includes a reader, a CMS save and the first visit to a 3D scene.
-    test.setTimeout(60_000)
+    test.setTimeout(browserName === 'webkit' ? 120_000 : 60_000)
     await page.setViewportSize(viewport)
     await gotoApp(page)
     const nav = page.getByRole('navigation', { name: 'Navegación principal' })

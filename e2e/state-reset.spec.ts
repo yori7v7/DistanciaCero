@@ -1,10 +1,23 @@
-import { test, expect } from '@playwright/test'
-import { gotoApp } from './helpers'
+import { test, expect, type Page } from '@playwright/test'
+
+async function resetToLanding(page: Page) {
+  page.once('dialog', dialog => dialog.accept())
+  await page.goto('/?reset=1', { waitUntil: 'domcontentloaded' })
+  // replaceState removes the query before reload; wait for the new document itself.
+  await page.waitForFunction(() => {
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+    return navigation?.type === 'reload'
+      && !new URLSearchParams(location.search).has('reset')
+      && document.readyState === 'complete'
+  })
+}
 
 test.describe('?reset=1', () => {
   test('clears all localStorage and sessionStorage', async ({ page }) => {
     // Seed data without reset
     await page.goto('/app', { waitUntil: 'domcontentloaded' })
+    // Let the initial React effect persist its default scene before seeding.
+    await expect.poll(() => page.evaluate(() => localStorage.getItem('distancia-cero-active-scene'))).toBe('inicio')
     await page.evaluate(() => {
       localStorage.setItem('distancia-cero-content-reasons', JSON.stringify([
         { id: 'seed', title: 'Seed', isLocal: true },
@@ -26,8 +39,7 @@ test.describe('?reset=1', () => {
     expect(before.session).toBe('alive')
 
     // Navigate with ?reset=1 — accept the confirm dialog so storage is cleared
-    page.once('dialog', dialog => dialog.accept())
-    await page.goto('/?reset=1', { waitUntil: 'domcontentloaded' })
+    await resetToLanding(page)
 
     // All storage should be empty
     const after = await page.evaluate(() => ({
@@ -41,13 +53,13 @@ test.describe('?reset=1', () => {
   test('resets to default scene after clearing', async ({ page }) => {
     // Seed non-default scene
     await page.goto('/app', { waitUntil: 'domcontentloaded' })
+    await expect.poll(() => page.evaluate(() => localStorage.getItem('distancia-cero-active-scene'))).toBe('inicio')
     await page.evaluate(() => {
       localStorage.setItem('distancia-cero-active-scene', 'musica')
     })
 
     // Reset — accept the confirm dialog so storage is cleared
-    page.once('dialog', dialog => dialog.accept())
-    await page.goto('/?reset=1', { waitUntil: 'domcontentloaded' })
+    await resetToLanding(page)
 
     // Should land on landing page (route /), not /app
     await expect(page.locator('h1')).toContainText('Para ti,')

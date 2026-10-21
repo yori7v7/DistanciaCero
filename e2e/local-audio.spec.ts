@@ -1,18 +1,21 @@
 import { expect, test, type Page } from '@playwright/test'
 import { readFileSync } from 'node:fs'
+import { startAudioFixture } from './audio-fixture'
 
 const sceneMusic = JSON.parse(readFileSync(new URL('../src/data/sceneMusic.json', import.meta.url), 'utf8'))
+let audioFixture: Awaited<ReturnType<typeof startAudioFixture>>
 
-function silentWave(seconds = 20): Buffer {
-  const samples = 8000 * seconds
-  const wave = Buffer.alloc(44 + samples * 2)
-  wave.write('RIFF', 0); wave.writeUInt32LE(wave.length - 8, 4); wave.write('WAVEfmt ', 8)
-  wave.writeUInt32LE(16, 16); wave.writeUInt16LE(1, 20); wave.writeUInt16LE(1, 22)
-  wave.writeUInt32LE(8000, 24); wave.writeUInt32LE(16000, 28)
-  wave.writeUInt16LE(2, 32); wave.writeUInt16LE(16, 34); wave.write('data', 36)
-  wave.writeUInt32LE(samples * 2, 40)
-  return wave
-}
+test.beforeAll(async () => {
+  audioFixture = await startAudioFixture([
+    ...sceneMusic.map(scene => `/audio/e2e-${scene.sectionId}.wav`),
+    '/audio/e2e-playlist-track.wav',
+    '/audio/e2e-valid.wav',
+  ])
+})
+
+test.afterAll(async () => {
+  await audioFixture?.close()
+})
 
 async function mediaState(page: Page) {
   return page.evaluate(() => {
@@ -22,16 +25,15 @@ async function mediaState(page: Page) {
   })
 }
 
-test('audio real local: escena, playlist, pausa, volumen y salida no se solapan', async ({ page }) => {
-  test.setTimeout(90_000)
+test('audio real local: escena, playlist, pausa, volumen y salida no se solapan', async ({ page, browserName }) => {
+  // WebKit on Windows needs a larger total budget for native audio plus the 3D scene.
+  test.setTimeout(browserName === 'webkit' ? 240_000 : 90_000)
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   await page.route(/^https?:\/\/(?!localhost(?=[:/])|127\.0\.0\.1(?=[:/]))/, route => route.abort())
-  const fixtures = sceneMusic.map(scene => ({ ...scene, src: `/audio/e2e-${scene.sectionId}.wav` }))
+  const fixtures = sceneMusic.map(scene => ({ ...scene, src: `${audioFixture.origin}/audio/e2e-${scene.sectionId}.wav` }))
   await page.route('**/src/data/sceneMusic.json*', route => route.fulfill({ contentType: 'application/javascript', body: `export default ${JSON.stringify(fixtures)}` }))
-  const wave = silentWave()
-  await page.route('**/audio/e2e-*.wav', route => route.fulfill({ contentType: 'audio/wav', body: wave }))
-  await page.addInitScript(() => {
+  await page.addInitScript(audioOrigin => {
     const NativeAudio = window.Audio
     ;(window as any).__localTestAudios = []
     ;(window as any).Audio = function (src?: string) {
@@ -41,9 +43,9 @@ test('audio real local: escena, playlist, pausa, volumen y salida no se solapan'
     }
     ;(window as any).Audio.prototype = NativeAudio.prototype
     localStorage.setItem('distancia-cero-content-playlist', JSON.stringify([
-      { id: 'e2e-track', title: 'Canción local de prueba', sourceType: 'local', src: '/audio/e2e-playlist-track.wav', isLocal: true },
+      { id: 'e2e-track', title: 'Canción local de prueba', sourceType: 'local', src: `${audioOrigin}/audio/e2e-playlist-track.wav`, isLocal: true },
     ]))
-  })
+  }, audioFixture.origin)
   await page.goto('/')
   await page.getByRole('button', { name: 'Entrar al universo' }).click()
   await expect(page.locator('.loading-intro')).toBeHidden({ timeout: 15_000 })
@@ -86,14 +88,12 @@ test('audio real local: escena, playlist, pausa, volumen y salida no se solapan'
 
 test('un archivo de playlist ausente muestra el error y permite reproducir otra canción', async ({ page }) => {
   await page.route(/^https?:\/\/(?!localhost(?=[:/])|127\.0\.0\.1(?=[:/]))/, route => route.abort())
-  await page.route('**/audio/e2e-missing.wav', route => route.fulfill({ status: 404, body: '' }))
-  await page.route('**/audio/e2e-valid.wav', route => route.fulfill({ contentType: 'audio/wav', body: silentWave() }))
-  await page.addInitScript(() => {
+  await page.addInitScript(audioOrigin => {
     localStorage.setItem('distancia-cero-content-playlist', JSON.stringify([
-      { id: 'missing', title: 'Archivo ausente de prueba', sourceType: 'local', src: '/audio/e2e-missing.wav', isLocal: true },
-      { id: 'valid', title: 'Archivo válido de prueba', sourceType: 'local', src: '/audio/e2e-valid.wav', isLocal: true },
+      { id: 'missing', title: 'Archivo ausente de prueba', sourceType: 'local', src: `${audioOrigin}/audio/e2e-missing.wav`, isLocal: true },
+      { id: 'valid', title: 'Archivo válido de prueba', sourceType: 'local', src: `${audioOrigin}/audio/e2e-valid.wav`, isLocal: true },
     ]))
-  })
+  }, audioFixture.origin)
   await page.goto('/app#/musica')
   await expect(page.locator('.loading-intro')).toBeHidden({ timeout: 15_000 })
   const playlist = page.locator('#playlist')

@@ -199,8 +199,9 @@ test.describe('Contenido local: formularios reales de las nueve colecciones', ()
   })
 
   for (const spec of collections) {
-    test(`${spec.module}: crear, editar y borrar una creación persiste y actualiza su sección`, async ({ page }, testInfo) => {
-      if (spec.collection === 'blackHoleGallery') test.setTimeout(120_000)
+    test(`${spec.module}: crear, editar y borrar una creación persiste y actualiza su sección`, async ({ page, browserName }, testInfo) => {
+      // Complete CMS journeys include repeated reloads and native interaction checks in Firefox.
+      test.setTimeout(browserName === 'webkit' ? 240_000 : browserName === 'firefox' ? 180_000 : spec.collection === 'blackHoleGallery' ? 120_000 : 90_000)
       const title = `Creación E2E ${spec.collection}`
       const editedTitle = `Creación editada E2E ${spec.collection}`
       const values = { ...spec.values, title }
@@ -262,8 +263,8 @@ test.describe('Contenido local: formularios reales de las nueve colecciones', ()
       })
     })
 
-    test(`${spec.module}: editar, ocultar, mostrar y restaurar un original conserva el contenido`, async ({ page }) => {
-      if (spec.collection === 'blackHoleGallery') test.setTimeout(120_000)
+    test(`${spec.module}: editar, ocultar, mostrar y restaurar un original conserva el contenido`, async ({ page, browserName }) => {
+      test.setTimeout(browserName === 'webkit' ? 240_000 : browserName === 'firefox' ? 180_000 : spec.collection === 'blackHoleGallery' ? 120_000 : 90_000)
       let panel = await openEditor(page, spec, true)
       await panel.locator('.reason-item-row').first().getByRole('button', { name: 'Editar original', exact: true }).click()
       const originalValues: FormValues = {}

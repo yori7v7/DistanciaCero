@@ -2,6 +2,8 @@
 
 ## Contexto del proyecto
 
+Para continuar desde otra computadora, leer primero [TRABAJO_ENTRE_EQUIPOS.md](docs/TRABAJO_ENTRE_EQUIPOS.md). Incluye la rama compartida, el punto de continuación portable y el procedimiento para recibir y entregar cambios. Una conversación sincronizada no sustituye los archivos del repositorio.
+
 Lee [CLAUDE.md](CLAUDE.md) al comenzar a trabajar en este repositorio: contiene el contexto compartido, los comandos y las reglas de arquitectura. Aunque su título mencione Claude, esas instrucciones del proyecto también sirven para Codex.
 
 Contrasta las versiones, rutas, conteos y estados descritos allí con el código actual y `package.json`; la documentación y la memoria pueden estar desactualizadas. Consulta [CONTENT_CONTRACT.md](docs/CONTENT_CONTRACT.md) o [IDENTITY_CONTRACT.md](docs/IDENTITY_CONTRACT.md) cuando el trabajo afecte esos contratos.
@@ -15,6 +17,14 @@ La memoria local en [.claude/memory/MEMORY.md](.claude/memory/MEMORY.md) es cont
 Los pasos 1–7 quedaron cerrados el 10 de octubre de 2026; resultados finales, límites y recuperación se registran en el documento de avance. Antes de iniciar otro trabajo, comprobar el estado actual y el alcance pedido. La auditoría de agosto y los informes de septiembre conservan sus fechas como instantáneas. No usar sus conteos, rutas o propuestas como descripción vigente sin comprobarlos.
 
 Al ejecutar E2E con Vite de desarrollo, congelar todos los archivos observados, incluidos Markdown y documentación. Tailwind puede enviar una recarga completa al editar esos documentos. Guardar logs/notas temporales en `.git/codex-checkpoints` y actualizar los documentos al terminar el runner. Las pruebas de reset/importación usan perfiles aislados, no el almacenamiento real del usuario.
+
+## Continuación entre escritorio y laptop
+
+Al recibir «prosigue» o retomar trabajo, comprobar uso normal disponible, directorio, rama, estado local y runners activos. Consultar `origin` con `git fetch origin` antes de modificar código; revisar la rama remota esperada y su divergencia. Si hay un runner activo, esperar su término antes de integrar cambios. Con el árbol limpio y sin divergencia, actualizar solo mediante fast-forward. Volver a leer el estado portable después de recibir cambios. Si hay trabajo local pendiente, conservarlo y distinguirlo antes de integrar; no usar stash automático, `reset --hard` ni force-push. Si no se puede consultar el remoto, informar que no se ha verificado la última versión antes de continuar en esa rama compartida.
+
+Al terminar un bloque, actualizar el punto de continuación, las pruebas realmente ejecutadas y sus pendientes en la documentación versionada, y guardar los cambios revisados en commits locales del alcance autorizado. Enviar esos commits con push normal solo cuando el usuario haya autorizado el destino y la publicación; la petición actual de explicar/preparar el flujo no acredita todavía esa autorización. No afirmar que otro equipo puede recibir cambios que solo están locales. La comprobación de publicación inicial está pendiente porque el repositorio actual es público; ver el documento de traspaso. La sincronización no autoriza merge a `main`, despliegues ni cambios de infraestructura.
+
+Trabajar en una computadora a la vez sobre la rama compartida. Antes de cambiar de equipo, comprobar que la entrega se envió y que no quedan cambios sin commit; en el equipo de destino comprobar que se recibió el mismo commit. Las credenciales, `.env.local`, almacenamiento del navegador, dependencias, reportes y checkpoints bajo `.git` no viajan con clone/pull. Registrar el estado necesario para retomar dentro de `docs/`, sin secretos ni rutas absolutas propias de un equipo. No copiar íntegramente el perfil global de Codex.
 
 ## Skills del proyecto
 
