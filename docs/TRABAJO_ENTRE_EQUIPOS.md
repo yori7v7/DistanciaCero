@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Estado preparado el **20 de octubre de 2026**. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de entrega actualizado el **21 de octubre de 2026** al salir de la laptop. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -15,7 +15,7 @@ Guardar commits permite traspasar trabajo incompleto si su estado está document
 
 ## Preparar la laptop una sola vez
 
-Los comandos siguientes son para **PowerShell en Windows** y guardan el proyecto en **Descargas**, en la carpeta física `Downloads\DistanciaCero` del perfil del usuario. Si la carpeta de Descargas está redirigida, ajustar `$downloadsPath` a su ubicación. Usar Node 22.12 o posterior de la rama 22 para coincidir con CI; una LTS posterior también satisface el requisito de Vite documentado en [CLAUDE.md](../CLAUDE.md). Si el equipo usa otro sistema, conservar el flujo Git y adaptar la ruta.
+Los comandos siguientes son para **PowerShell en Windows** y guardan el proyecto en **Descargas**, en la carpeta física `Downloads\DistanciaCero` del perfil del usuario. Si la carpeta de Descargas está redirigida, ajustar `$downloadsPath` a su ubicación. Usar Node 22.13 o posterior de la rama 22, o Node 24 o posterior, para satisfacer las dependencias completas del lockfile; CI utiliza la rama 22. El mínimo de Vite por sí solo no basta para todas las dependencias. Si el equipo usa otro sistema, conservar el flujo Git y adaptar la ruta.
 
 Si faltan herramientas, este primer bloque las instala mediante WinGet. Después de instalar, cerrar por completo la ventana de PowerShell y abrir otra para cargar el PATH actualizado:
 
@@ -45,8 +45,8 @@ Si faltan herramientas, este primer bloque las instala mediante WinGet. Después
 ```powershell
 & {
     $ErrorActionPreference = 'Stop'
-    node -e "const [major,minor]=process.versions.node.split('.').map(Number);if(!((major===20&&minor>=19)||(major===22&&minor>=12)||major>22))process.exit(1)"
-    if ($LASTEXITCODE -ne 0) { throw 'Node es demasiado antiguo para Vite. Instala una LTS reciente antes de continuar.' }
+    node -e "const [major,minor]=process.versions.node.split('.').map(Number);if(!((major===22&&minor>=13)||major>=24))process.exit(1)"
+    if ($LASTEXITCODE -ne 0) { throw 'Usa Node 22.13+ de la rama 22 o Node 24+ para las dependencias del lockfile.' }
     gh auth login --hostname github.com --git-protocol https --web
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo iniciar sesión en GitHub.' }
     gh auth setup-git
@@ -123,17 +123,23 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — 20 de octubre de 2026
+## Punto de continuación — entrega del 21 de octubre de 2026
 
 **Compatibilidad abierta; no empezar PWA entre versiones, limpieza de warnings ni funciones nuevas.** No activar Supabase ni desplegar. Conservar la condición de parar al agotarse el uso normal/premium, sin reserva, compras, resets ni cambios de modelo/modalidad.
 
-**Último bloque en laptop:** la corrida completa terminó con salida 1, **50 WebKit aprobadas, primer Firefox fallido al arrancar y 49 sin ejecutar**, 2917,40 s. Los 272 archivos observados conservaron sus hashes. Windows registró `SideBySide` 33: ensamblado `mozglue` no encontrado; no llegó a abrir la aplicación en Firefox. Una instalación limpia de Firefox 153.0 en caché aislada sí arrancó, aunque sus 63 archivos son idénticos a la caché estándar. La causa de esa diferencia por ubicación/entorno sigue sin explicar. El caso CMS Firefox aislado aprobó **1/1**, salida 0, 11,04 s, sin cambios de archivos. No suma una suite completa.
+**Entrega al salir de la laptop:** el usuario indicó cambiar de equipo el 21 de octubre. Antes de editar se comprobó uso normal disponible, árbol limpio, ausencia de runners E2E/Vite/Vitest del proyecto y ausencia de servidor en 5174. `git fetch origin` confirmó local y remoto en **`c666f64`**, sin divergencia ni avances nuevos que recibir por fast-forward. Ese commit y `7732df8` ya estaban publicados. Este bloque solo actualiza y revisa documentación; no inicia pruebas, servidores ni otro trabajo funcional. Recibir también el commit documental de esta entrega, cuyo hash se comunica al confirmar el push, y verificar que `HEAD` coincide con el remoto antes de trabajar desde el destino.
 
-**Siguiente acción:** repetir los 100 casos con los mismos motores/configuración y `PLAYWRIGHT_BROWSERS_PATH` apuntando a una caché aislada previamente preparada con `playwright install firefox webkit`. La caché local comprobada está en `.git/codex-checkpoints/laptop-compatibilidad-20261020/clean-browsers`; no viaja por Git. Antes de iniciar otro runner consultar `final-clean/state.json` y los procesos. Los reportes del primer intento están en el directorio padre y los del caso aislado en `firefox-smoke/`. El uso normal seguía permitido; no cambiar de equipo hasta que lo indique el usuario.
+**Resultados comprobados de la laptop, ejecutados el 20 de octubre:**
 
-Los puntos siguientes conservan los antecedentes recibidos del escritorio; la nueva corrida y el diagnóstico anterior son el estado más reciente.
+- Primer intento conjunto: salida 1, **50 WebKit aprobadas, primer Firefox fallido al arrancar y 49 sin ejecutar**, 2917,40 s. Los 272 archivos observados conservaron sus hashes. Firefox no abrió la aplicación; Windows registró `SideBySide` 33 para el ensamblado `mozglue`.
+- Instalación limpia del mismo Firefox 153.0 en caché aislada: arrancó, aunque sus 63 archivos son idénticos a la caché estándar. La causa de esa diferencia por ubicación/entorno sigue sin explicar. Caso CMS Firefox aislado **1/1**, salida 0, 11,04 s, sin cambios de archivos.
+- Repetición `final-clean`: **10 aprobadas WebKit**, detenida deliberadamente al 98% de uso normal consumido. Estado `interrupted`, 272 archivos sin cambios y **sin reporte final de Playwright**. La salida del proceso terminado no acredita un resultado de suite. Sus otros 90 casos no están acreditados.
 
-**Actualización al terminar el bloque:** `final-clean` se detuvo deliberadamente con el uso normal al 98% consumido, tras **10 aprobadas WebKit**, sin reporte final para los otros 90. Se terminó el árbol del runner para guardar el estado dentro del uso disponible; no interpretar esa terminación como fallo de la aplicación o corrida completa. El primer bloque está publicado en **`7732df8`**; este registro se entrega en el commit documental posterior. El siguiente pendiente sigue siendo una corrida conjunta completa con caché aislada y uso normal suficiente. El usuario continúa en la laptop y decidirá cuándo cambiar de equipo.
+No sumar estas corridas entre sí ni con las 92 históricas para declarar `100/100`. Los reportes, logs y caché comprobada permanecen solo en la laptop bajo `.git/codex-checkpoints/laptop-compatibilidad-20261020/`, con subdirectorios `firefox-smoke/`, `final-clean/` y `clean-browsers/`. El destino no los recibe con pull ni debe asumir que dispone de ellos.
+
+**Siguiente acción en el equipo de destino:** después de recibir la entrega por fast-forward y comprobar uso, cambios locales y runners, preparar las dependencias del lockfile si faltan y los motores Firefox/WebKit de Playwright 1.62.1. Si se utiliza caché aislada, fijar `PLAYWRIGHT_BROWSERS_PATH` a una ruta local de ese equipo y mantenerla tanto durante `npx.cmd playwright install firefox webkit` como durante las pruebas. Comprobar que ambos motores arrancan antes de lanzar la suite larga; la diferencia de caché observada en la laptop no garantiza ni impide su arranque en el destino. Obtener una corrida conjunta completa de los 100 casos con la configuración actual, guardando reporte y logs; congelar código y documentos hasta que termine. No iniciar ahora esa corrida desde la laptop que se está entregando.
+
+Los puntos siguientes conservan los antecedentes recibidos del escritorio:
 
 - Los pasos 1–7 terminaron el 10 de octubre y su cierre Git local es `4aab097`. La corrección posterior de foco durante gestos de puntero está en `904203f`.
 - Aplicación validada el 16 de octubre: TypeScript, **340 unitarias/22 archivos**, build/PWA y **16 E2E Chromium** afectados. No presentar estas fechas como comprobaciones recién ejecutadas en la laptop.
@@ -141,7 +147,7 @@ Los puntos siguientes conservan los antecedentes recibidos del escritorio; la nu
 - El 19 de octubre pasaron por separado la muestra CRUD WebKit **3/3** y Chromium audio/reset con los fixtures finales **4/4**. Una sonda nativa de WebKit/Windows reprodujo pausa al reiniciar un WAV de 20 s fuera de la app; no certifica Safari real ni explica la causa interna.
 - La corrida conjunta `todos-final-corregido-20261019` se interrumpió **sin reporte final**. El log termina con **92 aprobadas: 50 WebKit y 42 Firefox**. Quedan sin acreditar los ocho últimos casos de interfaz Firefox en esa corrida. No declarar `100/100`, salida 0 ni archivos congelados hasta un término que no existe.
 - El 20 de octubre se verificó que los **271 archivos** seguían coincidiendo con los hashes iniciales de esa corrida. Su sesión anterior ya no existe y no quedan el navegador/runner original ni servidor 5174. El `state.json` histórico todavía dice `running`: es un estado obsoleto, no un proceso activo. No sobrescribirlo para fabricar un resultado.
-- Siguiente trabajo funcional: obtener una validación final completa con la configuración actual. En un checkout preparado, `npm.cmd run test:e2e:cross-browser -- --max-failures=1` en PowerShell ejecuta los 100 casos. Guardar el reporte y congelar todos los archivos observados durante la ejecución, incluidos Markdown; no tocar documentación hasta que termine. El script durable anterior y los logs están solo en el checkpoint del escritorio; no dar por hecho que existen en la laptop.
+- Comando de validación final en un checkout preparado: `npm.cmd run test:e2e:cross-browser -- --max-failures=1` en PowerShell ejecuta los 100 casos. Guardar el reporte y congelar todos los archivos observados durante la ejecución, incluidos Markdown. Los runners auxiliares y logs de cada equipo permanecen en su propio `.git`; no dar por hecho que existen en el destino.
 - Después de aprobar la corrida completa, actualizar README/CLAUDE/TODO/RECORRIDOS/AVANCE, revisar enlaces y guardar el cierre de compatibilidad. El trabajo aquí guardado es un checkpoint de continuidad, no ese cierre.
 
 Evidencia detallada del escritorio en `.git/codex-checkpoints/compatibilidad-20261012/`; snapshot previo a este traspaso en `handoff-preparation-20261020/`. Los resultados anteriores, límites y contratos permanecen en el [avance](AVANCE_PULIDO_LOCAL.md). No restaurar snapshots ni aplicar el stash histórico automáticamente.
