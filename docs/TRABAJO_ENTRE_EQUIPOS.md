@@ -15,35 +15,82 @@ Guardar commits permite traspasar trabajo incompleto si su estado está document
 
 ## Preparar la laptop una sola vez
 
-Los comandos siguientes son para **PowerShell en Windows**, con Git, GitHub CLI (`gh`) y Node instalados. Usar Node 22.12 o posterior de la rama 22 para coincidir con CI; el requisito de Vite se documenta en [CLAUDE.md](../CLAUDE.md). Si el equipo usa otro sistema, conservar el flujo Git y adaptar la ruta.
+Los comandos siguientes son para **PowerShell en Windows** y guardan el proyecto en **Descargas**, en la carpeta física `Downloads\DistanciaCero` del perfil del usuario. Si la carpeta de Descargas está redirigida, ajustar `$downloadsPath` a su ubicación. Usar Node 22.12 o posterior de la rama 22 para coincidir con CI; una LTS posterior también satisface el requisito de Vite documentado en [CLAUDE.md](../CLAUDE.md). Si el equipo usa otro sistema, conservar el flujo Git y adaptar la ruta.
+
+Si faltan herramientas, este primer bloque las instala mediante WinGet. Después de instalar, cerrar por completo la ventana de PowerShell y abrir otra para cargar el PATH actualizado:
+
+```powershell
+& {
+    $ErrorActionPreference = 'Stop'
+    $toolsToInstall = @(
+        @{ Command = 'git'; Package = 'Git.Git' }
+        @{ Command = 'gh'; Package = 'GitHub.cli' }
+        @{ Command = 'node'; Package = 'OpenJS.NodeJS.LTS' }
+    )
+    foreach ($tool in $toolsToInstall) {
+        if (-not (Get-Command $tool.Command -ErrorAction SilentlyContinue)) {
+            if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+                throw 'Falta WinGet: instala o actualiza App Installer desde Microsoft Store.'
+            }
+            winget install --id $tool.Package --exact --source winget --accept-source-agreements --accept-package-agreements
+            if ($LASTEXITCODE -ne 0) { throw "No se pudo instalar $($tool.Package)." }
+        }
+    }
+    Write-Host 'Cierra esta ventana de PowerShell y abre otra para continuar.'
+}
+```
 
 **Ejecutar el clone solo después de que la rama esté publicada.** El bloque comprueba los errores antes de continuar y no sobrescribe una carpeta existente:
 
 ```powershell
 & {
     $ErrorActionPreference = 'Stop'
+    node -e "const [major,minor]=process.versions.node.split('.').map(Number);if(!((major===20&&minor>=19)||(major===22&&minor>=12)||major>22))process.exit(1)"
+    if ($LASTEXITCODE -ne 0) { throw 'Node es demasiado antiguo para Vite. Instala una LTS reciente antes de continuar.' }
     gh auth login --hostname github.com --git-protocol https --web
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo iniciar sesión en GitHub.' }
     gh auth setup-git
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo configurar Git.' }
-    $projectPath = Join-Path $env:USERPROFILE 'source\DistanciaCero'
-    New-Item -ItemType Directory -Force -Path (Split-Path $projectPath) | Out-Null
+    $downloadsPath = Join-Path $env:USERPROFILE 'Downloads'
+    $projectPath = Join-Path $downloadsPath 'DistanciaCero'
+    New-Item -ItemType Directory -Force -Path $downloadsPath | Out-Null
     if (Test-Path -LiteralPath $projectPath) { throw "La carpeta ya existe: $projectPath" }
     git clone --branch codex/compatibilidad-navegadores https://github.com/yori7v7/DistanciaCero.git $projectPath
     if ($LASTEXITCODE -ne 0) { throw 'La rama no se pudo clonar. Verifica que ya se haya publicado.' }
     Set-Location -LiteralPath $projectPath
     git config --local pull.ff only
-    npm ci
+    if ($LASTEXITCODE -ne 0) { throw 'No se pudo configurar fast-forward.' }
+    npm.cmd ci
     if ($LASTEXITCODE -ne 0) { throw 'No terminó la instalación de dependencias.' }
     git status --short --branch
 }
 ```
 
-Si se va a ejecutar E2E, instalar una vez los motores de la versión del lockfile con `npx playwright install chromium firefox webkit`. No es necesario descargar motores solo para leer o editar documentación. Para el trabajo local actual no hacen falta credenciales de Supabase.
+Si se va a ejecutar E2E, instalar una vez los motores de la versión del lockfile con `npx.cmd playwright install chromium firefox webkit`. No es necesario descargar motores solo para leer o editar documentación. Para el trabajo local actual no hacen falta credenciales de Supabase. Se usa `npm.cmd`/`npx.cmd` para evitar depender del permiso de ejecución de wrappers PowerShell.
 
 En Codex, añadir/abrir la carpeta clonada como proyecto local. No basta iniciar sesión con la misma cuenta: sincronizar conversaciones no copia el directorio del código. Se puede abrir un chat nuevo en esa carpeta y escribir:
 
 > Lee AGENTS.md y docs/TRABAJO_ENTRE_EQUIPOS.md, verifica el remoto y prosigue con el pendiente documentado. Estoy en la laptop.
+
+Prompts completos para copiar, dentro de un chat abierto en el proyecto:
+
+**Primera continuación en la laptop:**
+
+```text
+Estoy en mi laptop, en el proyecto Distancia Cero que cloné en Descargas. Lee AGENTS.md, CLAUDE.md, docs/TRABAJO_ENTRE_EQUIPOS.md y el estado más reciente de docs/AVANCE_PULIDO_LOCAL.md. Trabaja en codex/compatibilidad-navegadores del remoto https://github.com/yori7v7/DistanciaCero.git. Comprueba el uso normal disponible, los cambios locales y el remoto antes de editar; recibe los cambios por fast-forward cuando sea posible y conserva cualquier trabajo pendiente. Prosigue con el siguiente pendiente documentado, sin dar por terminada la compatibilidad interrumpida. No actives Supabase ni despliegues. Detente si se agota el uso normal; no cambies modelo/modalidad ni uses reserva, compras o resets. Yo indicaré cuándo cambiar de equipo. Antes de entregar, actualiza el estado portable y guarda commits revisados. Si la primera publicación de esta rama ya está comprobada, te autorizo a enviar los avances normales a esa misma rama con push sin force; no publiques otras ramas, no hagas merge a main ni cambies visibilidad. Si la primera publicación sigue pendiente, informa ese estado sin afirmar que ya podemos intercambiar cambios.
+```
+
+**Al salir de cualquiera de los dos equipos:**
+
+```text
+Voy a cambiar de equipo. Deja este bloque en un punto recuperable: no inicies otro trabajo largo; comprueba si hay pruebas activas y conserva su estado real. Si hay un E2E activo, espera a que termine antes de editar cualquier archivo observado, incluida la documentación. Actualiza docs/TRABAJO_ENTRE_EQUIPOS.md y el avance con lo terminado, lo pendiente y las comprobaciones reales. Revisa y guarda los cambios de este trabajo en commits. Te autorizo a enviarlos con push normal a origin/codex/compatibilidad-navegadores del repositorio ya usado para esta sincronización. Conserva cualquier trabajo ajeno; sin force-push, merge a main ni despliegues. Confirma si la entrega quedó realmente enviada e indica el commit que debe recibir el otro equipo.
+```
+
+**Al volver al otro equipo:**
+
+```text
+Ya estoy en mi computadora de escritorio [o: en mi laptop]. Antes de editar, lee AGENTS.md, verifica el estado local y recibe de GitHub los últimos cambios de codex/compatibilidad-navegadores mediante fast-forward si es posible. Conserva cualquier cambio local y resuelve la divergencia sin borrar ni forzar el historial. Lee el punto de continuación actualizado en docs/TRABAJO_ENTRE_EQUIPOS.md y el avance, confirma el commit recibido y prosigue con el pendiente documentado. Mantén las restricciones de trabajo local y uso normal. Yo indicaré el próximo cambio de equipo.
+```
 
 GitHub/Git y las conexiones de plugins se autentican en cada equipo. Si Git pide identidad para crear commits, configurar el nombre y correo propios del usuario; no inferirlos ni copiar claves privadas.
 
@@ -55,7 +102,7 @@ Una sola computadora trabaja en esta rama a la vez. Con la publicación ya autor
 2. Comparar la rama local con `origin/codex/compatibilidad-navegadores`. Con árbol limpio, integrar solo fast-forward (`git pull --ff-only`). Si hay commits locales por enviar o cambios de ambos equipos, conservarlos y evaluar la integración antes de editar. No borrar cambios ni forzar el historial para aparentar sincronización.
 3. Leer este punto de continuación y el avance, trabajar dentro del alcance y ejecutar las comprobaciones necesarias.
 4. Actualizar el estado portable, revisar el diff y crear commits locales explícitos. Si está autorizada la publicación, enviar con `git push` normal; comprobar que el remoto tiene el mismo commit antes de anunciar la entrega.
-5. En la otra computadora, recibir la rama antes de trabajar. Reinstalar dependencias con `npm ci` si cambió el lockfile o si todavía no existen.
+5. En la otra computadora, recibir la rama antes de trabajar. Reinstalar dependencias con `npm.cmd ci` en PowerShell si cambió el lockfile o si todavía no existen.
 
 En un clon limpio con upstream configurado, los comandos manuales de la rutina son:
 
@@ -86,7 +133,7 @@ Las conversaciones pueden tener otra disponibilidad según cliente/configuració
 - El 19 de octubre pasaron por separado la muestra CRUD WebKit **3/3** y Chromium audio/reset con los fixtures finales **4/4**. Una sonda nativa de WebKit/Windows reprodujo pausa al reiniciar un WAV de 20 s fuera de la app; no certifica Safari real ni explica la causa interna.
 - La corrida conjunta `todos-final-corregido-20261019` se interrumpió **sin reporte final**. El log termina con **92 aprobadas: 50 WebKit y 42 Firefox**. Quedan sin acreditar los ocho últimos casos de interfaz Firefox en esa corrida. No declarar `100/100`, salida 0 ni archivos congelados hasta un término que no existe.
 - El 20 de octubre se verificó que los **271 archivos** seguían coincidiendo con los hashes iniciales de esa corrida. Su sesión anterior ya no existe y no quedan el navegador/runner original ni servidor 5174. El `state.json` histórico todavía dice `running`: es un estado obsoleto, no un proceso activo. No sobrescribirlo para fabricar un resultado.
-- Siguiente trabajo funcional: obtener una validación final completa con la configuración actual. En un checkout preparado, `npm run test:e2e:cross-browser -- --max-failures=1` ejecuta los 100 casos. Guardar el reporte y congelar todos los archivos observados durante la ejecución, incluidos Markdown; no tocar documentación hasta que termine. El script durable anterior y los logs están solo en el checkpoint del escritorio; no dar por hecho que existen en la laptop.
+- Siguiente trabajo funcional: obtener una validación final completa con la configuración actual. En un checkout preparado, `npm.cmd run test:e2e:cross-browser -- --max-failures=1` en PowerShell ejecuta los 100 casos. Guardar el reporte y congelar todos los archivos observados durante la ejecución, incluidos Markdown; no tocar documentación hasta que termine. El script durable anterior y los logs están solo en el checkpoint del escritorio; no dar por hecho que existen en la laptop.
 - Después de aprobar la corrida completa, actualizar README/CLAUDE/TODO/RECORRIDOS/AVANCE, revisar enlaces y guardar el cierre de compatibilidad. El trabajo aquí guardado es un checkpoint de continuidad, no ese cierre.
 
 Evidencia detallada del escritorio en `.git/codex-checkpoints/compatibilidad-20261012/`; snapshot previo a este traspaso en `handoff-preparation-20261020/`. Los resultados anteriores, límites y contratos permanecen en el [avance](AVANCE_PULIDO_LOCAL.md). No restaurar snapshots ni aplicar el stash histórico automáticamente.
@@ -95,4 +142,5 @@ Evidencia detallada del escritorio en `.git/codex-checkpoints/compatibilidad-202
 
 - [Proyectos, carpetas y conversaciones de Codex](https://learn.chatgpt.com/docs/projects): sincronización de conversación y acceso a archivos son distintos; el contexto durable puede guardarse en AGENTS/documentación versionada.
 - [GitHub CLI: autenticación](https://cli.github.com/manual/gh_auth_login) y [clonar](https://cli.github.com/manual/gh_repo_clone).
+- [GitHub CLI en Windows](https://github.com/cli/cli/blob/trunk/docs/install_windows.md); identificadores de WinGet [Git.Git](https://github.com/microsoft/winget-pkgs/tree/master/manifests/g/Git/Git) y [OpenJS.NodeJS.LTS](https://github.com/microsoft/winget-pkgs/tree/master/manifests/o/OpenJS/NodeJS/LTS).
 - [Git: pull y fast-forward](https://git-scm.com/docs/git-pull).
