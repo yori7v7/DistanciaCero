@@ -133,6 +133,8 @@ Las conversaciones pueden tener otra disponibilidad según cliente/configuració
 
 Los puntos siguientes conservan los antecedentes recibidos del escritorio; la nueva corrida y el diagnóstico anterior son el estado más reciente.
 
+**Actualización al terminar el bloque:** `final-clean` se detuvo deliberadamente con el uso normal al 98% consumido, tras **10 aprobadas WebKit**, sin reporte final para los otros 90. Se terminó el árbol del runner para guardar el estado dentro del uso disponible; no interpretar esa terminación como fallo de la aplicación o corrida completa. El primer bloque está publicado en **`7732df8`**; este registro se entrega en el commit documental posterior. El siguiente pendiente sigue siendo una corrida conjunta completa con caché aislada y uso normal suficiente. El usuario continúa en la laptop y decidirá cuándo cambiar de equipo.
+
 - Los pasos 1–7 terminaron el 10 de octubre y su cierre Git local es `4aab097`. La corrección posterior de foco durante gestos de puntero está en `904203f`.
 - Aplicación validada el 16 de octubre: TypeScript, **340 unitarias/22 archivos**, build/PWA y **16 E2E Chromium** afectados. No presentar estas fechas como comprobaciones recién ejecutadas en la laptop.
 - Las pruebas pendientes usan HTTP loopback real para el WAV sintético de 300 s, esperan la recarga del reset y la primera persistencia antes de sembrar datos, y llevan Canvas al viewport. Configuración Firefox/WebKit: un worker, cero reintentos, WebKit densidad 1, puerto 5174. Presupuestos totales ampliados según [AVANCE_PULIDO_LOCAL.md](AVANCE_PULIDO_LOCAL.md), sin omitir clics ni aserciones.
