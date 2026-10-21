@@ -6,8 +6,8 @@ Estado preparado el **20 de octubre de 2026**. Este documento acompaña al códi
 
 - Repositorio configurado: `https://github.com/yori7v7/DistanciaCero.git`, **público** al comprobarlo el 20 de octubre.
 - Rama de continuidad: `codex/compatibilidad-navegadores`. `main` conserva el punto anterior del proyecto.
-- Al preparar esta guía, el remoto solo tenía `main` en `0c1e46f`. Los cuatro commits hasta `904203f`, las adaptaciones de skills y el trabajo de compatibilidad posterior seguían en escritorio. Clonar `main` en ese estado no trae ese avance.
-- La primera publicación de esta rama **no se ha realizado**. Antes de enviarla hay que confirmar el destino público y que ninguna integración externa vaya a desplegarla. Se puede elegir un repositorio privado en vez del destino actual; no cambiar visibilidad ni crear repositorios sin autorización.
+- Al preparar inicialmente esta guía, el remoto solo tenía `main` en `0c1e46f`. Esa situación es histórica: el 20 de octubre la laptop recibió `codex/compatibilidad-navegadores` en `3be83c1`, idéntico al checkout limpio y sin divergencia tras `git fetch origin`.
+- La rama ya está publicada. El usuario autorizó commits y push normal de los avances de este trabajo a esa misma rama del repositorio indicado. Conservar el destino y la visibilidad; sin force-push, merge a `main`, despliegues ni activación de Supabase.
 - Los cuatro commits locales previos incluyen un correo de autor/committer que no es `noreply`; su metadata también será visible si se publican en este destino. La comprobación acotada no encontró credenciales concretas en sus líneas añadidas ni en los dos archivos nuevos de pruebas, pero no constituye una auditoría completa del historial. No se reescribió metadata.
 - El workflow `.github/workflows/ci.yml` ejecuta validación en push a `main` o PR hacia `main`, sin un paso de deploy. Esto no descarta integraciones externas. `npm run deploy` sí publica mediante `gh-pages`: no forma parte de sincronizar.
 
@@ -113,7 +113,7 @@ git pull --ff-only
 git push
 ```
 
-El primer envío desde escritorio, una vez revisado y autorizado, será `git push --set-upstream origin codex/compatibilidad-navegadores`. Este documento no lo ejecuta ni autoriza. No se necesita merge a `main` ni publicar la web para trasladar código. Sin Internet o con una entrega sin enviar no se puede confirmar que el otro equipo tiene lo último; informar esa situación sin inventar sincronización.
+La rama ya tiene upstream en el clon de la laptop; usar push normal al destino autorizado. No se necesita merge a `main` ni publicar la web para trasladar código. Sin Internet o con una entrega sin enviar no se puede confirmar que el otro equipo tiene lo último; informar esa situación sin inventar sincronización.
 
 ## Qué viaja y qué se queda en cada equipo
 
@@ -126,6 +126,12 @@ Las conversaciones pueden tener otra disponibilidad según cliente/configuració
 ## Punto de continuación — 20 de octubre de 2026
 
 **Compatibilidad abierta; no empezar PWA entre versiones, limpieza de warnings ni funciones nuevas.** No activar Supabase ni desplegar. Conservar la condición de parar al agotarse el uso normal/premium, sin reserva, compras, resets ni cambios de modelo/modalidad.
+
+**Último bloque en laptop:** la corrida completa terminó con salida 1, **50 WebKit aprobadas, primer Firefox fallido al arrancar y 49 sin ejecutar**, 2917,40 s. Los 272 archivos observados conservaron sus hashes. Windows registró `SideBySide` 33: ensamblado `mozglue` no encontrado; no llegó a abrir la aplicación en Firefox. Una instalación limpia de Firefox 153.0 en caché aislada sí arrancó, aunque sus 63 archivos son idénticos a la caché estándar. La causa de esa diferencia por ubicación/entorno sigue sin explicar. El caso CMS Firefox aislado aprobó **1/1**, salida 0, 11,04 s, sin cambios de archivos. No suma una suite completa.
+
+**Siguiente acción:** repetir los 100 casos con los mismos motores/configuración y `PLAYWRIGHT_BROWSERS_PATH` apuntando a una caché aislada previamente preparada con `playwright install firefox webkit`. La caché local comprobada está en `.git/codex-checkpoints/laptop-compatibilidad-20261020/clean-browsers`; no viaja por Git. Antes de iniciar otro runner consultar `final-clean/state.json` y los procesos. Los reportes del primer intento están en el directorio padre y los del caso aislado en `firefox-smoke/`. El uso normal seguía permitido; no cambiar de equipo hasta que lo indique el usuario.
+
+Los puntos siguientes conservan los antecedentes recibidos del escritorio; la nueva corrida y el diagnóstico anterior son el estado más reciente.
 
 - Los pasos 1–7 terminaron el 10 de octubre y su cierre Git local es `4aab097`. La corrección posterior de foco durante gestos de puntero está en `904203f`.
 - Aplicación validada el 16 de octubre: TypeScript, **340 unitarias/22 archivos**, build/PWA y **16 E2E Chromium** afectados. No presentar estas fechas como comprobaciones recién ejecutadas en la laptop.
