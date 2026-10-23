@@ -123,9 +123,19 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — entrega del 21 de octubre de 2026
+## Punto de continuación — retoma del escritorio, 23 de octubre de 2026
 
 **Compatibilidad abierta; no empezar PWA entre versiones, limpieza de warnings ni funciones nuevas.** No activar Supabase ni desplegar. Conservar la condición de parar al agotarse el uso normal/premium, sin reserva, compras, resets ni cambios de modelo/modalidad.
+
+**Estado vigente del escritorio:** recibidos por fast-forward los tres commits de la laptop hasta `ac07ed6`, sin divergencia ni cambios locales ajenos. Firefox 153.0 y WebKit 26.5 arrancaron en la caché estándar de este equipo; no se necesitó copiar ni reinstalar la caché de la laptop.
+
+La corrida `desktop-final-20261021` terminó con **61 aprobadas, una fallida y 38 sin ejecutar**, 4154,61 s, salida 1, cero reintentos/inestables y 272 archivos sin cambios. Pasaron los 50 WebKit. Firefox agotó el presupuesto de 180 s en Promesas/originales; el caso duró 27,9 minutos porque Windows entró en suspensión automática por `System Idle`. Los eventos del sistema registran suspensión a **2026-10-22 01:29:34 UTC** y reactivación a **01:57:18 UTC**, dentro del caso. No atribuir la espera interrumpida a un movimiento continuo del botón ni corregir React/CSS sin otra evidencia.
+
+El 23 de octubre, `firefox-promesas-20261023` repitió el caso **sin cambios en aplicación ni pruebas**: **1/1 aprobado**, caso 38,6 s, reporte total 48,70 s, salida 0, cero omitidas/inestables/reintentos/errores externos y hashes de los 272 archivos conservados. No se suma a los 61 para declarar una corrida completa.
+
+**Siguiente validación preparada:** `desktop-awake-20261023`, los 100 recorridos con la misma configuración. El supervisor local solicita temporalmente a Windows `ES_CONTINUOUS | ES_SYSTEM_REQUIRED` mediante `SetThreadExecutionState` y restaura el estado anterior al terminar. No cambia el plan de energía ni exige mantener la pantalla encendida; tampoco bloquea una suspensión manual. La solicitud/restauración se comprobó con la API real antes de lanzar la suite. Runner y evidencia siguen solo en `.git/codex-checkpoints/compatibilidad-20261012/` de este escritorio. Consultar su estado antes de empezar otro runner o cambiar de equipo; congelar todos los archivos observados, incluidos documentos, hasta que termine. El agotamiento del modelo no obliga a matar un runner local que puede guardar su reporte por sí mismo.
+
+Después de una corrida completa aprobada, quedan documentación general, revisión y cierre de compatibilidad. Si falla, investigar el primer fallo conservando el reporte. No declarar 100/100 ni cerrar a partir de resultados parciales. La entrega de laptop siguiente se conserva como antecedente fechado.
 
 **Entrega al salir de la laptop:** el usuario indicó cambiar de equipo el 21 de octubre. Antes de editar se comprobó uso normal disponible, árbol limpio, ausencia de runners E2E/Vite/Vitest del proyecto y ausencia de servidor en 5174. `git fetch origin` confirmó local y remoto en **`c666f64`**, sin divergencia ni avances nuevos que recibir por fast-forward. Ese commit y `7732df8` ya estaban publicados. Este bloque solo actualiza y revisa documentación; no inicia pruebas, servidores ni otro trabajo funcional. Recibir también el commit documental de esta entrega, cuyo hash se comunica al confirmar el push, y verificar que `HEAD` coincide con el remoto antes de trabajar desde el destino.
 
@@ -137,7 +147,7 @@ Las conversaciones pueden tener otra disponibilidad según cliente/configuració
 
 No sumar estas corridas entre sí ni con las 92 históricas para declarar `100/100`. Los reportes, logs y caché comprobada permanecen solo en la laptop bajo `.git/codex-checkpoints/laptop-compatibilidad-20261020/`, con subdirectorios `firefox-smoke/`, `final-clean/` y `clean-browsers/`. El destino no los recibe con pull ni debe asumir que dispone de ellos.
 
-**Siguiente acción en el equipo de destino:** después de recibir la entrega por fast-forward y comprobar uso, cambios locales y runners, preparar las dependencias del lockfile si faltan y los motores Firefox/WebKit de Playwright 1.62.1. Si se utiliza caché aislada, fijar `PLAYWRIGHT_BROWSERS_PATH` a una ruta local de ese equipo y mantenerla tanto durante `npx.cmd playwright install firefox webkit` como durante las pruebas. Comprobar que ambos motores arrancan antes de lanzar la suite larga; la diferencia de caché observada en la laptop no garantiza ni impide su arranque en el destino. Obtener una corrida conjunta completa de los 100 casos con la configuración actual, guardando reporte y logs; congelar código y documentos hasta que termine. No iniciar ahora esa corrida desde la laptop que se está entregando.
+**Acción indicada en la entrega de laptop del 21 (antecedente):** después de recibir la entrega por fast-forward y comprobar uso, cambios locales y runners, preparar las dependencias del lockfile si faltan y los motores Firefox/WebKit de Playwright 1.62.1. Si se utiliza caché aislada, fijar `PLAYWRIGHT_BROWSERS_PATH` a una ruta local de ese equipo y mantenerla tanto durante `npx.cmd playwright install firefox webkit` como durante las pruebas. Comprobar que ambos motores arrancan antes de lanzar la suite larga; la diferencia de caché observada en la laptop no garantiza ni impide su arranque en el destino. Obtener una corrida conjunta completa de los 100 casos con la configuración actual, guardando reporte y logs; congelar código y documentos hasta que termine. La recepción y el intento del escritorio se registran arriba; no tratar esta instrucción histórica como otro runner que deba iniciarse en paralelo.
 
 Los puntos siguientes conservan los antecedentes recibidos del escritorio:
 
@@ -158,3 +168,4 @@ Evidencia detallada del escritorio en `.git/codex-checkpoints/compatibilidad-202
 - [GitHub CLI: autenticación](https://cli.github.com/manual/gh_auth_login) y [clonar](https://cli.github.com/manual/gh_repo_clone).
 - [GitHub CLI en Windows](https://github.com/cli/cli/blob/trunk/docs/install_windows.md); identificadores de WinGet [Git.Git](https://github.com/microsoft/winget-pkgs/tree/master/manifests/g/Git/Git) y [OpenJS.NodeJS.LTS](https://github.com/microsoft/winget-pkgs/tree/master/manifests/o/OpenJS/NodeJS/LTS).
 - [Git: pull y fast-forward](https://git-scm.com/docs/git-pull).
+- [Windows: solicitud temporal de actividad](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate).
