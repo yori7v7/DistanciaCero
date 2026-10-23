@@ -67,7 +67,9 @@ node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173 --strict
 
 El build genera un service worker con precache de la aplicación. Su registro requiere un origen seguro: HTTPS o localhost. El servidor de desarrollo no sustituye la comprobación del build y su service worker.
 
-La PWA está configurada con `autoUpdate`, `skipWaiting`, `clientsClaim` y limpieza de caches antiguos. Una recarga debe cargar la versión servida por el worker activo. La prueba de preview verifica el registro/control del worker y la recarga/navegación local sin conexión sobre el build actual; no simula todavía una actualización entre dos releases.
+La PWA está configurada con `autoUpdate`, `skipWaiting`, `clientsClaim` y limpieza de caches antiguos. `main.tsx` registra además el cliente `virtual:pwa-register` mediante `registerSW({ immediate: true })`, para coordinar el refresco del documento abierto al detectar una versión nueva. La prueba de preview verifica registro/control del worker y recarga/navegación offline sobre un build; la actualización entre dos builds tiene su recorrido separado, descrito abajo.
+
+Referencia del cliente y refresco automático: [guía oficial de vite-plugin-pwa](https://vite-pwa-org.netlify.app/guide/auto-update).
 
 El modo sin conexión requiere haber cargado y almacenado la aplicación previamente. El contenido de localStorage queda en el mismo navegador y origen. El precache no convierte los enlaces externos, audio/video ni archivos ajenos en recursos offline: dependen de su fuente y de la disponibilidad de cada archivo. Borrar los datos del sitio elimina también contenido y caches; el respaldo JSON conserva solo el alcance descrito en [CONTENT_CONTRACT.md](CONTENT_CONTRACT.md).
 
@@ -80,5 +82,23 @@ npm run test:e2e:preview
 ```
 
 Esta configuración usa un servidor local en el puerto 4173 y un perfil de prueba aislado. Los recorridos de desarrollo usan la configuración principal y el puerto 5173; compatibilidad Firefox/WebKit usa el puerto 5174. Cada origen y contexto conserva su propio almacenamiento.
+
+## Actualización PWA entre dos builds locales
+
+```powershell
+npm run test:e2e:pwa-update
+```
+
+El caso de `playwright.pwa-update.config.ts` utiliza Chromium en Windows, un worker, cero reintentos y el mismo origen `http://127.0.0.1:4175` para A y B. `scripts/pwa-update-server.mjs` genera sus dos builds reales en `test-results/pwa-update-builds`; no requiere compilar previamente `dist`. Un plugin exclusivo de prueba cambia en memoria una marca del entry y el título del lazy `StoryTimeline`: ambos chunks y el hash del worker difieren entre A/B. No modifica archivos de `src`, el `dist` del usuario ni infraestructura remota.
+
+En A, el recorrido guarda una promesa desde el CMS, abre una carta para persistir progreso, conserva volumen cero y Centro visible, y añade una caché ajena como control. Al pasar el servidor a B, pide explícitamente `registration.update()` para comprobar actualizaciones sin esperar el calendario del navegador. La transición al documento B ocurre mediante el cliente de registro, sin forzar `skipWaiting`, borrar cachés, volver a sembrar datos ni recargar manualmente durante A→B.
+
+La prueba espera después la marca B y un `timeOrigin` nuevo, conserva el hash de escena y comprueba el contenido guardado, progreso `opened`, volumen cero y Centro visible. Identidad/espacio permanecen nulos en ambos extremos; no acredita conservación de una identidad elegida. Comprueba al final chunks B presentes, entry/lazy A ausentes y caché ajena conservada. El adjunto temprano de `controllerchange` puede mostrar todavía el documento A; el evento precede a las verificaciones finales y no demuestra por sí solo que el documento o la limpieza de caché ya hayan terminado.
+
+Con red desactivada, se abre el lazy Diario B que el documento A aún no había solicitado, se recarga B y se navega por cartas, landing y entrada, manteniendo los datos guardados. No se registraron errores JS, assets fallidos ni solicitudes Supabase; otras solicitudes externas se bloquearon deliberadamente. El caso pasó **1/1 el 23 de octubre**, en 43,94 s de reporte y 22,9 s de caso, con 275 archivos congelados. Preview/offline pasó por separado **1/1** después del build; resultados completos en el avance.
+
+Esta comprobación local no acredita despliegue real, propagación de CDN, otros orígenes/basepaths, Firefox/WebKit/Safari para la actualización ni instalación como aplicación. Tampoco determina cuándo descubrirá una versión nueva cada navegador: la comprobación se dispara explícitamente, y lo automático probado es el refresco posterior. Conserva **datos ya guardados**, sin garantizar formularios abiertos sin guardar ni todo el estado en memoria; una autorrecarga puede descartar cambios no persistidos. Los medios remotos siguen fuera de la garantía offline.
+
+Una pestaña antigua cargada sin el cliente virtual no contiene el nuevo código que coordina el refresco. Se infiere que necesita una primera recarga manual para incorporarlo; **esa transición legacy no se probó**. El recorrido aprobado parte de A con el cliente nuevo y acredita la actualización detectada siguiente A→B.
 
 Durante los E2E de desarrollo no editar archivos del proyecto, incluidos documentos: el escáner de Tailwind puede provocar una recarga completa al cambiar Markdown. Las notas y resultados temporales se guardan en `.git/codex-checkpoints`; la documentación se actualiza después.

@@ -4,8 +4,12 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import App from './App'
 import PublicLanding from './components/PublicLanding'
 import { AudioProvider } from './context/AudioContext'
+import { registerSW } from 'virtual:pwa-register'
 
 import './styles/tailwind.css'
+
+// Keep the open document in sync when autoUpdate activates a new precache.
+registerSW({ immediate: true })
 
 const resetParams = new URLSearchParams(window.location.search)
 

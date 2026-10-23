@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 10 de octubre de 2026; la etapa posterior de compatibilidad cerró el 23 de octubre con 100/100 E2E Firefox/WebKit. Los resultados conservan sus fechas en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md). Antes de continuar, consultar también [AGENTS.md](AGENTS.md) y el [punto de continuación entre equipos](docs/TRABAJO_ENTRE_EQUIPOS.md).
+Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 10 de octubre de 2026; las etapas posteriores de compatibilidad (100/100 E2E Firefox/WebKit) y actualización PWA A→B local cerraron el 23. Los resultados conservan sus fechas y alcances en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md). Antes de continuar, consultar también [AGENTS.md](AGENTS.md) y el [punto de continuación entre equipos](docs/TRABAJO_ENTRE_EQUIPOS.md).
 
 ## ¿Qué es?
 
@@ -18,9 +18,9 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 | Datos locales | JSON (`src/data/`) + localStorage |
 | Estilos | Tailwind CSS v4 (1 archivo: `src/styles/tailwind.css`) |
 | Publicación | Script heredado de GitHub Pages y configuración Vercel; fuera de la etapa local |
-| PWA | vite-plugin-pwa (manifest, autoUpdate) |
+| PWA | vite-plugin-pwa (manifest, autoUpdate) + cliente virtual `registerSW` en `main.tsx` |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (22 archivos, 340 tests; verificado el 16 de octubre; el paso 7 cerró con 338) |
+| Tests | Vitest + @testing-library/react (22 archivos, 340 tests; comprobados también el 23 de octubre; el paso 7 cerró con 338) |
 | CI | GitHub Actions: tipos, build, unitarias y job E2E (Node 22, Ubuntu); no ejecutado desde esta etapa local |
 
 ## Rutas
@@ -48,6 +48,7 @@ npm test -- src/__tests__/FileName.test.ts     # Un solo archivo de tests
 npm run test:e2e         # Recorridos de desarrollo, Chromium
 npm run test:e2e:preview # Preview/PWA después del build
 npm run test:e2e:cross-browser # Desarrollo, Firefox y WebKit; puerto 5174
+npm run test:e2e:pwa-update # Chromium, dos builds propios A→B; puerto 4175
 ```
 
 Instalar con `npm ci` conserva las versiones del lockfile. React, React DOM, lucide-react y el plugin React tienen versiones exactas alineadas con ese archivo; ya no usan `latest`. `verify:local` utiliza los ejecutables instalados, funciona en Windows y otros sistemas, y se detiene en el primer fallo. Los recorridos de navegador se ejecutan por separado.
@@ -276,6 +277,7 @@ Template seguro en `.env.example`. Valores reales van en `.env.local` (no commit
 - El paso 7 aprobó el 10 de octubre los 50 E2E en una única corrida y un preview/offline, con cero omitidas, inestables o reintentos. Incluye los diez casos UI en cinco tamaños; las 338 unitarias y el build también pasaron. El cierre documental es del 10 de octubre. Consultar el avance para evidencia y límites; los fallos anteriores siguen registrados como históricos.
 - La corrección posterior de foco durante gestos de puntero (`904203f`) añadió dos regresiones. El 16 de octubre se aprobaron 340 unitarias/22 archivos, tipos/build/PWA y 16 Chromium afectados; el 19, cuatro Chromium de audio/reset con los fixtures finales. No presentar estas comprobaciones como ejecutadas el 23.
 - Compatibilidad cerrada el 23 de octubre: `desktop-awake-20261023`, **100/100 en una sola corrida**, 50 WebKit y 50 Firefox, 67,82 min, cero omitidas/inestables/reintentos/errores externos y 272 archivos congelados. Ambos respaldos conservaron documento y CMS real. Motores Playwright en Windows, WebKit densidad 1; no acredita Safari/iPhone reales ni actualización PWA entre releases. Configuración, presupuestos, recurso HTTP de audio y límites en [RECORRIDOS_LOCALES.md](docs/RECORRIDOS_LOCALES.md).
+- PWA local cerrada después, el 23: caso separado A→B **1/1 Chromium/Windows**, preview/offline **1/1**, tipos, **340 unitarias/22 archivos** y build/PWA. `main.tsx` utiliza `registerSW({ immediate: true })` de `virtual:pwa-register`, con tipos `vite-plugin-pwa/client`. Tras detectar la actualización, ese cliente coordina el refresco del documento; la configuración del worker por sí sola no lo acreditaba. El caso genera dos builds propios sin modificar `src`/`dist`, conserva datos guardados y comprueba B offline. No cubre formularios sin guardar ni la primera actualización de una pestaña legacy sin ese cliente; alcance y límites centralizados en los recorridos.
 
 ### Escenas y lectores
 
