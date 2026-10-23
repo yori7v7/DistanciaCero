@@ -35,4 +35,17 @@ export default defineConfig({
     })
   ],
   base,
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            { name: 'react-vendor', test: /[\\/]node_modules[\\/](?:react|react-dom|react-router|react-router-dom|scheduler)[\\/]/ },
+            { name: 'three-core', test: /[\\/]three[\\/]build[\\/]three\.core\.js$/ },
+            { name: 'three-renderer', test: /[\\/]three[\\/]build[\\/]three\.module\.js$/ },
+          ],
+        },
+      },
+    },
+  },
 })

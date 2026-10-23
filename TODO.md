@@ -27,14 +27,14 @@ Estado del **23 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 
 ## Trabajo local pendiente
 
-Los pasos 1–7, la compatibilidad posterior y la actualización PWA local están terminados. La siguiente propuesta es una limpieza acotada de warnings; **sigue pendiente y no se ha iniciado**. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
+Los pasos 1–7, la compatibilidad posterior y la actualización PWA local están terminados. La limpieza acotada de warnings está **en curso**: división de chunks comprobada; falta resolver el import dinámico ineficaz y decidir la migración del aviso externo de Clock antes del bloque de audio. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
 ## Límites y deuda visible
 
 - La cobertura de desarrollo incluye Chromium (comprobaciones del 10/16/19) y Firefox/WebKit de Playwright en Windows (23), con cinco tamaños y WebKit densidad 1. No acredita Safari/macOS/iPhone reales, otros dispositivos ni certificación WCAG completa.
 - WebKit 26.5 en este Windows reprodujo fuera de la aplicación una pausa nativa al cruzar el loop de un WAV de 20 s, con volumen cero y pausa/reanudación cerca del final. El síntoma está observado; su causa interna no está explicada. El WAV de 300 s de las pruebas evita ese límite durante los controles, sin declarar corregido el loop ni extrapolar a otros formatos/equipos.
 - La actualización PWA A→B se comprobó localmente en Chromium/Windows y el mismo origen; no acredita instalación, Safari ni despliegue real. Conserva datos guardados, sin garantizar formularios sin guardar o medios externos offline. La primera recarga de pestañas antiguas sin el nuevo cliente se mantiene como límite inferido, no como recorrido verificado.
-- Se conservan avisos de tamaño de chunks/import dinámico y de `THREE.Clock`. No impidieron los recorridos locales; valorar su limpieza en un bloque acotado posterior.
+- El aviso de chunks grandes se resolvió con grupos React/Three en el build local: máximo 372,57 kB, sin subir el umbral. Siguen el import dinámico ineficaz y `THREE.Clock` de Fiber; el bloque no está cerrado.
 - Algunas estructuras de contenido conservan campos dinámicos y casts históricos; el CMS y el lector compartido tienen tipos concretos. Ampliar tipado solo con un alcance y regresiones claros.
 - `siteConfig.secret` conserva campos de plantilla sin una sección consumidora actual; no hay autenticación privada mediante esas claves.
 - El inventario Git de septiembre es histórico. `main`, los tags y el stash WIP se preservaron; no hace falta aplicarlos ni eliminarlos para cerrar el trabajo local. Cualquier decisión de limpieza requiere un encargo posterior.

@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Checkpoint de warnings, 23 de octubre:** división de chunks aprobada (build, PWA A→B y Universo compilado); bloque todavía abierto. Resolver imports antes de pasar a audio.
+
 - **PWA entre dos builds locales cerrada — 23 de octubre de 2026:** el caso A→B aprobó **1/1 en Chromium/Windows**, con contenido/progreso guardados y B offline; `verify:local` aprobó tipos, **340 unitarias/22 archivos** y build/PWA, y preview/offline **1/1**. Son comprobaciones separadas del cierre de compatibilidad. Alcance y resultados al final; la siguiente propuesta, limpieza acotada de warnings, **sigue pendiente y no se ha iniciado**.
 - **Compatibilidad cerrada — 23 de octubre de 2026:** `desktop-awake-20261023` aprobó **100/100 en una sola corrida, 50 WebKit y 50 Firefox**, 4069,33 s (67,82 min), salida 0, cero omitidas/inestables/reintentos/errores externos y **272 archivos congelados sin cambios**. Ambos respaldos conservaron documento y CMS real; el guard temporal de suspensión quedó restaurado. Resultados y límites al final.
 - Las comprobaciones anteriores conservan sus fechas: **340 unitarias/22 archivos, tipos/build/PWA y 16 E2E Chromium afectados** del 16; cuatro Chromium de audio/reset del 19. El nuevo verify del 23 pertenece al bloque PWA; no se volvió a ejecutar la suite de compatibilidad ni se suman sus resultados para inventar una corrida conjunta mayor.
@@ -568,3 +570,12 @@ Alcance: Chromium/Windows, dos builds locales y un mismo origen. No acredita pub
 La primera recarga manual de una pestaña antigua que no contiene el cliente virtual se mantiene como **límite inferido, no recorrido verificado**: ese documento no incorpora todavía el código nuevo de refresco. El caso A→B aprobado parte de un build A con el cliente y comprueba la actualización detectada siguiente. Detalle y comandos en [RECORRIDOS_LOCALES.md](RECORRIDOS_LOCALES.md).
 
 No se activó Supabase ni se desplegó, cambió modelo/modalidad o consumió reserva/reset. `main`, `origin/main` y el stash histórico se preservan. El commit nuevo y su envío normal a la rama autorizada se comprobarán al preparar la entrega; no se inventa un hash futuro. **Siguiente propuesta: limpieza acotada de warnings, pendiente y no iniciada.**
+
+
+## Checkpoint de avisos técnicos — 23 de octubre de 2026
+
+Sobre `2fb4eb4`, `vite.config.ts` separa React y las fronteras naturales `three.core.js`/`three.module.js` mediante grupos de Rolldown. No se cambia el umbral de 500 kB, paquetes ni código de escenas. La entrada pasa de 548,69 a 327,41 kB; CanvasActivityController de 882,12 a 159,00 kB. Los grupos React/core/renderer miden 230,82/372,57/355,85 kB; máximo 372,57 kB. No equivale a reducir el total descargado: el precache pasa de 1670,05 a 1675,81 KiB, 26 a 29 entradas. Desaparece el aviso de chunks grandes, no el import dinámico ineficaz.
+
+Comprobaciones reales: build/PWA salida 0; actualización A→B 1/1 (41,140315 s de reporte), Universo compilado 1/1 (22,347350 s), Chromium/Windows, sin reintentos, omitidas, inestables ni errores externos. El segundo usa el test existente de pausa/selección/giro reducido con config temporal de preview: no acredita toda la UI de producción. Ambos conservaron 275 archivos y restauraron el guard temporal. No se repitieron unitarias por este cambio de empaquetado. Evidencia local en `.git/codex-checkpoints/warnings-20261023/`; no viaja con Git. Referencia de grupos: https://rolldown.rs/reference/OutputOptions.codeSplitting.
+
+Pendientes: `supabaseSyncService` sigue importado estática y dinámicamente; revisar la frontera sin activar el backend ni convertir la API local en async. El aviso Clock viene de Fiber 9.6.1, que crea THREE.Clock con Three 0.184.0; nuestro canvasClock usa esa API. Timer no es sustitución directa: no se parcheó node_modules ni se filtró console.warn. La migración de dependencias queda por decidir y verificar. El bloque warnings sigue abierto; el siguiente audio WebKit aún no se inicia. Mantener trabajo local, sin despliegues/Supabase ni cambios de modalidad/resets. Checkpoint preparado por uso normal próximo a agotarse.
