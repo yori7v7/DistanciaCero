@@ -4,9 +4,11 @@ Plantilla de un universo romántico con cartas, recuerdos, música y escenas 3D.
 
 Los siete pasos del refactor y pulido local quedaron cerrados el 10 de octubre de 2026. La validación final aprobó tipos, 338 unitarias, 50 recorridos de navegador y preview/offline. El [documento de avance](docs/AVANCE_PULIDO_LOCAL.md) conserva resultados, límites y puntos de recuperación. El backend permanece desactivado y la aplicación no se ha publicado en esta etapa.
 
+La etapa posterior de compatibilidad quedó cerrada el **23 de octubre de 2026**: **100/100 recorridos en una sola corrida, 50 en Firefox y 50 en WebKit**, en Windows, sin omitidas, inestables ni reintentos. El [punto de continuación entre equipos](docs/TRABAJO_ENTRE_EQUIPOS.md) separa ese cierre de los trabajos futuros.
+
 ## Ejecutar localmente
 
-Requisitos: Node.js 22.12 o posterior de la rama 22 y npm. El Vite instalado también admite Node 20.19 o posterior; CI utiliza Node 22.
+Para seguir esta guía, utilizar Node.js 22.13 o posterior de la rama 22, o Node 24 o posterior, y npm. El lockfile de jsdom exige al menos 22.13 en la rama 22; el mínimo de Vite por sí solo (22.12 en esa rama) no basta para todas las dependencias. CI utiliza Node 22.
 
 ```powershell
 npm ci
@@ -52,11 +54,14 @@ La [guía de edición](GUIA_PARA_EDITAR.md) explica bloqueos manuales, simulaci�
 npm run verify:local       # Tipos → unitarias → build; remoto desactivado
 npm run test:e2e           # Recorridos de desarrollo, Chromium
 npm run test:e2e:preview   # Build ya generado; PWA y offline en preview
+npm run test:e2e:cross-browser # Recorridos de desarrollo, Firefox y WebKit
 ```
 
-En una instalación nueva, preparar el navegador de pruebas con `npx playwright install chromium`. Para pruebas individuales: `npm test -- src/__tests__/contentService.test.ts`.
+En una instalación nueva, preparar Chromium con `npx playwright install chromium` y los motores adicionales con `npx playwright install firefox webkit`. Se descargan los motores de la versión de Playwright del lockfile. Para pruebas individuales: `npm test -- src/__tests__/contentService.test.ts`.
 
-La validación final del 10 de octubre aprobó **338 unitarias en 22 archivos, los 50 E2E en una sola corrida y un recorrido de preview/PWA/offline**, sin reintentos de navegador. Incluye los diez casos de interfaz y cinco tamaños de pantalla en Chromium. Resultados exactos y límites en el [avance](docs/AVANCE_PULIDO_LOCAL.md); no se ha ejecutado CI ni comprobado otros navegadores en esta etapa.
+La validación final del 10 de octubre aprobó **338 unitarias en 22 archivos, los 50 E2E en una sola corrida y un recorrido de preview/PWA/offline**, sin reintentos de navegador. Incluye los diez casos de interfaz y cinco tamaños de pantalla en Chromium. La corrección posterior de foco/puntero se comprobó el 16 de octubre con **340 unitarias en 22 archivos, tipos/build/PWA y 16 E2E Chromium afectados**; el 19 pasaron los cuatro casos Chromium de audio/reset con los fixtures finales. Son comprobaciones distintas, conservadas con sus fechas.
+
+El 23 de octubre, Firefox y WebKit aprobaron juntos los **100 E2E**, en 67,82 minutos, con perfiles sintéticos y 272 archivos congelados sin cambios. WebKit se ejecutó con densidad de pantalla 1. Esta cobertura en Windows no acredita Safari/macOS/iPhone reales, certificación WCAG ni PWA entre versiones. No se ejecutó CI desde este trabajo local. Resultados y límites en el [avance](docs/AVANCE_PULIDO_LOCAL.md) y los [recorridos](docs/RECORRIDOS_LOCALES.md).
 
 Durante E2E de desarrollo, dejar congelados también los documentos: el escáner de Tailwind puede recargar la página al editar Markdown. Actualizar notas después de terminar las pruebas.
 

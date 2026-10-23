@@ -1,6 +1,6 @@
 # Pendientes — Distancia Cero
 
-Estado del 10 de octubre de 2026. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) están cerrados. Los resultados y las copias de recuperación están en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md).
+Estado del **23 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; el bloque posterior de compatibilidad Firefox/WebKit cerró el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
 
 ## Trabajo local terminado
 
@@ -15,13 +15,19 @@ Estado del 10 de octubre de 2026. Los siete pasos de [el plan de pulido local](d
 - [x] **Paso 6 — documentación:** README, contexto de agentes, guía, contratos y pendientes alineados; 13 documentos sin enlaces locales rotos. Revisión independiente y reglas de recuperación documentadas.
 - [x] **Paso 7 — entrega final:** 338 unitarias, tipos/build, **50 E2E en una sola corrida y 1 preview/offline**, sin reintentos. Scrolls de foco corregidos y comprobados, diff revisado y copia final de recuperación guardada.
 
+## Compatibilidad posterior terminada — 23 de octubre
+
+- [x] Corrección de foco durante gestos de puntero y dos regresiones: **340 unitarias/22 archivos, tipos/build/PWA y 16 Chromium afectados**, comprobados el 16 de octubre. Los cuatro casos Chromium de audio/reset con los fixtures finales pasaron el 19.
+- [x] **100/100 E2E en una corrida**, 50 WebKit y 50 Firefox, 67,82 min, cero omitidas/inestables/reintentos/errores externos y 272 archivos congelados. Documento y CMS conservados en ambos respaldos; guard temporal de suspensión restaurado al finalizar.
+
 ## Trabajo local pendiente
 
-No quedan tareas abiertas dentro del alcance acordado de los pasos 1–7. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
+Los pasos 1–7 y la compatibilidad posterior están terminados. El siguiente bloque propuesto es comprobar PWA entre versiones; **sigue pendiente y no se ha iniciado**. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
 ## Límites y deuda visible
 
-- La cobertura visual/teclado se comprobó en Chromium y cinco tamaños; queda una revisión futura en navegadores y dispositivos reales, sin declarar certificación WCAG completa.
+- La cobertura de desarrollo incluye Chromium (comprobaciones del 10/16/19) y Firefox/WebKit de Playwright en Windows (23), con cinco tamaños y WebKit densidad 1. No acredita Safari/macOS/iPhone reales, otros dispositivos ni certificación WCAG completa.
+- WebKit 26.5 en este Windows reprodujo fuera de la aplicación una pausa nativa al cruzar el loop de un WAV de 20 s, con volumen cero y pausa/reanudación cerca del final. El síntoma está observado; su causa interna no está explicada. El WAV de 300 s de las pruebas evita ese límite durante los controles, sin declarar corregido el loop ni extrapolar a otros formatos/equipos.
 - La PWA se comprobó con el build actual previamente cargado. Falta probar una actualización entre releases; medios externos no tienen garantía offline.
 - Se conservan avisos de tamaño de chunks/import dinámico y de `THREE.Clock`. No impidieron los recorridos locales; valorar su limpieza en un bloque acotado posterior.
 - Algunas estructuras de contenido conservan campos dinámicos y casts históricos; el CMS y el lector compartido tienen tipos concretos. Ampliar tipado solo con un alcance y regresiones claros.

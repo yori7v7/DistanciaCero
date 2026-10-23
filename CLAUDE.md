@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Contexto y reglas compartidas para Claude Code y Codex. Estado contrastado con el código, el lockfile y los resultados finales al cerrar el plan el 10 de octubre de 2026. Antes de continuar, consultar [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md) y [AGENTS.md](AGENTS.md).
+Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 10 de octubre de 2026; la etapa posterior de compatibilidad cerró el 23 de octubre con 100/100 E2E Firefox/WebKit. Los resultados conservan sus fechas en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md). Antes de continuar, consultar también [AGENTS.md](AGENTS.md) y el [punto de continuación entre equipos](docs/TRABAJO_ENTRE_EQUIPOS.md).
 
 ## ¿Qué es?
 
@@ -20,7 +20,7 @@ Contexto y reglas compartidas para Claude Code y Codex. Estado contrastado con e
 | Publicación | Script heredado de GitHub Pages y configuración Vercel; fuera de la etapa local |
 | PWA | vite-plugin-pwa (manifest, autoUpdate) |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (22 archivos, 338 tests; verificado en el paso 7) |
+| Tests | Vitest + @testing-library/react (22 archivos, 340 tests; verificado el 16 de octubre; el paso 7 cerró con 338) |
 | CI | GitHub Actions: tipos, build, unitarias y job E2E (Node 22, Ubuntu); no ejecutado desde esta etapa local |
 
 ## Rutas
@@ -47,11 +47,12 @@ npm run test:watch       # Tests en modo watch
 npm test -- src/__tests__/FileName.test.ts     # Un solo archivo de tests
 npm run test:e2e         # Recorridos de desarrollo, Chromium
 npm run test:e2e:preview # Preview/PWA después del build
+npm run test:e2e:cross-browser # Desarrollo, Firefox y WebKit; puerto 5174
 ```
 
 Instalar con `npm ci` conserva las versiones del lockfile. React, React DOM, lucide-react y el plugin React tienen versiones exactas alineadas con ese archivo; ya no usan `latest`. `verify:local` utiliza los ejecutables instalados, funciona en Windows y otros sistemas, y se detiene en el primer fallo. Los recorridos de navegador se ejecutan por separado.
 
-Requisito instalado de Vite: Node `^20.19.0 || >=22.12.0`; para reproducir CI utilizar Node 22.12 o posterior de la rama 22. En un checkout nuevo, `npx playwright install chromium` prepara el navegador E2E. No se reinstalaron dependencias ni se ejecutó CI en el pulido local.
+Requisito instalado de Vite: Node `^20.19.0 || >=22.12.0`; jsdom 29.1.1 del lockfile declara `^20.19.0 || ^22.13.0 || >=24.0.0`. Para seguir la preparación entre equipos, utilizar Node 22.13 o posterior de la rama 22, o Node 24 o posterior; para reproducir CI, la rama 22. En un checkout nuevo, `npx playwright install chromium` prepara Chromium y `npx playwright install firefox webkit` los otros motores. La laptop instaló dependencias y motores el 20 de octubre sin cambiar el lockfile; no se ejecutó CI desde este trabajo local.
 
 Congelar todos los archivos observados mientras corren E2E de desarrollo, incluida la documentación: Tailwind puede enviar `full-reload` al cambiar Markdown. Guardar notas provisionales en `.git/codex-checkpoints` y actualizar los documentos al terminar. Evitar ejecutar suites simultáneas en este equipo.
 
@@ -273,6 +274,8 @@ Template seguro en `.env.example`. Valores reales van en `.env.local` (no commit
 - El lector compartido tiene tipos `LetterContent`; sus pruebas cubren ambas colecciones, simulación, lectura y reset. El CMS conserva sus formularios al actualizar progreso mediante eventos, sin cambiar su key ni recargar la página.
 - Navegación deriva la escena del hash; el router usa `useTransitions={false}` para actualizar pronto la visibilidad. Audio coordina escena/ambiente/playlist, permite cancelar cargas y muestra errores. Reglas y límites de PWA en `docs/RECORRIDOS_LOCALES.md`.
 - El paso 7 aprobó el 10 de octubre los 50 E2E en una única corrida y un preview/offline, con cero omitidas, inestables o reintentos. Incluye los diez casos UI en cinco tamaños; las 338 unitarias y el build también pasaron. El cierre documental es del 10 de octubre. Consultar el avance para evidencia y límites; los fallos anteriores siguen registrados como históricos.
+- La corrección posterior de foco durante gestos de puntero (`904203f`) añadió dos regresiones. El 16 de octubre se aprobaron 340 unitarias/22 archivos, tipos/build/PWA y 16 Chromium afectados; el 19, cuatro Chromium de audio/reset con los fixtures finales. No presentar estas comprobaciones como ejecutadas el 23.
+- Compatibilidad cerrada el 23 de octubre: `desktop-awake-20261023`, **100/100 en una sola corrida**, 50 WebKit y 50 Firefox, 67,82 min, cero omitidas/inestables/reintentos/errores externos y 272 archivos congelados. Ambos respaldos conservaron documento y CMS real. Motores Playwright en Windows, WebKit densidad 1; no acredita Safari/iPhone reales ni actualización PWA entre releases. Configuración, presupuestos, recurso HTTP de audio y límites en [RECORRIDOS_LOCALES.md](docs/RECORRIDOS_LOCALES.md).
 
 ### Escenas y lectores
 
