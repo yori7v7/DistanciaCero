@@ -27,7 +27,7 @@ Estado del **23 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 
 ## Trabajo local pendiente
 
-Los pasos 1–7, la compatibilidad posterior y la actualización PWA local están terminados. La limpieza de avisos de la aplicación quedó comprobada; se conserva la deprecación externa de Clock. El siguiente bloque autorizado es investigar el audio WebKit, todavía pendiente. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
+Los pasos 1–7, la compatibilidad posterior y la actualización PWA local están terminados. La limpieza de avisos de la aplicación quedó comprobada; se conserva la deprecación externa de Clock. El bloque de audio WebKit está en investigación: la pausa nativa se repitió fuera de la aplicación con volumen cero y uno; falta delimitar formato/duración y decidir si corresponde un ajuste local. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
 ## Límites y deuda visible
 

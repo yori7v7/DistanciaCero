@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Audio WebKit en investigación, 23 de octubre:** repetición nativa sobre `068788a` con volúmenes 0 y 1: ambas cruzan un loop y quedan pausadas a tiempo cero, fuera de la aplicación. No hay corrección de reproductor demostrada; continuación al final.
+
 - **Avisos de aplicación cerrados, 23 de octubre:** chunks e import dinámico corregidos; 343 unitarias/23 archivos, tipos/build/PWA y PWA/Universo aprobados. Clock continúa como deprecación externa conocida. Siguiente bloque autorizado: audio WebKit.
 
 - Antecedente: el checkpoint de chunks del 23 quedó en `bff3bb4`; el cierre posterior de imports y su evidencia se registran al final.
@@ -592,3 +594,14 @@ Resultados: tipos y build/PWA aprobados; 343 unitarias en 23 archivos (106,04 s)
 Clock lo instancia Fiber 9.6.1 con Three 0.184.0. Se consultó además el tarball oficial de Fiber estable 9.8.2, que todavía usa `new THREE.Clock()`; no se instaló. Timer tiene otra API (https://threejs.org/docs/pages/Timer). Migrar el bucle de Fiber requiere otra compatibilidad, no sustituir nuestro reloj o filtrar console.warn. Queda visible como deuda externa, sin actualización mayor/canary. No constituye una falla funcional demostrada.
 
 Se cierra el bloque de avisos corregibles de aplicación, manteniendo esa deprecación externa. No se activó Supabase, desplegó, cambió modalidad ni consumió resets. Siguiente trabajo autorizado: investigar el loop de audio WebKit antes de ampliar tipado o dispositivos. El commit y push se verifican al guardar esta entrega.
+
+
+## Audio WebKit — checkpoint de investigación del 23 de octubre
+
+El cierre de avisos quedó publicado en `068788a`. A continuación se repitió la sonda nativa original del 19, sin React/aplicación, sin seek, intercepción de media ni reloj falso, con botones reales y HTTP loopback. Mismo WAV silencioso PCM de 20 s, 8 kHz/16-bit/mono; WebKit 26.5/Windows, densidad 1, perfiles aislados. Se comparan volúmenes 0 y 1, sin instalar/cambiar motores.
+
+En ambas observaciones, Pause/Resume ocurre cerca del final (19,8736 y 19,8505 s), las dos promesas play se resuelven, cruza una vuelta y aparece pause nativo trusted a tiempo cero, sin MediaError; no avanza más de dos segundos durante los siete observados. La pausa no requiere volumen cero en estas condiciones. No se deduce una causa interna, ni se extrapola a MP3, WAV no silencioso, Safari real o todas las duraciones. Es evidencia del caso fuera de la aplicación, no prueba de una corrección ni dos casos funcionales aprobados.
+
+Ambas sondas finalizaron con salida 0, cero errores JS y 277 archivos congelados; el guard temporal se restauró. Evidencia local en `.git/codex-checkpoints/audio-loop-20261023/`: `state.json`, `native-loop-vol0.json`, `native-loop-vol1.json`, sonda y logs. Esos archivos no viajan con Git.
+
+El bloque de audio sigue abierto. Próximo: contrastar formato/duración y contenido del audio con controles nativos antes de proponer un workaround; revisar luego si afecta un recurso real de la app. No añadir reproducción automática al recibir pause, porque podría contradecir pausa voluntaria/salida/cancelación. No se modificó el reproductor ni se ampliaron las aserciones para ocultar la pausa. El WAV largo de E2E sigue acreditando controles, no este loop corto. Guardado como checkpoint al quedar cerca del límite normal; sin reserva/reset/modelo alterno, Supabase o despliegues.
