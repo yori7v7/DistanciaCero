@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-- **Audio WebKit en investigación, 23 de octubre:** repetición nativa sobre `068788a` con volúmenes 0 y 1: ambas cruzan un loop y quedan pausadas a tiempo cero, fuera de la aplicación. No hay corrección de reproductor demostrada; continuación al final.
+- **Investigación inicial de audio delimitada, 24 de octubre:** 16 pausas nativas en WebKit 26.5/27.2 Windows y dos controles Chromium con dos vueltas/avance, WAV y MP3. El límite continúa sin corregirse; no hay defecto de aplicación demostrado. Siguiente bloque autorizado: tipado focalizado. Evidencia y límites al final.
 
 - **Avisos de aplicación cerrados, 23 de octubre:** chunks e import dinámico corregidos; 343 unitarias/23 archivos, tipos/build/PWA y PWA/Universo aprobados. Clock continúa como deprecación externa conocida. Siguiente bloque autorizado: audio WebKit.
 
@@ -605,3 +605,29 @@ En ambas observaciones, Pause/Resume ocurre cerca del final (19,8736 y 19,8505 s
 Ambas sondas finalizaron con salida 0, cero errores JS y 277 archivos congelados; el guard temporal se restauró. Evidencia local en `.git/codex-checkpoints/audio-loop-20261023/`: `state.json`, `native-loop-vol0.json`, `native-loop-vol1.json`, sonda y logs. Esos archivos no viajan con Git.
 
 El bloque de audio sigue abierto. Próximo: contrastar formato/duración y contenido del audio con controles nativos antes de proponer un workaround; revisar luego si afecta un recurso real de la app. No añadir reproducción automática al recibir pause, porque podría contradecir pausa voluntaria/salida/cancelación. No se modificó el reproductor ni se ampliaron las aserciones para ocultar la pausa. El WAV largo de E2E sigue acreditando controles, no este loop corto. Guardado como checkpoint al quedar cerca del límite normal; sin reserva/reset/modelo alterno, Supabase o despliegues.
+
+
+## Delimitación del audio nativo — 24 de octubre de 2026
+
+Sobre `e184c4c`, se cerró la investigación inicial mediante matriz nativa, sin cambiar fuentes, reproductor, lockfile, versiones del proyecto ni datos del usuario. La revisión no encontró fallo de WAV/rangos HTTP que explicara el síntoma, ni una ruta nueva de cancelación defectuosa. Solo la música de escenas usa loop; el evento pause invalida solicitudes, cancela fade/timer y devuelve el control a Reproducir. La cobertura unitaria previa de pause/ended/error sigue siendo la comprobación del código; no se repitieron tipos/unitarias/build por esta investigación sin cambios de aplicación.
+
+| Condición nativa | WebKit 26.5 | WebKit 27.2 |
+| --- | --- | --- |
+| WAV silencioso 8 kHz, 20 s, continuo | Pausa estable | Pausa estable |
+| Mismo WAV, pausa a unos 3 s | Pausa estable | Pausa estable |
+| Mismo WAV, pausa cerca del final | Pausa estable | Pausa estable |
+| WAV con tono 8 kHz, 20 s, cerca del final | Pausa estable | Pausa estable |
+| WAV con tono 44,1 kHz, 20 s, cerca del final | Pausa estable | Pausa estable |
+| WAV con tono 8 kHz, 4 s, cerca del final | Pausa estable | Pausa estable |
+| MP3 de prueba, cerca del final | Pausa estable | Pausa estable |
+| Mismo MP3, continuo | Pausa estable | Pausa estable |
+
+Chromium 151.0.7922.34 completó dos vueltas y avanzó tanto con el WAV de 20 s/pausa cercana al final como con el MP3 continuo. El MP3 es el asset Apache-2.0 de microsoft/playwright `tests/assets/example.mp3`, commit `b335271cdc2b57cac2be8ad37c5dd283ac6b8938`, 48465 bytes, SHA-256 `2024cb48249894b49bb8204cf1e395465e6f1e518e59fcd72da36628333a06ac`; ya estaba en el checkpoint, no se añadió al proyecto. Duración informada aproximada: 12,0686 s en WebKit y 12,0373 s en Chromium; se usaron los mismos bytes, no se forzó una duración.
+
+Los 18 casos son observaciones, no 18 E2E funcionales aprobados: 16 pausas estables y dos controles con dos vueltas/avance. Cada documento permaneció visible y con foco; no hubo errores JS o de infraestructura. Los tres runners finalizaron con salida 0, 277 archivos congelados y guard temporal restaurado. Los eventos y posiciones reales de Pause/Resume se conservaron; no hubo seeks, fake clocks ni interceptación de media. En el WAV de cuatro segundos de baseline, el contador de muestras vio cero descensos porque el reinicio ocurrió antes de la primera observación; los eventos y posición cero/pausa no permiten inventar un total exacto de vueltas.
+
+La comparación utilizó playwright-core 1.64.1/WebKit 27.2 en una instalación privada bajo `.git/codex-checkpoints/audio-matrix-20261024/`, sin modificar el package.json, lockfile o caché global del proyecto. No resolvió el síntoma, por lo que no justifica actualizar esas dependencias como arreglo. Evidencia: `baseline-162/` (9 observaciones), `compare-164/` (8), `chromium-mp3/` (1), supervisores, fuentes de las sondas y `validated-summary.json`. No viaja con Git; este resumen conserva los factores y resultados necesarios para otro equipo.
+
+El problema permanece fuera de la aplicación en los motores/condiciones probados. No se atribuye a una causa interna específica ni a todo Safari. El antecedente WebKit 302541 describe un síntoma parecido, pero es Linux/WebKitGTK/GStreamer y no demuestra la causa de este Windows. La [documentación de Playwright](https://playwright.dev/docs/browsers) distingue motores/plataformas y codecs. No hay canciones reales dentro de public para atribuir impacto a una canción original; escenas con rutas vacías y ambiente ausente mantienen el tratamiento de archivos no disponibles ya documentado.
+
+Se cierra la investigación inicial con la limitación visible, sin afirmar que el loop está arreglado ni añadir auto-reproducción al recibir pause. Cualquier corrección futura requiere otro caso verificable y preservar pausa voluntaria, salida y cancelación. El WAV largo E2E acredita controles, no el loop. Próximo bloque autorizado: revisar tipado donde exista un beneficio concreto. Sin Supabase, despliegues ni cambios de modalidad/resets.
