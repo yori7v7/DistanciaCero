@@ -10,7 +10,7 @@ import type { Session, User } from '@supabase/supabase-js'
 import { getSupabaseClient, isRemoteContentEnabled } from '../integrations/supabase/client'
 import { getCurrentUser, setCurrentUser } from './authService'
 import { getProfileById } from './profileService'
-import { resetSpaceIdCache } from './supabaseSyncService'
+import { resetSpaceIdCache } from './remoteSpaceCache'
 import { DEFAULT_LOCAL_USER_ID } from '../constants/localUsers'
 
 type SessionListener = (session: Session | null) => void

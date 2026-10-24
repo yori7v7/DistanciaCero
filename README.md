@@ -81,3 +81,5 @@ Para trabajar en el código, leer [CLAUDE.md](CLAUDE.md) y [AGENTS.md](AGENTS.md
 ## Uso
 
 Libre para uso personal y portafolio. Modifica, comparte y adapta como quieras.
+
+El mantenimiento local del 23 de octubre resolvió los avisos de tamaño de chunks e import dinámico: tipos, 343 unitarias/23 archivos, build/PWA y regresiones PWA/Universo aprobados. Clock permanece como deprecación de Fiber, sin ocultarla ni cambiar dependencias. Estado y límites en el avance.

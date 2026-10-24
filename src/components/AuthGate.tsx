@@ -9,8 +9,12 @@ import {
   onSessionChange
 } from '../services/supabaseAuthService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
-import { pullFromSupabase } from '../services/supabaseSyncService'
 import { notifyAllContentUpdated } from '../services/contentService'
+
+async function pullFromSupabase() {
+  const { pullFromSupabase: pull } = await import('../services/supabaseSyncService')
+  return pull()
+}
 
 async function ensureSpaceSetup() {
   const client = getAuthenticatedClient()

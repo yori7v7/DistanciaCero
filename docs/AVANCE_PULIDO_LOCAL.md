@@ -2,7 +2,9 @@
 
 ## Estado actual
 
-- **Checkpoint de warnings, 23 de octubre:** división de chunks aprobada (build, PWA A→B y Universo compilado); bloque todavía abierto. Resolver imports antes de pasar a audio.
+- **Avisos de aplicación cerrados, 23 de octubre:** chunks e import dinámico corregidos; 343 unitarias/23 archivos, tipos/build/PWA y PWA/Universo aprobados. Clock continúa como deprecación externa conocida. Siguiente bloque autorizado: audio WebKit.
+
+- Antecedente: el checkpoint de chunks del 23 quedó en `bff3bb4`; el cierre posterior de imports y su evidencia se registran al final.
 
 - **PWA entre dos builds locales cerrada — 23 de octubre de 2026:** el caso A→B aprobó **1/1 en Chromium/Windows**, con contenido/progreso guardados y B offline; `verify:local` aprobó tipos, **340 unitarias/22 archivos** y build/PWA, y preview/offline **1/1**. Son comprobaciones separadas del cierre de compatibilidad. Alcance y resultados al final; la siguiente propuesta, limpieza acotada de warnings, **sigue pendiente y no se ha iniciado**.
 - **Compatibilidad cerrada — 23 de octubre de 2026:** `desktop-awake-20261023` aprobó **100/100 en una sola corrida, 50 WebKit y 50 Firefox**, 4069,33 s (67,82 min), salida 0, cero omitidas/inestables/reintentos/errores externos y **272 archivos congelados sin cambios**. Ambos respaldos conservaron documento y CMS real; el guard temporal de suspensión quedó restaurado. Resultados y límites al final.
@@ -579,3 +581,14 @@ Sobre `2fb4eb4`, `vite.config.ts` separa React y las fronteras naturales `three.
 Comprobaciones reales: build/PWA salida 0; actualización A→B 1/1 (41,140315 s de reporte), Universo compilado 1/1 (22,347350 s), Chromium/Windows, sin reintentos, omitidas, inestables ni errores externos. El segundo usa el test existente de pausa/selección/giro reducido con config temporal de preview: no acredita toda la UI de producción. Ambos conservaron 275 archivos y restauraron el guard temporal. No se repitieron unitarias por este cambio de empaquetado. Evidencia local en `.git/codex-checkpoints/warnings-20261023/`; no viaja con Git. Referencia de grupos: https://rolldown.rs/reference/OutputOptions.codeSplitting.
 
 Pendientes: `supabaseSyncService` sigue importado estática y dinámicamente; revisar la frontera sin activar el backend ni convertir la API local en async. El aviso Clock viene de Fiber 9.6.1, que crea THREE.Clock con Three 0.184.0; nuestro canvasClock usa esa API. Timer no es sustitución directa: no se parcheó node_modules ni se filtró console.warn. La migración de dependencias queda por decidir y verificar. El bloque warnings sigue abierto; el siguiente audio WebKit aún no se inicia. Mantener trabajo local, sin despliegues/Supabase ni cambios de modalidad/resets. Checkpoint preparado por uso normal próximo a agotarse.
+
+
+## Cierre de avisos de aplicación — 23 de octubre de 2026
+
+Después de `bff3bb4`, se separa la caché pura en `remoteSpaceCache`: AuthGate carga sync dinámicamente y auth invalida el espacio síncronamente, antes de acceder al cliente o esperar un logout. Sync reexporta reset para conservar su API. Tres regresiones comprueban caché compartida, logout local sin cliente y una operación remota simulada pendiente; no se conecta ningún backend.
+
+Resultados: tipos y build/PWA aprobados; 343 unitarias en 23 archivos (106,04 s), PWA A→B 1/1 (30,014084 s), Universo compilado 1/1 (14,248805 s), Chromium/Windows. Ambos E2E sin omitidas/inestables/reintentos/errores externos. Los tres runners conservaron 277 archivos y restauraron sus guards. Evidencia y resumen validado en `.git/codex-checkpoints/warnings-imports-20261023/`, solo local. El build deja de emitir avisos de tamaño/import dinámico: entrada 321,65 kB, máximo 372,57 kB; precache 30 entradas/1676,23 KiB. No se afirma reducción del total descargado. El mensaje variable PLUGIN_TIMINGS de Rolldown es una medición, no un defecto ocultado.
+
+Clock lo instancia Fiber 9.6.1 con Three 0.184.0. Se consultó además el tarball oficial de Fiber estable 9.8.2, que todavía usa `new THREE.Clock()`; no se instaló. Timer tiene otra API (https://threejs.org/docs/pages/Timer). Migrar el bucle de Fiber requiere otra compatibilidad, no sustituir nuestro reloj o filtrar console.warn. Queda visible como deuda externa, sin actualización mayor/canary. No constituye una falla funcional demostrada.
+
+Se cierra el bloque de avisos corregibles de aplicación, manteniendo esa deprecación externa. No se activó Supabase, desplegó, cambió modalidad ni consumió resets. Siguiente trabajo autorizado: investigar el loop de audio WebKit antes de ampliar tipado o dispositivos. El commit y push se verifican al guardar esta entrega.

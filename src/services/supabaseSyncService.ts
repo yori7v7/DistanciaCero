@@ -15,6 +15,9 @@ import { isSupabaseAuthenticated, getAuthenticatedClient, getSupabaseUserId } fr
 import * as localContentRepository from '../repositories/localContentRepository'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { getLocalSpaceId } from '../utils/localIdentityStore'
+import { getCachedSpaceId, setCachedSpaceId } from './remoteSpaceCache'
+
+export { resetSpaceIdCache } from './remoteSpaceCache'
 
 interface SupabaseContentRow {
   id: string
@@ -33,7 +36,6 @@ interface SupabaseContentRow {
 
 // ---- helpers ---------------------------------------------------------------
 
-let _cachedSpaceId: string | null = null
 let lastSyncError: string | null = null
 
 /**
@@ -45,15 +47,6 @@ export function getLastSyncError(): string | null {
   return lastSyncError
 }
 
-/**
- * Clears the cached space id. MUST be called on sign-out so the next account
- * cannot resolve (and read) the previous account's space — prevents
- * cross-account data leakage.
- */
-export function resetSpaceIdCache(): void {
-  _cachedSpaceId = null
-}
-
 function canSync(): boolean {
   return isRemoteContentEnabled() && isSupabaseAuthenticated()
 }
@@ -63,7 +56,8 @@ function canSync(): boolean {
  * Cached after first successful lookup.
  */
 async function resolveSpaceId(): Promise<string | null> {
-  if (_cachedSpaceId) return _cachedSpaceId
+  const cachedSpaceId = getCachedSpaceId()
+  if (cachedSpaceId) return cachedSpaceId
 
   const client = getAuthenticatedClient()
   if (!client) return null
@@ -77,8 +71,9 @@ async function resolveSpaceId(): Promise<string | null> {
 
     if (error || !data) return null
 
-    _cachedSpaceId = (data as { space_id: string }).space_id
-    return _cachedSpaceId
+    const spaceId = (data as { space_id: string }).space_id
+    setCachedSpaceId(spaceId)
+    return spaceId
   } catch (err) {
     console.warn('[sync] resolveSpaceId failed:', (err as Error).message)
     return null

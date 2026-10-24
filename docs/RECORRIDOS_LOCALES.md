@@ -102,3 +102,7 @@ Esta comprobación local no acredita despliegue real, propagación de CDN, otros
 Una pestaña antigua cargada sin el cliente virtual no contiene el nuevo código que coordina el refresco. Se infiere que necesita una primera recarga manual para incorporarlo; **esa transición legacy no se probó**. El recorrido aprobado parte de A con el cliente nuevo y acredita la actualización detectada siguiente A→B.
 
 Durante los E2E de desarrollo no editar archivos del proyecto, incluidos documentos: el escáner de Tailwind puede provocar una recarga completa al cambiar Markdown. Las notas y resultados temporales se guardan en `.git/codex-checkpoints`; la documentación se actualiza después.
+
+## Mantenimiento de empaquetado y caché interna
+
+El 23 de octubre se comprobaron los grupos de React/Three y la carga diferida de sincronización: 343 unitarias/23 archivos, tipos/build/PWA, PWA A→B 1/1 y Universo compilado 1/1 (Chromium/Windows, perfiles aislados). No se repitieron los 100 de compatibilidad. Desaparecen los avisos de tamaño e import dinámico; permanece Clock desde Fiber, no una excepción JS. Rolldown puede emitir métricas variables de tiempo de plugins: no son un fallo funcional ni se suprimieron. El backend continúa desactivado.

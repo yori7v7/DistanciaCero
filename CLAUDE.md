@@ -20,7 +20,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 | Publicación | Script heredado de GitHub Pages y configuración Vercel; fuera de la etapa local |
 | PWA | vite-plugin-pwa (manifest, autoUpdate) + cliente virtual `registerSW` en `main.tsx` |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (22 archivos, 340 tests; comprobados también el 23 de octubre; el paso 7 cerró con 338) |
+| Tests | Vitest + @testing-library/react (23 archivos, 343 tests; comprobados al cerrar avisos el 23 de octubre; el paso 7 cerró con 338) |
 | CI | GitHub Actions: tipos, build, unitarias y job E2E (Node 22, Ubuntu); no ejecutado desde esta etapa local |
 
 ## Rutas
@@ -109,7 +109,7 @@ src/
 │   ├── identity.ts          # LocalUser, RelationshipSpace
 │   ├── audio.ts
 │   └── env.d.ts
-├── __tests__/               # 22 archivos de test
+├── __tests__/               # 23 archivos de test
 └── styles/
     └── tailwind.css         # Design tokens y estilos de la experiencia
 ```
@@ -267,7 +267,7 @@ Template seguro en `.env.example`. Valores reales van en `.env.local` (no commit
 - `isPlainObject()` está en `helpers.ts` (no duplicar en componentes)
 
 ### Tests
-- 22 archivos en `src/__tests__/` con extensión `.test.ts` o `.test.tsx`
+- 23 archivos en `src/__tests__/` con extensión `.test.ts` o `.test.tsx`
 - Entorno: jsdom, setup: `src/test-setup.ts` (importa `@testing-library/jest-dom/vitest`), globals: true
 - Los tests de almacenamiento limpian localStorage entre casos; Vitest excluye E2E, node_modules, dist y copias de recuperación dentro de `.git`.
 - Usar `describe`/`it`/`expect` de vitest (importados explícitamente)
@@ -309,3 +309,7 @@ Una etapa remota posterior requerirá revisar contratos/schema, identidad real, 
 - [CONTEXTO_PROYECTO_CODEX.md](docs/CONTEXTO_PROYECTO_CODEX.md) e [HISTORIAL_GIT_CODEX.md](docs/HISTORIAL_GIT_CODEX.md): instantáneas del 13 de septiembre; no sustituir el estado vigente por sus recuentos.
 - La memoria de `.claude/memory/` es contexto opcional histórico; comprobar los archivos pertinentes. Sus permisos/hooks pertenecen a Claude Code y no configuran Codex.
 - Leer solo las skills pertinentes en `.agents/skills/` y contrastar instrucciones/documentación con la fuente actual.
+
+### Mantenimiento local posterior — 23 de octubre
+
+Los grupos React/Three de Vite conservan chunks bajo el umbral original de 500 kB. AuthGate carga el motor de sincronización dinámicamente; auth y sync comparten `remoteSpaceCache`, sin un import estático circular. El reset de espacio sigue siendo síncrono y la API anterior se reexporta. Verificados tipos, 343 unitarias/23 archivos, build/PWA y un caso PWA A→B más Universo compilado. Clock sigue siendo una deprecación de Fiber (también presente en el paquete estable 9.8.2 consultado, sin instalar); no parchear ni filtrar avisos. Esta comprobación no activa ni valida el backend remoto.
