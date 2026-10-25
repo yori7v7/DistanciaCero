@@ -123,7 +123,11 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — contratos de datos base cerrados, 25 de octubre de 2026
+## Punto de continuación — checkpoint PWA Windows, 25 de octubre de 2026
+
+El tipado quedó publicado en `5378bc5`. Esta entrega corrige el idioma del manifiesto a español; build y requisitos/offline en Chrome 156 aprobaron. El bloque PWA Windows sigue abierto: instalación y desinstalación temporal confirmadas en perfiles aislados, pero la inspección de la ventana standalone falló al asociar su target con Playwright. No acredita standalone/reapertura offline instalada ni un bug de aplicación. Todos los runners terminaron y las instalaciones temporales quedaron desinstaladas. Retomar la asociación directa del target CDP, con cleanup y sin tocar el perfil habitual; detalles y límites al final del avance. Safari real requiere otro equipo. Mantener restricciones locales y de uso normal.
+
+### Antecedente: contratos de datos base cerrados
 
 **Ampliación posterior del tipado sobre `d11e865`:** Diario, Universo, Playlist, Razones y Galería ya tienen contratos explícitos de entrada en `src/types/sections.ts`; `App` no conserva casts `as any`. Se mantienen IDs string/número, aliases del Diario, playlist externa sin `src`, recuerdos mínimos y Universo vacío. `verify:local` aprobó de nuevo tipos, **343/343 unitarias en 23 archivos** y build/PWA; 278 archivos congelados, guard restaurado, seis TSX transformados y los 24 assets JS idénticos a la referencia. Es comprobación de datos base, no validación runtime ni tipado completo del CMS. Resumen y evidencia al final del avance; recibir la entrega que contiene este punto.
 

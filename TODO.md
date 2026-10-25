@@ -40,7 +40,7 @@ Estado del **25 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 
 Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y este bloque acotado de tipado están terminados. La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 
-- [ ] Revisar instalación PWA local en Windows en un perfil aislado; siguiente bloque. El usuario confirmó el 25 que solo dispone de Windows.
+- [ ] Terminar la inspección de la ventana PWA instalada en Windows: requisitos/offline aprobados en Chrome 156 y manifiesto corregido a español. Instalación/desinstalación temporal confirmadas; standalone pendiente porque Playwright no encontró el target nativo. Detalles en el avance. El usuario solo dispone de Windows.
 - [ ] Validar Safari/macOS/iPhone cuando estén disponibles. Los motores de Playwright en Windows no sustituyen esas comprobaciones; no se ha iniciado esa validación.
 
 Cualquier ampliación de funciones, infraestructura o refactor del contenido dinámico requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.

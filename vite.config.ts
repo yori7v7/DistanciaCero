@@ -14,6 +14,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons.svg'],
       manifest: {
+        lang: 'es',
         name: 'Distancia Cero',
         short_name: 'Distancia Cero',
         description: 'Un universo digital para dos',

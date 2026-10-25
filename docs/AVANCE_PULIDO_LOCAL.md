@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Checkpoint PWA Windows, 25 de octubre:** idioma del manifiesto corregido; requisitos/offline aprobados en Chrome 156. Instalación/desinstalación temporal confirmadas, pero inspección standalone pendiente por asociación del target nativo. No se declara cerrado este bloque.
+
 - **Contratos de los cinco lectores restantes cerrados, 25 de octubre:** `App` sin casts `as any`; nuevos tipos de datos base, conservando el CMS dinámico. Tipos, 343/343 unitarias y build/PWA aprobados, 278 archivos congelados y JavaScript idéntico. El usuario confirmó que solo dispone de Windows: siguiente bloque, instalación PWA local en perfil aislado; Safari real queda pendiente de equipo.
 
 - **Tipado focalizado cerrado, 25 de octubre:** siete usos innecesarios de `any` retirados en `App` y navegación, sin cambiar JavaScript ni contratos del CMS. Tipos, **343/343 unitarias en 23 archivos** y build/PWA aprobados; 277 archivos conservados. Siguiente pendiente: dispositivos reales cuando estén disponibles. Alcance, evidencia y límites al final.
@@ -664,3 +666,12 @@ Revisión independiente sin hallazgos. `verify:local` salida 0: tipos, **343/343
 La revisión del 25 confirmó que Fiber instalado 9.6.1 y el tarball oficial estable 9.8.2 siguen creando `THREE.Clock`; este último SHA-256 `db98d14ff474684e018c6103437b85ba919b83b24c5a1fbf1f0deb58dd96d465`. No se instaló ni modificó una dependencia. [Timer](https://threejs.org/docs/pages/Timer.html) requiere otra API; no hay arreglo mínimo demostrado para eliminar esa deprecación sin modificar el contrato de Fiber. Se conserva como deuda externa, sin filtrar warnings. El loop nativo WebKit conserva la delimitación del 24, sin nuevo workaround.
 
 Siguiente bloque: revisar instalación PWA local en Windows con perfil aislado. Safari/macOS/iPhone permanece pendiente de equipo real. Sin Supabase, despliegues, cambios de modalidad, reserva o resets; commit y push normal se verifican al guardar esta entrega.
+
+
+## Checkpoint PWA Windows — 25 de octubre de 2026
+
+Sobre `5378bc5`, Chrome 156.0.8078.48 con perfiles propios detectó el manifiesto sin errores, icono y evento beforeinstallprompt, contexto seguro y service worker controlador. Contenido sintético guardado y Diario lazy funcionaron con conexión deshabilitada por Playwright. Se corrigió `lang: 'es'` en Vite: el plugin generaba `en` aunque el HTML declara `es`. Build/PWA y segunda comprobación de requisitos/offline aprobaron; no se repitieron unitarias por esta metadata. Hubo solicitudes a Google Fonts, no se afirma ausencia total de red externa.
+
+Se probó después instalación temporal vía CDP en otro perfil/origen loopback. Chrome confirmó registro y desinstalación al finalizar cada intento. El primer precheck abortó antes de instalar por no reconocer el texto Unknown web-app manifest id. El primer lanzamiento registrado abrió en modo browser: la revisión exacta de Chrome `d0c02bfad08ec92a6ffcf989e53cd995e6381a4c` usa esa preferencia inicial en la ruta CDP. Al seleccionar explícitamente standalone, el target devuelto no apareció entre las páginas de Playwright y la inspección agotó 20 s. Esto es un límite del harness, sin fallo de aplicación demostrado; **standalone y reapertura offline de la app instalada NO están acreditados**. No alterar el manifiesto ni afirmar éxito para ocultar ese timeout.
+
+Los seis supervisores finalizaron, conservaron 278 archivos y restauraron sus guards; los dos intentos que instalaron confirmaron desinstalación. No quedan runners activos ni una instalación temporal registrada. Evidencia local en `.git/codex-checkpoints/pwa-windows-20261025/`: baseline/fixed, estados, native-results y checkpoint-summary. No viaja con Git. Para retomar: perfil aislado, build local y asociación directa al target CDP de la ventana nativa, conservando cleanup; no repetir la matriz de audio. El usuario confirmó solo Windows; Safari real sigue pendiente. Checkpoint preparado al quedar 3% de uso normal; sin reserva, resets, backend ni despliegue.
