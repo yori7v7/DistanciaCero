@@ -9,6 +9,7 @@ import useDialogFocus from '../hooks/useDialogFocus'
 import { getScrollBehavior } from '../utils/motion'
 import useSceneActivity from '../hooks/useSceneActivity'
 import CanvasActivityController from './CanvasActivityController'
+import type { UniverseContent } from '../types/sections'
 
 const ORBIT_CONFIGS = [
   { radius: 6.4, speed: 0.105, flatten: 0.78, incline: 0.18, phase: 0.25, ring: false, moon: false },
@@ -395,7 +396,7 @@ function UniverseScene({ universe, activeWorld, cameraFocus, onSelect, reducedMo
   )
 }
 
-function UniverseSection({ universe }) {
+function UniverseSection({ universe }: { universe: UniverseContent }) {
   const { reducedMotion } = useSceneActivity('universo')
   const [activeWorld, setActiveWorld] = useState(null)
   const [cameraFocus, setCameraFocus] = useState(null)

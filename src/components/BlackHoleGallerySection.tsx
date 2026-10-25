@@ -9,6 +9,7 @@ import useDialogFocus from '../hooks/useDialogFocus'
 import { getScrollBehavior } from '../utils/motion'
 import useSceneActivity from '../hooks/useSceneActivity'
 import CanvasActivityController from './CanvasActivityController'
+import type { GalleryContent } from '../types/sections'
 
 function AccretionDiskLayer({
   inner = 1.15,
@@ -392,7 +393,7 @@ function BlackHoleScene({ items, hasEntered, onPick, onBlocked, reducedMotion })
   )
 }
 
-function BlackHoleGallerySection({ items = [] }) {
+function BlackHoleGallerySection({ items = [] }: { items?: GalleryContent[] }) {
   const { reducedMotion } = useSceneActivity('galeria-agujero-negro')
   const [localVersion, setLocalVersion] = useState(0)
   const visibleItems = useMemo(() => {

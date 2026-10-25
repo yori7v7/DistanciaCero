@@ -5,6 +5,7 @@ import { Heart, MousePointer2, X, ZoomIn } from 'lucide-react'
 import { mergeCollectionWithLocal } from '../services/contentService'
 import useDialogFocus from '../hooks/useDialogFocus'
 import useSceneActivity from '../hooks/useSceneActivity'
+import type { ReasonContent } from '../types/sections'
 
 const BALL_SIZE = 62
 const RADIUS = BALL_SIZE / 2
@@ -33,7 +34,7 @@ function shuffleArray(array) {
   return copy
 }
 
-function ReasonsSection({ reasons = [] }) {
+function ReasonsSection({ reasons = [] }: { reasons?: ReasonContent[] }) {
   const [allReasons, setAllReasons] = useState(() => mergeCollectionWithLocal(reasons, 'reasons'))
   const [selectedReason, setSelectedReason] = useState(null)
   const [isPausedByFocus, setIsPausedByFocus] = useState(false)

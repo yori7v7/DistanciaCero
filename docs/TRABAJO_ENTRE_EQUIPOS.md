@@ -123,11 +123,17 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — tipado focalizado cerrado, 25 de octubre de 2026
+## Punto de continuación — contratos de datos base cerrados, 25 de octubre de 2026
+
+**Ampliación posterior del tipado sobre `d11e865`:** Diario, Universo, Playlist, Razones y Galería ya tienen contratos explícitos de entrada en `src/types/sections.ts`; `App` no conserva casts `as any`. Se mantienen IDs string/número, aliases del Diario, playlist externa sin `src`, recuerdos mínimos y Universo vacío. `verify:local` aprobó de nuevo tipos, **343/343 unitarias en 23 archivos** y build/PWA; 278 archivos congelados, guard restaurado, seis TSX transformados y los 24 assets JS idénticos a la referencia. Es comprobación de datos base, no validación runtime ni tipado completo del CMS. Resumen y evidencia al final del avance; recibir la entrega que contiene este punto.
+
+**Siguiente bloque: revisar instalación PWA local en Windows con perfil aislado.** El usuario confirmó el 25 que solo dispone de Windows. Safari/macOS/iPhone queda pendiente de equipo real, sin sustituirlo por emulación. Clock y el loop nativo WebKit siguen como límites externos documentados; la revisión de Fiber del 25 no encontró una corrección de aplicación segura. No tocar el perfil habitual ni instalar una app en el sistema sin distinguir y controlar sus efectos. Mantener las restricciones locales, de uso normal y sincronización.
+
+### Antecedente: primer cierre acotado del tipado
 
 **Compatibilidad, PWA, avisos de aplicación y tipado focalizado cerrados; investigación inicial de audio delimitada el 24.** El nuevo bloque parte del cierre de audio publicado en `5ffe12d`: cinco casts de datos base retirados en `App`, inferencia del filtro y mapa `LucideIcon` en navegación. `npm.cmd run verify:local` aprobó tipos, **343/343 unitarias en 23 archivos** y build/PWA; 277 archivos congelados y guard restaurado. Los dos TSX transformados y los 24 assets JS compilados coinciden con sus referencias bajo la misma configuración local. No se repitieron E2E ni se modificaron datos, almacenamiento o dependencias. Recibir la entrega que contiene este punto, no confundirla con su baseline `5ffe12d`.
 
-**Siguiente pendiente: validar dispositivos reales cuando estén disponibles**, en particular Safari/macOS/iPhone e instalación PWA si se utiliza. Esta sesión de Windows no dispone de un dispositivo Apple; no presentar emulación o WebKit de Playwright como esa validación. No iniciar funciones nuevas, despliegues, Supabase ni un rediseño del contrato dinámico para sustituirla. Los cinco consumidores de `App` con props implícitas y los campos dinámicos del CMS permanecen como deuda acotada, sin declarar tipado estricto global. Detalles y reproducción local en el avance.
+Al cerrar aquel bloque quedaban cinco consumidores de `App` con props implícitas, resueltos por la ampliación registrada arriba. Los campos dinámicos del CMS permanecen; no se declara tipado estricto global. No iniciar funciones nuevas, despliegues, Supabase ni un rediseño del contrato dinámico para sustituir la validación en equipos reales.
 
 **Audio delimitado el 24:** sobre `e184c4c` se observaron ocho condiciones nativas en WebKit 26.5 y 27.2 Windows: las 16 quedaron pausadas al repetir audio WAV/MP3, incluso sin pausa/reanudación. Chromium completó dos vueltas y avanzó con el WAV y el mismo MP3. Son 18 observaciones, no E2E funcionales aprobados. Documento visible/con foco, sin errores JS/infra, 277 archivos congelados y guards restaurados. El loop sigue sin corregirse allí y no hay defecto de aplicación demostrado; no añadir autoresume ante pause.
 

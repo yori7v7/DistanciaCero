@@ -7,8 +7,9 @@ import { mergeCollectionWithLocal } from '../services/contentService'
 import { listFiles, deleteFile, getFileUrl } from '../services/storageService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { isSupabaseAuthenticated } from '../services/supabaseAuthService'
+import type { PlaylistContent } from '../types/sections'
 
-function PlaylistSection({ playlist = [] }) {
+function PlaylistSection({ playlist = [] }: { playlist?: PlaylistContent[] }) {
   const {
     backgroundPlaying,
     currentTrack,

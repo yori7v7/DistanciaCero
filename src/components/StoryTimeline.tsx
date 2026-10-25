@@ -3,6 +3,7 @@ import SectionTitle from './SectionTitle'
 import { BookOpen, ChevronLeft, ChevronRight, Feather, Heart, MoonStar, Sparkles } from 'lucide-react'
 import { mergeCollectionWithLocal } from '../services/contentService'
 import { formatTimelineDateForDisplay, TIMELINE_MONTH_INDEXES } from '../utils/helpers'
+import type { TimelineContent } from '../types/sections'
 
 const fallbackPages = [
   {
@@ -79,7 +80,7 @@ function normalizePage(page, index) {
   }
 }
 
-function StoryTimeline({ timeline = [] }) {
+function StoryTimeline({ timeline = [] }: { timeline?: TimelineContent[] }) {
   const [localVersion, setLocalVersion] = useState(0)
   const [currentPage, setCurrentPage] = useState(0)
   const [turnDirection, setTurnDirection] = useState('next')

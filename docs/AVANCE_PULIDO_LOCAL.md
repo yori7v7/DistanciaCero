@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Contratos de los cinco lectores restantes cerrados, 25 de octubre:** `App` sin casts `as any`; nuevos tipos de datos base, conservando el CMS dinámico. Tipos, 343/343 unitarias y build/PWA aprobados, 278 archivos congelados y JavaScript idéntico. El usuario confirmó que solo dispone de Windows: siguiente bloque, instalación PWA local en perfil aislado; Safari real queda pendiente de equipo.
+
 - **Tipado focalizado cerrado, 25 de octubre:** siete usos innecesarios de `any` retirados en `App` y navegación, sin cambiar JavaScript ni contratos del CMS. Tipos, **343/343 unitarias en 23 archivos** y build/PWA aprobados; 277 archivos conservados. Siguiente pendiente: dispositivos reales cuando estén disponibles. Alcance, evidencia y límites al final.
 
 - **Investigación inicial de audio delimitada, 24 de octubre:** 16 pausas nativas en WebKit 26.5/27.2 Windows y dos controles Chromium con dos vueltas/avance, WAV y MP3. El límite continúa sin corregirse; no hay defecto de aplicación demostrado. Siguiente bloque autorizado: tipado focalizado. Evidencia y límites al final.
@@ -649,3 +651,16 @@ Comprobaciones del 25: `verify:local` con salida 0, TypeScript sin errores, **34
 Evidencia local: `.git/codex-checkpoints/typing-20261025/` contiene comparación de transformación, hashes y `validated-summary.json`; el supervisor/log/congelación están en `.git/codex-checkpoints/warnings-imports-20261023/typing-20261025/`. No viajan con Git. En otro equipo, recibir esta entrega, instalar las dependencias del lockfile si faltan y ejecutar `npm.cmd run verify:local`; no hacen falta credenciales ni un backend.
 
 El cierre es acotado: cinco consumidores de `App` aún tienen props implícitas; quitar sus casts sin definir contratos no daría la misma protección. El índice dinámico deliberado de `ContentItem` y los casts remotos históricos se conservan. No se declara tipado estricto global ni se rediseña el CMS. Siguiente pendiente de validación: dispositivos reales (Safari/macOS/iPhone e instalación PWA si se utiliza), cuando estén disponibles; esta sesión de Windows no dispone de un dispositivo Apple. Clock y el loop nativo WebKit permanecen como límites documentados. Sin Supabase, despliegues, cambios de modelo/modalidad, reserva o resets. El commit y push normal de esta entrega se comprueban al guardar; no se inventa un hash futuro.
+
+
+## Contratos de los lectores restantes — 25 de octubre de 2026
+
+Tras el cierre `d11e865`, el usuario autorizó resolver los pendientes locales y confirmó que solo dispone de Windows. Se añadieron contratos en `src/types/sections.ts` para los datos base de Diario, Universo, Playlist, Razones y Galería, y se retiraron los cinco casts restantes de `App`. Los imports son solo de tipo; no cambian hooks, efectos, refs, DOM, almacenamiento ni servicios.
+
+Los cuatro lectores CRUD conservan `ContentItem`, su índice dinámico, IDs string/número y campos opcionales. Diario mantiene sus aliases históricos; la playlist admite enlaces externos sin `src` y `sourceType` string; Galería acepta recuerdos mínimos. Universo mantiene `universe` requerido, con centro/planetas opcionales para permitir `{}`; los planetas declaran tamaño y colores consumidos. `mergeCollectionWithLocal` sigue devolviendo `ContentItem[]`: el beneficio nuevo es comprobar el contenido base en las props, sin inventar validación runtime del CMS ni tipado estricto global.
+
+Revisión independiente sin hallazgos. `verify:local` salida 0: tipos, **343/343 unitarias en 23 archivos** (122,90 s) y build/PWA aprobados; **278 archivos congelados sin cambios**, guard temporal restaurado. Seis TSX transformados antes/después y los **24 assets JS** compilados coinciden con la referencia local. No se repitieron E2E por estos cambios exclusivamente estáticos. El diagnóstico conocido de jsdom sobre scrollTo y los límites de Clock/audio continúan visibles. Evidencia ignorada en `.git/codex-checkpoints/typing-boundaries-20261025/` y `.git/codex-checkpoints/warnings-imports-20261023/typing-boundaries-20261025/`; reproducción portable: `npm.cmd run verify:local` con las dependencias del lockfile.
+
+La revisión del 25 confirmó que Fiber instalado 9.6.1 y el tarball oficial estable 9.8.2 siguen creando `THREE.Clock`; este último SHA-256 `db98d14ff474684e018c6103437b85ba919b83b24c5a1fbf1f0deb58dd96d465`. No se instaló ni modificó una dependencia. [Timer](https://threejs.org/docs/pages/Timer.html) requiere otra API; no hay arreglo mínimo demostrado para eliminar esa deprecación sin modificar el contrato de Fiber. Se conserva como deuda externa, sin filtrar warnings. El loop nativo WebKit conserva la delimitación del 24, sin nuevo workaround.
+
+Siguiente bloque: revisar instalación PWA local en Windows con perfil aislado. Safari/macOS/iPhone permanece pendiente de equipo real. Sin Supabase, despliegues, cambios de modalidad, reserva o resets; commit y push normal se verifican al guardar esta entrega.

@@ -93,15 +93,15 @@ function App() {
         <ProposalSection />
         <CounterSection />
         <MainLetter />
-        {mountedSections.has('historia') && <ErrorBoundary sectionId="historia" fallbackLabel="No se pudo cargar el Diario."><Suspense fallback={<SectionSkeleton sectionId="historia" />}><StoryTimeline timeline={timeline as any} /></Suspense></ErrorBoundary>}
-        {mountedSections.has('universo') && <ErrorBoundary sectionId="universo" fallbackLabel="No se pudo cargar el Universo 3D."><Suspense fallback={<SectionSkeleton sectionId="universo" />}><UniverseSection universe={universe as any} /></Suspense></ErrorBoundary>}
+        {mountedSections.has('historia') && <ErrorBoundary sectionId="historia" fallbackLabel="No se pudo cargar el Diario."><Suspense fallback={<SectionSkeleton sectionId="historia" />}><StoryTimeline timeline={timeline} /></Suspense></ErrorBoundary>}
+        {mountedSections.has('universo') && <ErrorBoundary sectionId="universo" fallbackLabel="No se pudo cargar el Universo 3D."><Suspense fallback={<SectionSkeleton sectionId="universo" />}><UniverseSection universe={universe} /></Suspense></ErrorBoundary>}
         {mountedSections.has('entrelazados') && <ErrorBoundary sectionId="entrelazados" fallbackLabel="No se pudo cargar Entrelazados."><Suspense fallback={<SectionSkeleton sectionId="entrelazados" />}><EntrelazadosSection /></Suspense></ErrorBoundary>}
         {mountedSections.has('cartas') && <ErrorBoundary sectionId="cartas" fallbackLabel="No se pudieron cargar las Cartas Mensuales."><Suspense fallback={<SectionSkeleton sectionId="cartas" />}><MonthlyLetters letters={monthlyLetters} /></Suspense></ErrorBoundary>}
         {mountedSections.has('abrir-cuando') && <ErrorBoundary sectionId="abrir-cuando" fallbackLabel="No se pudieron cargar las cartas Abrir Cuando."><Suspense fallback={<SectionSkeleton sectionId="abrir-cuando" />}><OpenWhenSection cards={openWhen} /></Suspense></ErrorBoundary>}
-        {mountedSections.has('playlist') && <ErrorBoundary sectionId="playlist" fallbackLabel="No se pudo cargar la Playlist."><Suspense fallback={<SectionSkeleton sectionId="playlist" />}><PlaylistSection playlist={playlist as any} /></Suspense></ErrorBoundary>}
-        {mountedSections.has('razones') && <ErrorBoundary sectionId="razones" fallbackLabel="No se pudieron cargar las Razones."><Suspense fallback={<SectionSkeleton sectionId="razones" />}><ReasonsSection reasons={reasons as any} /></Suspense></ErrorBoundary>}
+        {mountedSections.has('playlist') && <ErrorBoundary sectionId="playlist" fallbackLabel="No se pudo cargar la Playlist."><Suspense fallback={<SectionSkeleton sectionId="playlist" />}><PlaylistSection playlist={playlist} /></Suspense></ErrorBoundary>}
+        {mountedSections.has('razones') && <ErrorBoundary sectionId="razones" fallbackLabel="No se pudieron cargar las Razones."><Suspense fallback={<SectionSkeleton sectionId="razones" />}><ReasonsSection reasons={reasons} /></Suspense></ErrorBoundary>}
         <ImportantDatesSection dates={importantDates} />
-        {mountedSections.has('galeria-agujero-negro') && <ErrorBoundary sectionId="galeria-agujero-negro" fallbackLabel="No se pudo cargar la Galería."><Suspense fallback={<SectionSkeleton sectionId="galeria-agujero-negro" />}><BlackHoleGallerySection items={blackHoleGallery as any} /></Suspense></ErrorBoundary>}
+        {mountedSections.has('galeria-agujero-negro') && <ErrorBoundary sectionId="galeria-agujero-negro" fallbackLabel="No se pudo cargar la Galería."><Suspense fallback={<SectionSkeleton sectionId="galeria-agujero-negro" />}><BlackHoleGallerySection items={blackHoleGallery} /></Suspense></ErrorBoundary>}
         <FutureDreamsSection dreams={futureDreams} />
         <PromisesSection promises={promises} />
         <DistanceMapSection />

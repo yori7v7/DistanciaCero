@@ -108,6 +108,7 @@ src/
 │   ├── content.ts           # ContentItem, CollectionName, ContentRepository, etc.
 │   ├── identity.ts          # LocalUser, RelationshipSpace
 │   ├── audio.ts
+│   ├── sections.ts           # Contratos de datos base recibidos por los lectores
 │   └── env.d.ts
 ├── __tests__/               # 23 archivos de test
 └── styles/

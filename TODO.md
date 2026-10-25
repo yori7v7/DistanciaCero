@@ -34,12 +34,14 @@ Estado del **25 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 
 - [x] Retirados cinco casts de datos base en `App` que ya satisfacen los contratos de cartas/colecciones; inferencia del filtro de escenas y mapa `LucideIcon` en el controlador. Siete usos innecesarios de `any`, sin cambiar el contrato dinámico del CMS.
 - [x] `verify:local`: tipos, **343/343 unitarias en 23 archivos** y build/PWA aprobados; 277 archivos conservados durante el runner. Los dos TSX producen el mismo JavaScript transformado y los 24 assets JS compilados coinciden con la referencia bajo la misma configuración local. No se repitieron E2E por estos cambios exclusivamente de tipos.
+- [x] Ampliación posterior del 25: contratos explícitos de datos base para Diario, Universo, Playlist, Razones y Galería; retirados los cinco casts restantes de `App`. Nueva validación: 343/343 unitarias, tipos/build/PWA, 278 archivos conservados, seis TSX transformados y 24 assets JS idénticos. El CMS conserva su contrato dinámico.
 
 ## Trabajo local pendiente
 
 Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y este bloque acotado de tipado están terminados. La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 
-- [ ] Validar en dispositivos reales cuando estén disponibles: Safari/macOS/iPhone y, si se usa, instalación PWA. Los motores de Playwright en Windows no sustituyen esas comprobaciones. No hay un dispositivo Apple disponible en esta sesión ni se ha iniciado esa validación.
+- [ ] Revisar instalación PWA local en Windows en un perfil aislado; siguiente bloque. El usuario confirmó el 25 que solo dispone de Windows.
+- [ ] Validar Safari/macOS/iPhone cuando estén disponibles. Los motores de Playwright en Windows no sustituyen esas comprobaciones; no se ha iniciado esa validación.
 
 Cualquier ampliación de funciones, infraestructura o refactor del contenido dinámico requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
