@@ -1,6 +1,6 @@
 # Pendientes — Distancia Cero
 
-Estado del **24 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
+Estado del **25 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
 
 ## Trabajo local terminado
 
@@ -30,9 +30,18 @@ Estado del **24 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 - [x] Matriz nativa de 18 observaciones: 16 pausas estables en WebKit 26.5/27.2 y dos controles Chromium con dos vueltas y avance (WAV/MP3). Sin React, datos reales, cambios en el reproductor ni dependencias del proyecto.
 - [ ] El loop nativo de esos WebKit/Windows sigue siendo una limitación; no se conoce su causa interna ni se acredita Safari real. No implementar autoresume ante pause para ocultarlo.
 
+## Tipado focalizado terminado — 25 de octubre
+
+- [x] Retirados cinco casts de datos base en `App` que ya satisfacen los contratos de cartas/colecciones; inferencia del filtro de escenas y mapa `LucideIcon` en el controlador. Siete usos innecesarios de `any`, sin cambiar el contrato dinámico del CMS.
+- [x] `verify:local`: tipos, **343/343 unitarias en 23 archivos** y build/PWA aprobados; 277 archivos conservados durante el runner. Los dos TSX producen el mismo JavaScript transformado y los 24 assets JS compilados coinciden con la referencia bajo la misma configuración local. No se repitieron E2E por estos cambios exclusivamente de tipos.
+
 ## Trabajo local pendiente
 
-Los pasos 1–7, la compatibilidad posterior y la actualización PWA local están terminados. La limpieza de avisos de la aplicación quedó comprobada; se conserva la deprecación externa de Clock. La investigación inicial del audio quedó delimitada el 24 de octubre: límite reproducible de WebKit/Windows, sin corrección de aplicación demostrada. El loop sigue sin estar corregido en esos motores. Siguiente bloque autorizado: tipado focalizado, con beneficios y regresiones concretos. Los límites siguientes se mantienen visibles y cualquier ampliación requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
+Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y este bloque acotado de tipado están terminados. La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
+
+- [ ] Validar en dispositivos reales cuando estén disponibles: Safari/macOS/iPhone y, si se usa, instalación PWA. Los motores de Playwright en Windows no sustituyen esas comprobaciones. No hay un dispositivo Apple disponible en esta sesión ni se ha iniciado esa validación.
+
+Cualquier ampliación de funciones, infraestructura o refactor del contenido dinámico requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
 ## Límites y deuda visible
 

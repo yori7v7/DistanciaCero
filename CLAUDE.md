@@ -20,7 +20,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 | Publicación | Script heredado de GitHub Pages y configuración Vercel; fuera de la etapa local |
 | PWA | vite-plugin-pwa (manifest, autoUpdate) + cliente virtual `registerSW` en `main.tsx` |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (23 archivos, 343 tests; comprobados al cerrar avisos el 23 de octubre; el paso 7 cerró con 338) |
+| Tests | Vitest + @testing-library/react (23 archivos, 343 tests; comprobados de nuevo al cerrar tipado focalizado el 25 de octubre; el paso 7 cerró con 338) |
 | CI | GitHub Actions: tipos, build, unitarias y job E2E (Node 22, Ubuntu); no ejecutado desde esta etapa local |
 
 ## Rutas

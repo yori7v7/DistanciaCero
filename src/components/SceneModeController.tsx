@@ -4,13 +4,14 @@ import {
   ChevronLeft, ChevronRight, Clock, Heart, Home, Images, Infinity, MapPin, MessageCircle,
   Music2, Settings, ShieldAlert, Sparkles, Star, LogOut, X
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import scenesData from '../data/scenes.json'
 import { signOut as supabaseSignOut, isSupabaseAuthenticated } from '../services/supabaseAuthService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { getScrollBehavior } from '../utils/motion'
 import { CENTRO_VISIBLE_KEY, SCENE_STORAGE_KEY, resolveSceneId } from '../utils/sceneSelection'
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   inicio: Home,
   universo: Sparkles,
   entrelazados: Infinity,
@@ -37,7 +38,7 @@ function SceneModeController() {
 
   const scenes = useMemo(() => Array.isArray(scenesData) ? scenesData : [], [])
   // Filter out centro-universo from main navigation
-  const navScenes = useMemo(() => scenes.filter((s: any) => s.id !== 'centro-universo'), [scenes])
+  const navScenes = useMemo(() => scenes.filter(s => s.id !== 'centro-universo'), [scenes])
   const activeSceneId = useMemo(() => resolveSceneId(location.hash), [location.hash])
   const [navPulse, setNavPulse] = useState(false)
   const [navDirection, setNavDirection] = useState('next')
