@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **25 de octubre de 2026** tras validar la PWA instalada en Windows. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **26 de octubre de 2026** tras cerrar ajustes generales del CMS. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -123,7 +123,19 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — PWA Windows validada, 25 de octubre de 2026
+## Punto de continuación — ajustes generales cerrados, 26 de octubre de 2026
+
+Después de cerrar la PWA Windows en `4be45c4`, el usuario autorizó avanzar por ajustes generales, primera configuración guiada y contenido/recursos, cerrando cada bloque antes del siguiente. **El primero está terminado en `0125775`; el segundo sigue pendiente.** Recibir también el commit documental que contiene este punto; el hash final y su push se comprueban al entregar.
+
+En **Ajustes → Centro del Universo → Ajustes generales** se editan los dos nombres, nombre compartido, nombre de portada y tres fechas de contadores. Guardar actualiza la experiencia sin recargar; la portada vacía usa el nombre de la pareja. Restaurar plantilla confirma antes y conserva creaciones. Los nombres son presentación y no cambian identidad/autoría. El formulario conserva borradores ante errores y avisa si detecta ajustes nuevos mientras se edita.
+
+El respaldo v2 incluye `settings`; ausencia conserva ajustes actuales y `{}` vuelve a la plantilla. Contenido y ajustes se restauran en la misma operación recuperable. No viajan con Git: para trasladarlos entre equipos/orígenes, exportar e importar privadamente con esta versión. Los lectores antiguos pueden ignorar ajustes nuevos.
+
+Validación del 26: `verify:local` aprobó tipos, **382/382 unitarias en 25 archivos** y build/PWA; **6/6 Chromium** (cinco respaldos y el caso nuevo, 227,04 s) y **2/2 del caso nuevo en Firefox/WebKit** (73,67 s) aprobados. Sin omitidas, inestables, reintentos ni errores externos; los tres supervisores conservaron 286 archivos y restauraron sus guards. Revisión independiente cerrada y captura móvil inspeccionada. No se ejecutó la suite completa nueva de 51/102. Evidencia solo local en `.git/codex-checkpoints/general-settings-20261026/`; reproducción en [RECORRIDOS_LOCALES.md](RECORRIDOS_LOCALES.md).
+
+**Siguiente: paso 2, primera configuración guiada.** Comprobar uso, rama, cambios y remoto antes de empezar; reutilizar el servicio de ajustes y conservar personalizaciones existentes. No iniciar contenido/recursos hasta cerrar ese bloque. Safari/macOS/iPhone requiere otro equipo; Clock y el loop WebKit conservan sus límites. Mantener modo local, Supabase desactivado y sin despliegues, cambios de modalidad, reserva, compras ni resets.
+
+### Antecedente: PWA Windows validada, 25 de octubre de 2026
 
 Sobre `499f5d9`, el recorrido final de Chrome 156/Windows aprobó instalación temporal, apertura standalone, datos guardados y recarga con offline simulado; después cerró y reabrió otra ventana con el servidor local apagado, conservó datos y cargó Diario lazy mediante el worker. Duración 18,61 s, 278 archivos conservados y guard restaurado; desinstalación temporal confirmada y sin runners activos. No se modificó código de aplicación, dependencias ni almacenamiento real del usuario. Recibir la entrega que contiene este cierre; no confundirla con su baseline `499f5d9`.
 

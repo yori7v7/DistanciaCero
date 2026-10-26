@@ -1,6 +1,6 @@
 # Pendientes — Distancia Cero
 
-Estado del **25 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
+Estado del **26 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
 
 ## Trabajo local terminado
 
@@ -43,11 +43,17 @@ Estado del **25 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 
 ## Trabajo local pendiente
 
-Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y este bloque acotado de tipado están terminados. La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
+Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y tipado acotado están terminados. El usuario autorizó la siguiente etapa local, en orden:
+
+1. [x] **Ajustes generales desde el CMS**, cerrado el 26 de octubre (`0125775`): siete nombres/fechas, configuración reactiva y respaldo v2 recuperable. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, seis E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Documentación actualizada.
+2. [ ] **Primera configuración guiada**: siguiente bloque, aún sin implementar ni validar. Reutilizar los ajustes y conservar el contenido existente.
+3. [ ] **Contenido y recursos**: después de cerrar la configuración guiada; concretar contenido y archivos disponibles sin inventar datos personales.
+
+La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 
 - [ ] Validar Safari/macOS/iPhone cuando estén disponibles. Los motores de Playwright en Windows no sustituyen esas comprobaciones; no se ha iniciado esa validación.
 
-Cualquier ampliación de funciones, infraestructura o refactor del contenido dinámico requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
+Cualquier ampliación fuera de la etapa indicada, infraestructura o refactor del contenido dinámico requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
 
 ## Límites y deuda visible
 
@@ -66,7 +72,7 @@ Estas propuestas no forman parte del cierre local y no están activadas:
 
 - Ampliar Entrelazados y sus interacciones después de acordar su concepto.
 - Rediseñar el CMS o las transiciones por una dirección visual nueva; el pulido funcional actual ya está comprobado.
-- Añadir onboarding, revelado gradual o generación asistida de contenido.
+- Revelado gradual o generación asistida de contenido. La primera configuración guiada ya figura como el siguiente bloque de la etapa autorizada.
 - Revisar infraestructura remota: repositorio, Auth/UUIDs, aislamiento, sincronización, archivos y migración. El código existente no acredita preparación de producción; habilitar Supabase requiere otra etapa solicitada.
 - Elegir y preparar una publicación futura. Los scripts de GitHub Pages y la configuración Vercel existentes no acreditan un despliegue actual.
 

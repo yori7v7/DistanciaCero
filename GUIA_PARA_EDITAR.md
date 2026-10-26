@@ -1,6 +1,6 @@
 # Guía para editar Distancia Cero
 
-Esta guía explica cómo llenar el universo con contenido real. Las nueve colecciones se editan desde el **Centro del Universo**, un panel visual. Los nombres, la configuración, los planetas y algunos textos se cambian en los archivos indicados abajo. Guía contrastada con la versión local el 7 de octubre de 2026.
+Esta guía explica cómo llenar el universo con contenido real. Las nueve colecciones y los siete ajustes generales se editan desde el **Centro del Universo**, un panel visual. La configuración restante, los planetas y algunos textos se cambian en los archivos indicados abajo. Apartados de ajustes y respaldo actualizados el 26 de octubre de 2026; el resto conserva la revisión del 7 de octubre.
 
 ---
 
@@ -42,9 +42,10 @@ Estas ediciones pertenecen al navegador y a la dirección donde abriste la app. 
 ### Respaldo Local
 
 En la parte superior del CMS hay un panel de **Respaldo Local**:
-- **Exportar**: Descarga un respaldo v2 `.json` con tus creaciones, ediciones de originales y elementos ocultos de las nueve colecciones.
+- **Exportar**: Descarga un respaldo v2 `.json` con tus creaciones, ediciones de originales, elementos ocultos de las nueve colecciones y ajustes generales.
 - **Importar**: Valida el archivo antes de pedir confirmación. Después reemplaza los apartados incluidos y actualiza las secciones sin recargar. También acepta respaldos v1 de cartas.
 - Si el respaldo es parcial, los apartados ausentes conservan su contenido actual. Un apartado explícitamente vacío borra sus creaciones, ediciones u ocultos, según corresponda; no modifica los archivos originales del proyecto.
+- Los respaldos antiguos sin ajustes generales conservan los actuales. Un apartado `settings: {}` restaura los ajustes de plantilla. Ajustes y contenido incluidos se recuperan juntos si ocurre un fallo capturado al guardar. Para recuperar nombres y fechas en otro equipo, usar una versión de la app con este panel; las versiones anteriores no conocen esos campos del respaldo.
 - Se conservan los IDs, etiquetas y datos de autoría compatibles. Restaurar una carta con el mismo ID reemplaza su contenido actual.
 - El archivo no incluye progreso de lectura, Modo Prueba, identidad ni ajustes de música/escenas. Tampoco incluye archivos físicos de audio o video: sus rutas/enlaces necesitan seguir disponibles. Las fotos pegadas como base64 sí quedan dentro del JSON.
 - Si el navegador no puede guardar por espacio o permisos, aparece un error. Una restauración fallida intenta recuperar el estado previo y avisa expresamente si esa recuperación también falla. Conserva el archivo de respaldo para poder reintentar.
@@ -65,7 +66,15 @@ Abrir una carta marca su progreso en ese navegador. **Resetear Progreso** borra 
 
 ## Configuración general
 
-Si quieres cambiar los nombres, fechas, o contraseñas, edita este archivo:
+Abre **Ajustes → Centro del Universo → Ajustes generales**. Puedes cambiar:
+
+- Tu nombre, el de tu pareja y el nombre compartido.
+- El nombre en portada; vacío usa el nombre de tu pareja.
+- El día en que se conocieron, el inicio de la relación y el próximo encuentro.
+
+Pulsa **Guardar ajustes** para aplicarlos sin recargar. Los nombres admiten hasta 80 caracteres; el nombre compartido es obligatorio. Las fechas deben ser días reales, pueden ser futuras y no desbloquean cartas. **Restaurar plantilla** pide confirmación y conserva cartas y demás creaciones. Si falla guardar, se conserva tu borrador; si llegan ajustes desde otra pestaña o un respaldo mientras editas, puedes descartarlo y cargar los valores actuales. Estos nombres no cambian las identidades locales ni la autoría.
+
+Los cambios pertenecen a este navegador y se incluyen en el respaldo. El archivo siguiente sigue definiendo la plantilla y los campos no expuestos en el panel:
 
 ```
 src/data/siteConfig.json
@@ -169,7 +178,7 @@ Preview normalmente abre en `http://localhost:4173/`, un origen distinto del ser
 
 No intentes llenar todo de golpe. Empieza por:
 
-1. Nombres y fechas reales (`siteConfig.json`)
+1. Nombres y fechas reales (CMS → Ajustes generales)
 2. Carta principal
 3. Canciones que signifiquen algo para ustedes
 4. Planetas personalizados

@@ -1,6 +1,6 @@
 # Distancia Cero - Content Contract
 
-Contrato local contrastado con la fuente el 7 de octubre de 2026. Resultados y alcance de verificación en [AVANCE_PULIDO_LOCAL.md](AVANCE_PULIDO_LOCAL.md); la preparación remota descrita aquí no acredita una integración activa.
+Contrato local contrastado con la fuente el 7 de octubre de 2026; ajustes generales y ampliación del respaldo actualizados el 26 de octubre. Resultados y alcance de verificación en [AVANCE_PULIDO_LOCAL.md](AVANCE_PULIDO_LOCAL.md); la preparación remota descrita aquí no acredita una integración activa.
 
 ## 1. Resumen
 
@@ -335,6 +335,26 @@ Valor activo:
 1
 ```
 
+## Ajustes generales locales
+
+`SiteSettings` (`src/types/siteSettings.ts`) contiene overrides de siete campos de `src/data/siteConfig.json`:
+
+```ts
+interface SiteSettings {
+  couple?: { yourName?: string; herName?: string; mainPairName?: string }
+  dates?: { metDate?: string; relationshipStartDate?: string; nextMeetingDate?: string }
+  hero?: { titleName?: string }
+}
+```
+
+La clave es `distancia-cero-site-settings`. Los campos ausentes usan la plantilla; un título efectivo vacío usa el nombre de la pareja, sin reemplazar un título explícito. Son ajustes de presentación, separados de `CONTENT_COLLECTIONS`: no cambian identidades, autoría, audio, escenas ni claves narrativas.
+
+`validateSiteSettings(input)` valida y copia sin escribir. Solo admite objetos planos y los campos string anteriores; rechaza grupos/campos desconocidos y prototipos ajenos. Los nombres se recortan y admiten hasta 80 caracteres; `mainPairName`, si se incluye, no puede quedar vacío. Las fechas son días reales `YYYY-MM-DD`, años `0001`–`9999`; se permiten fechas futuras y no se impone orden entre ellas. No desbloquean cartas.
+
+La API síncrona `siteSettingsService` expone `getSiteSettings()`, `saveSiteSettings(input: unknown)` y `resetSiteSettings()`. Guardar reemplaza el documento completo de overrides; omitir un campo vuelve a la plantilla. Reset guarda `{}`. La escritura pasa por el repositorio y `writeStorageTransaction`, sin sincronización remota. Solo un guardado satisfactorio emite `distancia-cero-settings-updated`; los fallos de persistencia lanzan `ContentStorageError` y el formulario conserva el borrador.
+
+La lectura de la experiencia devuelve `{}` si los ajustes son inaccesibles o están dañados, sin reescribirlos. La exportación usa lectura estricta y falla para evitar omitirlos silenciosamente. Los hooks `useSiteSettings`/`useSiteConfig` reciben el evento propio, `storage` de esa clave o vaciado del origen y contenido `all` al importar. Portada, landing, introducción y contadores usan la configuración resuelta. Un borrador se conserva ante cambios externos detectados y requiere cargar los ajustes actuales antes de guardar; no es un bloqueo de escrituras concurrentes.
+
 ## 8. Export/import v2
 
 El respaldo local v2 mantiene este shape conceptual:
@@ -344,6 +364,7 @@ El respaldo local v2 mantiene este shape conceptual:
   version: 2,
   exportedAt: 'fecha ISO',
   source: 'Distancia Cero - Centro del Universo',
+  settings: {}, // Overrides generales; no la configuración completa resuelta
   content: {
     monthlyLetters: [],
     openWhenLetters: [],
@@ -383,9 +404,11 @@ El respaldo local v2 mantiene este shape conceptual:
 Reglas de compatibilidad:
 
 - Import v1 reemplaza las cartas locales incluidas en `monthlyLetters` y/o `openWhenLetters` en la raíz del documento. Escribe en estándar, incluso si ya existe un elemento con el mismo ID.
-- Import v1 no debe borrar razones, promesas, fechas, wishlist, timeline, galeria, playlist, overrides ni hidden.
+- Import v1 no debe borrar razones, promesas, fechas, wishlist, timeline, galeria, playlist, overrides, hidden ni ajustes generales; ignora `settings` en v1.
 - Import v2 incompleto conserva los apartados ausentes de `content`, `overrides` y `hidden`, por colección. Un `[]` o `{}` explícito reemplaza ese apartado por vacío; no elimina los JSON base.
-- Debe existir al menos un apartado de una colección reconocida. Se rechazan versiones desconocidas, contenedores incorrectos, elementos sin ID válido, IDs duplicados por `String(id)`, overrides cuyo ID no coincide con su clave, tipos incorrectos en campos renderizados y claves de prototipo peligrosas. Los campos extra compatibles y la metadata opcional se preservan.
+- En v2, `settings` ausente conserva los ajustes actuales; si está presente reemplaza los overrides generales tras validarlos. `settings: {}` restaura la plantilla; sus campos ausentes toman valores base, sin mezclar con los overrides anteriores. Las exportaciones nuevas siempre incluyen `settings`, vacío si no hay personalización.
+- Debe existir al menos un apartado de una colección reconocida o `settings` en v2. Se acepta un respaldo solo de ajustes, incluso `{ version: 2, settings: {} }`. Se rechazan versiones desconocidas, contenedores incorrectos, elementos sin ID válido, IDs duplicados por `String(id)`, overrides cuyo ID no coincide con su clave, tipos incorrectos en campos renderizados y claves de prototipo peligrosas. Los campos extra compatibles y la metadata opcional se preservan.
+- Lectores anteriores de v2 pueden restaurar las colecciones de un respaldo completo e ignorar estos ajustes. Un respaldo solo de ajustes necesita esta versión; no se garantiza recuperar nombres/fechas en una app antigua.
 - `validateContentBackup(input)` valida sin escribir; `restoreContentBackup(input)` vuelve a validar, restaura y notifica `all` solo al tener éxito. `exportContentBackup()` devuelve un documento v2 completo y comprueba que sea restaurable.
 - La restauración conserva IDs/metadata, normaliza `isLocal: true` en creaciones y los IDs ocultos a strings. No regenera autoría ni fechas.
 - Si la validacion falla, no se debe borrar ni reemplazar nada.
@@ -393,14 +416,15 @@ Reglas de compatibilidad:
 
 Alcance del archivo:
 
-- Incluye creaciones de las nueve colecciones, overrides y ocultos; enlaces/rutas multimedia y fotos pegadas como Data URL viajan dentro de esos elementos.
-- No incluye los JSON base, progreso de cartas/misiones, simulación, identidad, configuración de escenas/audio ni otros ajustes fuera de esas tres áreas.
+- Incluye creaciones de las nueve colecciones, overrides, ocultos y los siete ajustes generales; enlaces/rutas multimedia y fotos pegadas como Data URL viajan dentro de esos elementos.
+- No incluye los JSON base, progreso de cartas/misiones, simulación, identidad, configuración de escenas/audio ni otros ajustes fuera de esos siete campos.
 - No contiene los archivos físicos de audio/video ni imágenes referenciadas por URL/ruta. Esas referencias siguen necesitando el archivo o servicio de origen.
 
 Errores de persistencia:
 
 - Las escrituras de contenido ya no devuelven un éxito aparente cuando localStorage falla: lanzan `ContentStorageError`, que los formularios y BackupPanel muestran al usuario. El borrador y la selección se conservan si guardar falla.
 - Se serializan los valores y se captura el estado anterior de todas las claves antes de escribir. Ante una escritura fallida, se eliminan las nuevas escrituras y se recuperan los valores anteriores, incluida la ausencia original de una clave. Las claves ajenas a la operación permanecen intactas.
+- Contenido, overrides, ocultos, ajustes y migración pendiente participan en la misma llamada a `writeStorageTransaction`. Ajustes inválidos impiden todas las escrituras; un fallo capturado intenta recuperar juntos los apartados anteriores. No se notifica `all` si falla.
 - Si también falla la recuperación, el error indica recuperación incompleta. localStorage no ofrece transacciones: este rollback cubre errores capturados durante la operación, no un cierre abrupto del navegador ni escrituras concurrentes de otra pestaña.
 - Los helpers históricos de progreso/simulación conservan su tolerancia previa a fallos; el cambio de errores afecta contenido, migración y respaldos.
 - Cada hook CRUD escucha su colección, `all` y (para cartas) `letters`, refrescando datos sin borrar borradores ni remontar formularios.

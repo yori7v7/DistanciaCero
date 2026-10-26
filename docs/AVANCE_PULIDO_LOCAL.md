@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Ajustes generales cerrados, 26 de octubre:** nuevo bloque local autorizado después del cierre previo, implementación `0125775`. Siete nombres/fechas editables en CMS, actualización sin recargar y respaldo v2 con ajustes opcionales. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, **6/6 E2E Chromium** y **2/2 del recorrido nuevo en Firefox/WebKit** aprobados. Tres supervisores con 286 archivos congelados y guards restaurados. Siguiente pendiente: primera configuración guiada, todavía sin implementar. Detalles al final y punto portable actualizado.
+
 - **PWA instalada en Windows validada, 25 de octubre:** recorrido final aprobado en Chrome 156, 18,61 s, 278 archivos conservados y desinstalación confirmada. Standalone, datos y recarga con offline simulado; cierre/reapertura sin servidor local y Diario lazy desde el worker. El corte no se aplica a Internet del sistema ni se reinicia Chrome. Alcance y reproducción al final; Safari real permanece pendiente de equipo.
 
 - Antecedente: el checkpoint PWA Windows del mismo día corrigió el idioma y acreditó requisitos/offline, con inspección de ventana pendiente. Su diagnóstico queda conservado; el recorrido final de arriba lo supera.
@@ -26,7 +28,7 @@
 - Recuperación final: `.git/codex-checkpoints/paso-7-cerrado-20261010/`, con copias, hashes y diff del working tree. Resultados en `.git/codex-checkpoints/paso-7-validacion-final-20261010/`. No restaurar automáticamente las copias ni aplicar el stash histórico.
 - Cierre en Git local del 12 de octubre: rama `codex/cierre-pulido-local`, con commits separados para skills, código/pruebas y documentación. `main`, `origin/main` y el stash histórico se preservan; consultar el registro al final. No se realizó push.
 - Bloque posterior autorizado el 12 de octubre: **compatibilidad local con Firefox y WebKit, cerrado el 23** en `codex/compatibilidad-navegadores`; después cerraron PWA A→B local, avisos de aplicación y tipado focalizado. Son etapas posteriores a los siete pasos; no se iniciaron funciones nuevas.
-- Alcance autorizado: ejecutar el plan en orden. Sin activar Supabase, desplegar ni añadir funciones nuevas.
+- Alcance inicial: ejecutar el plan en orden, sin funciones nuevas. Tras su cierre, el usuario autorizó la etapa local de ajustes generales, primera configuración guiada y contenido/recursos. Mantener el orden y las restricciones: sin activar Supabase ni desplegar.
 - Condición de uso: detenerse si se agota la modalidad normal/premium. No cambiar modelo, activar reserva, comprar créditos ni consumir resets. Uso ordinario permitido al retomar el 10 de octubre: 97% restante en cinco horas y 99% semanal. No se confirma Flash por separado.
 
 ## Punto de recuperación inicial
@@ -690,3 +692,28 @@ El primer recorrido ya acreditó standalone y recarga con navigator.onLine=false
 La sonda diagnóstica y el intento anterior con offline no heredado conservan sus estados y no se suman como E2E aprobados. Los tres supervisores terminaron y restauraron guards. Evidencia ignorada: `.git/codex-checkpoints/pwa-native-target-20261025/`, con trace-results, context-offline-results, server-down-proof, fuente final, captura y validated-summary. No viaja con Git; el procedimiento portable se registra en RECORRIDOS_LOCALES. No se repitieron tipos/unitarias/build ni suites generales por este ajuste del harness y documentación; los últimos 343/343, tipos/build y corrección lang mantienen sus fechas y alcances previos.
 
 Se cierra el bloque PWA Windows con este alcance. No acredita Safari, Edge, instalación mediante menú de usuario, reinicio de navegador/equipo, disponibilidad de medios/fuentes externas ni reapertura con todo Internet desconectado. Safari/macOS/iPhone requiere un equipo no disponible. Clock y el loop WebKit conservan sus límites; sin Supabase, despliegues, cambio de modelo, reserva ni resets. Commit y push normal se comprueban al entregar.
+
+
+## Ajustes generales del CMS — 26 de octubre de 2026
+
+El usuario autorizó una nueva etapa local por bloques: ajustes generales, primera configuración guiada y contenido/recursos. Este cierre implementa solo el primero, sobre `4be45c4`, en `0125775`. Los siete pasos originales y sus resultados históricos permanecen cerrados con sus fechas.
+
+El panel permite editar dos nombres, nombre compartido, nombre de portada y tres fechas de los contadores. `SiteSettings` valida campos permitidos, nombres recortados hasta 80 caracteres y días reales de años 0001–9999. El repositorio guarda overrides separados del JSON base; el hook reactivo actualiza portada, landing, introducción y contadores. Un título vacío deriva del nombre de la pareja; uno explícito se conserva. No cambian identidades ni autoría. Restaurar plantilla pide confirmación y conserva creaciones. Fallos de guardado conservan borradores; cambios externos detectados piden cargar valores actuales antes de guardar.
+
+El respaldo v2 incorpora `settings`, opcional al importar y siempre exportado: ausencia conserva; `{}` vuelve a la plantilla. Se acepta settings-only y v1 mantiene sus ajustes actuales. La validación impide escrituras ante datos inválidos; ajustes, contenido y migración pendiente usan el mismo rollback. La lectura tolerante de la experiencia no reescribe datos dañados; exportar requiere lectura estricta para evitar omitir ajustes silenciosamente. Se mantienen los límites de localStorage ante cierre abrupto o concurrencia; no se activa sincronización remota.
+
+La revisión independiente encontró el remap de años menores de 100 en `new Date(year, month, day)` de contadores. Se corrigió con fechas civiles UTC que conservan el año y se añadió regresión de 0099 a 0100. No quedaron otros hallazgos en el alcance revisado.
+
+Comprobaciones terminadas, todas con salida 0:
+
+- `verify-final`: tipos, **382/382 unitarias en 25 archivos** (292,31 s de reporte), build y PWA aprobados. Entrada 324,56 kB, máximo 372,57 kB; precache de 30 entradas/1683,23 KiB. Continúa el diagnóstico conocido de jsdom sobre scrollTo y las métricas informativas de plugins.
+- `chromium-final`: **6/6 E2E**, 227,04 s: cinco casos de respaldo existentes y el nuevo de ajustes (13,4 s). Descarga/importación real, aplicación inmediata, persistencia tras recarga, contadores y ancho de 390 px. Captura móvil inspeccionada; sin desbordamiento ni errores JS registrados.
+- `browsers-final`: **2/2**, 73,67 s: solo el recorrido nuevo en WebKit (46,0 s) y Firefox (19,9 s), Windows. Cero omitidas, inestables, reintentos y errores externos en ambos reportes E2E.
+
+Los tres supervisores conservaron los hashes de **286 archivos** y restauraron la solicitud temporal contra suspensión automática. No hubo ediciones observadas durante runners. El inventario actual tiene 51 recorridos por motor (comprobado con --list); no se ejecutaron los 51/102 completos ni se suman pruebas históricas para afirmarlo. Las pruebas usan datos sintéticos y perfiles aislados.
+
+Evidencia ignorada en `.git/codex-checkpoints/general-settings-20261026/`: scripts, estados, logs, reportes JSON, hashes y capturas copiadas. No viaja con Git. En otro equipo: recibir la entrega, preparar dependencias/motores si faltan y reproducir `npm.cmd run verify:local`, luego `npm.cmd run test:e2e -- site-settings.spec.ts content-backup.spec.ts` y después `npm.cmd run test:e2e:cross-browser -- site-settings.spec.ts`, por separado y con documentos congelados durante E2E.
+
+La documentación pasó revisión independiente y comprobación de 69 enlaces locales en 14 documentos, sin enlaces rotos. El diff no contiene errores de espacios. No quedaron runners propios ni servidores en 5173/5174 al terminar.
+
+Siguiente bloque: primera configuración guiada, pendiente; contenido/recursos va después. No se acredita Safari real ni se repiten las comprobaciones PWA instaladas por este cambio. Clock y loop nativo WebKit mantienen sus límites. Sin Supabase, despliegues, cambios de modelo/modalidad, reserva, compras ni resets. Commit y push normal de la entrega documental se comprueban al guardar.

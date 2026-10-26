@@ -42,7 +42,13 @@ npx playwright install firefox webkit
 npm run test:e2e:cross-browser
 ```
 
-`playwright.cross-browser.config.ts` ejecuta los 50 recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
+`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **51 por motor** tras añadir ajustes generales el 26 de octubre; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
+
+### Ajustes generales — 26 de octubre
+
+El panel del CMS guarda siete nombres/fechas, aplica portada y contadores sin recargar y conserva los valores al recargar. El recorrido nuevo descarga el respaldo real, cambia los ajustes, importa ese archivo y comprueba su restauración inmediata; incluye ancho de 390 px y cero errores JS. Pasó en Chromium (13,4 s), WebKit (46,0 s) y Firefox (19,9 s) de Windows. La corrida Chromium también aprobó los cinco casos existentes de respaldos: **6/6**, 227,04 s de reporte. Firefox/WebKit ejecutaron solo el caso nuevo: **2/2**, 73,67 s de reporte. No se ejecutó la suite completa de 51/102 ni se acredita Safari real.
+
+Reproducción acotada, con dependencias y motores instalados: `npm.cmd run test:e2e -- site-settings.spec.ts content-backup.spec.ts`; después `npm.cmd run test:e2e:cross-browser -- site-settings.spec.ts`. Ejecutar por separado y congelar fuentes y documentos hasta terminar. Tipos, 382 unitarias/25 archivos y build/PWA también aprobaron mediante `npm.cmd run verify:local`; evidencia y límites en el avance.
 
 La comprobación del 23 utilizó Playwright 1.62.1, Firefox 153.0 y WebKit 26.5 en Windows. WebKit usa el descriptor Desktop Safari con densidad 1, igual que la densidad de Chromium/Firefox en estas pruebas; no acredita pantallas Retina ni Safari de macOS/iOS. Las capacidades pueden variar por sistema y distribución del motor. [Documentación oficial de los motores de Playwright](https://playwright.dev/docs/browsers).
 
