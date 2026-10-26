@@ -36,11 +36,15 @@ Estado del **25 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 - [x] `verify:local`: tipos, **343/343 unitarias en 23 archivos** y build/PWA aprobados; 277 archivos conservados durante el runner. Los dos TSX producen el mismo JavaScript transformado y los 24 assets JS compilados coinciden con la referencia bajo la misma configuración local. No se repitieron E2E por estos cambios exclusivamente de tipos.
 - [x] Ampliación posterior del 25: contratos explícitos de datos base para Diario, Universo, Playlist, Razones y Galería; retirados los cinco casts restantes de `App`. Nueva validación: 343/343 unitarias, tipos/build/PWA, 278 archivos conservados, seis TSX transformados y 24 assets JS idénticos. El CMS conserva su contrato dinámico.
 
+## PWA instalada en Windows comprobada — 25 de octubre
+
+- [x] Chrome 156, perfil aislado: instalación temporal, apertura standalone, datos guardados y recarga con conexión simulada cortada. Cierre y reapertura en otra ventana con el servidor local apagado; documento y Diario lazy desde el service worker. Recorrido final aprobado, 18,61 s, 278 archivos conservados y desinstalación confirmada.
+- [x] Corregida la asociación del harness entre targets `tab`/`page` mediante `windowId`. No hizo falta modificar la aplicación. La reapertura sin servidor no representa un corte de Internet de Windows ni un reinicio completo de Chrome.
+
 ## Trabajo local pendiente
 
 Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y este bloque acotado de tipado están terminados. La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 
-- [ ] Terminar la inspección de la ventana PWA instalada en Windows: requisitos/offline aprobados en Chrome 156 y manifiesto corregido a español. Instalación/desinstalación temporal confirmadas; standalone pendiente porque Playwright no encontró el target nativo. Detalles en el avance. El usuario solo dispone de Windows.
 - [ ] Validar Safari/macOS/iPhone cuando estén disponibles. Los motores de Playwright en Windows no sustituyen esas comprobaciones; no se ha iniciado esa validación.
 
 Cualquier ampliación de funciones, infraestructura o refactor del contenido dinámico requiere acordar su alcance. Durante Vite/E2E se congelan también los documentos para evitar recargas de Tailwind.
@@ -50,6 +54,7 @@ Cualquier ampliación de funciones, infraestructura o refactor del contenido din
 - La cobertura de desarrollo incluye Chromium (comprobaciones del 10/16/19) y Firefox/WebKit de Playwright en Windows (23), con cinco tamaños y WebKit densidad 1. No acredita Safari/macOS/iPhone reales, otros dispositivos ni certificación WCAG completa.
 - WebKit 26.5 en este Windows reprodujo fuera de la aplicación una pausa nativa al cruzar el loop de un WAV de 20 s, con volumen cero y pausa/reanudación cerca del final. El síntoma está observado; su causa interna no está explicada. El WAV de 300 s de las pruebas evita ese límite durante los controles, sin declarar corregido el loop ni extrapolar a otros formatos/equipos.
 - La actualización PWA A→B se comprobó localmente en Chromium/Windows y el mismo origen; no acredita instalación, Safari ni despliegue real. Conserva datos guardados, sin garantizar formularios sin guardar o medios externos offline. La primera recarga de pestañas antiguas sin el nuevo cliente se mantiene como límite inferido, no como recorrido verificado.
+- La instalación en Chrome/Windows se comprobó por separado el 25. La recarga usa offline simulado; la reapertura usa el servidor local detenido y mantiene Internet del sistema disponible. No acredita reinicio de Chrome/Windows, Edge, Safari ni todos los medios o fuentes externas sin conexión.
 - El aviso de chunks grandes se resolvió con grupos React/Three en el build local: máximo 372,57 kB, sin subir el umbral. El import dinámico también quedó corregido mediante caché compartida y carga diferida, con 343 unitarias/23 archivos y regresiones PWA/Universo. Clock permanece como deprecación externa de Fiber, incluida en su estable 9.8.2 consultada sin instalar.
 - Algunas estructuras de contenido conservan campos dinámicos y casts históricos; el CMS y el lector compartido tienen tipos concretos. Ampliar tipado solo con un alcance y regresiones claros.
 - `siteConfig.secret` conserva campos de plantilla sin una sección consumidora actual; no hay autenticación privada mediante esas claves.

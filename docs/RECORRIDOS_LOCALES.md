@@ -108,3 +108,28 @@ Durante los E2E de desarrollo no editar archivos del proyecto, incluidos documen
 ## Mantenimiento de empaquetado y caché interna
 
 El 23 de octubre se comprobaron los grupos de React/Three y la carga diferida de sincronización: 343 unitarias/23 archivos, tipos/build/PWA, PWA A→B 1/1 y Universo compilado 1/1 (Chromium/Windows, perfiles aislados). No se repitieron los 100 de compatibilidad. Desaparecen los avisos de tamaño e import dinámico; permanece Clock desde Fiber, no una excepción JS. Rolldown puede emitir métricas variables de tiempo de plugins: no son un fallo funcional ni se suprimieron. El backend continúa desactivado.
+
+
+## PWA instalada en Chrome/Windows — 25 de octubre de 2026
+
+Comprobación separada de las suites anteriores, sobre `499f5d9`: Chrome 156.0.8078.48 instalado, perfil temporal propio y preview loopback 4179. Se instaló mediante CDP PWA.install, se eligió PWA.changeAppUserSettings con displayMode standalone y se lanzó la app. Al finalizar, PWA.uninstall y la consulta de estado confirmaron su retirada; el perfil habitual y los datos reales no se tocaron.
+
+La asociación esencial para reconstruir el harness en otro equipo es la ventana, porque el target de PWA.launch es tab y el de cada Page es page. Con una sesión CDP del navegador y otra de la página candidata:
+
+```js
+const launch = await browserSession.send('PWA.launch', { manifestId, url })
+const launchedWindow = await browserSession.send('Browser.getWindowForTarget', {
+  targetId: launch.targetId,
+})
+const { targetInfo } = await pageSession.send('Target.getTargetInfo')
+const candidateWindow = await browserSession.send('Browser.getWindowForTarget', {
+  targetId: targetInfo.targetId,
+})
+// Seleccionar la Page del origen esperado cuyo windowId coincide.
+```
+
+Procedimiento portable: preparar el build local vigente con remoto desactivado; abrir Chrome con un directorio de perfil nuevo, confirmar que no existe esa instalación y guardar una promesa sintética en ese origen. Tras instalar/lanzar, comprobar datos y matchMedia('(display-mode: standalone)'). Recargar con context.setOffline(true) y verificar navigator.onLine=false y respuesta desde el worker. Cerrar la ventana; detener realmente el servidor loopback y verificar conexión rechazada. Relanzar la app instalada, asociar la nueva ventana, comprobar los datos guardados y el Diario lazy. Verificar controlador del worker, workerStart positivo y origen aún cerrado. Restaurar la simulación y desinstalar en finally, incluso ante errores; no añadir esta prueba con efectos de instalación a la suite/CI habitual.
+
+No se debe usar context.setOffline como prueba de que una ventana nativa recién abierta ya está offline desde su primer request: el intento anterior no heredó esa condición. La reapertura final se acredita **sin servidor local**, con Internet del sistema disponible. No requiere apagar la red de Windows ni permite afirmar que todos los recursos externos funcionen offline. La [implementación exacta de Chrome](https://raw.githubusercontent.com/chromium/chromium/d0c02bfad08ec92a6ffcf989e53cd995e6381a4c/chrome/browser/devtools/protocol/pwa_handler.cc) explica el target tab y la preferencia de apertura de la ruta CDP; la [resolución de ventana](https://raw.githubusercontent.com/chromium/chromium/d0c02bfad08ec92a6ffcf989e53cd995e6381a4c/chrome/browser/devtools/protocol/browser_handler.cc) permite asociar ambos targets.
+
+El recorrido final aprobó en 18,613 s, con 278 archivos conservados, guard restaurado y desinstalación confirmada. Evidencia local en `.git/codex-checkpoints/pwa-native-target-20261025/`; no se distribuye el perfil ni el checkpoint. No se reinició Chrome/Windows, no se verificó el menú de instalación del usuario, Edge ni Safari. Los resultados A→B anteriores conservan su alcance; este caso no los repite ni los extiende a otros motores.

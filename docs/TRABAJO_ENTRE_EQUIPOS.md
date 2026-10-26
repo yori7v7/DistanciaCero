@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **25 de octubre de 2026** tras cerrar el tipado focalizado. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **25 de octubre de 2026** tras validar la PWA instalada en Windows. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -123,9 +123,17 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — checkpoint PWA Windows, 25 de octubre de 2026
+## Punto de continuación — PWA Windows validada, 25 de octubre de 2026
 
-El tipado quedó publicado en `5378bc5`. Esta entrega corrige el idioma del manifiesto a español; build y requisitos/offline en Chrome 156 aprobaron. El bloque PWA Windows sigue abierto: instalación y desinstalación temporal confirmadas en perfiles aislados, pero la inspección de la ventana standalone falló al asociar su target con Playwright. No acredita standalone/reapertura offline instalada ni un bug de aplicación. Todos los runners terminaron y las instalaciones temporales quedaron desinstaladas. Retomar la asociación directa del target CDP, con cleanup y sin tocar el perfil habitual; detalles y límites al final del avance. Safari real requiere otro equipo. Mantener restricciones locales y de uso normal.
+Sobre `499f5d9`, el recorrido final de Chrome 156/Windows aprobó instalación temporal, apertura standalone, datos guardados y recarga con offline simulado; después cerró y reabrió otra ventana con el servidor local apagado, conservó datos y cargó Diario lazy mediante el worker. Duración 18,61 s, 278 archivos conservados y guard restaurado; desinstalación temporal confirmada y sin runners activos. No se modificó código de aplicación, dependencias ni almacenamiento real del usuario. Recibir la entrega que contiene este cierre; no confundirla con su baseline `499f5d9`.
+
+La corrección fue del harness: `PWA.launch` devuelve un target `tab`, mientras Playwright inspecciona un target `page`; se asocian por `Browser.getWindowForTarget().windowId`, no por igualdad de IDs. La nueva ventana no heredaba el offline del contexto: para la reapertura se detuvo el servidor y se confirmó ECONNREFUSED antes/después, controlador/tiempos del worker y contenido. Internet de Windows siguió disponible y Chrome no se reinició. El intento previo con esa aserción inválida se conserva como diagnóstico, no como fallo de aplicación. Reproducción y límites en el avance y recorridos.
+
+**Pendiente disponible solo con otro equipo: Safari/macOS/iPhone.** El usuario confirmó que solo dispone de Windows. Los bloques locales autorizados quedaron cerrados; Clock y el loop nativo WebKit continúan como límites documentados. No repetir suites ya aprobadas por cambios de documentación ni iniciar funciones nuevas o infraestructura para sustituir esa validación. Mantener restricciones locales, de uso normal y sincronización.
+
+### Antecedente: checkpoint PWA Windows
+
+El tipado quedó publicado en `5378bc5`; `499f5d9` corrigió el idioma del manifiesto a español y guardó el checkpoint de la ventana pendiente. Su instalación/desinstalación y requisitos/offline estaban comprobados; la inspección standalone se resolvió por separado en el cierre de arriba. El perfil habitual se conserva.
 
 ### Antecedente: contratos de datos base cerrados
 
