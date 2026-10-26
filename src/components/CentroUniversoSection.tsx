@@ -8,6 +8,7 @@ import SimulationBanner from './centro-universo/SimulationBanner'
 import LetterStatsPanel from './centro-universo/LetterStatsPanel'
 import BackupPanel from './centro-universo/BackupPanel'
 import GeneralSettingsPanel from './centro-universo/GeneralSettingsPanel'
+import SetupGuide from './centro-universo/SetupGuide'
 import { BookOpen, Edit2, Power, Trash2 } from 'lucide-react'
 import {
   cmsCollections,
@@ -255,6 +256,7 @@ function CentroUniversoSection() {
       </div>
 
       <LocalIdentitySelector />
+      <SetupGuide />
       <GeneralSettingsPanel />
       <BackupPanel />
 
