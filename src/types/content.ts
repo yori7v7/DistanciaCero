@@ -1,4 +1,5 @@
 // ─── Tipos base para el sistema de contenido ───
+import type { SiteSettings } from './siteSettings'
 
 /** Nombre de colección soportada por el CRUD */
 export type CollectionName =
@@ -22,6 +23,7 @@ export interface ContentSnapshot {
   content: Partial<Record<CollectionName, ContentItem[]>>
   overrides: Partial<Record<CollectionName, OverrideMap>>
   hidden: Partial<Record<CollectionName, string[]>>
+  settings?: SiteSettings
 }
 
 /** Item genérico de contenido (antes del merge) */

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Heart, Sparkles } from 'lucide-react'
-import siteConfig from '../data/siteConfig.json'
+import useSiteConfig from '../hooks/useSiteConfig'
 
 const loadingLines = [
   'Inicializando universo...',
@@ -11,6 +11,7 @@ const loadingLines = [
 ]
 
 function LoadingIntro() {
+  const siteConfig = useSiteConfig()
   const [visible, setVisible] = useState<boolean>(() => {
     return sessionStorage.getItem('distancia-cero-intro-seen') !== 'true'
   })

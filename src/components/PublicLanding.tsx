@@ -1,6 +1,6 @@
 import { Heart, Sparkles, Stars, ArrowRight, Music } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import siteConfig from '../data/siteConfig.json'
+import useSiteConfig from '../hooks/useSiteConfig'
 import { useReducedMotion } from '../hooks/useSceneActivity'
 
 interface PublicLandingProps {
@@ -8,6 +8,7 @@ interface PublicLandingProps {
 }
 
 function PublicLanding({ onEnter }: PublicLandingProps) {
+  const siteConfig = useSiteConfig()
   const [phraseIndex, setPhraseIndex] = useState(0)
   const reducedMotion = useReducedMotion()
 

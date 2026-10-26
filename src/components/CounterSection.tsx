@@ -1,6 +1,6 @@
 import { Calendar, Heart, Sparkles } from 'lucide-react'
 import type { ReactNode } from 'react'
-import siteConfig from '../data/siteConfig.json'
+import useSiteConfig from '../hooks/useSiteConfig'
 
 interface CounterStat {
   id: number
@@ -21,8 +21,10 @@ function getTodayOnly(): Date {
 
 function differenceInCalendarDays(fromDate: Date, toDate: Date): number {
   const msPerDay = 1000 * 60 * 60 * 24
-  const start = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate())
-  const end = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate())
+  const start = new Date(0)
+  const end = new Date(0)
+  start.setUTCFullYear(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate())
+  end.setUTCFullYear(toDate.getFullYear(), toDate.getMonth(), toDate.getDate())
   return Math.max(0, Math.round((end.getTime() - start.getTime()) / msPerDay))
 }
 
@@ -39,6 +41,7 @@ function differenceInMonths(fromDate: Date, toDate: Date): number {
 }
 
 function CounterSection() {
+  const siteConfig = useSiteConfig()
   const today = getTodayOnly()
   const metDate = parseLocalDate(siteConfig.dates.metDate)
   const storyStartDate = parseLocalDate(siteConfig.dates.relationshipStartDate)

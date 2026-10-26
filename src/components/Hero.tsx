@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Heart, Sparkles, Music } from 'lucide-react'
 import { useAudio } from '../context/AudioContext'
 import randomPhrases from '../data/randomPhrases.json'
-import siteConfig from '../data/siteConfig.json'
+import useSiteConfig from '../hooks/useSiteConfig'
 
 interface RandomPhrase {
   text: string
@@ -10,6 +10,7 @@ interface RandomPhrase {
 }
 
 function Hero() {
+  const siteConfig = useSiteConfig()
   const { backgroundPlaying, toggleBackground, infoMessage } = useAudio()
 
   const dailyPhrase: RandomPhrase | null = useMemo(() => {

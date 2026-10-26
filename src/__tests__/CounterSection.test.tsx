@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import CounterSection from '../components/CounterSection'
+import { saveSiteSettings } from '../services/siteSettingsService'
 
 // Mock siteConfig to control dates
 vi.mock('../data/siteConfig.json', () => ({
@@ -18,6 +19,7 @@ vi.mock('../data/siteConfig.json', () => ({
 
 describe('CounterSection', () => {
   beforeEach(() => {
+    localStorage.clear()
     // Freeze time to a known date for deterministic tests
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-07-22T12:00:00Z'))
@@ -48,5 +50,12 @@ describe('CounterSection', () => {
     render(<CounterSection />)
     // Should show days until Dec 25 2026 from Jul 22 2026 = ~156
     expect(screen.getByText('156')).toBeDefined()
+  })
+
+  it('respeta los años menores que 100 introducidos en ajustes', () => {
+    vi.setSystemTime(new Date('0100-01-02T12:00:00'))
+    saveSiteSettings({ dates: { metDate: '0099-12-31', relationshipStartDate: '0099-12-31', nextMeetingDate: '0100-01-03' } })
+    const { container } = render(<CounterSection />)
+    expect(Array.from(container.querySelectorAll('.glass-card h3'), card => card.textContent)).toEqual(['2', '3', '0', '1'])
   })
 })

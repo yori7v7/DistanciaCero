@@ -81,9 +81,9 @@ export default function BackupPanel() {
   return (
     <div className="backup-card">
       <h3><Download size={18} /> Respaldo Local</h3>
-      <p>Guarda tus creaciones, las ediciones de originales y los elementos ocultos de las nueve colecciones en un archivo JSON.</p>
+      <p>Guarda tus creaciones, las ediciones de originales, los elementos ocultos y los ajustes generales en un archivo JSON.</p>
 
-      <p>No incluye progreso de lectura, ajustes de la experiencia ni archivos de audio o video. Las imágenes pegadas como base64 sí se guardan; los enlaces conservan su dirección.</p>
+      <p>No incluye progreso de lectura, volumen, selección de escenas ni archivos de audio o video. Las imágenes pegadas como base64 sí se guardan; los enlaces conservan su dirección. Los respaldos antiguos sin ajustes generales conservan los ajustes actuales.</p>
 
       <div className="backup-actions">
         <button type="button" className="control-btn" onClick={handleExport} disabled={isImporting}>

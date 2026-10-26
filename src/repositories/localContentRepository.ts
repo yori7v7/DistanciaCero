@@ -21,6 +21,8 @@ import {
   writeStorageTransaction
 } from '../utils/localContentStore'
 import { buildUpdateMetadata, withCreateMetadata } from '../services/contentMetadataService'
+import type { SiteSettings } from '../types/siteSettings'
+import { SITE_SETTINGS_STORAGE_KEY, validateSiteSettings } from '../utils/siteSettings'
 
 const LEGACY_MONTHLY_LETTERS_KEY = 'distancia-cero-local-monthly-letters'
 const LEGACY_OPEN_WHEN_LETTERS_KEY = 'distancia-cero-local-open-when'
@@ -266,6 +268,7 @@ export function restoreContentSnapshot(snapshot: ContentSnapshot): void {
     if (Object.hasOwn(snapshot.overrides, name)) values[getOverrideStorageKey(name)] = snapshot.overrides[name]
     if (Object.hasOwn(snapshot.hidden, name)) values[getHiddenStorageKey(name)] = snapshot.hidden[name]
   }
+  if (Object.hasOwn(snapshot, 'settings')) values[SITE_SETTINGS_STORAGE_KEY] = validateSiteSettings(snapshot.settings)
   writeStorageTransaction(values)
 }
 
@@ -276,5 +279,24 @@ export function getContentSnapshot(): ContentSnapshot {
     snapshot.overrides[name] = getLocalOverrides(name, true)
     snapshot.hidden[name] = getHiddenItemIds(name, true)
   }
+  snapshot.settings = getSiteSettings(true)
   return snapshot
+}
+
+/** La UI tolera datos inaccesibles; los respaldos requieren una lectura íntegra. */
+export function getSiteSettings(strict = false): SiteSettings {
+  try {
+    if (!canUseLocalStorage()) throw new ContentStorageError()
+    const raw = window.localStorage.getItem(SITE_SETTINGS_STORAGE_KEY)
+    return raw === null ? {} : validateSiteSettings(JSON.parse(raw))
+  } catch {
+    if (strict) throw new ContentStorageError()
+    return {}
+  }
+}
+
+export function saveSiteSettings(settings: SiteSettings): SiteSettings {
+  const checked = validateSiteSettings(settings)
+  writeStorageTransaction({ [SITE_SETTINGS_STORAGE_KEY]: checked })
+  return checked
 }

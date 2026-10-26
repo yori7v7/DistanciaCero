@@ -1,5 +1,6 @@
 import { CONTENT_COLLECTIONS, type ContentItem, type ContentSnapshot, type OverrideMap } from '../types/content'
 import { isPlainObject } from './helpers'
+import { validateSiteSettings } from './siteSettings'
 
 const textFields = new Set([
   'title', 'text', 'description', 'date', 'tag', 'category', 'artist', 'sourceType',
@@ -84,6 +85,10 @@ export function validateContentBackup(input: unknown): ContentSnapshot {
         snapshot.hidden[collection] = [...new Set(value.map(String))]
       }
     }
+  }
+  if (input.version === 2 && Object.hasOwn(input, 'settings')) {
+    try { snapshot.settings = validateSiteSettings(input.settings) } catch { invalid('los ajustes generales') }
+    entries++
   }
   if (entries === 0) invalid('contenido vacío o colecciones ausentes')
   return snapshot

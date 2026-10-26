@@ -7,6 +7,7 @@ import CrudEditorPanel from './centro-universo/CrudEditorPanel'
 import SimulationBanner from './centro-universo/SimulationBanner'
 import LetterStatsPanel from './centro-universo/LetterStatsPanel'
 import BackupPanel from './centro-universo/BackupPanel'
+import GeneralSettingsPanel from './centro-universo/GeneralSettingsPanel'
 import { BookOpen, Edit2, Power, Trash2 } from 'lucide-react'
 import {
   cmsCollections,
@@ -254,6 +255,7 @@ function CentroUniversoSection() {
       </div>
 
       <LocalIdentitySelector />
+      <GeneralSettingsPanel />
       <BackupPanel />
 
       <div className="crud-central-shell">
