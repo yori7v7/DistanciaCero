@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **26 de octubre de 2026** tras cerrar ajustes generales del CMS. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **26 de octubre de 2026** tras cerrar la primera configuración guiada. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -123,7 +123,17 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Punto de continuación — ajustes generales cerrados, 26 de octubre de 2026
+## Primera configuración guiada cerrada — 26 de octubre de 2026
+
+Implementación `05a713e`, sobre `e591908`. Guía opcional en Centro del Universo: Nombres, Fechas y Revisar. Precarga los ajustes existentes, conserva borradores al volver y solo escribe al confirmar el último paso. Cancelar confirma cambios; importaciones o cambios externos bloquean continuar hasta cargar los valores actuales. Un fallo de guardado conserva el borrador. Comparte campos y validación con el panel normal; no añade almacenamiento, identidad ni sincronización remota.
+
+Validación: tipos, **388/388 unitarias en 26 archivos** (211,21 s) y build/PWA aprobados. **2/2 E2E Chromium** (guía y ajustes, 49,78 s); **2/2 del caso nuevo en WebKit/Firefox** (100,98 s). Sin omitidas, inestables ni errores externos reportados. Los tres supervisores finales conservaron 290 archivos y restauraron sus guards. Revisión independiente sin hallazgos; captura móvil de revisión inspeccionada, sin desbordamiento. El intento inicial se detuvo en tipos por una opción de Testing Library usada por error en siete consultas; se corrigió antes de la validación final, sin alterar producción para ocultarlo.
+
+Evidencia ignorada en `.git/codex-checkpoints/setup-guide-20261026/`. Reproducción: `npm.cmd run verify:local`; después `npm.cmd run test:e2e -- setup-guide.spec.ts site-settings.spec.ts` y `npm.cmd run test:e2e:cross-browser -- setup-guide.spec.ts`, por separado y con archivos/documentos congelados durante E2E. El inventario es ahora 52 por motor, no una suite completa ejecutada en este bloque. Los resultados previos conservan sus fechas. No acredita Safari real.
+
+**Siguiente bloque: contenido y recursos**, sin inventar datos personales; revisar archivos disponibles y concretar la personalización necesaria. No se inició ese bloque al cerrar esta entrega por proximidad al límite de uso normal. El borrador de la guía es temporal: recargar antes de guardar lo descarta. Mantener trabajo local, Supabase desactivado y sin despliegues, cambios de modelo/modalidad, reserva, compras ni resets. Recibir también el commit documental que contiene este cierre; hash final y envío se comprueban al entregar.
+
+### Antecedente: ajustes generales cerrados, 26 de octubre de 2026
 
 Después de cerrar la PWA Windows en `4be45c4`, el usuario autorizó avanzar por ajustes generales, primera configuración guiada y contenido/recursos, cerrando cada bloque antes del siguiente. **El primero está terminado en `0125775`; el segundo sigue pendiente.** Recibir también el commit documental que contiene este punto; el hash final y su push se comprueban al entregar.
 

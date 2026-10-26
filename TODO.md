@@ -46,7 +46,7 @@ Estado del **26 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y tipado acotado están terminados. El usuario autorizó la siguiente etapa local, en orden:
 
 1. [x] **Ajustes generales desde el CMS**, cerrado el 26 de octubre (`0125775`): siete nombres/fechas, configuración reactiva y respaldo v2 recuperable. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, seis E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Documentación actualizada.
-2. [ ] **Primera configuración guiada**: siguiente bloque, aún sin implementar ni validar. Reutilizar los ajustes y conservar el contenido existente.
+2. [x] **Primera configuración guiada**, cerrada el 26 de octubre (`05a713e`): guía opcional del CMS en tres pasos, sin escribir hasta confirmar. Tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados.
 3. [ ] **Contenido y recursos**: después de cerrar la configuración guiada; concretar contenido y archivos disponibles sin inventar datos personales.
 
 La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.

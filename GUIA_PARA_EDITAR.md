@@ -64,6 +64,10 @@ Abrir una carta marca su progreso en ese navegador. **Resetear Progreso** borra 
 
 ---
 
+## Primera configuración guiada
+
+En el CMS, abre **Configura tu universo → Empezar guía** (o **Revisar con la guía** si ya guardaste ajustes). Recorre Nombres, Fechas y Revisar; **Anterior** conserva el borrador. Solo **Guardar configuración** persiste los datos. Cancelar pide confirmación si cambiaste valores. Revisa las fechas de plantilla antes de confirmar. Si llegan otros ajustes, carga los actuales antes de continuar. Se conservan creaciones e identidades; los datos guardados usan el mismo respaldo de ajustes generales. El borrador sin guardar no sobrevive a una recarga.
+
 ## Configuración general
 
 Abre **Ajustes → Centro del Universo → Ajustes generales**. Puedes cambiar:

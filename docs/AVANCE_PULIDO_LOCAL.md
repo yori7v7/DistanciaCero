@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Primera configuración guiada cerrada, 26 de octubre:** `05a713e`; tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Siguiente: contenido/recursos. Detalles y límites al final.
+
 - **Ajustes generales cerrados, 26 de octubre:** nuevo bloque local autorizado después del cierre previo, implementación `0125775`. Siete nombres/fechas editables en CMS, actualización sin recargar y respaldo v2 con ajustes opcionales. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, **6/6 E2E Chromium** y **2/2 del recorrido nuevo en Firefox/WebKit** aprobados. Tres supervisores con 286 archivos congelados y guards restaurados. Siguiente pendiente: primera configuración guiada, todavía sin implementar. Detalles al final y punto portable actualizado.
 
 - **PWA instalada en Windows validada, 25 de octubre:** recorrido final aprobado en Chrome 156, 18,61 s, 278 archivos conservados y desinstalación confirmada. Standalone, datos y recarga con offline simulado; cierre/reapertura sin servidor local y Diario lazy desde el worker. El corte no se aplica a Internet del sistema ni se reinicia Chrome. Alcance y reproducción al final; Safari real permanece pendiente de equipo.
@@ -717,3 +719,14 @@ Evidencia ignorada en `.git/codex-checkpoints/general-settings-20261026/`: scrip
 La documentación pasó revisión independiente y comprobación de 69 enlaces locales en 14 documentos, sin enlaces rotos. El diff no contiene errores de espacios. No quedaron runners propios ni servidores en 5173/5174 al terminar.
 
 Siguiente bloque: primera configuración guiada, pendiente; contenido/recursos va después. No se acredita Safari real ni se repiten las comprobaciones PWA instaladas por este cambio. Clock y loop nativo WebKit mantienen sus límites. Sin Supabase, despliegues, cambios de modelo/modalidad, reserva, compras ni resets. Commit y push normal de la entrega documental se comprueban al guardar.
+
+
+## Primera configuración guiada cerrada — 26 de octubre de 2026
+
+Implementación `05a713e`, sobre `e591908`. Guía opcional en Centro del Universo: Nombres, Fechas y Revisar. Precarga los ajustes existentes, conserva borradores al volver y solo escribe al confirmar el último paso. Cancelar confirma cambios; importaciones o cambios externos bloquean continuar hasta cargar los valores actuales. Un fallo de guardado conserva el borrador. Comparte campos y validación con el panel normal; no añade almacenamiento, identidad ni sincronización remota.
+
+Validación: tipos, **388/388 unitarias en 26 archivos** (211,21 s) y build/PWA aprobados. **2/2 E2E Chromium** (guía y ajustes, 49,78 s); **2/2 del caso nuevo en WebKit/Firefox** (100,98 s). Sin omitidas, inestables ni errores externos reportados. Los tres supervisores finales conservaron 290 archivos y restauraron sus guards. Revisión independiente sin hallazgos; captura móvil de revisión inspeccionada, sin desbordamiento. El intento inicial se detuvo en tipos por una opción de Testing Library usada por error en siete consultas; se corrigió antes de la validación final, sin alterar producción para ocultarlo.
+
+Evidencia ignorada en `.git/codex-checkpoints/setup-guide-20261026/`. Reproducción: `npm.cmd run verify:local`; después `npm.cmd run test:e2e -- setup-guide.spec.ts site-settings.spec.ts` y `npm.cmd run test:e2e:cross-browser -- setup-guide.spec.ts`, por separado y con archivos/documentos congelados durante E2E. El inventario es ahora 52 por motor, no una suite completa ejecutada en este bloque. Los resultados previos conservan sus fechas. No acredita Safari real.
+
+**Siguiente bloque: contenido y recursos**, sin inventar datos personales; revisar archivos disponibles y concretar la personalización necesaria. No se inició ese bloque al cerrar esta entrega por proximidad al límite de uso normal. El borrador de la guía es temporal: recargar antes de guardar lo descarta. Mantener trabajo local, Supabase desactivado y sin despliegues, cambios de modelo/modalidad, reserva, compras ni resets. Recibir también el commit documental que contiene este cierre; hash final y envío se comprueban al entregar.

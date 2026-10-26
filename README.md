@@ -32,6 +32,8 @@ Preview utiliza normalmente `http://localhost:4173/`. El contenido del navegador
 
 En `/app`, abrir **Ajustes → Centro del Universo**. El panel edita nueve colecciones: razones, promesas, fechas, sueños, historia, galería, playlist, cartas mensuales y cartas «Abrir cuando». **Originales** permite personalizar, ocultar y restaurar datos base; **Tus creaciones** permite crear, editar y eliminar contenido local.
 
+**Configura tu universo** ofrece una guía opcional de nombres, fechas y revisión. Permite volver o cancelar y solo guarda al confirmar el último paso. Los valores existentes se precargan.
+
 En **Ajustes generales** también puedes editar los dos nombres, el nombre compartido, el nombre de portada y las tres fechas de los contadores. Guardar actualiza la experiencia sin recargar; restaurar la plantilla conserva tus creaciones.
 
 Las ediciones del panel se guardan en ese navegador, sin cambiar los archivos del proyecto. El respaldo JSON conserva creaciones, personalizaciones, ocultos y ajustes generales; excluye progreso, identidad, volumen, selección de escenas y archivos multimedia externos. La importación acepta v1/v2 y valida antes de escribir. Los apartados ausentes se conservan, incluidos los ajustes cuando el respaldo es antiguo. Para trasladar contenido entre equipos, transferir el archivo privadamente; no añadirlo al repositorio público.
@@ -86,4 +88,4 @@ Libre para uso personal y portafolio. Modifica, comparte y adapta como quieras.
 
 El mantenimiento local del 23 de octubre resolvió los avisos de tamaño de chunks e import dinámico: tipos, 343 unitarias/23 archivos, build/PWA y regresiones PWA/Universo aprobados. Clock permanece como deprecación de Fiber, sin ocultarla ni cambiar dependencias. Estado y límites en el avance.
 
-El 26 de octubre se cerró el nuevo panel de ajustes generales: tipos, **382 unitarias en 25 archivos** y build/PWA aprobados; seis recorridos Chromium de respaldos/ajustes y el recorrido nuevo en Firefox y WebKit también aprobaron. Son comprobaciones acotadas; el inventario actual es de 51 recorridos por motor y no se ejecutó completo en este bloque.
+El 26 de octubre se cerró el nuevo panel de ajustes generales: tipos, **382 unitarias en 25 archivos** y build/PWA aprobados; seis recorridos Chromium de respaldos/ajustes y el recorrido nuevo en Firefox y WebKit también aprobaron. Son comprobaciones acotadas; el inventario en ese cierre era de 51 recorridos por motor y no se ejecutó completo en este bloque.

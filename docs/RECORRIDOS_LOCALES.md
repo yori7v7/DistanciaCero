@@ -42,7 +42,7 @@ npx playwright install firefox webkit
 npm run test:e2e:cross-browser
 ```
 
-`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **51 por motor** tras añadir ajustes generales el 26 de octubre; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
+`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **52 por motor** tras añadir ajustes generales y configuración guiada el 26 de octubre; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
 
 ### Ajustes generales — 26 de octubre
 
@@ -139,3 +139,8 @@ Procedimiento portable: preparar el build local vigente con remoto desactivado; 
 No se debe usar context.setOffline como prueba de que una ventana nativa recién abierta ya está offline desde su primer request: el intento anterior no heredó esa condición. La reapertura final se acredita **sin servidor local**, con Internet del sistema disponible. No requiere apagar la red de Windows ni permite afirmar que todos los recursos externos funcionen offline. La [implementación exacta de Chrome](https://raw.githubusercontent.com/chromium/chromium/d0c02bfad08ec92a6ffcf989e53cd995e6381a4c/chrome/browser/devtools/protocol/pwa_handler.cc) explica el target tab y la preferencia de apertura de la ruta CDP; la [resolución de ventana](https://raw.githubusercontent.com/chromium/chromium/d0c02bfad08ec92a6ffcf989e53cd995e6381a4c/chrome/browser/devtools/protocol/browser_handler.cc) permite asociar ambos targets.
 
 El recorrido final aprobó en 18,613 s, con 278 archivos conservados, guard restaurado y desinstalación confirmada. Evidencia local en `.git/codex-checkpoints/pwa-native-target-20261025/`; no se distribuye el perfil ni el checkpoint. No se reinició Chrome/Windows, no se verificó el menú de instalación del usuario, Edge ni Safari. Los resultados A→B anteriores conservan su alcance; este caso no los repite ni los extiende a otros motores.
+
+
+### Configuración guiada — 26 de octubre
+
+La guía opcional del CMS se comprobó en Chromium, WebKit y Firefox de Windows: volver conserva datos, cancelar no escribe, revisión móvil y foco funcionan, guardar actualiza portada/contadores y recargar conserva ajustes y creaciones. Dos casos Chromium (guía y ajustes) y solo el nuevo en los otros motores aprobaron. Reproducción y resultados exactos en el avance.

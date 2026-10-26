@@ -355,6 +355,8 @@ La API síncrona `siteSettingsService` expone `getSiteSettings()`, `saveSiteSett
 
 La lectura de la experiencia devuelve `{}` si los ajustes son inaccesibles o están dañados, sin reescribirlos. La exportación usa lectura estricta y falla para evitar omitirlos silenciosamente. Los hooks `useSiteSettings`/`useSiteConfig` reciben el evento propio, `storage` de esa clave o vaciado del origen y contenido `all` al importar. Portada, landing, introducción y contadores usan la configuración resuelta. Un borrador se conserva ante cambios externos detectados y requiere cargar los ajustes actuales antes de guardar; no es un bloqueo de escrituras concurrentes.
 
+`SetupGuide` ofrece una guía opcional dentro del CMS con Nombres, Fechas y Revisar. Comparte campos y conversión con `GeneralSettingsPanel` mediante `siteSettingsForm`; no añade claves de almacenamiento. Valida cada paso y guarda todos los ajustes únicamente al confirmar la revisión con el mismo servicio. Volver conserva el borrador; cancelar confirma si cambió y no escribe. Los ajustes existentes se precargan; cambios externos bloquean continuar hasta cargar los actuales. Un fallo al guardar conserva revisión y borrador. El estado del recorrido es temporal y no se incluye en respaldos.
+
 ## 8. Export/import v2
 
 El respaldo local v2 mantiene este shape conceptual:

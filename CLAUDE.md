@@ -4,7 +4,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 
 ## ¿Qué es?
 
-**Distancia Cero** es una SPA romántica personalizable con cartas, recuerdos, música y escenas 3D. Los pasos 1–7 del pulido local están cerrados, con validación final completa. El usuario autorizó después avanzar por ajustes generales, primera configuración guiada y contenido/recursos. El primer bloque cerró el 26 de octubre; el segundo sigue pendiente. Supabase y publicación permanecen fuera del alcance. Los archivos de publicación existentes no acreditan un despliegue vigente.
+**Distancia Cero** es una SPA romántica personalizable con cartas, recuerdos, música y escenas 3D. Los pasos 1–7 del pulido local están cerrados, con validación final completa. El usuario autorizó después avanzar por ajustes generales, primera configuración guiada y contenido/recursos. Los dos primeros bloques cerraron el 26 de octubre; contenido/recursos sigue pendiente. Supabase y publicación permanecen fuera del alcance. Los archivos de publicación existentes no acreditan un despliegue vigente.
 
 ## Stack
 
@@ -20,7 +20,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 | Publicación | Script heredado de GitHub Pages y configuración Vercel; fuera de la etapa local |
 | PWA | vite-plugin-pwa (manifest, autoUpdate) + cliente virtual `registerSW` en `main.tsx` |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (25 archivos, 382 tests; comprobados al cerrar ajustes generales el 26 de octubre; el paso 7 cerró con 338) |
+| Tests | Vitest + @testing-library/react (26 archivos, 388 tests; comprobados al cerrar configuración guiada el 26 de octubre; el paso 7 cerró con 338) |
 | CI | GitHub Actions: tipos, build, unitarias y job E2E (Node 22, Ubuntu); no ejecutado desde esta etapa local |
 
 ## Rutas
@@ -111,7 +111,7 @@ src/
 │   ├── audio.ts
 │   ├── sections.ts           # Contratos de datos base recibidos por los lectores
 │   └── env.d.ts
-├── __tests__/               # 25 archivos de test
+├── __tests__/               # 26 archivos de test
 └── styles/
     └── tailwind.css         # Design tokens y estilos de la experiencia
 ```
@@ -273,7 +273,7 @@ Template seguro en `.env.example`. Valores reales van en `.env.local` (no commit
 - `isPlainObject()` está en `helpers.ts` (no duplicar en componentes)
 
 ### Tests
-- 25 archivos en `src/__tests__/` con extensión `.test.ts` o `.test.tsx`
+- 26 archivos en `src/__tests__/` con extensión `.test.ts` o `.test.tsx`
 - Entorno: jsdom, setup: `src/test-setup.ts` (importa `@testing-library/jest-dom/vitest`), globals: true
 - Los tests de almacenamiento limpian localStorage entre casos; Vitest excluye E2E, node_modules, dist y copias de recuperación dentro de `.git`.
 - Usar `describe`/`it`/`expect` de vitest (importados explícitamente)
