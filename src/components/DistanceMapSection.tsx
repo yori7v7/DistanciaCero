@@ -14,7 +14,7 @@ function DistanceMapSection({ config = siteConfig.distanceMap }: { config?: Dist
   const hasDistance = typeof config.kilometers === 'number' && Number.isFinite(config.kilometers) && config.kilometers >= 0
   const renderPoint = (index: number) => {
     const point = points[index]
-    const content = <><div className="portrait-placeholder"><span>{index + 1}</span></div><MapPin size={22} aria-hidden="true" /><strong>{point.label}</strong>{!point.link && <small>Ubicación pendiente</small>}</>
+    const content = <><div className="portrait-placeholder"><span>{index + 1}</span></div><MapPin size={22} aria-hidden="true" /><strong>{point.label}</strong></>
     const className = `map-point point-${index === 0 ? 'left' : 'right'} portrait-point`
     return point.link
       ? <a className={className} href={point.link} target="_blank" rel="noreferrer">{content}</a>
@@ -49,6 +49,7 @@ function DistanceMapSection({ config = siteConfig.distanceMap }: { config?: Dist
           <p>
             {hasDistance ? 'Esta distancia se indicó al configurar la página; no se calcula automáticamente.' : 'Añade sus ubicaciones y una distancia para personalizar este rincón del universo.'}
           </p>
+          {points.some(point => !point.link) && <p className="text-xs">Ubicaciones pendientes de configurar.</p>}
 
           <div className="distance-links">
             {points.map((point, index) => point.link && <a key={index} href={point.link} target="_blank" rel="noreferrer"><ExternalLink size={16} aria-hidden="true" />Ver punto {index + 1}</a>)}

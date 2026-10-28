@@ -8,7 +8,7 @@ describe('mapa de la plantilla', () => {
   it('muestra pendientes sin enlaces vacíos ni una ruta calculada ficticia', () => {
     render(<DistanceMapSection />)
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
-    expect(screen.getAllByText('Ubicación pendiente')).toHaveLength(2)
+    expect(screen.getByText('Ubicaciones pendientes de configurar.')).toBeVisible()
     expect(screen.getByText('Distancia pendiente')).toBeVisible()
   })
   it('usa ubicaciones y distancia configuradas y rechaza protocolos inválidos', () => {
