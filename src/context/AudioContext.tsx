@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import type { AudioTrack, AudioContextValue } from '../types/audio'
 import siteConfig from '../data/siteConfig.json'
 import { resolveAudioSource } from '../utils/audioSource'
+import { resolveExternalUrl } from '../utils/externalUrl'
 import { claimAudio, isCurrentAudio, pauseAllAudio, registerAudio, releaseAudio } from '../utils/audioCoordinator'
 
 interface AudioContextExtended extends AudioContextValue {
@@ -25,7 +26,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   const [pendingTrack, setPendingTrack] = useState<AudioTrack | null>(null)
   const [infoMessage, setInfoMessage] = useState(BACKGROUND_TRACK
     ? 'Tema principal listo para reproducirse.'
-    : 'El tema principal todavía no tiene ruta de audio.')
+    : 'Añade una canción de fondo para activar el ambiente.')
   const [backgroundVolume, setBackgroundVolume] = useState(siteConfig.audio.defaultVolume)
 
   const pauseBackground = useCallback(() => {
@@ -57,7 +58,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const audio = backgroundAudioRef.current
     if (!audio) return
     if (!BACKGROUND_TRACK) {
-      setInfoMessage('El tema principal todavía no tiene ruta de audio.')
+      setInfoMessage('Añade una canción de fondo para activar el ambiente.')
       return
     }
     if (currentTrackRef.current) {
@@ -75,7 +76,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     } catch {
       if (!mountedRef.current || request !== backgroundRequestRef.current) return
       pauseBackground()
-      setInfoMessage(`No se pudo reproducir el tema principal. Ruta usada: ${BACKGROUND_TRACK}`)
+      setInfoMessage('No se pudo reproducir el audio de ambiente. Revisa que el archivo esté disponible.')
     }
   }, [pauseBackground])
 
@@ -111,7 +112,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     }
     const handleBackgroundError = () => {
       pauseBackground()
-      setInfoMessage(`No se pudo cargar el tema principal en: ${BACKGROUND_TRACK}`)
+      setInfoMessage('No se pudo cargar el audio de ambiente. Revisa que el archivo esté disponible.')
     }
     const handleTrackPause = () => {
       if (!track.paused || !isCurrentAudio(track)) return
@@ -181,7 +182,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     if (!resolvedTrackPath) {
       setInfoMessage(track?.src?.trim()
         ? 'Esa canción tiene una ruta de audio no válida.'
-        : 'Esa canción local todavía no tiene ruta.')
+        : 'Esa canción aún no tiene audio. Añádelo desde el Centro del Universo.')
       return
     }
     const audio = trackAudioRef.current
@@ -213,7 +214,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     } catch {
       if (!mountedRef.current || request !== trackRequestRef.current) return
       pauseTrack()
-      setInfoMessage(`No se pudo reproducir ${track.title}. Ruta usada: ${resolvedTrackPath}`)
+      setInfoMessage(`No se pudo reproducir ${track.title}. Revisa que el audio esté disponible.`)
     }
   }
 
@@ -227,14 +228,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const openExternalLink = (item: AudioTrack) => {
     // Keep the HTTP(S) allowlist: CMS links must not execute in the app.
-    const safeUrl = (() => {
-      try {
-        const url = new URL(item?.link || '')
-        return url.protocol === 'https:' || url.protocol === 'http:' ? item.link : null
-      } catch {
-        return null
-      }
-    })()
+    const safeUrl = resolveExternalUrl(item?.link)
 
     if (safeUrl) {
       pauseAllAudio()

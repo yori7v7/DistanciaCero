@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 const root = fileURLToPath(new URL('../', import.meta.url))
 const checks = [
   ['TypeScript', 'node_modules/typescript/bin/tsc', ['--noEmit']],
+  ['Recursos configurados', 'scripts/check-resources.mjs', []],
   ['Pruebas unitarias', 'node_modules/vitest/vitest.mjs', ['run']],
   ['Build local', 'node_modules/vite/bin/vite.js', ['build']]
 ]

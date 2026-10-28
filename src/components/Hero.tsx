@@ -11,7 +11,7 @@ interface RandomPhrase {
 
 function Hero() {
   const siteConfig = useSiteConfig()
-  const { backgroundPlaying, toggleBackground, infoMessage } = useAudio()
+  const { backgroundPlaying, backgroundTrackPath, toggleBackground, infoMessage } = useAudio()
 
   const dailyPhrase: RandomPhrase | null = useMemo(() => {
     if (!randomPhrases.length) return null
@@ -71,12 +71,13 @@ function Hero() {
           </a>
           <button
             onClick={toggleBackground}
+            disabled={!backgroundTrackPath}
             className="ghost-button"
-            title={backgroundPlaying ? 'Pausar música' : 'Activar música'}
-            aria-label={backgroundPlaying ? 'Pausar música de fondo' : 'Activar música de fondo'}
+            title={!backgroundTrackPath ? 'Añade una canción de fondo' : backgroundPlaying ? 'Pausar música' : 'Activar música'}
+            aria-label={!backgroundTrackPath ? 'Añade una canción de fondo' : backgroundPlaying ? 'Pausar música de fondo' : 'Activar música de fondo'}
           >
             <Music size={16} />
-            <span>{backgroundPlaying ? 'Pausar canción' : 'Activar canción'}</span>
+            <span>{!backgroundTrackPath ? 'Añade una canción de fondo' : backgroundPlaying ? 'Pausar canción' : 'Activar canción'}</span>
           </button>
         </div>
         {infoMessage && <p role="status" className="text-sm text-muted">{infoMessage}</p>}

@@ -1,10 +1,25 @@
 import SectionTitle from './SectionTitle'
 import { ExternalLink, Heart, MapPin, Navigation } from 'lucide-react'
+import siteConfig from '../data/siteConfig.json'
+import { resolveExternalUrl } from '../utils/externalUrl'
 
-const location1 = '#'
-const location2 = '#'
+interface DistanceMapConfig {
+  point1: { label: string; link: string }
+  point2: { label: string; link: string }
+  kilometers: number | null
+}
 
-function DistanceMapSection() {
+function DistanceMapSection({ config = siteConfig.distanceMap }: { config?: DistanceMapConfig }) {
+  const points = [config.point1, config.point2].map(point => ({ ...point, link: resolveExternalUrl(point.link) }))
+  const hasDistance = typeof config.kilometers === 'number' && Number.isFinite(config.kilometers) && config.kilometers >= 0
+  const renderPoint = (index: number) => {
+    const point = points[index]
+    const content = <><div className="portrait-placeholder"><span>{index + 1}</span></div><MapPin size={22} aria-hidden="true" /><strong>{point.label}</strong>{!point.link && <small>Ubicación pendiente</small>}</>
+    const className = `map-point point-${index === 0 ? 'left' : 'right'} portrait-point`
+    return point.link
+      ? <a className={className} href={point.link} target="_blank" rel="noreferrer">{content}</a>
+      : <div className={className}>{content}</div>
+  }
   return (
     <section className="section" id="distancia">
       <SectionTitle
@@ -14,49 +29,29 @@ function DistanceMapSection() {
       />
 
       <article className="distance-card fade-up distance-card-final">
-        <a className="map-point point-left portrait-point" href={location1} target="_blank" rel="noreferrer">
-          <div className="portrait-placeholder">
-            <span>1</span>
-          </div>
-          <MapPin size={22} />
-          <strong>Ubicación 1</strong>
-        </a>
+        {renderPoint(0)}
 
         <div className="map-line">
           <Heart size={28} />
         </div>
 
-        <a className="map-point point-right portrait-point" href={location2} target="_blank" rel="noreferrer">
-          <div className="portrait-placeholder">
-            <span>2</span>
-          </div>
-          <MapPin size={22} />
-          <strong>Ubicación 2</strong>
-        </a>
+        {renderPoint(1)}
 
         <div className="distance-message distance-message-final">
           <Navigation size={24} />
           <h3>Kilómetros de distancia</h3>
 
           <div className="km-counter">
-            <span className="km-number">---</span>
-            <span className="km-label">km aprox. por carretera</span>
+            <span className="km-number">{hasDistance ? config.kilometers.toLocaleString('es-MX') : '---'}</span>
+            <span className="km-label">{hasDistance ? 'km configurados' : 'Distancia pendiente'}</span>
           </div>
 
           <p>
-            Según la ruta mostrada en Maps, entre ustedes hay una distancia que se mide en kilómetros.
-            El mapa marca distancia, sí, pero esta página existe justo para que todo se sienta mucho más cerca.
+            {hasDistance ? 'Esta distancia se indicó al configurar la página; no se calcula automáticamente.' : 'Añade sus ubicaciones y una distancia para personalizar este rincón del universo.'}
           </p>
 
           <div className="distance-links">
-            <a href={location1} target="_blank" rel="noreferrer">
-              <ExternalLink size={16} />
-              Ver punto 1
-            </a>
-            <a href={location2} target="_blank" rel="noreferrer">
-              <ExternalLink size={16} />
-              Ver punto 2
-            </a>
+            {points.map((point, index) => point.link && <a key={index} href={point.link} target="_blank" rel="noreferrer"><ExternalLink size={16} aria-hidden="true" />Ver punto {index + 1}</a>)}
           </div>
         </div>
       </article>

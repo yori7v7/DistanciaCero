@@ -181,7 +181,7 @@ export const cmsCollections: Record<CollectionName, CmsCollectionConfig> = {
       { name: 'image', label: 'Imagen (base64 o URL)', type: 'textarea', rows: 2, placeholder: 'Pega una URL o usa el botón de subir archivo' },
       { name: 'alt', label: 'Texto alternativo', placeholder: 'Describe la imagen' },
       { name: 'tag', label: 'Tag', placeholder: 'Ej. foto, concierto, viaje' },
-      { name: 'videoUrl', label: 'Video URL', placeholder: 'https://...' },
+      { name: 'videoUrl', label: 'Enlace de video (solo respaldo, no se reproduce)', placeholder: 'https://...' },
     ],
   },
   playlist: {

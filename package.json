@@ -11,6 +11,7 @@
         "deploy": "gh-pages -d dist",
         "typecheck": "tsc --noEmit",
         "verify:local": "node scripts/verify-local.mjs",
+        "check:resources": "node scripts/check-resources.mjs",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:e2e": "playwright test",

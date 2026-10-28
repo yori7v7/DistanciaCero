@@ -92,7 +92,7 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
         </div>
 
         <p className="mt-10 text-xs text-muted/60">
-          Solo {siteConfig.couple.herName} y {siteConfig.couple.yourName} pueden entrar.
+          Un espacio para compartir su historia, a su ritmo.
         </p>
       </div>
 

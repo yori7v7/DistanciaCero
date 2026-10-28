@@ -7,6 +7,11 @@ import PlaylistSection from '../components/PlaylistSection'
 import type { SceneMusicConfig } from '../types/audio'
 import { resolveAudioSource } from '../utils/audioSource'
 
+vi.mock('../data/siteConfig.json', async importOriginal => {
+  const actual = await importOriginal<{ default: typeof import('../data/siteConfig.json') }>()
+  return { ...actual, default: { ...actual.default, audio: { ...actual.default.audio, backgroundTrackPath: '/audio/background-test.wav' } } }
+})
+
 const fixtures: SceneMusicConfig[] = [
   { sectionId: 'inicio', label: 'Inicio de prueba', title: 'Tema A', artist: 'Prueba', src: '/audio/a.wav', volume: 0.7 },
   { sectionId: 'universo', label: 'Universo de prueba', title: 'Tema B', artist: 'Prueba', src: '/audio/b.wav', volume: 0.5 },
@@ -206,7 +211,7 @@ describe('coordinación de escenas, ambiente y playlist', () => {
     await flush()
     expect(result.current.backgroundPlaying).toBe(false)
     expect(background.paused).toBe(true)
-    expect(result.current.infoMessage).toContain('No se pudo reproducir el tema principal')
+    expect(result.current.infoMessage).toContain('No se pudo reproducir el audio de ambiente')
   })
 
   it('ignora resultados antiguos tras cambiar rápidamente o detener la playlist', async () => {
@@ -257,7 +262,7 @@ describe('coordinación de escenas, ambiente y playlist', () => {
     const plays = play.mock.calls.length
     await act(async () => { await result.current.playLocalTrack({ title: 'Vacía', src: ' ' }) })
     expect(result.current.currentTrack?.id).toBe('a')
-    expect(result.current.infoMessage).toContain('todavía no tiene ruta')
+    expect(result.current.infoMessage).toContain('aún no tiene audio')
     expect(play).toHaveBeenCalledTimes(plays)
     expect(track.paused).toBe(false)
   })

@@ -8,10 +8,18 @@ import { listFiles, deleteFile, getFileUrl } from '../services/storageService'
 import { isRemoteContentEnabled } from '../integrations/supabase/client'
 import { isSupabaseAuthenticated } from '../services/supabaseAuthService'
 import type { PlaylistContent } from '../types/sections'
+import { resolveAudioSource } from '../utils/audioSource'
+import { resolveExternalUrl } from '../utils/externalUrl'
+
+function hasPlaylistSource(item: PlaylistContent): boolean {
+  if (item.sourceType === 'placeholder') return false
+  return item.sourceType === 'local' ? Boolean(resolveAudioSource(item.src)) : Boolean(resolveExternalUrl(item.link))
+}
 
 function PlaylistSection({ playlist = [] }: { playlist?: PlaylistContent[] }) {
   const {
     backgroundPlaying,
+    backgroundTrackPath,
     currentTrack,
     pendingTrack,
     infoMessage,
@@ -74,13 +82,12 @@ function PlaylistSection({ playlist = [] }: { playlist?: PlaylistContent[] }) {
     _path: f.path
   }))
 
-  const mainTrack = visiblePlaylist[0]
-  const baseItems = [...visiblePlaylist.slice(1), ...uploadedItems]
+  const baseItems = [...visiblePlaylist, ...uploadedItems]
   const items = baseItems.length > 0 ? baseItems : [{
     id: 'soon-playlist',
     title: 'Próximamente',
     artist: 'Artista',
-    description: 'Sube canciones o agrega links de Spotify.',
+    description: 'Añade canciones o enlaces desde el Centro del Universo.',
     sourceType: 'placeholder',
     tag: 'Pendiente'
   }]
@@ -89,9 +96,13 @@ function PlaylistSection({ playlist = [] }: { playlist?: PlaylistContent[] }) {
   const isPendingTrack = (item) => pendingTrack?.id === item.id
 
   const handleItem = (item) => {
-    if (item.sourceType === 'placeholder') return
+    if (isCurrentTrack(item) || isPendingTrack(item)) {
+      stopTrack()
+      return
+    }
+    if (!hasPlaylistSource(item)) return
     if (item.sourceType === 'local') {
-      isCurrentTrack(item) || isPendingTrack(item) ? stopTrack() : playLocalTrack(item)
+      playLocalTrack(item)
       return
     }
     openExternalLink(item)
@@ -121,53 +132,64 @@ function PlaylistSection({ playlist = [] }: { playlist?: PlaylistContent[] }) {
       )}
 
       <div className="playlist-shell fade-up refined-playlist">
-        {mainTrack && (
-          <div className={`playlist-cover ${backgroundPlaying ? 'audio-card-playing' : ''}`}>
-            <Headphones size={46} />
-            {backgroundPlaying && (
-              <span className="now-playing-pill">
-                <Music size={14} /> Ambiente activo
-              </span>
-            )}
-            <h3>{mainTrack.title}</h3>
-            <p>{mainTrack.description}</p>
-            <button className="main-button playlist-main-button" onClick={toggleBackground}>
-              {backgroundPlaying ? <Pause size={18} /> : <Play size={18} />}
-              {backgroundPlaying ? 'Pausar ambiente' : 'Reproducir ambiente'}
-            </button>
-          </div>
-        )}
+        <div className={`playlist-cover ${backgroundPlaying ? 'audio-card-playing' : ''}`}>
+          <Headphones size={46} />
+          {backgroundPlaying && (
+            <span className="now-playing-pill">
+              <Music size={14} /> Ambiente activo
+            </span>
+          )}
+          <h3>Audio de ambiente</h3>
+          <p>{backgroundTrackPath ? 'Una canción de fondo para acompañar este universo.' : 'Añade una canción de fondo para activar el ambiente.'}</p>
+          <button className="main-button playlist-main-button" type="button" disabled={!backgroundTrackPath} onClick={toggleBackground}>
+            {backgroundPlaying ? <Pause size={18} /> : <Play size={18} />}
+            {backgroundPlaying ? 'Pausar ambiente' : 'Reproducir ambiente'}
+          </button>
+        </div>
 
         <div className="playlist-list">
-          {items.map((item) => (
-            <div key={item.id} className="playlist-row-wrapper">
-              <button
-                className={`playlist-row playlist-button-row ${item.sourceType === 'placeholder' ? 'coming-soon-card playlist-soon-card' : ''} ${isCurrentTrack(item) ? 'audio-row-playing' : ''}`}
-                onClick={() => handleItem(item)}
-                type="button"
-                disabled={item.sourceType === 'placeholder'}
-              >
-                {item.sourceType === 'placeholder' ? (
-                  <Sparkles size={20} />
-                ) : item.sourceType === 'local' ? (
-                  isCurrentTrack(item) || isPendingTrack(item) ? <Square size={20} /> : <Music size={20} />
-                ) : (
-                  <ExternalLink size={20} />
-                )}
-                <div>
-                  <span>{item.tag || (item.isUpload ? 'Subido' : '')}</span>
-                  <h4>{item.title}</h4>
-                  <p>{isPendingTrack(item) ? 'Cargando canción. Toca para cancelar.' : isCurrentTrack(item) ? 'Sonando ahora.' : item.description}</p>
-                </div>
-              </button>
-              {item.isUpload && (
-                <button className="playlist-delete-btn" onClick={() => handleDelete(item._path)}
-                  title="Eliminar canción" aria-label="Eliminar canción">
-                  <Trash2 size={14} />
+          {items.map((item) => {
+            const active = isCurrentTrack(item) || isPendingTrack(item)
+            const available = active || hasPlaylistSource(item)
+            const missingMessage = item.sourceType === 'placeholder' ? item.description
+              : item.sourceType === 'local' ? 'Audio pendiente. Añade el audio desde el Centro del Universo.'
+                : 'Enlace pendiente. Añade un enlace válido desde el Centro del Universo.'
+            const message = isPendingTrack(item) ? 'Cargando canción. Toca para cancelar.'
+              : isCurrentTrack(item) ? 'Sonando ahora.'
+                : !available ? missingMessage : item.description
+            return (
+              <div key={item.id} className="playlist-row-wrapper">
+                <button
+                  className={`playlist-row playlist-button-row ${item.sourceType === 'placeholder' ? 'coming-soon-card playlist-soon-card' : ''} ${isCurrentTrack(item) ? 'audio-row-playing' : ''}`}
+                  onClick={() => handleItem(item)}
+                  type="button"
+                  disabled={!available}
+                >
+                  {active ? (
+                    <Square size={20} />
+                  ) : item.sourceType === 'placeholder' ? (
+                    <Sparkles size={20} />
+                  ) : item.sourceType === 'local' ? (
+                    isCurrentTrack(item) || isPendingTrack(item) ? <Square size={20} /> : <Music size={20} />
+                  ) : (
+                    <ExternalLink size={20} />
+                  )}
+                  <div>
+                    <span>{item.tag || (item.isUpload ? 'Subido' : '')}</span>
+                    <h4>{item.title}</h4>
+                    <p>{item.description}</p>
+                    {message && message !== item.description && <p>{message}</p>}
+                  </div>
                 </button>
-              )}
-            </div>
-          ))}
+                {item.isUpload && (
+                  <button className="playlist-delete-btn" onClick={() => handleDelete(item._path)}
+                    title="Eliminar canción" aria-label="Eliminar canción">
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

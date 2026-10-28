@@ -131,7 +131,7 @@ function ProposalSection() {
               </button>
             </div>
 
-            <p className="mt-6 text-xs text-muted/60">El resto de este universo se desbloquea cuando respondas que sí.</p>
+            <p className="mt-6 text-xs text-muted/60">Tu respuesta se guarda en este navegador. Puedes seguir explorando el universo a tu ritmo.</p>
           </>
         )}
 
@@ -154,7 +154,7 @@ function ProposalSection() {
             <h2 className="font-display text-[clamp(2rem,5vw,2.8rem)] mb-4">Entonces lo hablamos bonito</h2>
             <p className="text-muted mb-6 leading-relaxed">{proposal.talkMessage}</p>
 
-            <div className="soft-badge mb-8">El universo seguirá esperando aquí, sin desbloquearse todavía.</div>
+            <div className="soft-badge mb-8">Podemos hablarlo con calma. El universo sigue disponible para explorar.</div>
 
             <div className="flex flex-wrap justify-center gap-4">
               <button className="main-button flex items-center gap-2" onClick={handleYes}>

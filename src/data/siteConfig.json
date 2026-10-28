@@ -24,10 +24,15 @@
     "nextMeetingLabel": "Días para vernos"
   },
   "audio": {
-    "backgroundTrackPath": "/audio/background.mp3",
+    "backgroundTrackPath": "",
     "defaultVolume": 0.45,
     "afterMainPlaylistName": "Playlist compartida",
     "afterMainPlaylistLink": ""
+  },
+  "distanceMap": {
+    "point1": { "label": "Ubicación 1", "link": "" },
+    "point2": { "label": "Ubicación 2", "link": "" },
+    "kilometers": null
   },
   "secret": {
     "passwords": ["contraseña"],
