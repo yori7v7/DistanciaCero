@@ -72,7 +72,7 @@ Estas propuestas no forman parte del cierre local y no están activadas:
 
 - Ampliar Entrelazados y sus interacciones después de acordar su concepto.
 - Rediseñar el CMS o las transiciones por una dirección visual nueva; el pulido funcional actual ya está comprobado.
-- Revelado gradual o generación asistida de contenido. La primera configuración guiada ya figura como el siguiente bloque de la etapa autorizada.
+- Revelado gradual o generación asistida de contenido. La primera configuración guiada forma parte del trabajo ya terminado.
 - Revisar infraestructura remota: repositorio, Auth/UUIDs, aislamiento, sincronización, archivos y migración. El código existente no acredita preparación de producción; habilitar Supabase requiere otra etapa solicitada.
 - Elegir y preparar una publicación futura. Los scripts de GitHub Pages y la configuración Vercel existentes no acreditan un despliegue actual.
 
