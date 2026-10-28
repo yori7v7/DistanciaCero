@@ -419,7 +419,7 @@ Reglas de compatibilidad:
 Alcance del archivo:
 
 - Incluye creaciones de las nueve colecciones, overrides, ocultos y los siete ajustes generales; enlaces/rutas multimedia y fotos pegadas como Data URL viajan dentro de esos elementos.
-- No incluye los JSON base, progreso de cartas/misiones, simulación, identidad, configuración de escenas/audio ni otros ajustes fuera de esos siete campos.
+- No incluye los JSON base, progreso de cartas/misiones, simulación, identidad, configuración de escenas/audio, `siteConfig.distanceMap` ni otros ajustes fuera de esos siete campos. El mapa y el audio configurados en archivos se trasladan con el proyecto, no con el respaldo del navegador.
 - No contiene los archivos físicos de audio/video ni imágenes referenciadas por URL/ruta. Esas referencias siguen necesitando el archivo o servicio de origen.
 
 Errores de persistencia:

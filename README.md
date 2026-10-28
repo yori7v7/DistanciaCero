@@ -50,14 +50,14 @@ La plantilla, la configuración restante y los planetas se editan en archivos:
 
 `openWhen.json` es el archivo base de la colección `openWhenLetters`; la diferencia de nombres se conserva por compatibilidad. La carta principal tiene su texto en `src/components/MainLetter.tsx`.
 
-Guardar imágenes/audio/video propios en `public/` y utilizar sus rutas. La plantilla referencia `/audio/background.mp3` sin incluir ese archivo y deja vacía la música de escenas. Pegar una ruta en el CMS no copia un archivo al proyecto.
+Guardar imágenes/audio/video propios en `public/` y utilizar sus rutas. La plantilla deja vacíos el ambiente y la música de escenas; configura una ruta cuando hayas añadido el archivo. Pegar una ruta en el CMS no copia un archivo al proyecto.
 
 La [guía de edición](GUIA_PARA_EDITAR.md) explica bloqueos manuales, simulación, archivos y respaldo. Los [recorridos locales](docs/RECORRIDOS_LOCALES.md) describen navegación, foco, audio y límites offline. Las claves y las identidades locales son parte de la experiencia; no constituyen autenticación privada de un servidor.
 
 ## Comprobar cambios
 
 ```powershell
-npm run verify:local       # Tipos → unitarias → build; remoto desactivado
+npm run verify:local       # Tipos → recursos → unitarias → build; remoto desactivado
 npm run test:e2e           # Recorridos de desarrollo, Chromium
 npm run test:e2e:preview   # Build ya generado; PWA y offline en preview
 npm run test:e2e:cross-browser # Recorridos de desarrollo, Firefox y WebKit
@@ -89,3 +89,6 @@ Libre para uso personal y portafolio. Modifica, comparte y adapta como quieras.
 El mantenimiento local del 23 de octubre resolvió los avisos de tamaño de chunks e import dinámico: tipos, 343 unitarias/23 archivos, build/PWA y regresiones PWA/Universo aprobados. Clock permanece como deprecación de Fiber, sin ocultarla ni cambiar dependencias. Estado y límites en el avance.
 
 El 26 de octubre se cerró el nuevo panel de ajustes generales: tipos, **382 unitarias en 25 archivos** y build/PWA aprobados; seis recorridos Chromium de respaldos/ajustes y el recorrido nuevo en Firefox y WebKit también aprobaron. Son comprobaciones acotadas; el inventario en ese cierre era de 51 recorridos por motor y no se ejecutó completo en este bloque.
+
+
+El 27 de octubre cerró el bloque de contenido/recursos: 411 unitarias/29 archivos, tipos, auditor y build/PWA aprobados; cinco recorridos Chromium y comprobación móvil final aprobados por separado. Recursos vacíos quedan pendientes sin enlaces ficticios. Inventario, campos efectivos y comandos en [CONTENIDO_Y_RECURSOS.md](docs/CONTENIDO_Y_RECURSOS.md).

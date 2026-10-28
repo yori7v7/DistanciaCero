@@ -42,7 +42,7 @@ npx playwright install firefox webkit
 npm run test:e2e:cross-browser
 ```
 
-`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **52 por motor** tras añadir ajustes generales y configuración guiada el 26 de octubre; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
+`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **53 por motor** tras añadir ajustes, guía y plantilla entre el 26 y 27 de octubre; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
 
 ### Ajustes generales — 26 de octubre
 
@@ -144,3 +144,8 @@ El recorrido final aprobó en 18,613 s, con 278 archivos conservados, guard rest
 ### Configuración guiada — 26 de octubre
 
 La guía opcional del CMS se comprobó en Chromium, WebKit y Firefox de Windows: volver conserva datos, cancelar no escribe, revisión móvil y foco funcionan, guardar actualiza portada/contadores y recargar conserva ajustes y creaciones. Dos casos Chromium (guía y ajustes) y solo el nuevo en los otros motores aprobaron. Reproducción y resultados exactos en el avance.
+
+
+### Contenido y recursos — 27 de octubre
+
+Cinco casos Chromium aprobaron CRUD de música, audio real y recuperación de archivos ausentes, junto con los pendientes de la plantilla. El caso de plantilla se repitió tras ajustar y capturar el mapa móvil. Resultados separados, sin repetir los 53/106 completos ni certificar otros motores. Instrucciones y resultados exactos en el avance.

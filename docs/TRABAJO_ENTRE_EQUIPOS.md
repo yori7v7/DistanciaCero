@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **26 de octubre de 2026** tras cerrar la primera configuración guiada. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **27 de octubre de 2026** tras cerrar contenido y recursos. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -123,7 +123,21 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Primera configuración guiada cerrada — 26 de octubre de 2026
+## Cierre de contenido y recursos — 27 de octubre de 2026
+
+El usuario eligió una **plantilla reutilizable sin datos personales**. Sobre `3d95717`, implementación `4f5e316` y ajuste móvil `4642c7d`: todas las canciones usan su propia fila, el ambiente es independiente y las fuentes vacías muestran pendientes. Se conservan descripciones y la opción de detener/cancelar aunque se cambie la fuente durante la reproducción. El mapa admite dos enlaces HTTP(S) y kilómetros manuales en `siteConfig.distanceMap`; no abre enlaces vacíos ni calcula una ruta. Se corrigieron textos que prometían privacidad o desbloqueos inexistentes. No se añadieron medios ni datos personales.
+
+`npm.cmd run check:resources` comprueba referencias configuradas dentro de public sin consultar Internet; distingue 25 campos vacíos intencionales de errores. Forma parte de verify:local. El importador de música valida antes de copiar y recupera audio/JSON ante fallos capturados; sus siete grupos aislados aprobaron en PowerShell 5.1 y 7. Las pruebas detectaron y corrigieron redondeo del volumen y lectura distinta de arrays JSON entre shells.
+
+Validación final: tipos, auditor con **0 errores**, **411/411 unitarias en 29 archivos** y build/PWA aprobados. **5/5 E2E Chromium**, 95,72 s: CRUD de música, audio real, recuperación de archivo ausente y plantilla. Tras ajustar el aviso del mapa, se repitieron verify:local completo y el caso de plantilla: **1/1**, 12,93 s. La captura móvil de 390 px quedó inspeccionada. Son corridas separadas; no se suman como una suite mayor. Todos estos runners conservaron los 298 archivos observados y restauraron sus guards; cero omitidas, inestables, reintentos y errores externos en los reportes finales. No se ejecutó la suite completa de 53/106 ni se repitió Firefox/WebKit o PWA instalada en este bloque.
+
+Los diagnósticos anteriores se conservan: una expectativa de texto obsoleta hizo fallar la primera suite; el primer E2E halló una descripción ocultada por el aviso pendiente. Ambos se corrigieron y las verificaciones finales aprobaron. La revisión independiente encontró además la cancelación bloqueada tras vaciar una fuente; quedó corregida con regresión. Continúa el diagnóstico conocido de scrollTo en jsdom.
+
+Evidencia ignorada en `.git/codex-checkpoints/template-resources-20261026/`: scripts, reportes, logs, hashes y capturas. No viaja con Git. Reproducir con `npm.cmd run verify:local`; después `npm.cmd run test:e2e -- template-resources.spec.ts local-audio.spec.ts content-crud.spec.ts --grep "plantilla|audio real local|archivo de playlist|Música"`, sin editar fuentes ni documentos durante runners. El inventario y las instrucciones de recursos están en [CONTENIDO_Y_RECURSOS.md](CONTENIDO_Y_RECURSOS.md).
+
+**Los tres bloques autorizados quedan cerrados.** Safari/macOS/iPhone sigue pendiente de equipo real; Clock y el loop nativo WebKit conservan sus límites. Cualquier nueva función requiere definir otro alcance. Mantener trabajo local, sin Supabase ni despliegues; no cambiar modelo/modalidad ni usar reserva, compras o resets. Recibir también el commit documental que contiene este cierre; hash final y push se comprueban al entregar.
+
+### Antecedente: primera configuración guiada cerrada — 26 de octubre de 2026
 
 Implementación `05a713e`, sobre `e591908`. Guía opcional en Centro del Universo: Nombres, Fechas y Revisar. Precarga los ajustes existentes, conserva borradores al volver y solo escribe al confirmar el último paso. Cancelar confirma cambios; importaciones o cambios externos bloquean continuar hasta cargar los valores actuales. Un fallo de guardado conserva el borrador. Comparte campos y validación con el panel normal; no añade almacenamiento, identidad ni sincronización remota.
 

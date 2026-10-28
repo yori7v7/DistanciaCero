@@ -1,6 +1,6 @@
 # Pendientes — Distancia Cero
 
-Estado del **26 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
+Estado del **27 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
 
 ## Trabajo local terminado
 
@@ -47,7 +47,7 @@ Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y tipado acotado est
 
 1. [x] **Ajustes generales desde el CMS**, cerrado el 26 de octubre (`0125775`): siete nombres/fechas, configuración reactiva y respaldo v2 recuperable. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, seis E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Documentación actualizada.
 2. [x] **Primera configuración guiada**, cerrada el 26 de octubre (`05a713e`): guía opcional del CMS en tres pasos, sin escribir hasta confirmar. Tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados.
-3. [ ] **Contenido y recursos**: después de cerrar la configuración guiada; concretar contenido y archivos disponibles sin inventar datos personales.
+3. [x] **Contenido y recursos**, cerrado el 27 de octubre (`4f5e316`, ajuste móvil `4642c7d`): plantilla reutilizable sin datos personales, playlist/mapa honestos, auditor de referencias e importador de audio recuperable. Tipos, 411 unitarias/29 archivos, build/PWA, cinco E2E Chromium y comprobación móvil final aprobados. Siete grupos del importador aprobados en PowerShell 5.1 y 7. Los tres bloques están terminados.
 
 La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 

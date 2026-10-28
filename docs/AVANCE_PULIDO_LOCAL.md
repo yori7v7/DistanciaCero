@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Contenido y recursos cerrado, 27 de octubre:** plantilla reutilizable, `4f5e316` y `4642c7d`; tipos, auditor, 411 unitarias/29 archivos, build/PWA y cinco E2E Chromium aprobados. Validación móvil final separada aprobada. Los tres bloques autorizados están cerrados; detalles al final.
+
 - **Primera configuración guiada cerrada, 26 de octubre:** `05a713e`; tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Siguiente: contenido/recursos. Detalles y límites al final.
 
 - **Ajustes generales cerrados, 26 de octubre:** nuevo bloque local autorizado después del cierre previo, implementación `0125775`. Siete nombres/fechas editables en CMS, actualización sin recargar y respaldo v2 con ajustes opcionales. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, **6/6 E2E Chromium** y **2/2 del recorrido nuevo en Firefox/WebKit** aprobados. Tres supervisores con 286 archivos congelados y guards restaurados. Siguiente pendiente: primera configuración guiada, todavía sin implementar. Detalles al final y punto portable actualizado.
@@ -730,3 +732,18 @@ Validación: tipos, **388/388 unitarias en 26 archivos** (211,21 s) y build/PWA 
 Evidencia ignorada en `.git/codex-checkpoints/setup-guide-20261026/`. Reproducción: `npm.cmd run verify:local`; después `npm.cmd run test:e2e -- setup-guide.spec.ts site-settings.spec.ts` y `npm.cmd run test:e2e:cross-browser -- setup-guide.spec.ts`, por separado y con archivos/documentos congelados durante E2E. El inventario es ahora 52 por motor, no una suite completa ejecutada en este bloque. Los resultados previos conservan sus fechas. No acredita Safari real.
 
 **Siguiente bloque: contenido y recursos**, sin inventar datos personales; revisar archivos disponibles y concretar la personalización necesaria. No se inició ese bloque al cerrar esta entrega por proximidad al límite de uso normal. El borrador de la guía es temporal: recargar antes de guardar lo descarta. Mantener trabajo local, Supabase desactivado y sin despliegues, cambios de modelo/modalidad, reserva, compras ni resets. Recibir también el commit documental que contiene este cierre; hash final y envío se comprueban al entregar.
+
+
+## Cierre de contenido y recursos — 27 de octubre de 2026
+
+El usuario eligió una **plantilla reutilizable sin datos personales**. Sobre `3d95717`, implementación `4f5e316` y ajuste móvil `4642c7d`: todas las canciones usan su propia fila, el ambiente es independiente y las fuentes vacías muestran pendientes. Se conservan descripciones y la opción de detener/cancelar aunque se cambie la fuente durante la reproducción. El mapa admite dos enlaces HTTP(S) y kilómetros manuales en `siteConfig.distanceMap`; no abre enlaces vacíos ni calcula una ruta. Se corrigieron textos que prometían privacidad o desbloqueos inexistentes. No se añadieron medios ni datos personales.
+
+`npm.cmd run check:resources` comprueba referencias configuradas dentro de public sin consultar Internet; distingue 25 campos vacíos intencionales de errores. Forma parte de verify:local. El importador de música valida antes de copiar y recupera audio/JSON ante fallos capturados; sus siete grupos aislados aprobaron en PowerShell 5.1 y 7. Las pruebas detectaron y corrigieron redondeo del volumen y lectura distinta de arrays JSON entre shells.
+
+Validación final: tipos, auditor con **0 errores**, **411/411 unitarias en 29 archivos** y build/PWA aprobados. **5/5 E2E Chromium**, 95,72 s: CRUD de música, audio real, recuperación de archivo ausente y plantilla. Tras ajustar el aviso del mapa, se repitieron verify:local completo y el caso de plantilla: **1/1**, 12,93 s. La captura móvil de 390 px quedó inspeccionada. Son corridas separadas; no se suman como una suite mayor. Todos estos runners conservaron los 298 archivos observados y restauraron sus guards; cero omitidas, inestables, reintentos y errores externos en los reportes finales. No se ejecutó la suite completa de 53/106 ni se repitió Firefox/WebKit o PWA instalada en este bloque.
+
+Los diagnósticos anteriores se conservan: una expectativa de texto obsoleta hizo fallar la primera suite; el primer E2E halló una descripción ocultada por el aviso pendiente. Ambos se corrigieron y las verificaciones finales aprobaron. La revisión independiente encontró además la cancelación bloqueada tras vaciar una fuente; quedó corregida con regresión. Continúa el diagnóstico conocido de scrollTo en jsdom.
+
+Evidencia ignorada en `.git/codex-checkpoints/template-resources-20261026/`: scripts, reportes, logs, hashes y capturas. No viaja con Git. Reproducir con `npm.cmd run verify:local`; después `npm.cmd run test:e2e -- template-resources.spec.ts local-audio.spec.ts content-crud.spec.ts --grep "plantilla|audio real local|archivo de playlist|Música"`, sin editar fuentes ni documentos durante runners. El inventario y las instrucciones de recursos están en [CONTENIDO_Y_RECURSOS.md](CONTENIDO_Y_RECURSOS.md).
+
+**Los tres bloques autorizados quedan cerrados.** Safari/macOS/iPhone sigue pendiente de equipo real; Clock y el loop nativo WebKit conservan sus límites. Cualquier nueva función requiere definir otro alcance. Mantener trabajo local, sin Supabase ni despliegues; no cambiar modelo/modalidad ni usar reserva, compras o resets. Recibir también el commit documental que contiene este cierre; hash final y push se comprueban al entregar.

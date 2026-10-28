@@ -87,7 +87,7 @@ src/data/siteConfig.json
 Aquí puedes cambiar:
 
 - Nombre del proyecto
-- Nombres de la pareja y apodos
+- Nombres de la pareja (los apodos son campos reservados sin consumidor actual)
 - Fechas importantes (cuándo se conocieron, aniversario, próxima fecha para verse)
 - Canción de fondo y su volumen
 
@@ -112,7 +112,7 @@ La ruta y el volumen se configuran en `src/data/siteConfig.json`:
 }
 ```
 
-La plantilla referencia ese archivo, pero no lo incluye: debes copiarlo al proyecto para poder escucharlo. El botón inicia la canción; si la ruta falta o falla, aparece un mensaje.
+La plantilla deja vacía esa ruta y no incluye el archivo: cópialo y configura la ruta para activar el botón. Los controles sin fuente muestran un estado pendiente.
 
 La música por escena se configura aparte en `src/data/sceneMusic.json`; sus rutas están vacías en la plantilla. Puedes guardar los archivos en `public/audio/scenes/` y asignar sus rutas. Iniciar una canción de playlist pausa la música de escena; cambiar de escena conserva esa canción hasta que pulses Reproducir en la banda sonora. Durante la carga puedes cancelar desde la misma fila de la playlist.
 
@@ -132,8 +132,8 @@ Ahí puedes cambiar:
 
 - Nombre del planeta
 - Descripción
-- Colores, tamaño, órbita y velocidad
-- Si tiene anillo o no
+- Colores y tamaño
+Las órbitas, velocidades y anillos los determina `ORBIT_CONFIGS` en `UniverseSection.tsx`; los campos equivalentes del JSON están reservados y no se consumen.
 
 ---
 
@@ -195,3 +195,6 @@ Así la página se vuelve personal sin abrumarte.
 ## ¿Necesitas ayuda?
 
 Si algo no funciona o tienes una idea para mejorar la página, avísale a la persona que te dio este universo. El código está vivo y se puede adaptar a lo que necesites. 💫
+
+
+Inventario de recursos, mapa y campos efectivos en [CONTENIDO_Y_RECURSOS.md](docs/CONTENIDO_Y_RECURSOS.md).
