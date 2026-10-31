@@ -49,3 +49,5 @@ Ejemplos: `$ui-ux-pro-max mejora esta sección`, `$code-review-skill revisa esto
 Los permisos y hooks de `.claude/settings*.json` pertenecen a Claude Code; no configuran ni conceden permisos a Codex. Los archivos `.hive/` dentro de la biblioteca de revisión son material del paquete original, no instrucciones del proyecto.
 
 `skills-lock.json` conserva el historial del instalador externo. Una entrada allí no prueba que la skill siga instalada: comprueba su `SKILL.md`. En esta adaptación no se modifica ese registro ni se descargan paquetes adicionales.
+
+El 31 de octubre se autorizó pulir la interfaz con skills, una sección a la vez. La bienvenida pública sigue abierta; consultar [PULIDO_INTERFAZ.md](docs/PULIDO_INTERFAZ.md) y el punto portable. No iniciar Hero hasta resolver y verificar el pendiente WebKit.

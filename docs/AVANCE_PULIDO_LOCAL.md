@@ -2,6 +2,8 @@
 
 ## Estado actual
 
+- **Pulido de bienvenida en curso, 31 de octubre:** Chromium 5/5; pendiente desplazamiento del CTA en WebKit y Firefox sin ejecutar. Checkpoint por uso normal próximo al límite. No iniciar Hero. Detalles en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+
 - **Validación integral local cerrada, 31 de octubre:** implementación `4e9a036`, sobre `5f009d2`. Pista retirada detenida/cancelada y ajustes conservados offline/A→B. Tipos, auditor, **414 unitarias/29 archivos** y build/PWA aprobados el 28; el 31, **53/53 Chromium**, **14/14 seleccionados WebKit/Firefox**, **1/1 preview/offline** y **1/1 PWA A→B**, en corridas separadas. Detalles, interrupción anterior y corrección del diagnóstico PWA en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md) y al final. Siguiente: concretar el pulido particular con skills; sin funciones nuevas ni infraestructura.
 
 - **Contenido y recursos cerrado, 27 de octubre:** plantilla reutilizable, `4f5e316` y `4642c7d`; tipos, auditor, 411 unitarias/29 archivos, build/PWA y cinco E2E Chromium aprobados. Validación móvil final separada aprobada. Los tres bloques autorizados están cerrados; detalles al final.

@@ -1,4 +1,4 @@
-import { Heart, Sparkles, Stars, ArrowRight, Music } from 'lucide-react'
+import { Heart, Sparkles, Stars, ArrowRight, Music, Pause, Play } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import useSiteConfig from '../hooks/useSiteConfig'
 import { useReducedMotion } from '../hooks/useSceneActivity'
@@ -7,100 +7,88 @@ interface PublicLandingProps {
   onEnter: () => void
 }
 
+const phrases = [
+  'Un universo donde la distancia no existe',
+  'Cartas que viajan entre estrellas',
+  'Canciones que cruzan océanos',
+  'Recuerdos atrapados en gravedad cero',
+  'Donde cada latido es una galaxia',
+]
+
 function PublicLanding({ onEnter }: PublicLandingProps) {
   const siteConfig = useSiteConfig()
   const [phraseIndex, setPhraseIndex] = useState(0)
+  const [motionPaused, setMotionPaused] = useState(false)
   const reducedMotion = useReducedMotion()
-
-  const phrases = [
-    'Un universo donde la distancia no existe',
-    'Cartas que viajan entre estrellas',
-    'Canciones que cruzan océanos',
-    'Recuerdos atrapados en gravedad cero',
-    'Donde cada latido es una galaxia'
-  ]
+  const animationsPaused = reducedMotion || motionPaused
+  const { yourName, herName, mainPairName } = siteConfig.couple
 
   useEffect(() => {
-    if (reducedMotion) return
+    if (animationsPaused) return
     const timer = setInterval(() => {
-      setPhraseIndex((i) => (i + 1) % phrases.length)
+      setPhraseIndex(i => (i + 1) % phrases.length)
     }, 3000)
     return () => clearInterval(timer)
-  }, [reducedMotion])
+  }, [animationsPaused])
 
   return (
-    <div className="public-landing fixed inset-0 z-50 overflow-y-auto">
-      {/* Same background as main app */}
-      <div className="background-orbs">
-        <span className="orb orb-pink"></span>
-        <span className="orb orb-red"></span>
-        <span className="orb orb-soft"></span>
-      </div>
-      <div className="energy-lines"></div>
-      <div className="stars-layer"></div>
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
-          <span
-            key={i}
-            className="absolute bottom-0 w-1 h-1 rounded-full bg-pink opacity-30
-              animate-[particleRise_5s_ease-in_infinite]"
-            style={{
-              left: `${10 + (i * 7)}%`,
-              animationDelay: `${i * 0.4}s`,
-              animationDuration: `${4 + (i % 3) * 2}s`
-            }}
-          />
-        ))}
+    <div className="public-landing fixed inset-0 z-50 overflow-y-auto" data-motion-paused={animationsPaused}>
+      <div aria-hidden="true">
+        <div className="background-orbs">
+          <span className="orb orb-pink" />
+          <span className="orb orb-red" />
+          <span className="orb orb-soft" />
+        </div>
+        <div className="energy-lines" />
+        <div className="stars-layer" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-xl w-full mx-auto py-12 min-h-full justify-center">
-        <div className="small-pill mb-8">
-          <Sparkles size={14} />
-          <span>{siteConfig.hero.eyebrow}</span>
-        </div>
+      <div className="landing-layout">
+        <main className="landing-content" aria-labelledby="landing-title">
+          <div className="small-pill landing-eyebrow">
+            <Sparkles size={14} aria-hidden="true" />
+            <span>{siteConfig.hero.eyebrow}</span>
+          </div>
 
-        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] font-display font-black leading-tight mb-8">
-          <span className="block text-white-soft">{siteConfig.hero.titlePrefix}</span>
-          <span className="block text-pink">
-            {siteConfig.hero.titleName}
-          </span>
-        </h1>
+          <h1 id="landing-title" className="landing-title">
+            <span>{siteConfig.hero.titlePrefix}</span>
+            <span className="landing-title-name">{siteConfig.hero.titleName || 'nuestro universo'}</span>
+          </h1>
+          <p className="landing-description">{siteConfig.hero.description}</p>
 
-        <div className="hero-names flex items-center justify-center gap-3.5 text-pink-soft font-bold text-lg mb-10">
-          <span>{siteConfig.couple.yourName}</span>
-          <Heart size={22} className="mx-3 inline-block text-pink animate-[pulse-heart_2s_ease-in-out_infinite]" />
-          <span>{siteConfig.couple.herName}</span>
-        </div>
+          <div className="hero-names landing-names">
+            {yourName && <span>{yourName}</span>}
+            {yourName && herName && <Heart size={20} aria-hidden="true" />}
+            {herName && <span>{herName}</span>}
+            {!yourName && !herName && <span>{mainPairName}</span>}
+          </div>
 
-        {/* Animated phrase */}
-        <div className="flex items-center gap-2 text-muted text-sm min-h-[24px] mb-12">
-          <Music size={14} className="text-pink-soft shrink-0" />
-          <span key={phraseIndex} className="animate-[fade-up_0.4s_ease_both]">
-            {phrases[phraseIndex]}
-          </span>
-        </div>
+          <div className="landing-phrase">
+            <Music size={16} aria-hidden="true" />
+            <span key={phraseIndex} className={animationsPaused ? undefined : 'animate-[fade-up_0.4s_ease_both]'}>
+              {phrases[phraseIndex]}
+            </span>
+          </div>
 
-        {/* CTA */}
-        <div className="flex flex-col items-center gap-4">
-          <button className="main-button flex items-center gap-3 text-lg px-10 py-4" onClick={onEnter}>
+          <button type="button" className="main-button landing-enter" onClick={onEnter}>
             <span>{siteConfig.hero.primaryButton}</span>
-            <ArrowRight size={20} />
+            <ArrowRight size={20} aria-hidden="true" />
           </button>
-        </div>
+          <p className="landing-note">Un espacio para compartir su historia, a su ritmo.</p>
+        </main>
 
-        <p className="mt-10 text-xs text-muted/60">
-          Un espacio para compartir su historia, a su ritmo.
-        </p>
-      </div>
-
-      {/* Footer */}
-      <div className="relative z-10 pb-6 flex items-center justify-center gap-2 text-muted text-xs">
-        <Stars size={12} />
-        <span>{siteConfig.project.name} • Desde {siteConfig.dates.metDate?.split('-')[0] || '2026'}</span>
-        <Heart size={10} />
+        <footer className="landing-footer">
+          <p className="landing-signature">
+            <Stars size={14} aria-hidden="true" />
+            <span>{siteConfig.project.name} · Desde {siteConfig.dates.metDate?.split('-')[0] || '2026'}</span>
+          </p>
+          {!reducedMotion && (
+            <button type="button" className="landing-motion-toggle" onClick={() => setMotionPaused(paused => !paused)}>
+              {motionPaused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+              <span>{motionPaused ? 'Reanudar animaciones' : 'Pausar animaciones'}</span>
+            </button>
+          )}
+        </footer>
       </div>
     </div>
   )

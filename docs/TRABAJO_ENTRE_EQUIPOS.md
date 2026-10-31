@@ -123,7 +123,11 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Continuación — validación integral local cerrada, 31 de octubre de 2026
+## Continuación — bienvenida en pulido, 31 de octubre de 2026
+
+El usuario autorizó pulir con skills una sección a la vez. La bienvenida pública está en curso; Hero no se ha iniciado. Alcance, cambios, resultados y pendiente WebKit en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). Chromium final 5/5 aprobado; WebKit detectó 8,05 px de desplazamiento del CTA y Firefox quedó sin ejecutar. Guardado como checkpoint por proximidad al límite de uso normal; no declarar terminado. Recibir la entrega que contiene este punto antes de retomar. Mantener todas las restricciones locales y de uso.
+
+### Antecedente: validación integral local cerrada, 31 de octubre de 2026
 
 La revisión autorizada el 28 quedó terminada sobre `5f009d2`, con implementación/pruebas en **`4e9a036`**. La playlist detiene o cancela el audio al desaparecer su fila, sin interrumpir una selección válida al editar o cambiar de escena. Los ajustes guardados se comprueban también después de actualizar la PWA y sin conexión. Plan, diagnósticos y comandos en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md).
 

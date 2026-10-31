@@ -35,4 +35,50 @@ test.describe('PublicLanding', () => {
     await expect(page.getByText('Distancia Cero')).toBeVisible()
     await expect(page.getByText('Desde 2024')).toBeVisible()
   })
+
+  test('la bienvenida conserva nombres largos y controles dentro de 320 px', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 })
+    await page.addInitScript(() => localStorage.setItem('distancia-cero-site-settings', JSON.stringify({
+      couple: { yourName: 'A'.repeat(80), herName: 'B'.repeat(80) },
+      hero: { titleName: 'Universo'.repeat(10) },
+    })))
+    await page.goto('/', { waitUntil: 'domcontentloaded' })
+    await expect(page.locator('h1')).toContainText('Universo'.repeat(10))
+    await expect(page.locator('.hero-names')).toContainText('A'.repeat(80))
+    await expect.poll(() => page.locator('.public-landing').evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1)
+    const pause = page.getByRole('button', { name: 'Pausar animaciones', exact: true })
+    await pause.scrollIntoViewIfNeeded()
+    await expect(pause).toBeInViewport()
+    const enter = page.getByRole('button', { name: 'Entrar al universo', exact: true })
+    await enter.focus()
+    await enter.press('Enter')
+    await expect(page).toHaveURL(/\/app/)
+  })
+
+  test('la bienvenida mantiene el botón estable y permite pausar o reducir las animaciones', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 })
+    await page.goto('/', { waitUntil: 'domcontentloaded' })
+    const landing = page.locator('.public-landing')
+    const enter = page.getByRole('button', { name: 'Entrar al universo', exact: true })
+    await page.evaluate(() => document.fonts.ready)
+    const top = (await enter.boundingBox())!.y
+    await expect(page.getByText('Cartas que viajan entre estrellas')).toBeVisible({ timeout: 6000 })
+    expect(Math.abs((await enter.boundingBox())!.y - top)).toBeLessThanOrEqual(1)
+    await expect.poll(() => landing.evaluate(element => element.scrollHeight - element.clientHeight)).toBeLessThanOrEqual(1)
+    const pause = page.getByRole('button', { name: 'Pausar animaciones', exact: true })
+    await pause.focus()
+    await expect(pause).toBeFocused()
+    await pause.press('Space')
+    await expect(landing).toHaveAttribute('data-motion-paused', 'true')
+    await expect(page.locator('.orb').first()).toHaveCSS('animation-play-state', 'paused')
+    const phrase = await page.locator('.landing-phrase').innerText()
+    await page.waitForTimeout(3300) // Observe a full rotation interval while paused.
+    await expect(page.locator('.landing-phrase')).toHaveText(phrase)
+    await page.getByRole('button', { name: 'Reanudar animaciones', exact: true }).click()
+    await expect(landing).toHaveAttribute('data-motion-paused', 'false')
+    await expect.poll(() => page.locator('.landing-phrase').innerText(), { timeout: 6000 }).not.toBe(phrase)
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await expect(landing).toHaveAttribute('data-motion-paused', 'true')
+    await expect(page.getByRole('button', { name: /animaciones/ })).toHaveCount(0)
+  })
 })
