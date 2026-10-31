@@ -4,7 +4,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 
 ## ¿Qué es?
 
-**Distancia Cero** es una SPA romántica personalizable con cartas, recuerdos, música y escenas 3D. Los pasos 1–7 del pulido local están cerrados, con validación final completa. El usuario autorizó después avanzar por ajustes generales, primera configuración guiada y contenido/recursos. Los dos primeros bloques cerraron el 26 de octubre y contenido/recursos el 27. Se conserva una plantilla reutilizable sin datos personales. Supabase y publicación permanecen fuera del alcance. Los archivos de publicación existentes no acreditan un despliegue vigente.
+**Distancia Cero** es una SPA romántica personalizable con cartas, recuerdos, música y escenas 3D. Los pasos 1–7 del pulido local están cerrados, con validación final completa. El usuario autorizó después avanzar por ajustes generales, primera configuración guiada y contenido/recursos. Los dos primeros bloques cerraron el 26 de octubre y contenido/recursos el 27. La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) cerró el 31 de octubre, tras corregir la parada de una pista cuya fila desaparece. Sigue concretar el pulido particular con skills. Se conserva una plantilla reutilizable sin datos personales. Supabase y publicación permanecen fuera del alcance. Los archivos de publicación existentes no acreditan un despliegue vigente.
 
 ## Stack
 
@@ -20,7 +20,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 | Publicación | Script heredado de GitHub Pages y configuración Vercel; fuera de la etapa local |
 | PWA | vite-plugin-pwa (manifest, autoUpdate) + cliente virtual `registerSW` en `main.tsx` |
 | Iconos | lucide-react |
-| Tests | Vitest + @testing-library/react (29 archivos, 411 tests; comprobados al cerrar contenido/recursos el 27 de octubre; el paso 7 cerró con 338) |
+| Tests | Vitest + @testing-library/react (29 archivos, 414 tests; comprobados el 28 de octubre para el cierre integral del 31; el paso 7 cerró con 338) |
 | CI | GitHub Actions: tipos, build, unitarias y job E2E (Node 22, Ubuntu); no ejecutado desde esta etapa local |
 
 ## Rutas
@@ -274,6 +274,7 @@ Template seguro en `.env.example`. Valores reales van en `.env.local` (no commit
 
 ### Tests
 - 29 archivos en `src/__tests__/` con extensión `.test.ts`, `.test.tsx` o `.test.js`
+- Validación integral cerrada el 31 de octubre: `verify:local` del 28 aprobó tipos, auditor de recursos, **414/414 unitarias** y build/PWA. El 31 aprobaron **53/53 Chromium**, **14/14 seleccionados en Firefox/WebKit** (siete por motor), **1/1 preview/offline** y **1/1 PWA A→B** con ajustes guardados. Son corridas separadas, sin reintentos, omitidas, inestables ni errores externos en los reportes finales; no se ejecutaron los 106 casos completos de Firefox/WebKit. Detalles y diagnósticos conservados en [VALIDACION_INTEGRAL_LOCAL.md](docs/VALIDACION_INTEGRAL_LOCAL.md).
 - Entorno: jsdom, setup: `src/test-setup.ts` (importa `@testing-library/jest-dom/vitest`), globals: true
 - Los tests de almacenamiento limpian localStorage entre casos; Vitest excluye E2E, node_modules, dist y copias de recuperación dentro de `.git`.
 - Usar `describe`/`it`/`expect` de vitest (importados explícitamente)
@@ -312,6 +313,7 @@ Una etapa remota posterior requerirá revisar contratos/schema, identidad real, 
 - [GUIA_PARA_EDITAR.md](GUIA_PARA_EDITAR.md): alcance real del CMS, personalización y respaldo.
 - [CONTENT_CONTRACT.md](docs/CONTENT_CONTRACT.md) e [IDENTITY_CONTRACT.md](docs/IDENTITY_CONTRACT.md): contratos locales vigentes.
 - [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md): estado, resultados exactos, límites y recuperación.
+- [VALIDACION_INTEGRAL_LOCAL.md](docs/VALIDACION_INTEGRAL_LOCAL.md): cierre del 31 de octubre y comprobaciones de los flujos recientes antes del pulido particular con skills.
 - [CONTEXTO_PROYECTO_CODEX.md](docs/CONTEXTO_PROYECTO_CODEX.md) e [HISTORIAL_GIT_CODEX.md](docs/HISTORIAL_GIT_CODEX.md): instantáneas del 13 de septiembre; no sustituir el estado vigente por sus recuentos.
 - La memoria de `.claude/memory/` es contexto opcional histórico; comprobar los archivos pertinentes. Sus permisos/hooks pertenecen a Claude Code y no configuran Codex.
 - Leer solo las skills pertinentes en `.agents/skills/` y contrastar instrucciones/documentación con la fuente actual.

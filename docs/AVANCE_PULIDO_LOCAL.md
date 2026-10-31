@@ -2,11 +2,13 @@
 
 ## Estado actual
 
+- **Validación integral local cerrada, 31 de octubre:** implementación `4e9a036`, sobre `5f009d2`. Pista retirada detenida/cancelada y ajustes conservados offline/A→B. Tipos, auditor, **414 unitarias/29 archivos** y build/PWA aprobados el 28; el 31, **53/53 Chromium**, **14/14 seleccionados WebKit/Firefox**, **1/1 preview/offline** y **1/1 PWA A→B**, en corridas separadas. Detalles, interrupción anterior y corrección del diagnóstico PWA en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md) y al final. Siguiente: concretar el pulido particular con skills; sin funciones nuevas ni infraestructura.
+
 - **Contenido y recursos cerrado, 27 de octubre:** plantilla reutilizable, `4f5e316` y `4642c7d`; tipos, auditor, 411 unitarias/29 archivos, build/PWA y cinco E2E Chromium aprobados. Validación móvil final separada aprobada. Los tres bloques autorizados están cerrados; detalles al final.
 
-- **Primera configuración guiada cerrada, 26 de octubre:** `05a713e`; tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Siguiente: contenido/recursos. Detalles y límites al final.
+- **Primera configuración guiada cerrada, 26 de octubre:** `05a713e`; tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Contenido/recursos cerró después, el 27. Detalles y límites al final.
 
-- **Ajustes generales cerrados, 26 de octubre:** nuevo bloque local autorizado después del cierre previo, implementación `0125775`. Siete nombres/fechas editables en CMS, actualización sin recargar y respaldo v2 con ajustes opcionales. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, **6/6 E2E Chromium** y **2/2 del recorrido nuevo en Firefox/WebKit** aprobados. Tres supervisores con 286 archivos congelados y guards restaurados. Siguiente pendiente: primera configuración guiada, todavía sin implementar. Detalles al final y punto portable actualizado.
+- **Ajustes generales cerrados, 26 de octubre:** nuevo bloque local autorizado después del cierre previo, implementación `0125775`. Siete nombres/fechas editables en CMS, actualización sin recargar y respaldo v2 con ajustes opcionales. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, **6/6 E2E Chromium** y **2/2 del recorrido nuevo en Firefox/WebKit** aprobados. Tres supervisores con 286 archivos congelados y guards restaurados. La guía también cerró el 26. Detalles al final y punto portable actualizado.
 
 - **PWA instalada en Windows validada, 25 de octubre:** recorrido final aprobado en Chrome 156, 18,61 s, 278 archivos conservados y desinstalación confirmada. Standalone, datos y recarga con offline simulado; cierre/reapertura sin servidor local y Diario lazy desde el worker. El corte no se aplica a Internet del sistema ni se reinicia Chrome. Alcance y reproducción al final; Safari real permanece pendiente de equipo.
 
@@ -747,3 +749,23 @@ Los diagnósticos anteriores se conservan: una expectativa de texto obsoleta hiz
 Evidencia ignorada en `.git/codex-checkpoints/template-resources-20261026/`: scripts, reportes, logs, hashes y capturas. No viaja con Git. Reproducir con `npm.cmd run verify:local`; después `npm.cmd run test:e2e -- template-resources.spec.ts local-audio.spec.ts content-crud.spec.ts --grep "plantilla|audio real local|archivo de playlist|Música"`, sin editar fuentes ni documentos durante runners. El inventario y las instrucciones de recursos están en [CONTENIDO_Y_RECURSOS.md](CONTENIDO_Y_RECURSOS.md).
 
 **Los tres bloques autorizados quedan cerrados.** Safari/macOS/iPhone sigue pendiente de equipo real; Clock y el loop nativo WebKit conservan sus límites. Cualquier nueva función requiere definir otro alcance. Mantener trabajo local, sin Supabase ni despliegues; no cambiar modelo/modalidad ni usar reserva, compras o resets. Recibir también el commit documental que contiene este cierre; hash final y push se comprueban al entregar.
+
+## Validación integral local cerrada — 31 de octubre de 2026
+
+El usuario autorizó el 28 revisar y corregir lo necesario de los flujos existentes antes del pulido particular con skills. Baseline `5f009d2`; implementación y pruebas en `4e9a036`. La revisión encontró una pista de playlist que continuaba sin su control al desaparecer la fila. Ahora se detiene o cancela; editar una fila válida y cambiar de escena conservan el comportamiento. Tres regresiones unitarias y el recorrido de audio real cubren la corrección. La revisión independiente de datos y del diff final no dejó hallazgos accionables.
+
+Resultados reales, en corridas separadas:
+
+- **28 de octubre, `verify-final`:** tipos, auditor con 0 errores y 25 campos vacíos intencionales, **414/414 unitarias en 29 archivos** (141,37 s) y build/PWA aprobados. Los archivos de aplicación y unitarias no cambiaron después de esa comprobación.
+- **31 de octubre, `chromium-full`: 53/53**, 1307,86 s (21,80 min), suite de desarrollo completa. Incluye las nueve colecciones, respaldos, audio, guía, ajustes y los cinco tamaños de interfaz.
+- **31 de octubre, `cross-recent`: 14/14**, 656,24 s (10,94 min): siete flujos recientes en WebKit y siete en Firefox, Windows. No representa los 106 completos.
+- **31 de octubre, `preview-offline`: 1/1**, 18,38 s. Título personalizado y contenido guardado conservados al recargar y navegar sin conexión.
+- **31 de octubre, `pwa-update-settings-settled`: 1/1**, 40,56 s. Nombres/título guardados desde el formulario, contenido, progreso y volumen conservados entre A/B y en B offline. Cachés y módulos nuevos comprobados.
+
+Los cuatro reportes finales de navegador tienen cero omitidas, fallos, inestables, reintentos y errores externos. Todos los supervisores finales conservaron los **299 archivos observados** y restauraron sus guards. Los perfiles y datos son sintéticos y aislados; no se tocaron datos reales ni servicios remotos.
+
+Diagnósticos preservados: el primer caso de audio del 28 falló por un selector global ambiguo del CMS; se acotó al menú y aprobó aislado. La corrida completa del 28 se interrumpió tras 16 casos aprobados sin resultado final; el 31 no quedaban procesos activos y se repitió completa. El primer A→B del 31 falló al adjuntar un diagnóstico durante la recarga automática. Se movió la captura detrás de las comprobaciones del documento B y su nuevo `timeOrigin`, sin retirar aserciones ni forzar la actualización. Se repitió solo ese caso y aprobó, sin reintento automático. No se alteran ni se presentan como aprobados los reportes fallidos.
+
+Evidencia ignorada en `.git/codex-checkpoints/final-local-20261028/` y `.git/codex-checkpoints/final-local-20261031/`; no viaja con Git. [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md) conserva alcance, comandos de reproducción y límites; el [traspaso](TRABAJO_ENTRE_EQUIPOS.md) contiene el punto portable. Recibir también el commit documental de cierre; la entrega y su hash final se comprueban al publicar en la rama compartida.
+
+**Siguiente etapa: concretar el pulido particular con skills sobre la experiencia existente.** La validación y los tres bloques anteriores quedan cerrados. Safari/macOS/iPhone requiere equipo real; Clock, el loop nativo WebKit y los borradores sin guardar mantienen sus límites. No se repitió la instalación standalone ya comprobada el 25. Sin funciones nuevas, Supabase, despliegues, cambio de modelo/modalidad, reserva, compras ni resets.

@@ -8,6 +8,8 @@ La etapa posterior de compatibilidad quedó cerrada el **23 de octubre de 2026**
 
 Ese mismo día se comprobó por separado la actualización PWA entre dos builds locales A→B en Chromium/Windows, conservando datos guardados y funcionando offline en B. Los [recorridos locales](docs/RECORRIDOS_LOCALES.md) explican su alcance y límites.
 
+La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) cerró el **31 de octubre**: ajustes, guía, respaldos y recursos comprobados, incluida la parada de una canción cuando se elimina su fila. Se mantiene una plantilla reutilizable sin datos personales; sigue el pulido particular con skills, sin activar servicios ni desplegar.
+
 ## Ejecutar localmente
 
 Para seguir esta guía, utilizar Node.js 22.13 o posterior de la rama 22, o Node 24 o posterior, y npm. El lockfile de jsdom exige al menos 22.13 en la rama 22; el mínimo de Vite por sí solo (22.12 en esa rama) no basta para todas las dependencias. CI utiliza Node 22.
@@ -66,6 +68,8 @@ npm run test:e2e:pwa-update # Dos builds locales A→B; genera sus propios fixtu
 
 En una instalación nueva, preparar Chromium con `npx playwright install chromium` y los motores adicionales con `npx playwright install firefox webkit`. Se descargan los motores de la versión de Playwright del lockfile. Para pruebas individuales: `npm test -- src/__tests__/contentService.test.ts`.
 
+La comprobación más reciente aprobó tipos, auditor de recursos, **414/414 unitarias en 29 archivos** y build/PWA el 28 de octubre. El 31 aprobaron por separado **53/53 recorridos Chromium**, **14/14 seleccionados en Firefox/WebKit** (siete por motor), **1/1 preview/offline** y **1/1 PWA A→B**, conservando también los nombres y el título guardados. Los reportes finales no tuvieron omitidas, inestables, reintentos ni errores externos. Se ejecutaron motores de Windows; no la suite completa de 106 Firefox/WebKit ni Safari real. Los intentos previos y sus correcciones constan en la [validación integral](docs/VALIDACION_INTEGRAL_LOCAL.md).
+
 La validación final del 10 de octubre aprobó **338 unitarias en 22 archivos, los 50 E2E en una sola corrida y un recorrido de preview/PWA/offline**, sin reintentos de navegador. Incluye los diez casos de interfaz y cinco tamaños de pantalla en Chromium. La corrección posterior de foco/puntero se comprobó el 16 de octubre con **340 unitarias en 22 archivos, tipos/build/PWA y 16 E2E Chromium afectados**; el 19 pasaron los cuatro casos Chromium de audio/reset con los fixtures finales. Son comprobaciones distintas, conservadas con sus fechas.
 
 El 23 de octubre, Firefox y WebKit aprobaron juntos los **100 E2E**, en 67,82 minutos, con perfiles sintéticos y 272 archivos congelados sin cambios. WebKit se ejecutó con densidad de pantalla 1. Esta cobertura en Windows no acredita Safari/macOS/iPhone reales, certificación WCAG ni PWA entre versiones. No se ejecutó CI desde este trabajo local. Resultados y límites en el [avance](docs/AVANCE_PULIDO_LOCAL.md) y los [recorridos](docs/RECORRIDOS_LOCALES.md).
@@ -78,7 +82,7 @@ Durante E2E de desarrollo, dejar congelados también los documentos: el escáner
 
 React 19, TypeScript 7, Vite 8, Tailwind CSS 4 y Three.js con React Three Fiber/Drei. El flujo de contenido es `componentes → contentService → localContentRepository → localContentStore → localStorage`. El CMS comparte configuración y formularios; los dos lectores comparten `LetterCollectionSection`. Las secciones pesadas se cargan en su primera visita y conservan estado al ocultarse.
 
-La PWA conserva la aplicación previamente cargada y el nuevo cliente de registro coordina el refresco del documento al detectar una actualización. Se comprobó A→B localmente en Chromium/Windows, con contenido y progreso ya guardados; no garantiza formularios sin guardar, instalación, medios remotos ni despliegue real. El código remoto de Supabase sigue fuera de esta etapa y no se considera listo para producción. Los archivos de publicación existentes no acreditan un despliegue actual.
+La PWA conserva la aplicación previamente cargada y el nuevo cliente de registro coordina el refresco del documento al detectar una actualización. Se comprobó A→B localmente en Chromium/Windows, con contenido, progreso y ajustes generales ya guardados; no garantiza formularios sin guardar, instalación, medios remotos ni despliegue real. El código remoto de Supabase sigue fuera de esta etapa y no se considera listo para producción. Los archivos de publicación existentes no acreditan un despliegue actual.
 
 Para trabajar en el código, leer [CLAUDE.md](CLAUDE.md) y [AGENTS.md](AGENTS.md), que comparten reglas de arquitectura y alcance. Contratos vigentes: [contenido](docs/CONTENT_CONTRACT.md) e [identidad](docs/IDENTITY_CONTRACT.md). La [auditoría de agosto](AUDITORIA_ARQUITECTURA.md) y los informes de septiembre son históricos.
 

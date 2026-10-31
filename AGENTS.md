@@ -18,6 +18,8 @@ Los pasos 1–7 quedaron cerrados el 10 de octubre de 2026; resultados finales, 
 
 Etapa posterior autorizada: ajustes generales del CMS, primera configuración guiada y después contenido/recursos, en ese orden. El primer bloque cerró el 26 de octubre con nombres/fechas locales y respaldo; el segundo cerró también el 26 de octubre. Contenido/recursos cerró el 27 de octubre como plantilla reutilizable sin datos personales. Los tres bloques están terminados; no iniciar funciones nuevas sin definir otro alcance. Consultar el punto portable y el avance antes de continuarlo. Se mantienen las restricciones locales, sin activar Supabase ni desplegar.
 
+El 28 de octubre el usuario autorizó la revisión y validación integral local de esos flujos y la corrección de problemas demostrables. Cerró el 31: 414 unitarias/29 archivos, 53 Chromium completos, 14 seleccionados WebKit/Firefox y los casos separados de preview/offline y PWA A→B aprobados. Resultados, diagnósticos y límites en [VALIDACION_INTEGRAL_LOCAL.md](docs/VALIDACION_INTEGRAL_LOCAL.md). La siguiente etapa es concretar el pulido particular con skills sobre la experiencia existente; no implica añadir funciones nuevas ni cambiar las restricciones de infraestructura o uso.
+
 Al ejecutar E2E con Vite de desarrollo, congelar todos los archivos observados, incluidos Markdown y documentación. Tailwind puede enviar una recarga completa al editar esos documentos. Guardar logs/notas temporales en `.git/codex-checkpoints` y actualizar los documentos al terminar el runner. Las pruebas de reset/importación usan perfiles aislados, no el almacenamiento real del usuario.
 
 ## Continuación entre escritorio y laptop

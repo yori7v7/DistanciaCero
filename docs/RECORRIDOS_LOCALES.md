@@ -4,6 +4,8 @@ Comportamiento local contrastado al cerrar el plan el 10 de octubre de 2026. La 
 
 El bloque posterior de compatibilidad cerró el **23 de octubre** con **100/100 E2E en una corrida: 50 WebKit y 50 Firefox**, en Windows, sin omitidas, inestables, reintentos ni errores externos. Duró 67,82 minutos y conservó los hashes de los 272 archivos observados. No repitió la validación histórica de preview/PWA ni acredita Safari/iPhone reales.
 
+La [validación integral local](VALIDACION_INTEGRAL_LOCAL.md) de los flujos recientes cerró el **31 de octubre**: **53/53 Chromium**, **14/14 seleccionados en Firefox/WebKit** (siete por motor), **1/1 preview/offline** y **1/1 PWA A→B**, en corridas separadas. Tipos, auditor, **414/414 unitarias en 29 archivos** y build/PWA aprobaron el 28. Los resultados anteriores conservan sus fechas; no se ejecutaron los 106 casos completos de Firefox/WebKit.
+
 ## Navegación
 
 - `/` abre la landing; Entrar monta la experiencia en `/app`.
@@ -31,6 +33,7 @@ El bloque posterior de compatibilidad cerró el **23 de octubre** con **100/100 
 - La reproducción comienza con una acción del usuario. Escenas sin archivo muestran una indicación y su botón queda desactivado.
 - Ambiente, playlist y música de escenas comparten coordinación exclusiva, incluidos los elementos de audio creados fuera del DOM. Iniciar uno pausa los otros.
 - Una canción de playlist continúa al cambiar de escena. Para regresar a la banda sonora de la escena seleccionada, pulsar Reproducir. Al terminar una canción, solo se retoma el ambiente si estaba sonando antes de elegirla.
+- Borrar, ocultar o importar una lista que retire la fila activa detiene la pista o cancela su carga. Editar una fila conservando su ID mantiene el control para detenerla; una nueva selección válida tiene prioridad sobre la anterior.
 - Una canción en carga muestra «Cargando canción. Toca para cancelar». Otro clic en su fila cancela la solicitud; un resultado tardío no debe reanudarla. Los errores de archivo/reproducción se muestran en el reproductor correspondiente.
 - Pausa, cambio rápido y salida de `/app` cancelan reproducción/transiciones pendientes. El volumen cero se conserva al pausar, reanudar y recargar.
 - Las rutas públicas respetan `VITE_BASE`. Audio conserva fuentes HTTP(S), `data:audio` y `blob:`; los enlaces externos de playlist solo permiten HTTP(S).
@@ -99,11 +102,11 @@ npm run test:e2e:pwa-update
 
 El caso de `playwright.pwa-update.config.ts` utiliza Chromium en Windows, un worker, cero reintentos y el mismo origen `http://127.0.0.1:4175` para A y B. `scripts/pwa-update-server.mjs` genera sus dos builds reales en `test-results/pwa-update-builds`; no requiere compilar previamente `dist`. Un plugin exclusivo de prueba cambia en memoria una marca del entry y el título del lazy `StoryTimeline`: ambos chunks y el hash del worker difieren entre A/B. No modifica archivos de `src`, el `dist` del usuario ni infraestructura remota.
 
-En A, el recorrido guarda una promesa desde el CMS, abre una carta para persistir progreso, conserva volumen cero y Centro visible, y añade una caché ajena como control. Al pasar el servidor a B, pide explícitamente `registration.update()` para comprobar actualizaciones sin esperar el calendario del navegador. La transición al documento B ocurre mediante el cliente de registro, sin forzar `skipWaiting`, borrar cachés, volver a sembrar datos ni recargar manualmente durante A→B.
+En A, el recorrido guarda una promesa desde el CMS y nombres/título desde el formulario de ajustes generales, abre una carta para persistir progreso, conserva volumen cero y Centro visible, y añade una caché ajena como control. Al pasar el servidor a B, pide explícitamente `registration.update()` para comprobar actualizaciones sin esperar el calendario del navegador. La transición al documento B ocurre mediante el cliente de registro, sin forzar `skipWaiting`, borrar cachés, volver a sembrar datos ni recargar manualmente durante A→B.
 
-La prueba espera después la marca B y un `timeOrigin` nuevo, conserva el hash de escena y comprueba el contenido guardado, progreso `opened`, volumen cero y Centro visible. Identidad/espacio permanecen nulos en ambos extremos; no acredita conservación de una identidad elegida. Comprueba al final chunks B presentes, entry/lazy A ausentes y caché ajena conservada. El adjunto temprano de `controllerchange` puede mostrar todavía el documento A; el evento precede a las verificaciones finales y no demuestra por sí solo que el documento o la limpieza de caché ya hayan terminado.
+La prueba espera después la marca B y un `timeOrigin` nuevo, conserva el hash de escena y comprueba el contenido guardado, los ajustes generales, progreso `opened`, volumen cero y Centro visible. Identidad/espacio permanecen nulos en ambos extremos; no acredita conservación de una identidad elegida. Comprueba al final chunks B presentes, entry/lazy A ausentes y caché ajena conservada. `controllerchange` puede preceder a la recarga; el adjunto de diagnóstico se lee después de verificar el documento B y su nuevo `timeOrigin`, para no competir con esa navegación.
 
-Con red desactivada, se abre el lazy Diario B que el documento A aún no había solicitado, se recarga B y se navega por cartas, landing y entrada, manteniendo los datos guardados. No se registraron errores JS, assets fallidos ni solicitudes Supabase; otras solicitudes externas se bloquearon deliberadamente. El caso pasó **1/1 el 23 de octubre**, en 43,94 s de reporte y 22,9 s de caso, con 275 archivos congelados. Preview/offline pasó por separado **1/1** después del build; resultados completos en el avance.
+Con red desactivada, se abre el lazy Diario B que el documento A aún no había solicitado, se recarga B y se navega por cartas, landing y entrada, manteniendo los datos guardados y el título personalizado. No se registraron errores JS, assets fallidos ni solicitudes Supabase; otras solicitudes externas se bloquearon deliberadamente. El caso original pasó **1/1 el 23 de octubre**, en 43,94 s de reporte y 22,9 s de caso, con 275 archivos congelados. La versión ampliada con ajustes pasó **1/1 el 31**, en 40,56 s de reporte; preview/offline pasó por separado **1/1**, en 18,38 s. Los resultados completos y el diagnóstico corregido constan en la [validación integral](VALIDACION_INTEGRAL_LOCAL.md).
 
 Esta comprobación local no acredita despliegue real, propagación de CDN, otros orígenes/basepaths, Firefox/WebKit/Safari para la actualización ni instalación como aplicación. Tampoco determina cuándo descubrirá una versión nueva cada navegador: la comprobación se dispara explícitamente, y lo automático probado es el refresco posterior. Conserva **datos ya guardados**, sin garantizar formularios abiertos sin guardar ni todo el estado en memoria; una autorrecarga puede descartar cambios no persistidos. Los medios remotos siguen fuera de la garantía offline.
 
@@ -149,3 +152,9 @@ La guía opcional del CMS se comprobó en Chromium, WebKit y Firefox de Windows:
 ### Contenido y recursos — 27 de octubre
 
 Cinco casos Chromium aprobaron CRUD de música, audio real y recuperación de archivos ausentes, junto con los pendientes de la plantilla. El caso de plantilla se repitió tras ajustar y capturar el mapa móvil. Resultados separados, sin repetir los 53/106 completos ni certificar otros motores. Instrucciones y resultados exactos en el avance.
+
+### Validación integral — 31 de octubre
+
+La corrida completa Chromium aprobó **53/53**, en 1307,86 s de reporte. Firefox/WebKit aprobaron **14/14 seleccionados**, en 656,24 s: ajustes, guía, plantilla, dos recorridos de audio y dos CRUD de música por motor. La prueba de audio elimina y recrea una pista en reproducción desde el CMS y conserva las comprobaciones de navegación y coordinación exclusiva. Preview/offline y PWA A→B aprobaron por separado; también conservaron los ajustes guardados.
+
+Los cuatro reportes finales tuvieron cero omitidas, inestables, reintentos y errores externos; conservaron los 299 archivos observados y restauraron sus guards. No se usó el almacenamiento real del usuario ni se activó infraestructura. Los intentos interrumpidos o fallidos y su corrección se conservan en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md); estas corridas no acreditan Safari real ni corrigen los límites conocidos de Clock y del loop nativo WebKit.

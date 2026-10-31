@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **27 de octubre de 2026** tras cerrar contenido y recursos. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **31 de octubre de 2026** tras cerrar la validación integral local. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -123,7 +123,17 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Cierre de contenido y recursos — 27 de octubre de 2026
+## Continuación — validación integral local cerrada, 31 de octubre de 2026
+
+La revisión autorizada el 28 quedó terminada sobre `5f009d2`, con implementación/pruebas en **`4e9a036`**. La playlist detiene o cancela el audio al desaparecer su fila, sin interrumpir una selección válida al editar o cambiar de escena. Los ajustes guardados se comprueban también después de actualizar la PWA y sin conexión. Plan, diagnósticos y comandos en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md).
+
+Resultados separados: tipos, auditor con 0 errores/25 campos vacíos intencionales, **414/414 unitarias en 29 archivos** y build/PWA aprobados el 28; el 31 aprobaron **53/53 Chromium completos**, **14/14 seleccionados entre WebKit/Firefox**, **1/1 preview/offline** y **1/1 actualización A→B**. Cero omitidas, inestables, reintentos o errores externos en los reportes finales; 299 archivos conservados y guards restaurados. La corrida interrumpida del 28 no cuenta como suite terminada. El primer A→B del 31 falló en una captura de diagnóstico durante la recarga; se corrigió el harness y solo ese caso se repitió. No se ejecutaron los 106 completos ni Safari real.
+
+Evidencia local ignorada en `.git/codex-checkpoints/final-local-20261028/` y `.git/codex-checkpoints/final-local-20261031/`; no viaja con Git. Recibir también el commit documental que contiene este cierre; el hash final y su envío se comprueban al entregar, no confundirlo con el commit de implementación.
+
+**Siguiente etapa: pulido particular con skills sobre la experiencia existente.** Los tres bloques anteriores y esta validación quedan cerrados. Concretar la sección o detalle de ese pulido antes de ampliar el alcance; no reabrir pasos históricos ni iniciar funciones nuevas por un «prosigue». Safari/macOS/iPhone requiere otro equipo; Clock y el loop WebKit mantienen sus límites. Comprobar uso, rama, archivos, remoto y runners antes de trabajar. Mantener modo local, sin Supabase, despliegues, cambios de modalidad, reserva, compras ni resets.
+
+### Antecedente: cierre de contenido y recursos — 27 de octubre de 2026
 
 El usuario eligió una **plantilla reutilizable sin datos personales**. Sobre `3d95717`, implementación `4f5e316` y ajuste móvil `4642c7d`: todas las canciones usan su propia fila, el ambiente es independiente y las fuentes vacías muestran pendientes. Se conservan descripciones y la opción de detener/cancelar aunque se cambie la fuente durante la reproducción. El mapa admite dos enlaces HTTP(S) y kilómetros manuales en `siteConfig.distanceMap`; no abre enlaces vacíos ni calcula una ruta. Se corrigieron textos que prometían privacidad o desbloqueos inexistentes. No se añadieron medios ni datos personales.
 

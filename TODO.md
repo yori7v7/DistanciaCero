@@ -1,6 +1,6 @@
 # Pendientes — Distancia Cero
 
-Estado del **27 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
+Estado del **31 de octubre de 2026**. Los siete pasos de [el plan de pulido local](docs/PLAN_PULIDO_LOCAL.md) cerraron el 10 de octubre; compatibilidad Firefox/WebKit y actualización PWA local cerraron después, el 23. La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) de los bloques recientes cerró el 31. Los resultados conservan sus fechas y recuperación en [AVANCE_PULIDO_LOCAL.md](docs/AVANCE_PULIDO_LOCAL.md); el [traspaso](docs/TRABAJO_ENTRE_EQUIPOS.md) registra cómo continuar entre equipos.
 
 ## Trabajo local terminado
 
@@ -41,13 +41,23 @@ Estado del **27 de octubre de 2026**. Los siete pasos de [el plan de pulido loca
 - [x] Chrome 156, perfil aislado: instalación temporal, apertura standalone, datos guardados y recarga con conexión simulada cortada. Cierre y reapertura en otra ventana con el servidor local apagado; documento y Diario lazy desde el service worker. Recorrido final aprobado, 18,61 s, 278 archivos conservados y desinstalación confirmada.
 - [x] Corregida la asociación del harness entre targets `tab`/`page` mediante `windowId`. No hizo falta modificar la aplicación. La reapertura sin servidor no representa un corte de Internet de Windows ni un reinicio completo de Chrome.
 
-## Trabajo local pendiente
+## Tres bloques locales terminados — 26 y 27 de octubre
 
-Los pasos 1–7, compatibilidad, PWA, avisos de aplicación y tipado acotado están terminados. El usuario autorizó la siguiente etapa local, en orden:
+Después de los pasos 1–7, compatibilidad, PWA, avisos de aplicación y tipado acotado, se completaron estos bloques en el orden autorizado:
 
 1. [x] **Ajustes generales desde el CMS**, cerrado el 26 de octubre (`0125775`): siete nombres/fechas, configuración reactiva y respaldo v2 recuperable. Tipos, **382/382 unitarias en 25 archivos**, build/PWA, seis E2E Chromium y el caso nuevo en Firefox/WebKit aprobados. Documentación actualizada.
 2. [x] **Primera configuración guiada**, cerrada el 26 de octubre (`05a713e`): guía opcional del CMS en tres pasos, sin escribir hasta confirmar. Tipos, 388 unitarias/26 archivos, build/PWA, dos E2E Chromium y el caso nuevo en Firefox/WebKit aprobados.
 3. [x] **Contenido y recursos**, cerrado el 27 de octubre (`4f5e316`, ajuste móvil `4642c7d`): plantilla reutilizable sin datos personales, playlist/mapa honestos, auditor de referencias e importador de audio recuperable. Tipos, 411 unitarias/29 archivos, build/PWA, cinco E2E Chromium y comprobación móvil final aprobados. Siete grupos del importador aprobados en PowerShell 5.1 y 7. Los tres bloques están terminados.
+
+## Validación integral local terminada — 31 de octubre
+
+- [x] Detener/cancelar la pista al borrar, ocultar o importar una lista que ya no contenga su fila; conservar los controles al editarla o cambiar de escena. Regresiones unitarias y eliminación/recreación desde el CMS comprobadas.
+- [x] `verify:local` del 28: tipos, recursos con **0 errores y 25 vacíos intencionales**, **414/414 unitarias en 29 archivos** y build/PWA aprobados.
+- [x] Corridas finales del 31: **53/53 Chromium**, **14/14 seleccionados en Firefox/WebKit** (siete por motor), **1/1 preview/offline** y **1/1 PWA A→B** con ajustes generales guardados. Reportes finales sin omitidas, inestables, reintentos ni errores externos; 299 archivos observados conservados y guards restaurados. No se ejecutó la suite completa de 106 Firefox/WebKit.
+
+## Siguiente alcance
+
+- [ ] Concretar el pulido particular con skills sobre la experiencia existente, después de este cierre. Las funciones nuevas y la infraestructura requieren otro alcance.
 
 La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 
@@ -57,9 +67,9 @@ Cualquier ampliación fuera de la etapa indicada, infraestructura o refactor del
 
 ## Límites y deuda visible
 
-- La cobertura de desarrollo incluye Chromium (comprobaciones del 10/16/19) y Firefox/WebKit de Playwright en Windows (23), con cinco tamaños y WebKit densidad 1. No acredita Safari/macOS/iPhone reales, otros dispositivos ni certificación WCAG completa.
+- La cobertura de desarrollo incluye los **53 casos Chromium del 31**, los **100 Firefox/WebKit del 23** y los **14 seleccionados del 31** para ajustes, guía, plantilla, audio y CRUD de música. Son corridas con fechas y alcances separados; no una corrida de 106 Firefox/WebKit. Las pruebas usan Windows, cinco tamaños y WebKit densidad 1; no acreditan Safari/macOS/iPhone reales, otros dispositivos ni certificación WCAG completa.
 - WebKit 26.5 en este Windows reprodujo fuera de la aplicación una pausa nativa al cruzar el loop de un WAV de 20 s, con volumen cero y pausa/reanudación cerca del final. El síntoma está observado; su causa interna no está explicada. El WAV de 300 s de las pruebas evita ese límite durante los controles, sin declarar corregido el loop ni extrapolar a otros formatos/equipos.
-- La actualización PWA A→B se comprobó localmente en Chromium/Windows y el mismo origen; no acredita instalación, Safari ni despliegue real. Conserva datos guardados, sin garantizar formularios sin guardar o medios externos offline. La primera recarga de pestañas antiguas sin el nuevo cliente se mantiene como límite inferido, no como recorrido verificado.
+- La actualización PWA A→B se comprobó localmente en Chromium/Windows y el mismo origen, incluyendo los ajustes generales guardados el 31; no acredita instalación, Safari ni despliegue real. Conserva datos guardados, sin garantizar formularios sin guardar o medios externos offline. La primera recarga de pestañas antiguas sin el nuevo cliente se mantiene como límite inferido, no como recorrido verificado.
 - La instalación en Chrome/Windows se comprobó por separado el 25. La recarga usa offline simulado; la reapertura usa el servidor local detenido y mantiene Internet del sistema disponible. No acredita reinicio de Chrome/Windows, Edge, Safari ni todos los medios o fuentes externas sin conexión.
 - El aviso de chunks grandes se resolvió con grupos React/Three en el build local: máximo 372,57 kB, sin subir el umbral. El import dinámico también quedó corregido mediante caché compartida y carga diferida, con 343 unitarias/23 archivos y regresiones PWA/Universo. Clock permanece como deprecación externa de Fiber, incluida en su estable 9.8.2 consultada sin instalar.
 - Algunas estructuras de contenido conservan campos dinámicos y casts históricos; el CMS y el lector compartido tienen tipos concretos. Ampliar tipado solo con un alcance y regresiones claros.
