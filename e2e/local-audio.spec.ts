@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 import { startAudioFixture } from './audio-fixture'
+import { enableCentro } from './helpers'
 
 const sceneMusic = JSON.parse(readFileSync(new URL('../src/data/sceneMusic.json', import.meta.url), 'utf8'))
 let audioFixture: Awaited<ReturnType<typeof startAudioFixture>>
@@ -70,6 +71,23 @@ test('audio real local: escena, playlist, pausa, volumen y salida no se solapan'
   await expect.poll(async () => (await mediaState(page)).filter(audio => !audio.paused).length).toBe(1)
   await expect.poll(async () => (await mediaState(page)).find(audio => !audio.paused)?.src).toContain('e2e-playlist-track.wav')
   await expect(player.getByRole('button', { name: 'Reproducir', exact: true })).toBeVisible()
+  // Removing a playing row from the real CMS must also stop its detached audio.
+  await enableCentro(page)
+  const cms = page.locator('#centro-universo')
+  await cms.locator('.crud-central-shell').getByRole('button', { name: 'Música', exact: true }).click()
+  await cms.getByRole('button', { name: 'Tus creaciones', exact: true }).click()
+  const editor = page.locator('#local-playlist-editor')
+  page.once('dialog', dialog => dialog.accept())
+  await editor.locator('.reason-item-row').filter({ hasText: 'Canción local de prueba' })
+    .getByRole('button', { name: 'Eliminar', exact: true }).click()
+  await expect(page.locator('#playlist').getByRole('button', { name: /Canción local de prueba/ })).toHaveCount(0)
+  await expect.poll(async () => (await mediaState(page)).filter(audio => !audio.paused).length).toBe(0)
+  await editor.locator('#playlist-title').fill('Canción local de prueba')
+  await editor.locator('#playlist-sourceType').selectOption('local')
+  await editor.locator('#playlist-src').fill(`${audioFixture.origin}/audio/e2e-playlist-track.wav`)
+  await editor.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await page.locator('#playlist').getByRole('button', { name: /Canción local de prueba/ }).click()
+  await expect.poll(async () => (await mediaState(page)).find(audio => !audio.paused)?.src).toContain('e2e-playlist-track.wav')
   await page.locator('.scene-portal').getByRole('button', { name: 'Cartas', exact: true }).click()
   await expect(player.locator('.scene-music-info')).toContainText('Cartas mensuales')
   await expect.poll(async () => (await mediaState(page)).filter(audio => !audio.paused).length).toBe(1)

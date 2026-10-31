@@ -5,16 +5,18 @@ const title = 'Promesa conservada entre versiones'
 const contentKey = 'distancia-cero-content-promises'
 const progressKey = 'distancia-cero-monthly-letter-m1'
 const volumeKey = 'distancia-cero-scene-music-volume'
+const settingsKey = 'distancia-cero-site-settings'
 
 async function storedData(page: Page) {
-  return page.evaluate(({ contentKey, progressKey, volumeKey }) => ({
+  return page.evaluate(({ contentKey, progressKey, volumeKey, settingsKey }) => ({
     content: localStorage.getItem(contentKey),
     progress: localStorage.getItem(progressKey),
     volume: localStorage.getItem(volumeKey),
+    settings: localStorage.getItem(settingsKey),
     cms: localStorage.getItem('distancia-cero-centro-visible'),
     identity: localStorage.getItem('distancia-cero-local-current-user'),
     space: localStorage.getItem('distancia-cero-local-current-space'),
-  }), { contentKey, progressKey, volumeKey })
+  }), { contentKey, progressKey, volumeKey, settingsKey })
 }
 
 async function cachePaths(page: Page) {
@@ -62,6 +64,14 @@ test('PWA A → B: actualiza documento y lazy chunks sin perder datos, y B funci
 
   await enableCentro(page)
   const cms = page.locator('#centro-universo')
+  await cms.getByText('Ajustes generales', { exact: true }).click()
+  const settings = cms.getByRole('form', { name: 'Ajustes generales' })
+  await settings.getByLabel('Tu nombre', { exact: true }).fill('PWA Alex')
+  await settings.getByLabel('Nombre de tu pareja', { exact: true }).fill('PWA Sam')
+  await settings.getByLabel('Nombre en portada (opcional)', { exact: true }).fill('Universo de prueba PWA')
+  await settings.getByRole('button', { name: 'Guardar ajustes', exact: true }).click()
+  await expect(page.locator('#inicio h1')).toContainText('Universo de prueba PWA')
+  await expect.poll(() => page.evaluate(key => localStorage.getItem(key), settingsKey)).toContain('PWA Alex')
   await cms.locator('.crud-central-shell').getByRole('button', { name: 'Promesas', exact: true }).click()
   await cms.getByRole('button', { name: 'Tus creaciones', exact: true }).click()
   const editor = page.locator('#local-promises-editor')
@@ -94,14 +104,15 @@ test('PWA A → B: actualiza documento y lazy chunks sin perder datos, y B funci
   // Do not force skipWaiting, unregister, clear caches, reload, or reseed data.
   await page.evaluate(async () => { await (await navigator.serviceWorker.ready).update() })
   await expect.poll(() => page.evaluate(() => sessionStorage.getItem('pwa-test-controller-changed')), { timeout: 30_000 }).toBe('true')
+  await expect(page.locator('html')).toHaveAttribute('data-pwa-test-release', 'B', { timeout: 30_000 })
+  await expect.poll(() => page.evaluate(() => performance.timeOrigin)).not.toBe(beforeOrigin)
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem('pwa-test-controller-changed'))).toBe('true')
+  // Read diagnostics after the new document exists; controllerchange can precede its reload.
   await testInfo.attach('pwa-activation-evidence', {
     body: JSON.stringify({ releases, beforeOrigin, currentOrigin: await page.evaluate(() => performance.timeOrigin),
       documentRelease: await page.locator('html').getAttribute('data-pwa-test-release'),
       cachePaths: await cachePaths(page) }, null, 2), contentType: 'application/json',
   })
-  await expect(page.locator('html')).toHaveAttribute('data-pwa-test-release', 'B', { timeout: 30_000 })
-  await expect.poll(() => page.evaluate(() => performance.timeOrigin)).not.toBe(beforeOrigin)
-  await expect.poll(() => page.evaluate(() => sessionStorage.getItem('pwa-test-controller-changed'))).toBe('true')
   await expect(page).toHaveURL(/#\/promesas$/)
   await expect(page.locator('#promesas').getByRole('heading', { name: title })).toBeVisible()
   await expect(page.getByRole('slider', { name: 'Volumen de la banda sonora' })).toHaveValue('0')
@@ -121,6 +132,7 @@ test('PWA A → B: actualiza documento y lazy chunks sin perder datos, y B funci
   await expect(page.locator('#cartas article').filter({ hasText: 'El comienzo de todo' })
     .getByRole('button', { name: 'Releer carta', exact: true })).toBeVisible()
   await page.goto('/')
+  await expect(page.locator('h1')).toContainText('Universo de prueba PWA')
   await page.getByRole('button', { name: 'Entrar al universo' }).click()
   await expect(page.locator('#cartas')).toBeVisible()
   expect(await storedData(page)).toEqual(before)

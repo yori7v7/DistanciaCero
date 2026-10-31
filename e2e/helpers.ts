@@ -24,7 +24,7 @@ export async function enableCentro(page: Page) {
   const cms = page.locator('#centro-universo')
   if (!await cms.isVisible()) {
     await page.getByRole('button', { name: 'Ajustes' }).click()
-    await page.getByRole('button', { name: /Centro del Universo/ }).click()
+    await page.locator('.scene-settings-dropdown').getByRole('button', { name: /Centro del Universo/ }).click()
     await expect(page.locator('.scene-settings-dropdown')).toBeHidden()
   }
   // The lazy-loading placeholder has the same section ID as the real editor.

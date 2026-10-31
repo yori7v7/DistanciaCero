@@ -98,6 +98,37 @@ describe('recursos de playlist y ambiente', () => {
     expect(screen.getByRole('heading', { name: 'Audio de ambiente' })).toBeVisible()
   })
 
+  it.each(['currentTrack', 'pendingTrack'] as const)('detiene o cancela cuando desaparece la fila de %s', state => {
+    const song = { id: 'removed', title: 'Canción retirada', sourceType: 'local' as const, src: '/audio/removed.wav' }
+    const other = { id: 'remaining', title: 'Canción conservada', sourceType: 'local' as const, src: '/audio/remaining.wav' }
+    audio[state] = song
+    const { rerender } = render(<PlaylistSection playlist={[song, other]} />)
+    expect(audio.stopTrack).not.toHaveBeenCalled()
+    rerender(<PlaylistSection playlist={[other]} />)
+    expect(screen.queryByRole('button', { name: /Canción retirada/ })).not.toBeInTheDocument()
+    expect(audio.stopTrack).toHaveBeenCalledTimes(1)
+    audio[state] = other
+    rerender(<PlaylistSection playlist={[other]} />)
+    expect(audio.stopTrack).toHaveBeenCalledTimes(1)
+    expect(audio.playLocalTrack).not.toHaveBeenCalled()
+    expect(audio.openExternalLink).not.toHaveBeenCalled()
+  })
+
+  it('conserva una pista válida al editar su fila o cambiar de selección', () => {
+    const song = { id: 'same', title: 'Antes', sourceType: 'local' as const, src: '/audio/same.wav' }
+    const next = { id: 'next', title: 'Siguiente', sourceType: 'local' as const, src: '/audio/next.wav' }
+    audio.currentTrack = song
+    const { rerender } = render(<PlaylistSection playlist={[song, next]} />)
+    rerender(<PlaylistSection playlist={[{ ...song, title: 'Después', src: '' }, next]} />)
+    expect(screen.getByRole('button', { name: /Después/ })).toBeEnabled()
+    expect(audio.stopTrack).not.toHaveBeenCalled()
+    // A newly requested, listed track takes precedence over the previous selection.
+    audio.pendingTrack = next
+    rerender(<PlaylistSection playlist={[next]} />)
+    expect(audio.stopTrack).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: /Siguiente/ })).toHaveTextContent('Cargando canción')
+  })
+
   it('la portada explica que falta la canción de fondo y no intenta reproducirla', () => {
     render(<Hero />)
     const button = screen.getByRole('button', { name: 'Añade una canción de fondo' })

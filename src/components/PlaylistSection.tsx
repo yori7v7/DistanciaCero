@@ -83,6 +83,14 @@ function PlaylistSection({ playlist = [] }: { playlist?: PlaylistContent[] }) {
   }))
 
   const baseItems = [...visiblePlaylist, ...uploadedItems]
+  const activeTrack = pendingTrack ?? currentTrack
+  const activeMissing = Boolean(activeTrack && !baseItems.some(item => item.id === activeTrack.id))
+
+  useEffect(() => {
+    // Detached audio must not outlive the row that provides its stop control.
+    if (activeMissing) stopTrack()
+  }, [activeMissing, stopTrack])
+
   const items = baseItems.length > 0 ? baseItems : [{
     id: 'soon-playlist',
     title: 'Próximamente',

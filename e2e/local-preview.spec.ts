@@ -14,16 +14,21 @@ test('preview: service worker, recarga y navegación local sin conexión conserv
     localStorage.setItem('distancia-cero-content-promises', JSON.stringify([
       { id: 'offline-promise', title: 'Promesa guardada sin conexión', text: 'Contenido sintético conservado.', isLocal: true },
     ]))
+    localStorage.setItem('distancia-cero-site-settings', JSON.stringify({
+      couple: { yourName: 'Alex offline', herName: 'Sam offline' }, hero: { titleName: 'Universo offline' },
+    }))
   })
   await context.setOffline(true)
   await page.reload()
   await expect(page.locator('#cartas')).toBeVisible()
+  await expect(page.locator('#inicio h1')).toContainText('Universo offline')
   await page.locator('.scene-portal').getByRole('button', { name: 'Promesas', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Promesa guardada sin conexión' })).toBeVisible()
   await page.goto('/app#/historia')
   await expect(page.locator('#historia')).toBeVisible()
   await page.screenshot({ path: testInfo.outputPath('preview-offline.png') })
   await page.goto('/')
+  await expect(page.locator('h1')).toContainText('Universo offline')
   await page.getByRole('button', { name: 'Entrar al universo' }).click()
   await expect(page.locator('#historia')).toBeVisible()
   expect(errors).toEqual([])
