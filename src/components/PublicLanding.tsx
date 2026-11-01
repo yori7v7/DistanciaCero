@@ -83,7 +83,12 @@ function PublicLanding({ onEnter }: PublicLandingProps) {
             <span>{siteConfig.project.name} · Desde {siteConfig.dates.metDate?.split('-')[0] || '2026'}</span>
           </p>
           {!reducedMotion && (
-            <button type="button" className="landing-motion-toggle" onClick={() => setMotionPaused(paused => !paused)}>
+            <button
+              type="button"
+              className="landing-motion-toggle"
+              onFocus={event => event.currentTarget.scrollIntoView({ block: 'nearest', behavior: 'instant' })}
+              onClick={() => setMotionPaused(paused => !paused)}
+            >
               {motionPaused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
               <span>{motionPaused ? 'Reanudar animaciones' : 'Pausar animaciones'}</span>
             </button>

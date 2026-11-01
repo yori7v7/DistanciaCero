@@ -322,6 +322,7 @@ html {
   min-width: 0;
 }
 .landing-motion-toggle {
+  scroll-margin-block: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
