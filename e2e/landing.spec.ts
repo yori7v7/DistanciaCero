@@ -60,6 +60,8 @@ test.describe('PublicLanding', () => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
     const landing = page.locator('.public-landing')
     const enter = page.getByRole('button', { name: 'Entrar al universo', exact: true })
+    // Text must be mounted and laid out before fonts.ready can cover its fonts.
+    await expect(enter).toBeVisible()
     await page.evaluate(() => document.fonts.ready)
     const top = (await enter.boundingBox())!.y
     await expect(page.getByText('Cartas que viajan entre estrellas')).toBeVisible({ timeout: 6000 })

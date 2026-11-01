@@ -349,7 +349,7 @@ html {
 
 @media (max-height: 700px) {
   .landing-content {
-    padding-block: 16px;
+    padding-block: 12px;
   }
   .public-landing .landing-eyebrow {
     margin-bottom: 12px;
