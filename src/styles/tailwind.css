@@ -370,6 +370,135 @@ html {
 }
 
 
+/* Main experience cover: only Hero uses these spacing and wrapping rules. */
+.hero.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100svh - var(--scene-navigation-height, 72px) - 48px);
+  padding-block: clamp(24px, 4vh, 56px);
+}
+body.scene-mode-enabled .hero.hero-section.scene-visible {
+  display: flex;
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: min(calc(100% - 32px), 760px);
+  margin-inline: auto;
+  text-align: center;
+}
+.hero-brand {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.hero-brand svg, .hero-couple-names svg, .hero-daily-phrase svg, .hero-actions svg {
+  flex-shrink: 0;
+}
+.hero-heading {
+  max-width: 100%;
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.hero-heading > span {
+  display: block;
+}
+.hero-heading-name {
+  margin-top: 8px;
+  color: var(--pink);
+}
+.hero-description {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.hero-couple-names {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  max-width: 100%;
+  color: var(--pink-soft);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.hero-couple-names span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hero-daily-phrase {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--pink-soft);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.hero-daily-phrase svg {
+  margin-top: 3px;
+}
+.hero-daily-phrase span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+.hero-actions .main-button, .hero-actions .ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 100%;
+  min-height: 52px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  scroll-margin-block: calc(var(--scene-navigation-height, 72px) + 24px) 12px;
+}
+.hero-actions span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hero-info {
+  max-width: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+@media (max-height: 700px) {
+  .hero.hero-section {
+    padding-block: 24px;
+  }
+  .hero-content {
+    gap: 16px;
+  }
+  .hero-description {
+    font-size: 1rem;
+  }
+}
+
 /* ─── Keyframes esenciales que requieren CSS puro ─── */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(24px); }

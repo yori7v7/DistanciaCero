@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type FocusEvent } from 'react'
 import { Heart, Sparkles, Music } from 'lucide-react'
 import { useAudio } from '../context/AudioContext'
 import randomPhrases from '../data/randomPhrases.json'
@@ -9,9 +9,17 @@ interface RandomPhrase {
   author?: string
 }
 
+function revealKeyboardFocus(event: FocusEvent<HTMLElement>) {
+  const control = event.currentTarget
+  if (control.matches(':focus-visible')) {
+    control.scrollIntoView({ block: 'nearest', behavior: 'instant' })
+  }
+}
+
 function Hero() {
   const siteConfig = useSiteConfig()
   const { backgroundPlaying, backgroundTrackPath, toggleBackground, infoMessage } = useAudio()
+  const { yourName, herName, mainPairName } = siteConfig.couple
 
   const dailyPhrase: RandomPhrase | null = useMemo(() => {
     if (!randomPhrases.length) return null
@@ -20,67 +28,59 @@ function Hero() {
   }, [])
 
   return (
-    <section className="section hero relative min-h-screen flex items-center justify-center overflow-hidden" id="inicio">
-      {/* Background ambient orbs */}
-      <div className="absolute inset-0 pointer-events-none">
+    <section className="section hero hero-section" id="inicio" aria-labelledby="hero-title">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div className="glow-orb w-[500px] h-[500px] bg-pink top-1/4 -left-32" />
         <div className="glow-orb w-[400px] h-[400px] bg-red top-1/3 -right-24" />
         <div className="glow-orb w-[300px] h-[300px] bg-pink-soft bottom-1/4 left-1/3 opacity-10" />
       </div>
 
-      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto py-36">
-        {/* Brand pill */}
-        <div className="pill mb-16 mx-auto">
-          <Heart size={16} />
-          <span>Distancia Cero</span>
+      <div className="hero-content">
+        <div className="pill hero-brand">
+          <Heart size={16} aria-hidden="true" />
+          <span>{siteConfig.project.name}</span>
         </div>
 
-        {/* Main title */}
-        <h1 className="font-display text-[clamp(2.8rem,8vw,5rem)] font-black leading-[1.2] mb-36">
-          <span className="block text-white-soft mb-4">{siteConfig.hero.titlePrefix}</span>
-          <span className="block text-gradient">{siteConfig.hero.titleName}</span>
+        <h1 id="hero-title" className="hero-heading">
+          <span>{siteConfig.hero.titlePrefix}</span>
+          <span className="hero-heading-name">{siteConfig.hero.titleName || 'nuestro universo'}</span>
         </h1>
+        <p className="hero-description">{siteConfig.hero.description}</p>
 
-        {/* Subtitle */}
-        <p className="text-muted text-lg max-w-lg mx-auto mb-16 leading-relaxed mt-8">
-          {siteConfig.hero.description}
-        </p>
-
-        {/* Couple names with heart */}
-        <div className="flex items-center justify-center gap-4 mb-16 text-xl font-semibold text-white-soft">
-          <span className="text-pink-soft">{siteConfig.couple.yourName}</span>
-          <Heart size={24} className="text-pink animate-[pulse-heart_2s_ease-in-out_infinite]" />
-          <span className="text-pink-soft">{siteConfig.couple.herName}</span>
+        <div className="hero-couple-names">
+          {yourName && <span>{yourName}</span>}
+          {yourName && herName && <Heart size={22} aria-hidden="true" />}
+          {herName && <span>{herName}</span>}
+          {!yourName && !herName && <span>{mainPairName}</span>}
         </div>
 
-        {/* Daily phrase */}
         {dailyPhrase && (
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full
-            bg-[rgba(255,138,212,0.06)] border border-[rgba(255,138,212,0.15)]
-            text-pink-soft text-sm mb-16">
-            <Sparkles size={14} />
+          <div className="hero-daily-phrase">
+            <Sparkles size={16} aria-hidden="true" />
             <span><strong>Mensaje del día:</strong> {dailyPhrase.text}</span>
           </div>
         )}
 
-        {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
-          <a href="#carta" className="main-button">
-            {siteConfig.hero.primaryButton}
-            <Heart size={18} />
+        <div className="hero-actions">
+          <a href="#/universo" className="main-button"
+            onFocus={revealKeyboardFocus}>
+            <span>{siteConfig.hero.primaryButton}</span>
+            <Heart size={18} aria-hidden="true" />
           </a>
           <button
+            type="button"
+            onFocus={revealKeyboardFocus}
             onClick={toggleBackground}
             disabled={!backgroundTrackPath}
             className="ghost-button"
             title={!backgroundTrackPath ? 'Añade una canción de fondo' : backgroundPlaying ? 'Pausar música' : 'Activar música'}
             aria-label={!backgroundTrackPath ? 'Añade una canción de fondo' : backgroundPlaying ? 'Pausar música de fondo' : 'Activar música de fondo'}
           >
-            <Music size={16} />
+            <Music size={16} aria-hidden="true" />
             <span>{!backgroundTrackPath ? 'Añade una canción de fondo' : backgroundPlaying ? 'Pausar canción' : 'Activar canción'}</span>
           </button>
         </div>
-        {infoMessage && <p role="status" className="text-sm text-muted">{infoMessage}</p>}
+        {infoMessage && <p role="status" className="hero-info">{infoMessage}</p>}
       </div>
     </section>
   )
