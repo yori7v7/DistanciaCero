@@ -123,9 +123,13 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Continuación — bienvenida en pulido, 31 de octubre de 2026
+## Continuación — bienvenida cerrada, 31 de octubre de 2026
 
-El usuario autorizó pulir con skills una sección a la vez. La bienvenida pública está en curso; Hero no se ha iniciado. Alcance, cambios, resultados y pendiente WebKit en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). Chromium final 5/5 aprobado; WebKit detectó 8,05 px de desplazamiento del CTA y Firefox quedó sin ejecutar. Guardado como checkpoint por proximidad al límite de uso normal; no declarar terminado. Recibir la entrega que contiene este punto antes de retomar. Mantener todas las restricciones locales y de uso.
+El pulido de la bienvenida pública quedó cerrado: checkpoint `6a4fb6e`, medición de fuentes corregida en `0eb663a` y foco ampliado en `a7b2304`. Plan y recuperación en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). WebKit se medía antes de montar el contenido; ahora espera el botón visible y sus fuentes sin retirar la aserción. En Firefox se corrigió la visibilidad completa de la pausa con texto al 200 %.
+
+Validación final: tipos/build/PWA, **5/5 Chromium**, **10/10 entre WebKit/Firefox** y **1/1 preview/offline** aprobados por separado. Cero omitidas, inestables, reintentos y errores externos; 300 archivos conservados y guards restaurados. Diez escenarios visuales finales aprobados, incluidos fuentes bloqueadas, nombres largos, texto al 200 % y foco por teclado. No se repitieron unitarias ni suites completas históricas. Evidencia ignorada en `.git/codex-checkpoints/ui-landing-resume-20261031/`; no viaja con Git.
+
+**Siguiente sección: Hero, sin iniciar.** Comprobar uso, rama, cambios, runners y remoto antes de tocarla. Mantener skills pertinentes, una sección a la vez, todo local y sin Supabase ni despliegues. Recibir también el commit documental que contiene este punto; hash final y push se confirman al entregar.
 
 ### Antecedente: validación integral local cerrada, 31 de octubre de 2026
 

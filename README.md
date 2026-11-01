@@ -8,7 +8,7 @@ La etapa posterior de compatibilidad quedó cerrada el **23 de octubre de 2026**
 
 Ese mismo día se comprobó por separado la actualización PWA entre dos builds locales A→B en Chromium/Windows, conservando datos guardados y funcionando offline en B. Los [recorridos locales](docs/RECORRIDOS_LOCALES.md) explican su alcance y límites.
 
-La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) cerró el **31 de octubre**: ajustes, guía, respaldos y recursos comprobados, incluida la parada de una canción cuando se elimina su fila. Se mantiene una plantilla reutilizable sin datos personales; sigue el pulido particular con skills, sin activar servicios ni desplegar.
+La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) cerró el **31 de octubre**: ajustes, guía, respaldos y recursos comprobados, incluida la parada de una canción cuando se elimina su fila. Se mantiene una plantilla reutilizable sin datos personales; el [pulido con skills](docs/PULIDO_INTERFAZ.md) comenzó por la bienvenida pública, ya cerrada; sigue Hero, sin activar servicios ni desplegar.
 
 ## Ejecutar localmente
 

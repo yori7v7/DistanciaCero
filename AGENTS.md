@@ -50,4 +50,4 @@ Los permisos y hooks de `.claude/settings*.json` pertenecen a Claude Code; no co
 
 `skills-lock.json` conserva el historial del instalador externo. Una entrada allí no prueba que la skill siga instalada: comprueba su `SKILL.md`. En esta adaptación no se modifica ese registro ni se descargan paquetes adicionales.
 
-El 31 de octubre se autorizó pulir la interfaz con skills, una sección a la vez. La bienvenida pública sigue abierta; consultar [PULIDO_INTERFAZ.md](docs/PULIDO_INTERFAZ.md) y el punto portable. No iniciar Hero hasta resolver y verificar el pendiente WebKit.
+El 31 de octubre se autorizó pulir la interfaz con skills, una sección a la vez. La bienvenida pública cerró el 31, con cinco casos por motor y preview/offline aprobados; consultar [PULIDO_INTERFAZ.md](docs/PULIDO_INTERFAZ.md) y el punto portable. Siguiente: Hero, sin iniciar. Cerrar cada sección antes de pasar a otra.

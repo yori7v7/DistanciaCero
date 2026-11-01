@@ -4,7 +4,7 @@ Contexto y reglas compartidas para Claude Code y Codex. El plan local cerró el 
 
 ## ¿Qué es?
 
-**Distancia Cero** es una SPA romántica personalizable con cartas, recuerdos, música y escenas 3D. Los pasos 1–7 del pulido local están cerrados, con validación final completa. El usuario autorizó después avanzar por ajustes generales, primera configuración guiada y contenido/recursos. Los dos primeros bloques cerraron el 26 de octubre y contenido/recursos el 27. La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) cerró el 31 de octubre, tras corregir la parada de una pista cuya fila desaparece. Sigue concretar el pulido particular con skills. Se conserva una plantilla reutilizable sin datos personales. Supabase y publicación permanecen fuera del alcance. Los archivos de publicación existentes no acreditan un despliegue vigente.
+**Distancia Cero** es una SPA romántica personalizable con cartas, recuerdos, música y escenas 3D. Los pasos 1–7 del pulido local están cerrados, con validación final completa. El usuario autorizó después avanzar por ajustes generales, primera configuración guiada y contenido/recursos. Los dos primeros bloques cerraron el 26 de octubre y contenido/recursos el 27. La [validación integral local](docs/VALIDACION_INTEGRAL_LOCAL.md) cerró el 31 de octubre, tras corregir la parada de una pista cuya fila desaparece. El pulido con skills comenzó por la bienvenida pública, cerrada el 31; sigue Hero, sin iniciar. Estado en [PULIDO_INTERFAZ.md](docs/PULIDO_INTERFAZ.md). Se conserva una plantilla reutilizable sin datos personales. Supabase y publicación permanecen fuera del alcance. Los archivos de publicación existentes no acreditan un despliegue vigente.
 
 ## Stack
 

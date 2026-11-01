@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-- **Pulido de bienvenida en curso, 31 de octubre:** Chromium 5/5; pendiente desplazamiento del CTA en WebKit y Firefox sin ejecutar. Checkpoint por uso normal próximo al límite. No iniciar Hero. Detalles en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+- **Bienvenida cerrada, 31 de octubre:** `a7b2304`; medición de fuentes, espaciado y foco ampliado corregidos. Tipos/build/PWA, **5/5 Chromium**, **10/10 WebKit/Firefox** y **1/1 preview/offline** aprobados, más diez escenarios visuales. Siguiente: Hero, sin iniciar. Detalles y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
 
 - **Validación integral local cerrada, 31 de octubre:** implementación `4e9a036`, sobre `5f009d2`. Pista retirada detenida/cancelada y ajustes conservados offline/A→B. Tipos, auditor, **414 unitarias/29 archivos** y build/PWA aprobados el 28; el 31, **53/53 Chromium**, **14/14 seleccionados WebKit/Firefox**, **1/1 preview/offline** y **1/1 PWA A→B**, en corridas separadas. Detalles, interrupción anterior y corrección del diagnóstico PWA en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md) y al final. Siguiente: concretar el pulido particular con skills; sin funciones nuevas ni infraestructura.
 
@@ -771,3 +771,7 @@ Diagnósticos preservados: el primer caso de audio del 28 falló por un selector
 Evidencia ignorada en `.git/codex-checkpoints/final-local-20261028/` y `.git/codex-checkpoints/final-local-20261031/`; no viaja con Git. [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md) conserva alcance, comandos de reproducción y límites; el [traspaso](TRABAJO_ENTRE_EQUIPOS.md) contiene el punto portable. Recibir también el commit documental de cierre; la entrega y su hash final se comprueban al publicar en la rama compartida.
 
 **Siguiente etapa: concretar el pulido particular con skills sobre la experiencia existente.** La validación y los tres bloques anteriores quedan cerrados. Safari/macOS/iPhone requiere equipo real; Clock, el loop nativo WebKit y los borradores sin guardar mantienen sus límites. No se repitió la instalación standalone ya comprobada el 25. Sin funciones nuevas, Supabase, despliegues, cambio de modelo/modalidad, reserva, compras ni resets.
+
+## Bienvenida cerrada — 31 de octubre de 2026
+
+Se retomó el checkpoint `6a4fb6e` con uso normal disponible y sin divergencia. `0eb663a` corrigió la espera de montaje/fuentes antes de medir el CTA y el espaciado sin fuentes externas; `a7b2304` asegura que la pausa enfocada y su contorno queden visibles con texto ampliado. Validación final: tipos/build/PWA, Chromium **5/5** (24,17 s), WebKit/Firefox **10/10** (60,25 s) y preview/offline **1/1** (11,95 s). Cero omitidas, inestables, reintentos o errores externos; 300 archivos conservados y guards restaurados. Diez escenarios visuales finales aprobados en tres motores; scroll natural con contenido largo y teclado comprobado al 200 %. Los intentos anteriores y los resultados históricos conservan sus fechas. No se repitieron unitarias ni suites completas. Alcance, evidencia y comandos en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). Siguiente: Hero, sin iniciar. Sin Supabase ni despliegues; entrega y hash final se comprueban al publicar en la rama compartida.

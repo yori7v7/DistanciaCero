@@ -57,7 +57,8 @@ Después de los pasos 1–7, compatibilidad, PWA, avisos de aplicación y tipado
 
 ## Siguiente alcance
 
-- [ ] Concretar el pulido particular con skills sobre la experiencia existente, después de este cierre. Las funciones nuevas y la infraestructura requieren otro alcance.
+- [x] Bienvenida pública pulida con skills: tipos/build/PWA, 5/5 Chromium, 10/10 WebKit/Firefox, 1/1 preview/offline y diez escenarios visuales aprobados el 31. Cierre en [PULIDO_INTERFAZ.md](docs/PULIDO_INTERFAZ.md).
+- [ ] Continuar por Hero, una sección a la vez. Las funciones nuevas y la infraestructura requieren otro alcance.
 
 La investigación inicial del audio quedó delimitada el 24 de octubre: el loop continúa sin corregirse en los WebKit/Windows probados, sin defecto de aplicación demostrado. Permanecen Clock y los límites siguientes; no se declara tipado estricto de toda la aplicación.
 

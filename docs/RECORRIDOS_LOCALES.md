@@ -45,7 +45,7 @@ npx playwright install firefox webkit
 npm run test:e2e:cross-browser
 ```
 
-`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **55 por motor** tras añadir dos casos de bienvenida el 31 de octubre; estos últimos siguen en validación; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
+`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **55 por motor** tras añadir dos casos de bienvenida el 31 de octubre; los cinco casos de bienvenida ya aprobaron en los tres motores; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
 
 ### Ajustes generales — 26 de octubre
 
@@ -158,3 +158,7 @@ Cinco casos Chromium aprobaron CRUD de música, audio real y recuperación de ar
 La corrida completa Chromium aprobó **53/53**, en 1307,86 s de reporte. Firefox/WebKit aprobaron **14/14 seleccionados**, en 656,24 s: ajustes, guía, plantilla, dos recorridos de audio y dos CRUD de música por motor. La prueba de audio elimina y recrea una pista en reproducción desde el CMS y conserva las comprobaciones de navegación y coordinación exclusiva. Preview/offline y PWA A→B aprobaron por separado; también conservaron los ajustes guardados.
 
 Los cuatro reportes finales tuvieron cero omitidas, inestables, reintentos y errores externos; conservaron los 299 archivos observados y restauraron sus guards. No se usó el almacenamiento real del usuario ni se activó infraestructura. Los intentos interrumpidos o fallidos y su corrección se conservan en [VALIDACION_INTEGRAL_LOCAL.md](VALIDACION_INTEGRAL_LOCAL.md); estas corridas no acreditan Safari real ni corrigen los límites conocidos de Clock y del loop nativo WebKit.
+
+### Bienvenida pública — 31 de octubre
+
+El pulido de `/` aprobó cinco casos por motor (5 Chromium y 10 WebKit/Firefox en corridas separadas) y un preview/offline. Contempla plantilla vacía, nombres largos, posición del CTA, pausa/reanudación, movimiento reducido y acceso con Tab al texto ampliado al 200 %. Las diez comprobaciones visuales finales incluyen fuentes bloqueadas y contornos de foco completos. El inventario de desarrollo permanece en 55 por motor; no se ejecutó completo en este bloque. Detalles y diagnósticos en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). Hero sigue pendiente.
