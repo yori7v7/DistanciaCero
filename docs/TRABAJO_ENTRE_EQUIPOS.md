@@ -1,6 +1,6 @@
 # Distancia Cero entre escritorio y laptop
 
-Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **31 de octubre de 2026** tras cerrar la validación integral local. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
+Guía preparada el **20 de octubre de 2026**; punto de continuación actualizado el **1 de noviembre de 2026** tras cerrar el pulido de Hero. Este documento acompaña al código para que otro chat pueda continuar sin depender del historial de una computadora. Actualizar el punto de continuación al entregar un bloque.
 
 ## Destino y primera entrega
 
@@ -123,7 +123,15 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Continuación — bienvenida cerrada, 31 de octubre de 2026
+## Continuación — Hero cerrado, 1 de noviembre de 2026
+
+Hero quedó pulido en `ec79a00`, sobre `d3b6856`. Espaciado adaptable, plantilla vacía, textos largos, iconos decorativos y foco de teclado corregidos. El CTA conserva su texto configurable y ahora abre `#/universo`; el audio mantiene su contexto y configuración. Cierre, diagnósticos y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+
+Resultados separados: tipos, **20/20 unitarias relacionadas**, build/PWA, **7/7 Chromium** (Hero y navegación), **6/6 Hero entre WebKit/Firefox** y **1/1 preview/offline** aprobados. Cero omitidas, inestables, reintentos y errores externos; 301 archivos conservados y guards restaurados. Diez escenarios visuales finales aprobados, incluidos nombres largos, fuentes bloqueadas y texto al 200 %. Inventario 58 por motor; no se ejecutaron las suites completas ni se repitieron las 414 unitarias históricas. Evidencia ignorada en `.git/codex-checkpoints/ui-hero-20261101/`; no viaja con Git.
+
+**Siguiente: navegación de escenas, sin iniciar; el reproductor se revisará después.** Mantener una sección a la vez, skills pertinentes y todas las restricciones locales/de uso. Recibir también el commit documental que contiene este punto; hash final y push se confirman al entregar.
+
+### Antecedente: bienvenida cerrada, 31 de octubre de 2026
 
 El pulido de la bienvenida pública quedó cerrado: checkpoint `6a4fb6e`, medición de fuentes corregida en `0eb663a` y foco ampliado en `a7b2304`. Plan y recuperación en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). WebKit se medía antes de montar el contenido; ahora espera el botón visible y sus fuentes sin retirar la aserción. En Firefox se corrigió la visibilidad completa de la pausa con texto al 200 %.
 

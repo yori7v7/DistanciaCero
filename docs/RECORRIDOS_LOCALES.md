@@ -45,7 +45,7 @@ npx playwright install firefox webkit
 npm run test:e2e:cross-browser
 ```
 
-`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **55 por motor** tras añadir dos casos de bienvenida el 31 de octubre; los cinco casos de bienvenida ya aprobaron en los tres motores; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
+`playwright.cross-browser.config.ts` ejecuta los recorridos de desarrollo en cada motor, WebKit primero y Firefox después, con un worker y cero reintentos. El inventario actual es de **58 por motor** tras añadir tres casos de Hero el 1 de noviembre; bienvenida y Hero aprobaron por separado en los tres motores; el cierre histórico del 23 ejecutó los 50 existentes entonces. Inicia un servidor propio en `http://127.0.0.1:5174`, sin reutilizar uno existente, con `VITE_BASE=/` y `VITE_REMOTE_CONTENT_ENABLED=false`. Los contextos son sintéticos y no utilizan el almacenamiento real del usuario. Reportes en `playwright-report/cross-browser` y artefactos en `test-results/cross-browser`.
 
 ### Ajustes generales — 26 de octubre
 
@@ -161,4 +161,8 @@ Los cuatro reportes finales tuvieron cero omitidas, inestables, reintentos y err
 
 ### Bienvenida pública — 31 de octubre
 
-El pulido de `/` aprobó cinco casos por motor (5 Chromium y 10 WebKit/Firefox en corridas separadas) y un preview/offline. Contempla plantilla vacía, nombres largos, posición del CTA, pausa/reanudación, movimiento reducido y acceso con Tab al texto ampliado al 200 %. Las diez comprobaciones visuales finales incluyen fuentes bloqueadas y contornos de foco completos. El inventario de desarrollo permanece en 55 por motor; no se ejecutó completo en este bloque. Detalles y diagnósticos en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). Hero sigue pendiente.
+El pulido de `/` aprobó cinco casos por motor (5 Chromium y 10 WebKit/Firefox en corridas separadas) y un preview/offline. Contempla plantilla vacía, nombres largos, posición del CTA, pausa/reanudación, movimiento reducido y acceso con Tab al texto ampliado al 200 %. Las diez comprobaciones visuales finales incluyen fuentes bloqueadas y contornos de foco completos. En ese cierre el inventario era de 55 por motor; no se ejecutó completo en ese bloque. Detalles y diagnósticos en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md). Hero cerró después, el 1 de noviembre.
+
+### Hero — 1 de noviembre
+
+El CTA de Hero abre `#/universo`, conservando su texto configurable. Plantilla vacía, textos de 80 caracteres, foco bajo la cabecera, clic cerca del borde y texto al 200 % comprobados. El audio local configurado activa/pausa y, sin fuente, permanece desactivado. Tipos, 20 unitarias relacionadas y build/PWA aprobados, más 7/7 Chromium (Hero/navegación), 6/6 Hero entre WebKit/Firefox y 1/1 preview/offline. Diez escenarios visuales finales aprobados; sin errores JS ni desbordamiento horizontal. No se ejecutaron los 58/116 completos. Cierre y límites en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
