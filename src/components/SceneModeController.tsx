@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import type { FocusEvent as ReactFocusEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ChevronLeft, ChevronRight, Clock, Heart, Home, Images, Infinity, MapPin, MessageCircle,
@@ -27,6 +28,25 @@ const iconMap: Record<string, LucideIcon> = {
 
 function getSectionElements() {
   return Array.from(document.querySelectorAll('section.section, section.hero'))
+}
+
+function revealSceneLink(button: HTMLButtonElement) {
+  const scroller = button.parentElement
+  if (!scroller || document.activeElement !== button || !button.matches(':focus-visible')) return
+  const rect = button.getBoundingClientRect()
+  const parent = scroller.getBoundingClientRect()
+  const inset = parseFloat(getComputedStyle(scroller).paddingLeft)
+  const left = rect.left < parent.left + inset ? rect.left - parent.left - inset
+    : rect.right > parent.right - inset ? rect.right - parent.right + inset : 0
+  if (left) scroller.scrollBy({ left, behavior: 'instant' })
+}
+
+function revealSceneFocus(event: ReactFocusEvent<HTMLButtonElement>) {
+  const button = event.currentTarget
+  if (!button.matches(':focus-visible')) return
+  revealSceneLink(button)
+  // Recheck after the browser's native focus scroll and responsive layout settle.
+  requestAnimationFrame(() => revealSceneLink(button))
 }
 
 const _sG = (k: string) => { try { return localStorage.getItem(k) } catch { return null } }
@@ -92,25 +112,11 @@ function SceneModeController() {
     }
   }, [settingsOpen])
 
+  // Reveal focus without moving a control between pointer press and click.
   useEffect(() => {
     const portal = portalRef.current
     if (!portal) return
     const previousHeight = document.body.style.getPropertyValue('--scene-navigation-height')
-    const measure = () => document.body.style.setProperty('--scene-navigation-height', `${portal.getBoundingClientRect().height}px`)
-    measure()
-    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
-    observer?.observe(portal)
-    window.addEventListener('resize', measure)
-    return () => {
-      observer?.disconnect()
-      window.removeEventListener('resize', measure)
-      if (previousHeight) document.body.style.setProperty('--scene-navigation-height', previousHeight)
-      else document.body.style.removeProperty('--scene-navigation-height')
-    }
-  }, [])
-
-  // Reveal focus without moving a control between pointer press and click.
-  useEffect(() => {
     const pressedPointers = new Set<number>()
     let mousePressed = false
     const beginPointer = (event: PointerEvent) => { pressedPointers.add(event.pointerId) }
@@ -118,18 +124,37 @@ function SceneModeController() {
     const beginMouse = () => { mousePressed = true }
     const endMouse = () => { mousePressed = false }
     const resetPointer = () => { pressedPointers.clear(); mousePressed = false }
-    const revealFocus = (event: FocusEvent) => {
+    const revealTarget = (target: EventTarget | null) => {
       if (pressedPointers.size || mousePressed) return
-      const target = event.target
-      const portal = portalRef.current
-      if (!(target instanceof HTMLElement) || !portal || !target.closest('.app') ||
+      if (!(target instanceof HTMLElement) || !target.closest('.app') ||
         target.closest('.scene-portal, .scene-hidden, [inert]')) return
       const rect = target.getBoundingClientRect()
       const safeTop = portal.getBoundingClientRect().bottom + 12
+      const safeBottom = window.innerHeight - 12
       if (rect.height > 0 && rect.top < safeTop) {
         window.scrollBy({ top: rect.top - safeTop, behavior: 'instant' })
+      } else if (rect.height > 0 && rect.height <= safeBottom - safeTop && rect.bottom > safeBottom) {
+        window.scrollBy({ top: rect.bottom - safeBottom, behavior: 'instant' })
       }
     }
+    const revealFocus = (event: FocusEvent) => revealTarget(event.target)
+    const revealKeyboardTarget = () => {
+      const target = document.activeElement
+      if (target instanceof HTMLElement && target.matches(':focus-visible')) revealTarget(target)
+    }
+    const measure = () => {
+      document.body.style.setProperty('--scene-navigation-height', `${portal.getBoundingClientRect().height}px`)
+      // Text zoom can change page padding after the native focus scroll finished.
+      revealKeyboardTarget()
+    }
+    const finishSceneMotion = (event: AnimationEvent) => {
+      if (event.target instanceof HTMLElement && event.target.matches('section.scene-visible') &&
+        event.target.contains(document.activeElement)) revealKeyboardTarget()
+    }
+    measure()
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    observer?.observe(portal)
+    window.addEventListener('resize', measure)
     document.addEventListener('pointerdown', beginPointer, true)
     document.addEventListener('pointerup', endPointer, true)
     document.addEventListener('pointercancel', resetPointer, true)
@@ -138,6 +163,7 @@ function SceneModeController() {
     document.addEventListener('mouseup', endMouse, true)
     document.addEventListener('keydown', resetPointer, true)
     document.addEventListener('focusin', revealFocus)
+    document.addEventListener('animationend', finishSceneMotion)
     window.addEventListener('blur', resetPointer)
     return () => {
       document.removeEventListener('pointerdown', beginPointer, true)
@@ -147,7 +173,12 @@ function SceneModeController() {
       document.removeEventListener('mouseup', endMouse, true)
       document.removeEventListener('keydown', resetPointer, true)
       document.removeEventListener('focusin', revealFocus)
+      document.removeEventListener('animationend', finishSceneMotion)
       window.removeEventListener('blur', resetPointer)
+      window.removeEventListener('resize', measure)
+      observer?.disconnect()
+      if (previousHeight) document.body.style.setProperty('--scene-navigation-height', previousHeight)
+      else document.body.style.removeProperty('--scene-navigation-height')
     }
   }, [])
 
@@ -269,6 +300,12 @@ function SceneModeController() {
   const centerActiveLink = (smooth = true) => {
     const btn = linkRefs.current[activeScene?.id]
     if (!btn) return
+    const focused = document.activeElement
+    if (focused instanceof HTMLButtonElement && focused.matches('.scene-link:focus-visible')) {
+      // The delayed scene scroll must not hide a link reached with Tab meanwhile.
+      revealSceneLink(focused)
+      return
+    }
     btn.scrollIntoView({ behavior: getScrollBehavior(smooth), inline: 'center', block: 'nearest' })
   }
 
@@ -344,9 +381,10 @@ function SceneModeController() {
               className={`scene-link ${scene.id === activeSceneId ? 'active' : ''}`}
               type="button"
               aria-current={scene.id === activeSceneId ? 'page' : undefined}
+              onFocus={revealSceneFocus}
               onClick={() => goToScene(scene.id, direction)}
             >
-              <Icon size={15} />
+              <Icon size={15} aria-hidden="true" />
               {scene.label}
             </button>
           )
@@ -355,21 +393,21 @@ function SceneModeController() {
 
       {/* Right side: settings + prev/next */}
       <div className="scene-portal-actions">
-        <button type="button" className="scene-nav-arrow" aria-label="Ir a la banda sonora" onClick={() => {
+        <button type="button" className="scene-nav-arrow" aria-label="Ir a la banda sonora" title="Ir a la banda sonora" onClick={() => {
           const player = document.getElementById('scene-music')
           window.scrollTo({ top: window.scrollY, behavior: 'instant' })
           player?.focus({ preventScroll: true })
           // Finish the focus correction and replace any in-flight reader scroll.
           if (player) window.scrollTo({ top: 0, behavior: 'instant' })
         }}>
-          <Music2 size={18} />
+          <Music2 size={18} aria-hidden="true" />
         </button>
-        <button type="button" onClick={goPrev} aria-label="Escena anterior" className="scene-nav-arrow">
-          <ChevronLeft size={18} />
+        <button type="button" onClick={goPrev} aria-label="Escena anterior" title="Escena anterior" className="scene-nav-arrow">
+          <ChevronLeft size={18} aria-hidden="true" />
         </button>
 
-        <button type="button" onClick={goNext} aria-label="Escena siguiente" className="scene-nav-arrow">
-          <ChevronRight size={18} />
+        <button type="button" onClick={goNext} aria-label="Escena siguiente" title="Escena siguiente" className="scene-nav-arrow">
+          <ChevronRight size={18} aria-hidden="true" />
         </button>
 
         {/* Settings gear */}
@@ -384,7 +422,7 @@ function SceneModeController() {
             aria-controls="scene-settings"
             title="Ajustes"
           >
-            <Settings size={18} />
+            <Settings size={18} aria-hidden="true" />
           </button>
 
           {settingsOpen && (
@@ -392,7 +430,7 @@ function SceneModeController() {
               <div className="scene-settings-dropdown__header">
                 <span>Ajustes</span>
                 <button type="button" onClick={() => { setSettingsOpen(false); settingsButtonRef.current?.focus({ preventScroll: true }) }} aria-label="Cerrar">
-                  <X size={14} />
+                  <X size={14} aria-hidden="true" />
                 </button>
               </div>
 
@@ -402,7 +440,7 @@ function SceneModeController() {
                 className={`scene-settings-item ${centroVisible ? 'scene-settings-item--active' : ''}`}
                 onClick={toggleCentro}
               >
-                <ShieldAlert size={16} />
+                <ShieldAlert size={16} aria-hidden="true" />
                 <div className="scene-settings-item__text">
                   <strong>Centro del Universo</strong>
                   <small>Agregar, editar, ocultar o mover contenido de cada sección</small>
@@ -418,8 +456,8 @@ function SceneModeController() {
                   onClick={handleLogout}
                   disabled={loggingOut}
                 >
-                  <LogOut size={16} />
-                  <span>{loggingOut ? 'Cerrando...' : 'Cerrar sesión'}</span>
+                  <LogOut size={16} aria-hidden="true" />
+                  <span>{loggingOut ? 'Cerrando…' : 'Cerrar sesión'}</span>
                 </button>
               )}
             </div>

@@ -57,11 +57,12 @@ test('Hero: nombres largos y texto ampliado conservan el contenido y el foco', a
     await expect(heading).toBeVisible()
   }
   await page.setViewportSize({ width: 375, height: 812 })
-  await page.evaluate(() => { document.documentElement.style.fontSize = '32px' })
   const enter = hero.getByRole('link', { name: 'Entrar al universo', exact: true })
   // Establish keyboard input before testing the keyboard-only focus correction.
   await page.keyboard.press('Tab')
   await enter.focus()
+  // Enlarging text changes the measured navigation height while focus stays put.
+  await page.evaluate(() => { document.documentElement.style.fontSize = '32px' })
   await expect(enter).toBeInViewport({ ratio: 1 })
   await expect.poll(() => enter.evaluate(e => e.getBoundingClientRect().top - document.querySelector('.scene-portal')!.getBoundingClientRect().bottom)).toBeGreaterThanOrEqual(0)
   await expect.poll(() => hero.evaluate(e => e.scrollWidth - e.clientWidth)).toBeLessThanOrEqual(1)
