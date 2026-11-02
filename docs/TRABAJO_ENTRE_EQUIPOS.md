@@ -123,7 +123,15 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Continuación — navegación cerrada, 2 de noviembre de 2026
+## Continuación — reproductor en curso, 2 de noviembre de 2026
+
+Checkpoint sobre `6c12910`: silencio con nombre estable y estado aria-pressed, valores temporales/porcentaje accesibles y hover solo cuando Reproducir está habilitado. No cambia la lógica de audio. Tipos, **35/35 AudioPlayback** (4,60 s), build/PWA y **1/1 Chromium de audio real** (23,8 s) aprobados; 301 archivos conservados, guards restaurados y cero fallos/reintentos/errores externos en ese reporte. Evidencia ignorada en `.git/codex-checkpoints/ui-player-20261102/`, no portable.
+
+**Reproductor abierto.** Pendiente: comprobar visualmente estos estados y teclado, texto al 200 %, metadatos largos y columnas temporales/porcentaje; después Firefox/WebKit y preview/offline. Hay un inspector preparado bajo `.git`, todavía SIN ejecutar; no cuenta como validación ni viaja con Git. Las skills identificaron estado de silencio no anunciado y hover de reproducción desactivada; ambos ajustados. No iniciar otra sección.
+
+Se guarda por proximidad al límite normal (97 %), sin cambiar modalidad ni consumir resets. Al retomar comprobar uso, Git, runners y remoto; leer este punto. Todo local, sin Supabase ni despliegues. Recibir también el commit documental de este checkpoint; hash y push se confirman al entregar.
+
+### Antecedente: navegación cerrada, 2 de noviembre de 2026
 
 Implementación y pruebas en **`93f75f1`**, sobre `e6461cd`. La navegación reserva espacio para el contorno de teclado, mantiene visible cada enlace, respeta el foco frente al centrado diferido y usa el mismo orden visual/DOM en móvil. Cerrar Ajustes mide 44 × 44 px. La altura adaptable de la cabecera y el final de la entrada de escenas conservan el control enfocado dentro del viewport, también al ampliar el texto. Se mantienen selección, historial, ajustes y protección de clics.
 

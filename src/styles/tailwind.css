@@ -1194,10 +1194,15 @@ body.scene-mode-enabled .hero.hero-section.scene-visible {
   transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-.scene-music-button:hover {
+.scene-music-button:hover:enabled {
   transform: translateY(-2px);
   border-color: rgba(255, 220, 240, 0.84);
   box-shadow: 0 0 24px rgba(255, 122, 200, 0.28);
+}
+
+.scene-music-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .scene-music-progress,
@@ -2628,7 +2633,7 @@ section.blackhole-section {
     0 0 12px rgba(255, 122, 200, 0.1);
   transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.12s cubic-bezier(0.16, 1, 0.3, 1), color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.scene-music-button:hover {
+.scene-music-button:hover:enabled {
   transform: translateY(-2px);
   background: rgba(255, 122, 200, 0.15);
   border-color: rgba(255, 122, 200, 0.4);

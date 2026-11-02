@@ -447,6 +447,7 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
           onChange={seekSong}
           disabled={!duration}
           aria-label="Progreso de la canción"
+          aria-valuetext={`${formatTime(currentTime)} de ${formatTime(duration)}`}
           style={{ '--song-progress': `${progressPercent}%` } as React.CSSProperties}
         />
 
@@ -454,7 +455,9 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
       </div>
 
       <div className="scene-music-volume">
-        <button className="scene-volume-icon" type="button" onClick={toggleMute} aria-label="Silenciar o activar volumen">
+        <button className="scene-volume-icon" type="button" onClick={toggleMute}
+          aria-label="Silenciar banda sonora" aria-pressed={masterVolume === 0}
+          title={masterVolume > 0 ? 'Silenciar' : 'Activar volumen'}>
           {masterVolume > 0 ? <Volume2 size={15} /> : <VolumeX size={15} />}
         </button>
 
@@ -465,6 +468,7 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
           value={volumePercent}
           onChange={changeVolume}
           aria-label="Volumen de la banda sonora"
+          aria-valuetext={`${volumePercent}%`}
           style={{ '--volume-progress': `${volumePercent}%` } as React.CSSProperties}
         />
 

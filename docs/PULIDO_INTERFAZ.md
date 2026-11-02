@@ -132,3 +132,7 @@ npm.cmd run test:e2e:preview
 ```
 
 **Siguiente: reproductor, sin iniciar.** Cerrar esta entrega en Git antes de comenzar ese bloque; mantener una sección a la vez, modo local, Supabase desactivado, sin despliegues y las restricciones de uso normal.
+
+## Reproductor — checkpoint abierto, 2 de noviembre de 2026
+
+Sobre `6c12910`: estado accesible de silencio, valores de sliders y hover desactivado corregidos. Tipos, 35 unitarias AudioPlayback, build/PWA y un Chromium de audio real aprobados; detalles, evidencia y pendientes en [el punto portable](TRABAJO_ENTRE_EQUIPOS.md). Falta inspección visual/teclado, textos largos/ampliados, Firefox/WebKit y preview. No declara terminada la sección; checkpoint al 97 % del uso normal, sin resets ni cambios de modalidad.
