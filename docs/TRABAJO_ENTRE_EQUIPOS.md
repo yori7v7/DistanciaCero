@@ -123,7 +123,17 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Continuación — Hero cerrado, 1 de noviembre de 2026
+## Continuación — navegación cerrada, 2 de noviembre de 2026
+
+Implementación y pruebas en **`93f75f1`**, sobre `e6461cd`. La navegación reserva espacio para el contorno de teclado, mantiene visible cada enlace, respeta el foco frente al centrado diferido y usa el mismo orden visual/DOM en móvil. Cerrar Ajustes mide 44 × 44 px. La altura adaptable de la cabecera y el final de la entrada de escenas conservan el control enfocado dentro del viewport, también al ampliar el texto. Se mantienen selección, historial, ajustes y protección de clics.
+
+Validación final separada: tipos, **8/8 unitarias de navegación**, build/PWA, **9/9 Chromium** (seis navegación y tres Hero), **6/6 seleccionados WebKit/Firefox**, **11 escenarios visuales** y **1/1 preview/offline**. Cero omitidas, fallos, inestables, reintentos y errores externos en los reportes finales; 301 archivos conservados y guards restaurados. Inventario de 60 casos por motor; no se ejecutaron las suites completas ni se repitieron las 414 unitarias históricas. Diagnósticos, límites y comandos en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+
+Evidencia ignorada en `.git/codex-checkpoints/ui-navigation-20261101/` y `.git/codex-checkpoints/ui-navigation-20261102/`; no viaja con Git. Se conservaron los intentos fallidos y sus causas antes de la validación final. Revisión independiente del código sin hallazgos adicionales. Uso normal disponible, sin consumir resets ni cambiar modalidad.
+
+**Siguiente: reproductor, sin iniciar.** Mantener una sección a la vez, skills pertinentes, todo local, sin Supabase ni despliegues. Recibir también el commit documental que contiene este punto; el hash final y su push se confirman al entregar.
+
+### Antecedente: Hero cerrado, 1 de noviembre de 2026
 
 Hero quedó pulido en `ec79a00`, sobre `d3b6856`. Espaciado adaptable, plantilla vacía, textos largos, iconos decorativos y foco de teclado corregidos. El CTA conserva su texto configurable y ahora abre `#/universo`; el audio mantiene su contexto y configuración. Cierre, diagnósticos y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
 

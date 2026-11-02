@@ -2,7 +2,9 @@
 
 ## Estado actual
 
-- **Hero cerrado, 1 de noviembre:** `ec79a00`; espaciado, contenido largo, plantilla vacía y foco de teclado pulidos. Tipos, 20/20 unitarias relacionadas, build/PWA, 7/7 Chromium, 6/6 Hero WebKit/Firefox y 1/1 preview/offline aprobados, más diez escenarios visuales. Siguiente: navegación de escenas, sin iniciar; reproductor después. Cierre y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+- **Navegación cerrada, 2 de noviembre:** `93f75f1`; foco horizontal, orden móvil, cierre de Ajustes de 44 px y adaptación de altura corregidos. Tipos, 8/8 unitarias de navegación, build/PWA, 9/9 Chromium, 6/6 seleccionados WebKit/Firefox, once escenarios visuales y 1/1 preview/offline aprobados. Siguiente: reproductor, sin iniciar. Cierre, diagnósticos y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+
+- **Hero cerrado, 1 de noviembre:** `ec79a00`; espaciado, contenido largo, plantilla vacía y foco de teclado pulidos. Tipos, 20/20 unitarias relacionadas, build/PWA, 7/7 Chromium, 6/6 Hero WebKit/Firefox y 1/1 preview/offline aprobados, más diez escenarios visuales. Navegación cerró después, el 2. Cierre y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
 
 - **Bienvenida cerrada, 31 de octubre:** `a7b2304`; medición de fuentes, espaciado y foco ampliado corregidos. Tipos/build/PWA, **5/5 Chromium**, **10/10 WebKit/Firefox** y **1/1 preview/offline** aprobados, más diez escenarios visuales. Hero cerró después, el 1 de noviembre. Detalles y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
 

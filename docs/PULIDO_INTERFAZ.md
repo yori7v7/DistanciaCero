@@ -6,7 +6,7 @@ Etapa autorizada el 31 de octubre de 2026, después de cerrar la [validación in
 
 1. **Bienvenida pública (`/`, `PublicLanding`) — cerrada el 31 de octubre.** Skills `ui-ux-pro-max` y `web-design-guidelines`; se conservan paleta, tipografías y fondo cósmico existentes.
 2. **Portada principal (`/app`, `Hero`) — cerrada el 1 de noviembre.** Es una sección distinta de la bienvenida pública.
-3. **Navegación de escenas — siguiente, sin iniciar.** El reproductor se revisará después, como bloque separado.
+3. **Navegación de escenas — cerrada el 2 de noviembre.** El reproductor es el siguiente bloque, sin iniciar.
 4. Continuar las secciones de la experiencia en el orden de navegación; registrar el bloque concreto antes de tocarlo. No supone añadir funciones ni rediseñar todo simultáneamente.
 
 ## Bienvenida — alcance
@@ -92,4 +92,43 @@ npm.cmd run test:e2e:cross-browser -- hero.spec.ts
 npm.cmd run test:e2e:preview
 ```
 
-**Siguiente: navegación de escenas, sin iniciar.** El reproductor va después. No se rediseñaron esos controles ni otras secciones. Se mantienen las restricciones locales, de infraestructura y de uso; WebKit en Windows no acredita Safari real. Recibir también la entrega documental de cierre; el hash final y su push se comprueban al guardar.
+Al cerrar Hero, el siguiente bloque fue navegación de escenas, cuyo resultado se registra abajo. Se mantienen las restricciones locales, de infraestructura y de uso; WebKit en Windows no acredita Safari real.
+
+## Navegación de escenas — cerrada el 2 de noviembre de 2026
+
+Baseline `e6461cd`, implementación y pruebas `93f75f1`. Se conservaron los cambios locales iniciales de iconos/títulos y se comprobó coincidencia con origin antes de editar. Skills aplicadas: `ui-ux-pro-max`, `web-design-guidelines` y `code-review-skill`; referencias de paleta/pills y tokens existentes, sin instalar paquetes ni replantear el sistema visual. La revisión independiente final no encontró defectos adicionales.
+
+El cierre de Ajustes medía 18 px de ancho: ahora tiene una caja centrada de **44 × 44 px**. Los enlaces reservan espacio para el contorno, conservan su radio y retiran la máscara durante el foco. En móvil, las escenas aparecen antes que las acciones, igual que en el DOM y Tab. Las flechas y el acceso a la banda sonora tienen títulos descriptivos; se conservan nombres accesibles, escena activa, historial, configuración y almacenamiento.
+
+El foco de teclado desplaza solo el contenedor horizontal y vuelve a comprobarse en el siguiente frame si el mismo botón sigue enfocado. El centrado diferido respeta ese foco y el botón enfocado deja de animar su posición. Se conserva la protección durante pulsaciones de puntero. Al cambiar la altura de la cabecera o terminar la entrada de una escena, el controlador mantiene el control enfocado dentro del viewport; la regresión amplía texto después de enfocar el CTA de Hero, sin cambiar su diseño ni comportamiento.
+
+| Comprobación final | Resultado | Duración del reporte |
+| --- | --- | --- |
+| `local-final-pass` | Tipos, **8/8 unitarias de navegación**, build/PWA | Unitarias: 4,35 s |
+| `chromium-final-pass` | **9/9**, seis navegación y tres Hero | 37,60 s |
+| `browsers-final-pass` | **6/6 seleccionados**, tres por motor WebKit/Firefox | 34,06 s |
+| `visual-final-pass` | **11 escenarios**, tres motores | Salida 0 |
+| `preview-final-pass` | **1/1** build/offline | 10,57 s |
+
+Cero omitidas, fallos, inestables, reintentos o errores externos en los reportes finales. Los cinco supervisores conservaron **301 archivos observados** y restauraron sus guards. Los escenarios visuales incluyen 320/375 px, tablet, laptop, escritorio, paisaje, texto al 200 %, fuentes bloqueadas y movimiento normal/reducido. Sin desbordamiento horizontal de página/dropdown ni recorte del contorno en los enlaces medidos; cierre de Ajustes de 44 px. Capturas de foco móvil y Ajustes normal/ampliado inspeccionadas. El inventario es **60 casos por motor en 14 archivos**, comprobado con `--list`; no se ejecutaron las suites completas ni se repitieron las 414 unitarias históricas. No acredita Safari ni dispositivos Apple reales.
+
+El cierre documental pasó revisión independiente, `git diff --check` y comprobación de 105 enlaces locales en 17 documentos, sin enlaces rotos.
+
+Los diagnósticos se conservaron: la primera comprobación de tipos detectó una colisión entre `FocusEvent` DOM y React, corregida con alias; Hero reveló pérdida de visibilidad al ampliar texto con foco existente; WebKit encontró desplazamientos que dejaban enlaces fuera de la barra y el cambio de posición al terminar la animación. El primer ajuste de centrado no bastó: se completó con desplazamiento local y estabilidad del foco. Firefox midió 42,24 px durante `scale(.96)` del dropdown; la prueba espera ahora su animación finita antes de exigir 44 px, sin relajar la aserción ni añadir esperas fijas o reintentos.
+
+La corrida inicial del 1 de noviembre había aprobado tipos, ocho unitarias, build y cuatro Chromium; no constituye el cierre. Evidencia y diagnósticos ignorados en `.git/codex-checkpoints/ui-navigation-20261101/` y `.git/codex-checkpoints/ui-navigation-20261102/`; no viajan con Git. Se usaron perfiles y datos sintéticos aislados. Se mantiene el aviso conocido de deprecación `THREE.Clock`, sin ampliar este bloque al 3D.
+
+Reproducción, una suite a la vez y sin editar fuentes ni documentos durante runners:
+
+```powershell
+$env:VITE_REMOTE_CONTENT_ENABLED = 'false'
+$env:VITE_BASE = '/'
+npm.cmd run typecheck
+npm.cmd test -- src/__tests__/SceneNavigation.test.tsx
+npm.cmd run build
+npm.cmd run test:e2e -- navigation.spec.ts hero.spec.ts
+npm.cmd run test:e2e:cross-browser -- navigation.spec.ts hero.spec.ts --grep "Pulido de navegaci|nombres largos"
+npm.cmd run test:e2e:preview
+```
+
+**Siguiente: reproductor, sin iniciar.** Cerrar esta entrega en Git antes de comenzar ese bloque; mantener una sección a la vez, modo local, Supabase desactivado, sin despliegues y las restricciones de uso normal.
