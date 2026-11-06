@@ -123,7 +123,15 @@ No viajan `.env.local`, credenciales, `node_modules`, `dist`, reportes ignorados
 
 Las conversaciones pueden tener otra disponibilidad según cliente/configuración. La continuidad del proyecto se apoya en estos archivos versionados; no exige que aparezca este mismo chat ni copiar la carpeta global de Codex.
 
-## Continuación — reproductor en curso, 2 de noviembre de 2026
+## Continuación — reproductor cerrado, 5 de noviembre de 2026
+
+Checkpoint recibido `5e43900`; cierre funcional y pruebas en **`b5d6d76`**. Metadatos completos ajustables, tiempos/porcentajes adaptables y foco conservado al estrechar la ventana. El progreso solo corresponde a la fuente de la escena visible; volver a la misma fuente pausada conserva posición y duración sin reiniciar ni reclamar audio ajeno. Se completan los estados accesibles del checkpoint.
+
+Validación final separada: tipos, **38/38 AudioPlayback**, build/PWA, **4/4 Chromium** (tres reproductor y audio real existente), **6/6 WebKit/Firefox**, **12 escenarios visuales** y **1/1 preview/offline**. Cero omitidas, fallos, inestables, reintentos y errores externos en reportes finales; 302 archivos conservados y guards restaurados. Inventario de 63 casos por motor, no ejecutado completo. Detalles, diagnósticos y comandos en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md); evidencia ignorada en `.git/codex-checkpoints/ui-player-20261105/`, no portable.
+
+**Siguiente: Propuesta (`pregunta-oficial`, escena Inicio), sin iniciar.** Una sección a la vez, skills pertinentes, todo local, sin Supabase ni despliegues. Uso normal disponible; no se consumieron resets ni se cambió modalidad. Recibir también el commit documental de este cierre; hash final y push se confirman al entregar.
+
+### Antecedente: reproductor en curso, 2 de noviembre de 2026
 
 Checkpoint sobre `6c12910`: silencio con nombre estable y estado aria-pressed, valores temporales/porcentaje accesibles y hover solo cuando Reproducir está habilitado. No cambia la lógica de audio. Tipos, **35/35 AudioPlayback** (4,60 s), build/PWA y **1/1 Chromium de audio real** (23,8 s) aprobados; 301 archivos conservados, guards restaurados y cero fallos/reintentos/errores externos en ese reporte. Evidencia ignorada en `.git/codex-checkpoints/ui-player-20261102/`, no portable.
 

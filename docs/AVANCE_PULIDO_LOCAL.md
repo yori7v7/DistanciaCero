@@ -2,7 +2,9 @@
 
 ## Estado actual
 
-- **Navegación cerrada, 2 de noviembre:** `93f75f1`; foco horizontal, orden móvil, cierre de Ajustes de 44 px y adaptación de altura corregidos. Tipos, 8/8 unitarias de navegación, build/PWA, 9/9 Chromium, 6/6 seleccionados WebKit/Firefox, once escenarios visuales y 1/1 preview/offline aprobados. Siguiente: reproductor, sin iniciar. Cierre, diagnósticos y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+- **Reproductor cerrado, 5 de noviembre:** `b5d6d76`, sobre checkpoint `5e43900`; metadatos y números adaptables, foco conservado tras resize y progreso asociado a su fuente. Tipos, 38/38 AudioPlayback, build/PWA, 4/4 Chromium, 6/6 WebKit/Firefox, doce escenarios visuales y 1/1 preview/offline aprobados. Siguiente: Propuesta (`pregunta-oficial`, escena Inicio), sin iniciar. Evidencia y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
+
+- **Navegación cerrada, 2 de noviembre:** `93f75f1`; foco horizontal, orden móvil, cierre de Ajustes de 44 px y adaptación de altura corregidos. Tipos, 8/8 unitarias de navegación, build/PWA, 9/9 Chromium, 6/6 seleccionados WebKit/Firefox, once escenarios visuales y 1/1 preview/offline aprobados. Reproductor cerró después, el 5 de noviembre. Cierre, diagnósticos y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
 
 - **Hero cerrado, 1 de noviembre:** `ec79a00`; espaciado, contenido largo, plantilla vacía y foco de teclado pulidos. Tipos, 20/20 unitarias relacionadas, build/PWA, 7/7 Chromium, 6/6 Hero WebKit/Firefox y 1/1 preview/offline aprobados, más diez escenarios visuales. Navegación cerró después, el 2. Cierre y reproducción en [PULIDO_INTERFAZ.md](PULIDO_INTERFAZ.md).
 

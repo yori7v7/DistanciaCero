@@ -6,8 +6,9 @@ Etapa autorizada el 31 de octubre de 2026, después de cerrar la [validación in
 
 1. **Bienvenida pública (`/`, `PublicLanding`) — cerrada el 31 de octubre.** Skills `ui-ux-pro-max` y `web-design-guidelines`; se conservan paleta, tipografías y fondo cósmico existentes.
 2. **Portada principal (`/app`, `Hero`) — cerrada el 1 de noviembre.** Es una sección distinta de la bienvenida pública.
-3. **Navegación de escenas — cerrada el 2 de noviembre.** El reproductor es el siguiente bloque, sin iniciar.
-4. Continuar las secciones de la experiencia en el orden de navegación; registrar el bloque concreto antes de tocarlo. No supone añadir funciones ni rediseñar todo simultáneamente.
+3. **Navegación de escenas — cerrada el 2 de noviembre.**
+4. **Reproductor — cerrado el 5 de noviembre.**
+5. Continuar las secciones de la experiencia en el orden de navegación. Siguiente: Propuesta (`pregunta-oficial`, dentro de Inicio), sin iniciar. Registrar el bloque concreto antes de tocarlo; no supone añadir funciones ni rediseñar todo simultáneamente.
 
 ## Bienvenida — alcance
 
@@ -133,6 +134,45 @@ npm.cmd run test:e2e:preview
 
 **Siguiente: reproductor, sin iniciar.** Cerrar esta entrega en Git antes de comenzar ese bloque; mantener una sección a la vez, modo local, Supabase desactivado, sin despliegues y las restricciones de uso normal.
 
-## Reproductor — checkpoint abierto, 2 de noviembre de 2026
+## Antecedente: reproductor — checkpoint del 2 de noviembre de 2026
 
 Sobre `6c12910`: estado accesible de silencio, valores de sliders y hover desactivado corregidos. Tipos, 35 unitarias AudioPlayback, build/PWA y un Chromium de audio real aprobados; detalles, evidencia y pendientes en [el punto portable](TRABAJO_ENTRE_EQUIPOS.md). Falta inspección visual/teclado, textos largos/ampliados, Firefox/WebKit y preview. No declara terminada la sección; checkpoint al 97 % del uso normal, sin resets ni cambios de modalidad.
+
+## Reproductor — cerrado el 5 de noviembre de 2026
+
+Checkpoint recibido `5e43900`, implementación y regresiones finales `b5d6d76`. Uso normal disponible, árbol limpio y coincidencia con origin comprobados antes de editar. Se aplicaron las skills de UI/UX, guías web y revisión de código, conservando los tokens y el estilo existentes.
+
+Se completan el estado accesible de silencio y los valores descriptivos de progreso/volumen del checkpoint. Los metadatos largos ahora se ajustan completos; las columnas temporales y de porcentaje crecen con el texto y usan cifras tabulares. La medición inicial con 320 px y texto al 200 % encontró 1366 px de contenido dentro de 286 px y un porcentaje de 62,75 px en una columna de 44 px. Las mediciones finales no muestran desbordamiento.
+
+Se corrigió un fallo de estado: pausar A y navegar a otra escena conservaba su progreso habilitado bajo el título nuevo. El progreso queda asociado a la fuente seleccionada; eventos tardíos de otra fuente se descartan y buscar exige un recurso coincidente. Volver a la misma fuente pausada recupera sus tiempos nativos sin reiniciar ni reclamar el audio de la playlist. Tres regresiones unitarias cubren cambio a escena distinta/vacía, playlist activa y metadatos tardíos.
+
+Con metadatos muy largos, estrechar la ventana podía dejar el volumen enfocado fuera de la vista. El reproductor revela el control de teclado tras foco/cambio de tamaño y reserva margen para la cabecera. El observer, listeners y RAF tienen limpieza; el ajuste respeta gestos de puntero. Se mantuvo la aserción del control completamente visible, sin esperas fijas ni reintentos.
+
+| Comprobación final | Resultado | Duración del reporte |
+| --- | --- | --- |
+| `local-focus` | Tipos, **38/38 AudioPlayback**, build/PWA | Unitarias: 4,65 s |
+| `chromium-focus` | **4/4**, tres reproductor y audio real existente | 26,48 s |
+| `browsers-final` | **6/6**, tres reproductor por motor WebKit/Firefox | 55,83 s |
+| `matrix-final` | **12 escenarios visuales**, tres motores | Salida 0 |
+| `preview-final` | **1/1** build/offline | 10,81 s |
+
+Cero omitidas, fallos, inestables, reintentos o errores externos en los reportes finales; los cinco supervisores conservaron **302 archivos** y restauraron sus guards. La matriz incluye escritorio, laptop, tablet, móvil 320/375 px, paisaje, textos largos/al 200 %, fuentes bloqueadas y movimiento normal/reducido. Sin errores JS, desbordamiento de página/reproductor ni texto numérico fuera de su caja; foco visible y bajo la cabecera. Capturas de móvil y texto ampliado inspeccionadas. Los tres E2E nuevos dejan **63 casos por motor en 15 archivos**, comprobados con `--list`; no se ejecutaron completos ni se repitieron las 414 unitarias históricas. WebKit en Windows no acredita Safari real.
+
+El cierre documental pasó comprobación de 108 enlaces locales en 17 documentos, sin enlaces rotos, y `git diff --check`.
+
+Evidencia ignorada en `.git/codex-checkpoints/ui-player-20261102/` y `.git/codex-checkpoints/ui-player-20261105/`; no viaja con Git. El inspector pendiente del checkpoint se ejecutó al retomar. Se conservan el reporte inicial del fallo de foco y los logs de medición previa; la validación final corresponde al ajuste completo. Se usaron perfiles y WAV sintéticos aislados, sin alterar datos habituales. El aviso conocido de `THREE.Clock` sigue fuera de este bloque.
+
+Reproducción con remoto desactivado y archivos/documentos congelados durante cada runner, por separado:
+
+```powershell
+$env:VITE_REMOTE_CONTENT_ENABLED = 'false'
+$env:VITE_BASE = '/'
+npm.cmd run typecheck
+npm.cmd test -- src/__tests__/AudioPlayback.test.tsx
+npm.cmd run build
+npm.cmd run test:e2e -- player.spec.ts local-audio.spec.ts --grep "Reproductor:|audio real local"
+npm.cmd run test:e2e:cross-browser -- player.spec.ts
+npm.cmd run test:e2e:preview
+```
+
+**Siguiente: Propuesta (`pregunta-oficial`, escena Inicio), sin iniciar.** Mantener una sección a la vez, todo local, sin Supabase ni despliegues y las restricciones de uso normal.
