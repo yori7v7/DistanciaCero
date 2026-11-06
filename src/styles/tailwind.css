@@ -1137,6 +1137,16 @@ body.scene-mode-enabled .hero.hero-section.scene-visible {
 
 .scene-music-info {
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.scene-music-controller button,
+.scene-music-controller input {
+  scroll-margin-block: calc(var(--scene-navigation-height, 72px) + 24px) 12px;
+}
+
+.scene-music-info svg {
+  flex-shrink: 0;
 }
 
 .scene-music-info span,
@@ -1160,9 +1170,7 @@ body.scene-mode-enabled .hero.hero-section.scene-visible {
   margin: 3px 0;
   color: white;
   font-size: 0.98rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .scene-music-info p {
@@ -1217,11 +1225,11 @@ body.scene-mode-enabled .hero.hero-section.scene-visible {
 }
 
 .scene-music-progress {
-  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
 }
 
 .scene-music-volume {
-  grid-template-columns: auto minmax(0, 1fr) 44px;
+  grid-template-columns: auto minmax(0, 1fr) max-content;
 }
 
 .scene-volume-icon {
@@ -1300,6 +1308,8 @@ body.scene-mode-enabled .hero.hero-section.scene-visible {
   color: var(--pink-soft);
   font-size: 0.76rem;
   font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .scene-music-progress span:first-child {

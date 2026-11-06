@@ -125,6 +125,19 @@ function formatTime(seconds) {
   return `${minutes}:${remainingSeconds}`
 }
 
+const EMPTY_PROGRESS = { source: '', currentTime: 0, duration: 0 }
+
+function readSceneProgress(audio: HTMLAudioElement, scene: SceneMusicConfig | undefined) {
+  const source = resolveAudioSource(scene?.src)
+  if (!source || audio.getAttribute('data-scene-src') !== source ||
+    (audio.currentSrc && audio.currentSrc !== audio.src)) return null
+  return {
+    source,
+    currentTime: Number.isFinite(audio.currentTime) ? Math.max(0, audio.currentTime) : 0,
+    duration: Number.isFinite(audio.duration) ? Math.max(0, audio.duration) : 0,
+  }
+}
+
 const _safeGet = (k: string) => { try { return localStorage.getItem(k) } catch { return null } }
 const _safeSet = (k: string, v: string) => { try { localStorage.setItem(k, v) } catch { /* degraded */ } }
 
@@ -145,9 +158,9 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
   const [isStarting, setIsStarting] = useState(false)
   const [audioError, setAudioError] = useState('')
   const [masterVolume, setMasterVolume] = useState(DEFAULT_VOLUME)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const [progress, setProgress] = useState(EMPTY_PROGRESS)
 
+  const playerRef = useRef<HTMLDivElement | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const playbackRequestedRef = useRef(false)
   const requestRef = useRef(0)
@@ -160,8 +173,62 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
   const rafRef = useRef<number | null>(null)
 
   const activeScene = scenes.find((scene) => scene.sectionId === activeSectionId) || scenes[0]
+  const activeSource = resolveAudioSource(activeScene?.src)
+  const currentTime = progress.source === activeSource ? progress.currentTime : 0
+  const duration = progress.source === activeSource ? progress.duration : 0
   activeSceneRef.current = activeScene
   masterVolumeRef.current = masterVolume
+
+  // Wrapped metadata can move a focused control after the native focus scroll.
+  useEffect(() => {
+    const player = playerRef.current
+    if (!player) return
+    const pressedPointers = new Set<number>()
+    let mousePressed = false
+    let focusFrame: number | null = null
+    const beginPointer = (event: PointerEvent) => { pressedPointers.add(event.pointerId) }
+    const endPointer = (event: PointerEvent) => { pressedPointers.delete(event.pointerId) }
+    const beginMouse = () => { mousePressed = true }
+    const endMouse = () => { mousePressed = false }
+    const resetPointer = () => { pressedPointers.clear(); mousePressed = false }
+    const revealFocus = () => {
+      const target = document.activeElement
+      if (pressedPointers.size || mousePressed || !(target instanceof HTMLElement) ||
+        !player.contains(target) || !target.matches('button:focus-visible, input:focus-visible')) return
+      target.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'nearest' })
+    }
+    const scheduleReveal = () => {
+      if (!player.contains(document.activeElement)) return
+      if (focusFrame !== null) cancelAnimationFrame(focusFrame)
+      revealFocus()
+      focusFrame = requestAnimationFrame(() => {
+        focusFrame = null
+        revealFocus()
+      })
+    }
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(scheduleReveal)
+    observer?.observe(player)
+    player.addEventListener('focusin', scheduleReveal)
+    window.addEventListener('pointerdown', beginPointer, true)
+    window.addEventListener('pointerup', endPointer, true)
+    window.addEventListener('pointercancel', resetPointer, true)
+    window.addEventListener('mousedown', beginMouse, true)
+    window.addEventListener('mouseup', endMouse, true)
+    window.addEventListener('keydown', resetPointer, true)
+    window.addEventListener('blur', resetPointer)
+    return () => {
+      observer?.disconnect()
+      if (focusFrame !== null) cancelAnimationFrame(focusFrame)
+      player.removeEventListener('focusin', scheduleReveal)
+      window.removeEventListener('pointerdown', beginPointer, true)
+      window.removeEventListener('pointerup', endPointer, true)
+      window.removeEventListener('pointercancel', resetPointer, true)
+      window.removeEventListener('mousedown', beginMouse, true)
+      window.removeEventListener('mouseup', endMouse, true)
+      window.removeEventListener('keydown', resetPointer, true)
+      window.removeEventListener('blur', resetPointer)
+    }
+  }, [])
 
   const clearPendingSwitch = useCallback(() => {
     if (switchTimerRef.current !== null) clearTimeout(switchTimerRef.current)
@@ -212,8 +279,7 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
       audio.volume = 0
       audio.currentTime = 0
       audio.setAttribute('data-scene-src', nextSrc)
-      setCurrentTime(0)
-      setDuration(0)
+      setProgress({ source: nextSrc, currentTime: 0, duration: 0 })
       setIsPlaying(false)
     }
     claimAudio(audio)
@@ -239,12 +305,11 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
     if (!audio) return
     mountedRef.current = true
     const unregister = registerAudio(audio, pauseMusic)
-    const updateTime = () => setCurrentTime(audio.currentTime || 0)
-    const updateDuration = () => setDuration(Number.isFinite(audio.duration) ? audio.duration : 0)
-    const resetProgress = () => {
-      setCurrentTime(0)
-      setDuration(0)
+    const updateProgress = () => {
+      const nextProgress = readSceneProgress(audio, activeSceneRef.current)
+      if (nextProgress) setProgress(nextProgress)
     }
+    const resetProgress = () => setProgress(EMPTY_PROGRESS)
     const handlePause = () => {
       if (audio.paused && isCurrentAudio(audio)) pauseMusic()
     }
@@ -256,9 +321,9 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
       pauseMusic()
       setAudioError('No se pudo cargar esta escena. Comprueba que su archivo de audio exista.')
     }
-    audio.addEventListener('timeupdate', updateTime)
-    audio.addEventListener('loadedmetadata', updateDuration)
-    audio.addEventListener('durationchange', updateDuration)
+    audio.addEventListener('timeupdate', updateProgress)
+    audio.addEventListener('loadedmetadata', updateProgress)
+    audio.addEventListener('durationchange', updateProgress)
     audio.addEventListener('emptied', resetProgress)
     audio.addEventListener('pause', handlePause)
     audio.addEventListener('ended', handleEnded)
@@ -271,9 +336,9 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
       cancelFadeRef.current = null
       clearPendingSwitch()
       unregister()
-      audio.removeEventListener('timeupdate', updateTime)
-      audio.removeEventListener('loadedmetadata', updateDuration)
-      audio.removeEventListener('durationchange', updateDuration)
+      audio.removeEventListener('timeupdate', updateProgress)
+      audio.removeEventListener('loadedmetadata', updateProgress)
+      audio.removeEventListener('durationchange', updateProgress)
       audio.removeEventListener('emptied', resetProgress)
       audio.removeEventListener('pause', handlePause)
       audio.removeEventListener('ended', handleEnded)
@@ -346,7 +411,12 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
 
   useEffect(() => {
     if (playbackRequestedRef.current) void playScene(activeScene)
-    else setAudioError('')
+    else {
+      setAudioError('')
+      const audio = audioRef.current
+      // Navigation changes presentation without starting or reloading paused audio.
+      setProgress(audio ? readSceneProgress(audio, activeScene) ?? EMPTY_PROGRESS : EMPTY_PROGRESS)
+    }
   }, [activeScene, playScene])
 
   useEffect(() => {
@@ -381,10 +451,10 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
   const seekSong = (event: React.ChangeEvent<HTMLInputElement>) => {
     const audio = audioRef.current
     const nextTime = Number(event.target.value)
-    if (!audio || !Number.isFinite(nextTime) || !duration) return
+    if (!audio || !Number.isFinite(nextTime) || !duration || !readSceneProgress(audio, activeSceneRef.current)) return
     const safeTime = Math.max(0, Math.min(nextTime, duration))
     audio.currentTime = safeTime
-    setCurrentTime(safeTime)
+    setProgress(previous => ({ ...previous, currentTime: safeTime }))
   }
 
   const hasAudio = Boolean(resolveAudioSource(activeScene?.src))
@@ -400,7 +470,7 @@ function SceneMusicController({ scenes: sceneConfig = sceneMusic }: { scenes?: S
   const progressPercent = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0
 
   return (
-    <div id="scene-music" role="region" aria-label="Banda sonora" tabIndex={-1} className={`scene-music-controller ${isPlaying ? 'is-playing' : ''}`}>
+    <div ref={playerRef} id="scene-music" role="region" aria-label="Banda sonora" tabIndex={-1} className={`scene-music-controller ${isPlaying ? 'is-playing' : ''}`}>
       <audio ref={audioRef} preload="metadata" />
 
       <div className="scene-music-main">

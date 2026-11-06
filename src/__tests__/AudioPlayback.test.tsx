@@ -296,6 +296,88 @@ describe('ciclo de vida de la música de escena', () => {
     expect(play).not.toHaveBeenCalled()
   })
 
+  it.each(['universo', 'playlist'])('no muestra ni permite buscar el audio pausado de otra escena al navegar a %s', async (nextScene) => {
+    const { result, sceneAudio, track } = mountPlayers()
+    fireEvent.click(screen.getByRole('button', { name: 'Iniciar banda sonora' }))
+    await flush()
+    vi.spyOn(sceneAudio, 'duration', 'get').mockReturnValue(300)
+    act(() => {
+      sceneAudio.currentTime = 30
+      sceneAudio.dispatchEvent(new Event('loadedmetadata'))
+      sceneAudio.dispatchEvent(new Event('timeupdate'))
+    })
+    const progress = screen.getByRole('slider', { name: 'Progreso de la canción' })
+    expect(progress).toBeEnabled()
+    expect(progress).toHaveAttribute('aria-valuetext', '0:30 de 5:00')
+    fireEvent.click(screen.getByRole('button', { name: 'Pausar' }))
+    await act(async () => { await result.current.playLocalTrack(songA) })
+    const plays = play.mock.calls.length
+
+    sceneChange(nextScene)
+    expect(screen.getByText(nextScene === 'playlist' ? 'Sin canción' : 'Tema B')).toBeInTheDocument()
+    expect(progress).toBeDisabled()
+    expect(progress).toHaveAttribute('max', '0')
+    expect(progress).toHaveAttribute('aria-valuetext', '0:00 de 0:00')
+    act(() => {
+      sceneAudio.dispatchEvent(new Event('loadedmetadata'))
+      sceneAudio.dispatchEvent(new Event('timeupdate'))
+    })
+    expect(progress).toBeDisabled()
+    expect(progress).toHaveAttribute('aria-valuetext', '0:00 de 0:00')
+    fireEvent.change(progress, { target: { value: '75' } })
+    expect(sceneAudio.currentTime).toBe(30)
+    expect(sceneAudio.getAttribute('src')).toBe('/audio/a.wav')
+    expect(track.paused).toBe(false)
+    expect(sceneAudio.paused).toBe(true)
+    expect(play).toHaveBeenCalledTimes(plays)
+
+    sceneChange('inicio')
+    expect(progress).toBeEnabled()
+    expect(progress).toHaveAttribute('aria-valuetext', '0:30 de 5:00')
+    expect(track.paused).toBe(false)
+    expect(play).toHaveBeenCalledTimes(plays)
+    fireEvent.click(screen.getByRole('button', { name: 'Reproducir' }))
+    await flush()
+    expect(sceneAudio.currentTime).toBe(30)
+    expect(sceneAudio.paused).toBe(false)
+    expect(track.paused).toBe(true)
+    expect(play).toHaveBeenCalledTimes(plays + 1)
+    expect(progress).toHaveAttribute('aria-valuetext', '0:30 de 5:00')
+  })
+
+  it('ignora metadatos del recurso anterior mientras una fuente nueva está cargando', async () => {
+    const { sceneAudio } = mountPlayers()
+    fireEvent.click(screen.getByRole('button', { name: 'Iniciar banda sonora' }))
+    await flush()
+    const loadedSource = vi.spyOn(sceneAudio, 'currentSrc', 'get').mockReturnValue(sceneAudio.src)
+    const duration = vi.spyOn(sceneAudio, 'duration', 'get').mockReturnValue(300)
+    act(() => sceneAudio.dispatchEvent(new Event('loadedmetadata')))
+    fireEvent.click(screen.getByRole('button', { name: 'Pausar' }))
+    sceneChange('universo')
+    const pending = deferredPlayback()
+    fireEvent.click(screen.getByRole('button', { name: 'Reproducir' }))
+    const progress = screen.getByRole('slider', { name: 'Progreso de la canción' })
+    act(() => {
+      sceneAudio.currentTime = 77
+      sceneAudio.dispatchEvent(new Event('loadedmetadata'))
+      sceneAudio.dispatchEvent(new Event('timeupdate'))
+    })
+    expect(progress).toBeDisabled()
+    expect(progress).toHaveAttribute('aria-valuetext', '0:00 de 0:00')
+
+    loadedSource.mockReturnValue(sceneAudio.src)
+    duration.mockReturnValue(200)
+    act(() => {
+      sceneAudio.currentTime = 0
+      sceneAudio.dispatchEvent(new Event('loadedmetadata'))
+    })
+    await act(async () => { pending.resolve(); await Promise.resolve() })
+    expect(progress).toBeEnabled()
+    expect(progress).toHaveAttribute('aria-valuetext', '0:00 de 3:20')
+    expect(sceneAudio.getAttribute('src')).toBe('/audio/b.wav')
+    expect(sceneAudio.paused).toBe(false)
+  })
+
   it('una pausa explícita cancela un play pendiente y su fade', async () => {
     const { sceneAudio } = mountPlayers()
     const pending = deferredPlayback()
